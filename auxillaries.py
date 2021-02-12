@@ -8,9 +8,9 @@ class States:
     draw = False
 
 
-def loop(hours, game):
+def loop(game):
     if False:  # is server
-        tid, f = time() + 3600 * hours - 300, 0
+        tid, f = time() + 3600 * game.hours - 300, 0
         while time() < tid:
             f += 1
             yield f
@@ -31,7 +31,7 @@ def loop(hours, game):
                 Paint.switch()
 
         keyboard.Listener(on_press=on_press).start()
-        tid, f = time() + 3600 * hours - 300, 0
+        f = 0
         while States.running:
             f += 1
             if States.draw:

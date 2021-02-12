@@ -14,5 +14,5 @@ game.change()
 print(meta(game.board))
 
 
-for frame in game.loop(0.1):
+for frame in game.loop:
     print(frame, meta(game.board))
