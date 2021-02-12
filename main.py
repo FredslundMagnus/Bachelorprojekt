@@ -1,6 +1,5 @@
 from game import Game
 from agent import Meta
-from auxillaries import loop
 
 game = Game()
 meta = Meta()
