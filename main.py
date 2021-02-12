@@ -9,7 +9,7 @@ meta.add_category()
 print(meta(game.board))
 print(meta(game.board))
 print(meta(game.board))
-game.change()
+# game.change()
 print(meta(game.board))
 
 

@@ -19,8 +19,20 @@ class Paint:
     @staticmethod
     def __init__(game: Game) -> None:
         with screen(Colors.gray.c300):
-            Paint.drawRect(Colors.red, 5, 5)
-            Paint.drawRect(Colors.blue, 5, 5, 40)
+            for x, y in Paint.iterate(game, 0):
+                Paint.drawRect(Colors.gray, x, y)
+            for x, y in Paint.iterate(game, 1):
+                Paint.drawRect(Colors.green, x, y)
+            for x, y in Paint.iterate(game, 2):
+                Paint.drawRect(Colors.yellow, x, y, 30)
+
+    @staticmethod
+    def iterate(game, dim):
+        b = game._board[0, dim]
+        for x in range(b.shape[0]):
+            for y in range(b.shape[1]):
+                if bool(b[x, y]):
+                    yield x, y
 
     @staticmethod
     def drawRect(color: Color, x: int, y: int, size: int = 50):
@@ -28,7 +40,7 @@ class Paint:
 
     @staticmethod
     def start():
-        Paint.screen = pygame.display.set_mode([500, 500])
+        Paint.screen = pygame.display.set_mode([500, 500], vsync=True)
         States.draw = True
 
     @staticmethod
