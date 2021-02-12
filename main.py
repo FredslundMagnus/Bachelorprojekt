@@ -1,5 +1,6 @@
 from game import Game
 from agent import Meta
+from auxillaries import loop
 
 game = Game()
 meta = Meta()
@@ -11,3 +12,7 @@ print(meta(game.board))
 print(meta(game.board))
 game.change()
 print(meta(game.board))
+
+
+for frame in game.loop(0.1):
+    print(frame, meta(game.board))

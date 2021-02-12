@@ -1,5 +1,6 @@
 import numpy as np
 from torch import tensor
+from auxillaries import loop
 
 
 class Game:
@@ -7,6 +8,10 @@ class Game:
         super().__init__()
         self.n = n
         self._board = np.zeros((n, 3, 10, 10), dtype=np.float32)
+        self._board[:, 0, 0, :] = 1
+        self._board[:, 0, -1, :] = 1
+        self._board[:, 0, :, 0] = 1
+        self._board[:, 0, :, -1] = 1
 
     def change(self):
         for i in range(self.n):
@@ -15,3 +20,6 @@ class Game:
     @property
     def board(self):
         return tensor(self._board)
+
+    def loop(self, hours):
+        return loop(hours, self)
