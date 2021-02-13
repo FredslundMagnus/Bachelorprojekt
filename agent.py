@@ -1,4 +1,4 @@
-from torch import cat
+from torch import cat, Tensor
 import torch.nn as nn
 
 
@@ -7,7 +7,7 @@ class Meta(nn.Module):
         super(Meta, self).__init__()
         self.model = nn.Sequential(nn.Conv2d(3, 8, 3), nn.ReLU(), nn.Conv2d(8, 12, 3), nn.ReLU(), nn.Conv2d(12, 16, 3), nn.ReLU(), nn.Conv2d(16, 2, 4), nn.Flatten(), nn.Softmax(1))
 
-    def forward(self, x):
+    def forward(self, x: Tensor):
         return self.model(x)
 
     def add_category(self):

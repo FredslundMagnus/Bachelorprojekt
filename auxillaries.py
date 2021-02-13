@@ -1,4 +1,6 @@
 from time import time
+from typing import Iterator
+from collector import Collector
 
 
 class States:
@@ -8,7 +10,7 @@ class States:
     draw = False
 
 
-def loop(game):
+def loop(game, collector: Collector) -> Iterator[int]:
     if False:  # is server
         tid, f = time() + 3600 * game.hours - 300, 0
         while time() < tid:
@@ -36,4 +38,9 @@ def loop(game):
             f += 1
             if States.draw:
                 Paint(game)
+            if States.showPrint:
+                collector.show(game)
+                States.showPrint = False
+            if States.save:
+                States.save = False
             yield f

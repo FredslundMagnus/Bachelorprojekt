@@ -1,3 +1,4 @@
+from typing import Iterator, Tuple
 import pygame
 from game import Game
 from auxillaries import States
@@ -6,7 +7,7 @@ from contextlib import contextmanager
 
 
 @contextmanager
-def screen(background: Color):
+def screen(background: Color) -> None:
     Paint.screen.fill(background.color)
     try:
         yield
@@ -27,7 +28,7 @@ class Paint:
                 Paint.drawRect(Colors.yellow, x, y, 30)
 
     @staticmethod
-    def iterate(game, dim):
+    def iterate(game: Game, dim: int) -> Iterator[Tuple[int, int]]:
         b = game._board[0, dim]
         for x in range(b.shape[0]):
             for y in range(b.shape[1]):
@@ -35,22 +36,22 @@ class Paint:
                     yield x, y
 
     @staticmethod
-    def drawRect(color: Color, x: int, y: int, size: int = 50):
+    def drawRect(color: Color, x: int, y: int, size: int = 50) -> None:
         Paint.pygame.draw.rect(Paint.screen, color.color, Paint.pygame.Rect(x*50 + (50 - size) // 2, y*50 + (50 - size) // 2, size, size))
 
     @staticmethod
-    def start():
+    def start() -> None:
         Paint.screen = pygame.display.set_mode([500, 500], vsync=True)
         States.draw = True
 
     @staticmethod
-    def stop():
+    def stop() -> None:
         States.draw = False
         Paint.pygame.quit()
         Paint.screen = None
 
     @staticmethod
-    def switch():
+    def switch() -> None:
         if States.draw:
             Paint.stop()
         else:

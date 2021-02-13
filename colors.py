@@ -1,15 +1,28 @@
+from typing import Tuple
+
+
 class Color:
     def __init__(self, r: int, g: int, b: int) -> None:
-        self.color = (r, g, b)
+        self.color: Tuple[int, int, int] = (r, g, b)
 
 
 class MaterialColor(Color):
     def __init__(self, c50: Color, c100: Color, c200: Color, c300: Color, c400: Color, c500: Color, c600: Color, c700: Color, c800: Color, c900: Color) -> None:
-        self.c50, self.c100, self.c200, self.c300, self.c400, self.c500, self.c600, self.c700, self.c800, self.c900, self.color = c50, c100, c200, c300, c400, c500, c600, c700, c800, c900, c500.color
-        self.table = {50: c50, 100: c100, 200: c200, 300: c300, 400: c400, 500: c500, 600: c600, 700: c700, 800: c800, 900: c900}
+        self.c50:  Color = c50
+        self.c100: Color = c100
+        self.c200: Color = c200
+        self.c300: Color = c300
+        self.c400: Color = c400
+        self.c500: Color = c500
+        self.c600: Color = c600
+        self.c700: Color = c700
+        self.c800: Color = c800
+        self.c900: Color = c900
+        self.color: Tuple[int, int, int] = c500.color
+        self.table: dict[int, Color] = {50: c50, 100: c100, 200: c200, 300: c300, 400: c400, 500: c500, 600: c600, 700: c700, 800: c800, 900: c900}
 
-    def __getitem__(self, index):
-        self.table[index]
+    def __getitem__(self, index: int) -> Color:
+        return self.table[index]
 
 
 class Colors:
