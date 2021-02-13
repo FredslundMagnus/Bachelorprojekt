@@ -1,6 +1,7 @@
 from game import Game
 from agent import Meta
 from collector import Collector
+from auxillaries import loop
 
 collector = Collector()
 game = Game()
@@ -11,5 +12,5 @@ meta.add_category()
 print(meta(game.board))
 
 
-for frame in game.loop(collector):
+for frame in loop(game, collector):
     print(frame, meta(game.board))

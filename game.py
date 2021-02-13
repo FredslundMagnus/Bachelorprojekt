@@ -1,8 +1,5 @@
-from typing import Iterator
 import numpy as np
 from torch import tensor, Tensor
-from auxillaries import loop
-from collector import Collector
 
 
 class Game:
@@ -19,6 +16,3 @@ class Game:
     @property
     def board(self) -> Tensor:
         return tensor(self._board)
-
-    def loop(self, collector: Collector) -> Iterator[int]:
-        return loop(self, collector)
