@@ -17,31 +17,22 @@ def screen(background: Color) -> None:
 
 
 class Paint:
+    size = 50
+
     @staticmethod
     def __init__(game: Game) -> None:
         with screen(Colors.gray.c300):
-            for x, y in Paint.iterate(game, 0):
-                Paint.drawRect(Colors.gray, x, y)
-            for x, y in Paint.iterate(game, 1):
-                Paint.drawRect(Colors.green, x, y)
-            for x, y in Paint.iterate(game, 2):
-                Paint.drawRect(Colors.yellow, x, y, 30)
+            for layer in game.layers:
+                for x, y in layer.positions[0]:
+                    Paint.drawRect(layer.color, x, y, layer.size)
 
     @staticmethod
-    def iterate(game: Game, dim: int) -> Iterator[Tuple[int, int]]:
-        b = game._board[0, dim]
-        for x in range(b.shape[0]):
-            for y in range(b.shape[1]):
-                if bool(b[x, y]):
-                    yield x, y
+    def drawRect(color: Color, x: int, y: int, size: int) -> None:
+        Paint.pygame.draw.rect(Paint.screen, color.color, Paint.pygame.Rect(x*Paint.size + (Paint.size - size*Paint.size) // 2, y*Paint.size + (Paint.size - size*Paint.size) // 2, size*Paint.size, size*Paint.size))
 
     @staticmethod
-    def drawRect(color: Color, x: int, y: int, size: int = 50) -> None:
-        Paint.pygame.draw.rect(Paint.screen, color.color, Paint.pygame.Rect(x*50 + (50 - size) // 2, y*50 + (50 - size) // 2, size, size))
-
-    @staticmethod
-    def start() -> None:
-        Paint.screen = pygame.display.set_mode([500, 500], vsync=True)
+    def start(width: int, height: int) -> None:
+        Paint.screen = pygame.display.set_mode([width * Paint.size, height * Paint.size], vsync=True)
         States.draw = True
 
     @staticmethod
@@ -51,11 +42,11 @@ class Paint:
         Paint.screen = None
 
     @staticmethod
-    def switch() -> None:
+    def switch(width: int, height: int) -> None:
         if States.draw:
             Paint.stop()
         else:
-            Paint.start()
+            Paint.start(width, height)
 
 
 Paint.pygame = pygame
