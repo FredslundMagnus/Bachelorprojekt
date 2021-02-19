@@ -7,7 +7,7 @@ from torch import Tensor
 
 
 class Player(Layer):
-    color = Colors.green
+    color = Colors.blue
     size = 1
     blocking = True
     shape = Shape.Circle
@@ -75,24 +75,53 @@ class Gold(Layer):
         return len(self.positions[batch]) == 0
 
 
+class Goal(Layer):
+    color = Colors.green
+    size = 1
+    blocking = False
+    shape = Shape.Square
+
+    def __init__(self, batch: int, width: int, height: int) -> None:
+        super().__init__(batch, width, height)
+
+    def reset(self, batch: int) -> None:
+        self.add(batch, (8, 8))
+        self._done = True
+
+    def check(self, batch: int, pos: Tuple[int, int]) -> float:
+        self._done = pos in self.positions[batch]
+        print(self._done)
+        return 0
+
+    def isDone(self, batch: int) -> bool:
+        return self._done
+
+
 class LayerType(Enum):
     Player = 0
     Blocks = 1
     Gold = 2
+    Goal = 3
 
 
 class Layers:
     def __init__(self, batch: int, width: int, height: int, *layers: Tuple[LayerType]) -> None:
-        self.layers: List[Layer] = [Player(batch, width, height)]
-        self.player: Player = self.layers[0]
+        self.layers: List[Layer] = []
+        self.player: Player = Player(batch, width, height)
         self.width: int = width
         self.height: int = height
         self.batch: int = batch
         if LayerType.Blocks in layers:
             self.layers.append(Blocks(batch, width, height))
+        if LayerType.Goal in layers:
+            self.layers.append(Goal(batch, width, height))
         if LayerType.Gold in layers:
             self.layers.append(Gold(batch, width, height))
+        self.layers.append(self.player)
         self.board = np.zeros((batch, len(self.layers), width, height), dtype=np.float32)
+
+    def __len__(self) -> int:
+        return len(self.layers)
 
     def update(self):
         for batch in range(self.batch):

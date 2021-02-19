@@ -5,7 +5,7 @@ from auxillaries import loop, person
 
 collector = Collector()
 game = Game()
-meta = Meta()
+meta = Meta(len(game.layers))
 
 print(meta(game.board))
 meta.add_category()

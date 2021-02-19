@@ -51,10 +51,12 @@ def person(game: Game) -> List[int]:
     from pynput import keyboard
     d = {keyboard.Key.right: 0, keyboard.Key.down: 1, keyboard.Key.left: 2, keyboard.Key.up: 3}
     action = None
-    while action == None:
+    while action == None and States.running:
         with keyboard.Events() as events:
             event = events.get()
             if event.__class__ == keyboard.Events.Press:
                 if event.key in d:
                     action = d[event.key]
+    if action == None:
+        return [0 for _ in range(game.batch)]
     return [action for _ in range(game.batch)]
