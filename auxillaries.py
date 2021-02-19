@@ -31,7 +31,7 @@ def loop(game: Game, collector: Collector) -> Iterator[int]:
             if keyboard.Key.f3 == key:
                 States.save = True
             if keyboard.Key.f4 == key:
-                Paint.switch(game._board.shape[2], game._board.shape[3])
+                Paint.switch(game.layers.width, game.layers.height)
 
         keyboard.Listener(on_press=on_press).start()
         f = 0

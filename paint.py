@@ -22,12 +22,11 @@ class Paint:
     @staticmethod
     def __init__(game: Game) -> None:
         with screen(Colors.gray.c300):
-            for layer in game.layers:
-                for x, y in layer.positions[0]:
-                    Paint.drawRect(layer.color, x, y, layer.size)
+            for color, size, x, y in game.layers.getColorable():
+                Paint.drawRect(color, size, x, y)
 
     @staticmethod
-    def drawRect(color: Color, x: int, y: int, size: int) -> None:
+    def drawRect(color: Color, size: int, x: int, y: int) -> None:
         Paint.pygame.draw.rect(Paint.screen, color.color, Paint.pygame.Rect(x*Paint.size + (Paint.size - size*Paint.size) // 2, y*Paint.size + (Paint.size - size*Paint.size) // 2, size*Paint.size, size*Paint.size))
 
     @staticmethod

@@ -1,6 +1,5 @@
-import numpy as np
 from torch import tensor, Tensor
-from layers import Blocks, Player, Layer, Gold
+from layers import Layers, LayerType
 from typing import List, Tuple
 
 
@@ -9,14 +8,12 @@ class Game:
         super().__init__()
         self.batch: int = batch
         self.hours: float = hours
-        self.layers: List[Layer] = [Player(batch, width, height), Blocks(batch, width, height), Gold(batch, width, height)]
-        self._board = np.zeros((batch, len(self.layers), width, height), dtype=np.float32)
-        for layer in self.layers:
-            layer.update(self._board)
+        self.layers: Layers = Layers(batch, width, height, LayerType.Blocks, LayerType.Gold)
+        self.layers.update()
 
     @property
     def board(self) -> Tensor:
-        return tensor(self._board)
+        return tensor(self.layers.board)
 
     def step(action: List[int]) -> Tuple[Tensor, List[float], List[int], List[dict]]:
         pass

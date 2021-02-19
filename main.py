@@ -13,4 +13,4 @@ print(meta(game.board))
 
 
 for frame in loop(game, collector):
-    print(frame, meta(game.board))
+    meta(game.board)

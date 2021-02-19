@@ -30,7 +30,7 @@ class Layer(metaclass=ABCMeta):
         return self._layer
 
     @property
-    def positions(self) -> int:
+    def positions(self) -> List[List[Tuple[int, int]]]:
         return self._positions
 
     def move(self, batch: int, _from: Tuple[int, int], _to: Tuple[int, int]):
