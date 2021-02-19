@@ -15,5 +15,5 @@ class Game:
     def board(self) -> Tensor:
         return tensor(self.layers.board)
 
-    def step(action: List[int]) -> Tuple[Tensor, List[float], List[int], List[dict]]:
-        pass
+    def step(self, action: List[int]) -> Tuple[Tensor, List[float], List[int], List[dict]]:
+        self.layers.step(action)

@@ -1,5 +1,5 @@
 from time import time
-from typing import Iterator
+from typing import Iterator, List
 from collector import Collector
 from game import Game
 
@@ -45,3 +45,16 @@ def loop(game: Game, collector: Collector) -> Iterator[int]:
             if States.save:
                 States.save = False
             yield f
+
+
+def person(game: Game) -> List[int]:
+    from pynput import keyboard
+    d = {keyboard.Key.right: 0, keyboard.Key.down: 1, keyboard.Key.left: 2, keyboard.Key.up: 3}
+    action = None
+    while action == None:
+        with keyboard.Events() as events:
+            event = events.get()
+            if event.__class__ == keyboard.Events.Press:
+                if event.key in d:
+                    action = d[event.key]
+    return [action for _ in range(game.batch)]

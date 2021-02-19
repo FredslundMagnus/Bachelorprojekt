@@ -1,7 +1,7 @@
 from game import Game
 from agent import Meta
 from collector import Collector
-from auxillaries import loop
+from auxillaries import loop, person
 
 collector = Collector()
 game = Game()
@@ -13,4 +13,5 @@ print(meta(game.board))
 
 
 for frame in loop(game, collector):
-    meta(game.board)
+    print(meta(game.board))
+    game.step(person(game))

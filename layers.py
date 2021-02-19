@@ -3,6 +3,7 @@ from colors import Colors
 from typing import Tuple, List
 from enum import Enum
 import numpy as np
+from torch import Tensor
 
 
 class Player(Layer):
@@ -51,6 +52,7 @@ class Layers:
         self.layers: List[Layer] = [Player(batch, width, height)]
         self.width: int = width
         self.height: int = height
+        self.batch: int = batch
         if LayerType.Blocks in layers:
             self.layers.append(Blocks(batch, width, height))
         if LayerType.Gold in layers:
@@ -60,6 +62,9 @@ class Layers:
     def update(self):
         for layer in self.layers:
             layer.update(self.board)
+
+    def step(self, action: List[int]) -> Tuple[Tensor, List[float], List[int], List[dict]]:
+        pass
 
     def getColorable(self):
         for layer in self.layers:
