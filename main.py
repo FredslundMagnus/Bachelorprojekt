@@ -13,5 +13,6 @@ print(meta(game.board))
 
 
 for frame in loop(game, collector):
-    print(meta(game.board))
+    # print(meta(game.board))
     game.step(person(game))
+    print(game.layers.board[0])

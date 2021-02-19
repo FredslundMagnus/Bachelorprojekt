@@ -25,6 +25,9 @@ class Layer(metaclass=ABCMeta):
     def reset(self, batch: int) -> None:
         pass
 
+    def check(self, batch: int, pos: Tuple[int, int]) -> float:
+        pass
+
     @property
     def layer(self) -> int:
         return self._layer
@@ -33,11 +36,16 @@ class Layer(metaclass=ABCMeta):
     def positions(self) -> List[List[Tuple[int, int]]]:
         return self._positions
 
-    def move(self, batch: int, _from: Tuple[int, int], _to: Tuple[int, int]):
-        self._positions[batch].remove(_from)
-        self._removed[batch].append(_from)
-        self._positions[batch].append(_to)
-        self._added[batch].append(_to)
+    def isFree(self, batch: int, pos: Tuple[int, int]) -> bool:
+        return not self.blocking or pos not in self.positions[batch]
+
+    def move(self, batch: int, _from: Tuple[int, int], _to: Tuple[int, int], layers):
+        if layers.isFree(batch, _to):
+            self._positions[batch].remove(_from)
+            self._removed[batch].append(_from)
+            self._positions[batch].append(_to)
+            self._added[batch].append(_to)
+        layers.check(batch)
 
     def remove(self, batch: int, _pos: Tuple[int, int]):
         self._positions[batch].remove(_pos)
@@ -58,10 +66,10 @@ class Layer(metaclass=ABCMeta):
 
     def update(self, board) -> None:
         for batch, x, y in self.elements(self._removed):
-            board[batch, self._layer, x, y] = 0
+            board[batch, self._layer, y, x] = 0
 
         for batch, x, y in self.elements(self._added):
-            board[batch, self._layer, x, y] = 1
+            board[batch, self._layer, y, x] = 1
 
         self._removed = [[] for _ in range(self._batch)]
         self._added = [[] for _ in range(self._batch)]
@@ -71,10 +79,18 @@ class Layer(metaclass=ABCMeta):
             for y in range(self._height):
                 yield x, y
 
+    @abstractmethod
+    def isDone(self, batch: int) -> bool:
+        pass
+
     @abstractproperty
     def color(self) -> Color:
         pass
 
     @abstractproperty
     def size(self) -> float:
+        pass
+
+    @abstractproperty
+    def blocking(self) -> bool:
         pass
