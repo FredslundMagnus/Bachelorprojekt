@@ -31,7 +31,7 @@ class Layer(metaclass=ABCMeta):
     def reset(self, batch: int) -> None:
         pass
 
-    def check(self, batch: int, pos: Tuple[int, int]) -> float:
+    def check(self, batch: int, pos: Tuple[int, int], layers) -> float:
         pass
 
     @property
