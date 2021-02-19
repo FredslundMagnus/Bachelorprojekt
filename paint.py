@@ -1,3 +1,4 @@
+from layer import Shape
 from typing import Iterator, Tuple
 import pygame
 from game import Game
@@ -22,12 +23,19 @@ class Paint:
     @staticmethod
     def __init__(game: Game) -> None:
         with screen(Colors.gray.c300):
-            for color, size, x, y in game.layers.getColorable():
-                Paint.drawRect(color, size, x, y)
+            for shape, color, size, x, y in game.layers.getColorable():
+                if shape == Shape.Circle:
+                    Paint.drawCircle(color, size, x, y)
+                elif shape == Shape.Square:
+                    Paint.drawRect(color, size, x, y)
 
     @staticmethod
     def drawRect(color: Color, size: int, x: int, y: int) -> None:
         Paint.pygame.draw.rect(Paint.screen, color.color, Paint.pygame.Rect(x*Paint.size + (Paint.size - size*Paint.size) // 2, y*Paint.size + (Paint.size - size*Paint.size) // 2, size*Paint.size, size*Paint.size))
+
+    @staticmethod
+    def drawCircle(color: Color, size: int, x: int, y: int) -> None:
+        Paint.pygame.draw.circle(Paint.screen, color.color, (x*Paint.size + Paint.size // 2, y*Paint.size + Paint.size // 2), size*Paint.size // 2)
 
     @staticmethod
     def start(width: int, height: int) -> None:

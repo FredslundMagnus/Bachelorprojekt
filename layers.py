@@ -1,4 +1,4 @@
-from layer import Layer
+from layer import Layer, Shape
 from colors import Colors
 from typing import Tuple, List
 from enum import Enum
@@ -10,6 +10,7 @@ class Player(Layer):
     color = Colors.green
     size = 1
     blocking = True
+    shape = Shape.Circle
 
     def __init__(self, batch: int, width: int, height: int) -> None:
         super().__init__(batch, width, height)
@@ -37,6 +38,7 @@ class Blocks(Layer):
     color = Colors.gray
     size = 1
     blocking = True
+    shape = Shape.Square
 
     def __init__(self, batch: int, width: int, height: int) -> None:
         super().__init__(batch, width, height)
@@ -54,6 +56,7 @@ class Gold(Layer):
     color = Colors.yellow
     size = 0.6
     blocking = False
+    shape = Shape.Circle
 
     def __init__(self, batch: int, width: int, height: int) -> None:
         super().__init__(batch, width, height)
@@ -106,7 +109,7 @@ class Layers:
     def getColorable(self):
         for layer in self.layers:
             for x, y in layer.positions[0]:
-                yield layer.color, layer.size, x, y
+                yield layer.shape, layer.color, layer.size, x, y
 
     def isFree(self, batch: int, pos: Tuple[int, int]):
         for layer in self.layers:

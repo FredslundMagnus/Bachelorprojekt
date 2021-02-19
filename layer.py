@@ -1,6 +1,12 @@
 from abc import ABCMeta, abstractmethod, abstractproperty
 from typing import Iterable, List, Tuple
 from colors import Color
+from enum import Enum
+
+
+class Shape(Enum):
+    Square = 0
+    Circle = 1
 
 
 class Layer(metaclass=ABCMeta):
@@ -89,6 +95,10 @@ class Layer(metaclass=ABCMeta):
 
     @abstractproperty
     def size(self) -> float:
+        pass
+
+    @abstractproperty
+    def shape(self) -> Shape:
         pass
 
     @abstractproperty
