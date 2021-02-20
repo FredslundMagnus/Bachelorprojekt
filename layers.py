@@ -131,7 +131,7 @@ class Keys(Layer):
         return score
 
     def isDone(self, batch: int) -> bool:
-        return len(self.positions[batch]) == 0
+        return True
 
 
 class Door(Layer):
