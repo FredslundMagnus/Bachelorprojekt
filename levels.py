@@ -21,6 +21,7 @@ class Maze(Level):
         if self.start not in self.nodes or self.end not in self.nodes:
             return False
         self.lines: Set[Tuple[Tuple[int, int], Tuple[int, int]]] = set()
+        self.order: List[Tuple[int, int]] = []
         self.DFS(self.start)
         self.noBlocks: Set[Tuple[int, int]] = set()
         for start, end in self.lines:
@@ -30,40 +31,27 @@ class Maze(Level):
         for pos in self.inverse(self.noBlocks):
             self.level[LayerType.Blocks].append(pos)
 
-        if LayerType.Door in self.uses and LayerType.Keys in self.uses:
-            nodes: Set[Tuple[int, int]] = set(self.noBlocks)
-            nodes.remove(self.end)
-            posibilities = set([(self.end[0] + x, self.end[1]) for x in range(-1, 2)]) | set([(self.end[0], self.end[1] + y) for y in range(-1, 2)])
-            posibilities.intersection_update(nodes)
-            for pos in posibilities:
-                print(pos)
-                self.level[LayerType.Door].append(pos)
-            nodes: Set[Tuple[int, int]] = [(x, y) for x in xs for y in ys]
-            nodes.remove(self.end)
-            nodes.remove(self.start)
-            first = choice(nodes)
-            nodes.remove(first)
-            self.level[LayerType.Keys].append(first)
-            self.level[LayerType.Keys].append(choice(nodes))
-        if LayerType.Gold in self.uses:
-            nodes: Set[Tuple[int, int]] = [(x, y) for x in xs for y in ys]
-            nodes.remove(self.end)
-            nodes.remove(self.start)
-            for pos in self.level[LayerType.Keys]:
-                nodes.remove(pos)
-            first = choice(nodes)
-            nodes.remove(first)
-            self.level[LayerType.Gold].append(first)
-            self.level[LayerType.Gold].append(choice(nodes))
-
         if LayerType.Player in self.uses:
             self.level[LayerType.Player].append(self.start)
         if LayerType.Goal in self.uses:
             self.level[LayerType.Goal].append(self.end)
+        if LayerType.Door in self.uses and LayerType.Keys in self.uses:
+            indexes: List[int] = list(range(1, self.order.index(self.end)-1))
+            elements = list(sorted(sample(indexes, 3)))
+            for i in elements[:2]:
+                self.level[LayerType.Keys].append(self.order[i])
+            self.level[LayerType.Door].append(self.order[elements[2]])
+        if LayerType.Gold in self.uses:
+            free = set(self.order)
+            for pos in self.elementsIn(LayerType.Player, LayerType.Goal, LayerType.Door, LayerType.Keys):
+                free.remove(pos)
+            for pos in sample(free, 3):
+                self.level[LayerType.Gold].append(pos)
         return True
 
     def DFS(self, node):
         self.nodes.remove(node)
+        self.order.append(node)
         if node == self.end:
             return
         posibilities = set([(node[0] + x, node[1]) for x in range(-3, 4)]) | set([(node[0], node[1] + y) for y in range(-3, 4)])
@@ -75,4 +63,4 @@ class Maze(Level):
             posibilities.intersection_update(self.nodes)
 
 
-print(Maze([LayerType.Blocks, LayerType.Door, LayerType.Keys], (7, 7), (1, 1), (7, 7)).level[LayerType.Blocks])
+Maze([LayerType.Blocks, LayerType.Door, LayerType.Keys], (7, 7), (1, 1), (7, 7))

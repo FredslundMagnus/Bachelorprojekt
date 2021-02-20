@@ -2,6 +2,7 @@ from time import time
 from typing import Iterator, List
 from collector import Collector
 from game import Game
+from random import choice
 
 
 class States:
@@ -60,3 +61,7 @@ def person(game: Game) -> List[int]:
     if action == None:
         return [0 for _ in range(game.batch)]
     return [action for _ in range(game.batch)]
+
+
+def random(game: Game) -> List[int]:
+    return [choice([0, 1, 2, 3]) for _ in range(game.batch)]

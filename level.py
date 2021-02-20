@@ -1,6 +1,7 @@
 from layer import LayerType
 from typing import List, Tuple, Dict, Set
 from abc import ABCMeta, abstractclassmethod
+from functools import reduce
 
 
 class Level(metaclass=ABCMeta):
@@ -26,3 +27,6 @@ class Level(metaclass=ABCMeta):
             for y in range(1, self.shape[1]+1):
                 if (x, y) not in s:
                     yield x, y
+
+    def elementsIn(self, *types):
+        return reduce(lambda acc, e: acc + e, [self.level[t] for t in types], [])
