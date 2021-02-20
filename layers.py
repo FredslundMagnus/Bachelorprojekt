@@ -1,18 +1,10 @@
-from layer import Layer, Shape
+from layer import Layer, Shape, LayerType
 from colors import Colors
 from typing import Dict, Tuple, List
 from enum import Enum
 import numpy as np
 from torch import Tensor
-
-
-class LayerType(Enum):
-    Player = 0
-    Blocks = 1
-    Gold = 2
-    Goal = 3
-    Keys = 4
-    Door = 5
+from levels import Maze
 
 
 class Player(Layer):
@@ -25,7 +17,7 @@ class Player(Layer):
         super().__init__(batch, width, height)
 
     def reset(self, batch: int) -> None:
-        self.add(batch, (2, 3))
+        self.add(batch, (1, 1))
 
     def step(self, actions, layers):
         for batch, action in enumerate(actions):
@@ -56,9 +48,11 @@ class Blocks(Layer):
         for x, y in self.grid():
             if x == 0 or x == self._width-1 or y == 0 or y == self._height-1:
                 self.add(batch, (x, y))
-        self.add(batch, (7, 6))
-        self.add(batch, (7, 7))
-        self.add(batch, (7, 8))
+        # self.add(batch, (7, 6))
+        # self.add(batch, (7, 7))
+        # self.add(batch, (7, 8))
+        for pos in Maze([LayerType.Blocks], (8, 8), (1, 1), (8, 8)).level[LayerType.Blocks]:
+            self.add(batch, pos)
 
     def isDone(self, batch: int) -> bool:
         return True
@@ -73,10 +67,10 @@ class Gold(Layer):
     def __init__(self, batch: int, width: int, height: int) -> None:
         super().__init__(batch, width, height)
 
-    def reset(self, batch: int) -> None:
-        self.add(batch, (4, 5))
-        self.add(batch, (3, 2))
-        self.add(batch, (7, 3))
+    # def reset(self, batch: int) -> None:
+    #     self.add(batch, (4, 5))
+    #     self.add(batch, (3, 2))
+    #     self.add(batch, (7, 3))
 
     def check(self, batch: int, pos: Tuple[int, int], layersDict: Dict[LayerType, Layer]) -> float:
         if pos in self.positions[batch]:
@@ -94,18 +88,19 @@ class Goal(Layer):
     shape = Shape.Square
 
     def __init__(self, batch: int, width: int, height: int) -> None:
+        self._done: Dict[int, bool] = {}
         super().__init__(batch, width, height)
 
     def reset(self, batch: int) -> None:
         self.add(batch, (8, 8))
-        self._done = True
+        self._done[batch] = True
 
     def check(self, batch: int, pos: Tuple[int, int], layersDict: Dict[LayerType, Layer]) -> float:
-        self._done = pos in self.positions[batch]
+        self._done[batch] = pos in self.positions[batch] or self.positions[batch] == []
         return 0
 
     def isDone(self, batch: int) -> bool:
-        return self._done
+        return self._done[batch]
 
 
 class Keys(Layer):
@@ -117,8 +112,8 @@ class Keys(Layer):
     def __init__(self, batch: int, width: int, height: int) -> None:
         super().__init__(batch, width, height)
 
-    def reset(self, batch: int) -> None:
-        self.add(batch, (3, 8))
+    # def reset(self, batch: int) -> None:
+    #     self.add(batch, (3, 8))
 
     def check(self, batch: int, pos: Tuple[int, int], layersDict: Dict[LayerType, Layer]) -> float:
         score = 0
@@ -145,8 +140,8 @@ class Door(Layer):
     def __init__(self, batch: int, width: int, height: int) -> None:
         super().__init__(batch, width, height)
 
-    def reset(self, batch: int) -> None:
-        self.add(batch, (8, 6))
+    # def reset(self, batch: int) -> None:
+    #     self.add(batch, (8, 6))
 
     def check(self, batch: int, pos: Tuple[int, int], layersDict: Dict[LayerType, Layer]) -> float:
         if pos in self.positions[batch]:

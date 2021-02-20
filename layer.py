@@ -4,6 +4,15 @@ from colors import Color
 from enum import Enum
 
 
+class LayerType(Enum):
+    Player = 0
+    Blocks = 1
+    Gold = 2
+    Goal = 3
+    Keys = 4
+    Door = 5
+
+
 class Shape(Enum):
     Square = 0
     Circle = 1
