@@ -1,6 +1,6 @@
-from layers import LayerType
+from layer import LayerType
 from typing import List, Tuple, Dict, Set
-from abc import ABCMeta, abstractclassmethod, abstractmethod, abstractproperty
+from abc import ABCMeta, abstractclassmethod
 
 
 class Level(metaclass=ABCMeta):

@@ -12,12 +12,13 @@ class Player(Layer):
     size = 1
     blocking = True
     shape = Shape.Circle
+    type = LayerType.Player
 
     def __init__(self, batch: int, width: int, height: int) -> None:
         super().__init__(batch, width, height)
 
-    def reset(self, batch: int) -> None:
-        self.add(batch, (1, 1))
+    # def reset(self, batch: int) -> None:
+    #     self.add(batch, (1, 1))
 
     def step(self, actions, layers):
         for batch, action in enumerate(actions):
@@ -40,6 +41,7 @@ class Blocks(Layer):
     size = 1
     blocking = True
     shape = Shape.Square
+    type = LayerType.Blocks
 
     def __init__(self, batch: int, width: int, height: int) -> None:
         super().__init__(batch, width, height)
@@ -51,8 +53,6 @@ class Blocks(Layer):
         # self.add(batch, (7, 6))
         # self.add(batch, (7, 7))
         # self.add(batch, (7, 8))
-        for pos in Maze([LayerType.Blocks], (8, 8), (1, 1), (8, 8)).level[LayerType.Blocks]:
-            self.add(batch, pos)
 
     def isDone(self, batch: int) -> bool:
         return True
@@ -63,6 +63,7 @@ class Gold(Layer):
     size = 0.6
     blocking = False
     shape = Shape.Circle
+    type = LayerType.Gold
 
     def __init__(self, batch: int, width: int, height: int) -> None:
         super().__init__(batch, width, height)
@@ -86,13 +87,14 @@ class Goal(Layer):
     size = 1
     blocking = False
     shape = Shape.Square
+    type = LayerType.Goal
 
     def __init__(self, batch: int, width: int, height: int) -> None:
         self._done: Dict[int, bool] = {}
         super().__init__(batch, width, height)
 
     def reset(self, batch: int) -> None:
-        self.add(batch, (8, 8))
+        # self.add(batch, (8, 8))
         self._done[batch] = True
 
     def check(self, batch: int, pos: Tuple[int, int], layersDict: Dict[LayerType, Layer]) -> float:
@@ -108,6 +110,7 @@ class Keys(Layer):
     size = 0.4
     blocking = False
     shape = Shape.Circle
+    type = LayerType.Keys
 
     def __init__(self, batch: int, width: int, height: int) -> None:
         super().__init__(batch, width, height)
@@ -136,6 +139,7 @@ class Door(Layer):
     size = 1
     blocking = True
     shape = Shape.Square
+    type = LayerType.Door
 
     def __init__(self, batch: int, width: int, height: int) -> None:
         super().__init__(batch, width, height)
@@ -159,22 +163,29 @@ class Layers:
         self.width: int = width
         self.height: int = height
         self.batch: int = batch
+        self.types: List[LayerType] = []
         self.dict: Dict[LayerType, Layer] = {LayerType.Player: self.player}
+        self.types.append(LayerType.Player)
         if LayerType.Blocks in layers:
             self.layers.append(Blocks(batch, width, height))
             self.dict[LayerType.Blocks] = self.layers[-1]
+            self.types.append(LayerType.Blocks)
         if LayerType.Goal in layers:
             self.layers.append(Goal(batch, width, height))
             self.dict[LayerType.Goal] = self.layers[-1]
+            self.types.append(LayerType.Goal)
         if LayerType.Door in layers:
             self.layers.append(Door(batch, width, height))
             self.dict[LayerType.Door] = self.layers[-1]
+            self.types.append(LayerType.Door)
         if LayerType.Keys in layers:
             self.layers.append(Keys(batch, width, height))
             self.dict[LayerType.Keys] = self.layers[-1]
+            self.types.append(LayerType.Keys)
         if LayerType.Gold in layers:
             self.layers.append(Gold(batch, width, height))
             self.dict[LayerType.Gold] = self.layers[-1]
+            self.types.append(LayerType.Gold)
         self.layers.append(self.player)
         self.board = np.zeros((batch, len(self.layers), width, height), dtype=np.float32)
 
@@ -210,5 +221,6 @@ class Layers:
                 layer.check(batch, pos, self.dict)
 
     def restart(self, batch: int):
+        level = Maze(self.types, (self.width-2, self.height-2), (1, 1), (self.width-2, self.height-2)).level
         for layer in self.layers:
-            layer.restart(batch)
+            layer.restart(batch, level[layer.type])

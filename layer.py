@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod, abstractproperty
-from typing import Iterable, List, Tuple
+from typing import Iterable, List, Tuple, Dict
 from colors import Color
 from enum import Enum
 
@@ -31,10 +31,13 @@ class Layer(metaclass=ABCMeta):
         self._layer = Layer.__layer__
         Layer.__layer__ += 1
         for i in range(batch):
-            self.restart(i)
+            self.clear(i)
+            self.reset(i)
 
-    def restart(self, batch: int) -> None:
+    def restart(self, batch: int, positions: List[Tuple[int, int]]) -> None:
         self.clear(batch)
+        for pos in positions:
+            self.add(batch, pos)
         self.reset(batch)
 
     def reset(self, batch: int) -> None:
@@ -108,6 +111,10 @@ class Layer(metaclass=ABCMeta):
 
     @abstractproperty
     def shape(self) -> Shape:
+        pass
+
+    @abstractproperty
+    def type(self) -> LayerType:
         pass
 
     @abstractproperty
