@@ -13,9 +13,6 @@ class Player(Layer):
     shape = Shape.Circle
     type = LayerType.Player
 
-    def __init__(self, batch: int, width: int, height: int) -> None:
-        super().__init__(batch, width, height)
-
     def step(self, actions, layers):
         for batch, action in enumerate(actions):
             for x, y in self.positions[batch]:
@@ -36,9 +33,6 @@ class Blocks(Layer):
     shape = Shape.Square
     type = LayerType.Blocks
 
-    def __init__(self, batch: int, width: int, height: int) -> None:
-        super().__init__(batch, width, height)
-
     def reset(self, batch: int) -> None:
         for x, y in self.grid():
             if x == 0 or x == self._width-1 or y == 0 or y == self._height-1:
@@ -52,11 +46,7 @@ class Gold(Layer):
     shape = Shape.Circle
     type = LayerType.Gold
 
-    def __init__(self, batch: int, width: int, height: int) -> None:
-        super().__init__(batch, width, height)
-
     def check(self, batch: int, layersDict: Dict[LayerType, Layer]) -> None:
-
         if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch]:
             self.remove(batch, pos)
 
@@ -71,9 +61,6 @@ class Goal(Layer):
     shape = Shape.Square
     type = LayerType.Goal
 
-    def __init__(self, batch: int, width: int, height: int) -> None:
-        super().__init__(batch, width, height)
-
     def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
         positions = layersDict[LayerType.Player].positions[batch]
         return not positions or positions[0] in self.positions[batch] or not self.positions[batch]
@@ -85,9 +72,6 @@ class Keys(Layer):
     blocking = False
     shape = Shape.Circle
     type = LayerType.Keys
-
-    def __init__(self, batch: int, width: int, height: int) -> None:
-        super().__init__(batch, width, height)
 
     def check(self, batch: int, layersDict: Dict[LayerType, Layer]) -> None:
         score = 0
@@ -107,9 +91,6 @@ class Door(Layer):
     blocking = True
     shape = Shape.Square
     type = LayerType.Door
-
-    def __init__(self, batch: int, width: int, height: int) -> None:
-        super().__init__(batch, width, height)
 
 
 class Layers:

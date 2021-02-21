@@ -10,7 +10,7 @@ class Level(metaclass=ABCMeta):
         self.shape: Tuple[int, int] = shape
         self.start: Tuple[int, int] = start
         self.end: Tuple[int, int] = end
-        self.level: Dict[LayerType, List[Tuple[int, int]]] = {layer: [] for layer in uses}
+        self.level: Dict[LayerType, List[Tuple[int, int]]] = {e: [] for e in LayerType}
         if not self.generate():
             self.level = None
 
