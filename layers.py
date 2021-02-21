@@ -95,8 +95,7 @@ class Door(Layer):
         self._blocking[batch] = True
 
     def check(self, batch: int, layersDict: Dict[LayerType, Layer]) -> None:
-        self._blocking[batch] = bool(layersDict[LayerType.Keys].positions[batch])
-        print(self._blocking[batch])
+        self._blocking[batch] = LayerType.Keys in layersDict and bool(layersDict[LayerType.Keys].positions[batch])
 
     def isBlocking(self, batch: int):
         return self._blocking[batch]
