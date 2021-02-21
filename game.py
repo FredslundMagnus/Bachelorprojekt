@@ -4,7 +4,7 @@ from typing import List, Tuple
 
 
 class Game:
-    def __init__(self, batch: int = 200, hours: float = 1, width: int = 15, height: int = 15) -> None:
+    def __init__(self, batch: int = 200, hours: float = 1, width: int = 35, height: int = 35) -> None:
         super().__init__()
         self.batch: int = batch
         self.hours: float = hours
