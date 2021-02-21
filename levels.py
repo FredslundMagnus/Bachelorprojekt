@@ -22,7 +22,7 @@ class Maze(Level):
             return False
         self.lines: Set[Tuple[Tuple[int, int], Tuple[int, int]]] = set()
         self.order: List[Tuple[int, int]] = []
-        self.DFS(self.start)
+        self.RFS(self.start)
         self.noBlocks: Set[Tuple[int, int]] = set()
         for start, end in self.lines:
             for a in ((x, y) for x in range(min(start[0], end[0]), max(start[0], end[0])+1) for y in range(min(start[1], end[1]), max(start[1], end[1])+1)):
@@ -62,5 +62,23 @@ class Maze(Level):
             self.DFS(chosen)
             posibilities.intersection_update(self.nodes)
 
+    def RFS(self, start):
+        frontier = {start}
+        self.nodes.remove(start)
+        self.order.append(start)
+        while frontier:
+            node = choice(list(frontier))
+            frontier.remove(node)
+            if node == self.end:
+                continue
+                # return
+            posibilities = set([(node[0] + x, node[1]) for x in range(-3, 4)]) | set([(node[0], node[1] + y) for y in range(-3, 4)])
+            posibilities.intersection_update(self.nodes)
+            for posibility in posibilities:
+                self.lines.add((node, posibility))
+                frontier.add(posibility)
+                self.nodes.remove(posibility)
+                self.order.append(posibility)
 
-Maze([LayerType.Blocks, LayerType.Door, LayerType.Keys], (7, 7), (1, 1), (7, 7))
+
+# Maze([LayerType.Blocks, LayerType.Door, LayerType.Keys], (7, 7), (1, 1), (7, 7))
