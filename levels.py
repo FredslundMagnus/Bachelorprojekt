@@ -79,6 +79,3 @@ class Maze(Level):
                 frontier.add(posibility)
                 self.nodes.remove(posibility)
                 self.order.append(posibility)
-
-
-# Maze([LayerType.Blocks, LayerType.Door, LayerType.Keys], (7, 7), (1, 1), (7, 7))
