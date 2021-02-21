@@ -8,7 +8,7 @@ class Game:
         super().__init__()
         self.batch: int = batch
         self.hours: float = hours
-        self.layers: Layers = Layers(batch, width, height, LayerType.Blocks, LayerType.Gold, LayerType.Goal, LayerType.Keys, LayerType.Door, LayerType.Holder, LayerType.Putter)
+        self.layers: Layers = Layers(batch, width, height, LayerType.Blocks, LayerType.Keys, LayerType.Door, LayerType.Holder, LayerType.Goal)
         self.layers.update()
 
     @property

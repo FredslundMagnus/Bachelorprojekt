@@ -49,8 +49,9 @@ class Maze(Level):
         if LayerType.Gold in self.uses:
             for pos in sample(self.notUsed, 3):
                 self.level[LayerType.Gold].append(pos)
-        if LayerType.Holder in self.uses and LayerType.Putter in self.uses:
+        if LayerType.Holder in self.uses:
             self.level[LayerType.Holder].append(choice(self.notUsed))
+        if LayerType.Putter in self.uses:
             self.level[LayerType.Putter].append(choice(self.notUsed))
         return True
 

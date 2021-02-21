@@ -131,11 +131,14 @@ class Putter(Layer):
 
         if positions and positions[0] in self.positions[batch]:
             self._carried[batch] = True
-        positions = layersDict[LayerType.Holder].positions[batch]
-        if positions and positions[0] in self.positions[batch]:
-            self._carried[batch] = False
+        if LayerType.Holder in layersDict:
+            positions = layersDict[LayerType.Holder].positions[batch]
+            if positions and positions[0] in self.positions[batch]:
+                self._carried[batch] = False
 
     def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
+        if LayerType.Holder not in layersDict:
+            return True
         positions = layersDict[LayerType.Holder].positions[batch]
         if not positions or not self.positions[batch]:
             return True
