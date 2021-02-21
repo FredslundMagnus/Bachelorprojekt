@@ -25,6 +25,9 @@ class Player(Layer):
                 elif action == 3:
                     self.move(batch, (x, y), (x, y-1), layers)
 
+    def intervene(self, batch: int, intervention):
+        pass
+
 
 class Blocks(Layer):
     color = Colors.gray
@@ -209,3 +212,7 @@ class Layers:
         level = Maze(self.types, (self.width-2, self.height-2), (1, 1), (self.width-2, self.height-2)).level
         for layer in self.layers:
             layer.restart(batch, level[layer.type])
+
+    def intervention(self, interventions):
+        for batch, intervention in enumerate(interventions):
+            self.player.intervene(batch, intervention)

@@ -1,5 +1,5 @@
 from time import time
-from typing import Iterator, List
+from typing import Iterator, List, Tuple
 from collector import Collector
 from game import Game
 from random import choice
@@ -65,3 +65,7 @@ def person(game: Game) -> List[int]:
 
 def random(game: Game) -> List[int]:
     return [choice([0, 1, 2, 3]) for _ in range(game.batch)]
+
+
+def randomInvertention(game: Game) -> List[Tuple[int, int]]:
+    return [choice([(7, 7), (5, 5), (3, 3)]) for _ in range(game.batch)]
