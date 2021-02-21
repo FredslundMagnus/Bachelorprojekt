@@ -30,3 +30,7 @@ class Level(metaclass=ABCMeta):
 
     def elementsIn(self, *types):
         return reduce(lambda acc, e: acc + e, [self.level[t] for t in types], [])
+
+    @property
+    def notUsed(self):
+        return list(self.inverse(self.elementsIn(*LayerType)))

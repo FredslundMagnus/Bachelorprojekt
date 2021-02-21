@@ -42,11 +42,11 @@ class Maze(Level):
                 self.level[LayerType.Keys].append(self.order[i])
             self.level[LayerType.Door].append(self.order[elements[2]])
         if LayerType.Gold in self.uses:
-            free = set(self.order)
-            for pos in self.elementsIn(LayerType.Player, LayerType.Goal, LayerType.Door, LayerType.Keys):
-                free.remove(pos)
-            for pos in sample(free, 3):
+            for pos in sample(self.notUsed, 3):
                 self.level[LayerType.Gold].append(pos)
+        if LayerType.Holder in self.uses and LayerType.Putter in self.uses:
+            self.level[LayerType.Holder].append(choice(self.notUsed))
+            self.level[LayerType.Putter].append(choice(self.notUsed))
         return True
 
     def DFS(self, node):

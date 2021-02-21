@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractproperty
-from typing import Iterable, List, Tuple, Dict
+from typing import Iterable, List, Tuple
 from colors import Color
 from enum import Enum
 
@@ -11,6 +11,8 @@ class LayerType(Enum):
     Goal = 3
     Keys = 4
     Door = 5
+    Holder = 6
+    Putter = 7
 
 
 class Shape(Enum):

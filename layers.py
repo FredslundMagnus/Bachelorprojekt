@@ -93,6 +93,47 @@ class Door(Layer):
     type = LayerType.Door
 
 
+class Holder(Layer):
+    color = Colors.orange.c300
+    size = 1
+    blocking = False
+    shape = Shape.Square
+    type = LayerType.Holder
+
+
+class Putter(Layer):
+    color = Colors.orange.c700
+    size = 0.4
+    blocking = False
+    shape = Shape.Square
+    type = LayerType.Putter
+
+    def __init__(self, batch: int, width: int, height: int) -> None:
+        self._carried: Dict[int, bool] = {}
+        super().__init__(batch, width, height)
+
+    def reset(self, batch: int) -> None:
+        self._carried[batch] = False
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer]) -> None:
+        positions = layersDict[LayerType.Player].positions[batch]
+        if positions and self._carried[batch]:
+            self.remove(batch, self.positions[batch][0])
+            self.add(batch, positions[0])
+
+        if positions and positions[0] in self.positions[batch]:
+            self._carried[batch] = True
+        positions = layersDict[LayerType.Holder].positions[batch]
+        if positions and positions[0] in self.positions[batch]:
+            self._carried[batch] = False
+
+    def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
+        positions = layersDict[LayerType.Holder].positions[batch]
+        if not positions or not self.positions[batch]:
+            return True
+        return positions[0] == self.positions[batch][0]
+
+
 class Layers:
     def __init__(self, batch: int, width: int, height: int, *layers: Tuple[LayerType]) -> None:
         self.layers: List[Layer] = []
@@ -123,7 +164,15 @@ class Layers:
             self.layers.append(Gold(batch, width, height))
             self.dict[LayerType.Gold] = self.layers[-1]
             self.types.append(LayerType.Gold)
+        if LayerType.Holder in layers:
+            self.layers.append(Holder(batch, width, height))
+            self.dict[LayerType.Holder] = self.layers[-1]
+            self.types.append(LayerType.Holder)
         self.layers.append(self.player)
+        if LayerType.Putter in layers:
+            self.layers.append(Putter(batch, width, height))
+            self.dict[LayerType.Putter] = self.layers[-1]
+            self.types.append(LayerType.Putter)
         self.board = np.zeros((batch, len(self.layers), width, height), dtype=np.float32)
 
     def __len__(self) -> int:
