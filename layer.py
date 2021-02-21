@@ -1,4 +1,4 @@
-from abc import ABCMeta, abstractmethod, abstractproperty
+from abc import ABCMeta, abstractproperty
 from typing import Iterable, List, Tuple, Dict
 from colors import Color
 from enum import Enum
@@ -43,8 +43,11 @@ class Layer(metaclass=ABCMeta):
     def reset(self, batch: int) -> None:
         pass
 
-    def check(self, batch: int, pos: Tuple[int, int], layers) -> float:
+    def check(self, batch: int, layersDict) -> None:
         pass
+
+    def isDone(self, batch: int, layersDict) -> bool:
+        return True
 
     @property
     def layer(self) -> int:
@@ -96,10 +99,6 @@ class Layer(metaclass=ABCMeta):
         for x in range(self._width):
             for y in range(self._height):
                 yield x, y
-
-    @abstractmethod
-    def isDone(self, batch: int) -> bool:
-        pass
 
     @abstractproperty
     def color(self) -> Color:
