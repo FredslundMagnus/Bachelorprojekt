@@ -41,6 +41,11 @@ class Maze(Level):
             for i in elements[:2]:
                 self.level[LayerType.Keys].append(self.order[i])
             self.level[LayerType.Door].append(self.order[elements[2]])
+        elif LayerType.Door in self.uses:
+            self.level[LayerType.Door].append(choice(self.notUsed))
+        elif LayerType.Keys in self.uses:
+            for pos in sample(self.notUsed, 2):
+                self.level[LayerType.Keys].append(pos)
         if LayerType.Gold in self.uses:
             for pos in sample(self.notUsed, 3):
                 self.level[LayerType.Gold].append(pos)

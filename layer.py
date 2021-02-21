@@ -60,7 +60,7 @@ class Layer(metaclass=ABCMeta):
         return self._positions
 
     def isFree(self, batch: int, pos: Tuple[int, int]) -> bool:
-        return not self.blocking or pos not in self.positions[batch]
+        return not self.isBlocking(batch) or pos not in self.positions[batch]
 
     def move(self, batch: int, _from: Tuple[int, int], _to: Tuple[int, int], layers):
         if layers.isFree(batch, _to):
@@ -118,6 +118,9 @@ class Layer(metaclass=ABCMeta):
     def type(self) -> LayerType:
         pass
 
-    @abstractproperty
+    @property
     def blocking(self) -> bool:
         pass
+
+    def isBlocking(self, batch: int) -> bool:
+        return self.blocking

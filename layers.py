@@ -77,23 +77,29 @@ class Keys(Layer):
     type = LayerType.Keys
 
     def check(self, batch: int, layersDict: Dict[LayerType, Layer]) -> None:
-        score = 0
         if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch]:
             self.remove(batch, pos)
-            score = 1
-        if len(self.positions[batch]) == 0:
-            door = layersDict[LayerType.Door]
-            for pos in door.positions[batch]:
-                door.remove(batch, pos)
-        return score
 
 
 class Door(Layer):
     color = Colors.purple
     size = 1
-    blocking = True
     shape = Shape.Square
     type = LayerType.Door
+
+    def __init__(self, batch: int, width: int, height: int) -> None:
+        self._blocking: Dict[int, bool] = {}
+        super().__init__(batch, width, height)
+
+    def reset(self, batch: int) -> None:
+        self._blocking[batch] = True
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer]) -> None:
+        self._blocking[batch] = bool(layersDict[LayerType.Keys].positions[batch])
+        print(self._blocking[batch])
+
+    def isBlocking(self, batch: int):
+        return self._blocking[batch]
 
 
 class Holder(Layer):
