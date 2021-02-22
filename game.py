@@ -17,6 +17,3 @@ class Game:
 
     def step(self, action: List[int]) -> Tuple[Tensor, List[float], List[int], List[dict]]:
         self.layers.step(action)
-
-    def intervention(self, interventions):
-        self.layers.intervention(interventions)

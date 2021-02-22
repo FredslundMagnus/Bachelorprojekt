@@ -65,7 +65,3 @@ def person(game: Game) -> List[int]:
 
 def random(game: Game) -> List[int]:
     return [choice([0, 1, 2, 3]) for _ in range(game.batch)]
-
-
-def randomInvertention(game: Game) -> List[Tuple[int, int]]:
-    return [choice([(7, 7), (5, 5), (3, 3)]) for _ in range(game.batch)]
