@@ -1,6 +1,7 @@
 from auxillaries import device
 import torch
 
+
 class Learners():
     def __init__(self) -> None:
         self.counter = 1
