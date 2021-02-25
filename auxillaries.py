@@ -3,6 +3,7 @@ from typing import Iterator, List, Tuple
 from collector import Collector
 from game import Game
 from random import choice
+from torch import  device as devicer, cuda
 
 
 class States:
@@ -65,3 +66,5 @@ def person(game: Game) -> List[int]:
 
 def random(game: Game) -> List[int]:
     return [choice([0, 1, 2, 3]) for _ in range(game.batch)]
+
+device = devicer('cuda' if cuda.is_available() else 'cpu')
