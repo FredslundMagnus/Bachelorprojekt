@@ -187,16 +187,22 @@ class Layers:
         return len(self.layers)
 
     def update(self):
+        rewards = [0.0 for _ in range(self.batch)]
+        dones = [0 for _ in range(self.batch)]
         for batch in range(self.batch):
             if all(layer.isDone(batch, self.dict) for layer in self.layers):
                 self.restart(batch)
+                rewards[batch] = 10.0
+                dones[batch] = 1
 
         for layer in self.layers:
             layer.update(self.board)
+        return rewards, dones
 
-    def step(self, action: List[int]) -> Tuple[Tensor, List[float], List[int], List[dict]]:
+    def step(self, action: List[int]) -> Tuple[List[float], List[int]]:
         self.player.step(action, self)
-        self.update()
+        rewards, dones = self.update()
+        return rewards, dones
 
     def getColorable(self):
         for layer in self.layers:

@@ -10,5 +10,6 @@ agent = Agent(env, Networks.Small)
 
 for frame in loop(env, collector):
     actions = agent(env)
-    env.step(actions)
-    # agent.learn()
+    observations, rewards, dones = env.step(actions)
+    agent.learn(observations, actions, rewards, dones)
+    collector.collect(actions)
