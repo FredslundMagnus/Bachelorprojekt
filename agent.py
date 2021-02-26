@@ -12,8 +12,8 @@ class Agent:
         self.learner = Learner(self.net, learner)
 
     def __call__(self, game: Game) -> Tensor:
-        self.values: Tensor = self.net.network(game.board)
-        actions = torch.argmax(self.values, dim=1)
+        temp: Tensor = self.net.network(game.board)
+        self.values, actions = torch.max(temp, dim=1)
         return actions
 
     def learn(self, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor):

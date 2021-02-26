@@ -1,11 +1,11 @@
 from game import Game
-from agent import Agent, Networks
+from agent import Agent, Networks, Learners
 from collector import Collector
 from auxillaries import loop, person, random
 
 collector = Collector()
 env = Game()
-agent = Agent(env, Networks.Small)
+agent = Agent(env, Networks.Small, Learners.Qlearn)
 
 
 for frame in loop(env, collector):
