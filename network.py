@@ -1,6 +1,8 @@
 import torch.nn as nn
 from enum import Enum
 from torch import cat, Tensor
+import pickle
+from helper import device
 
 
 class Networks(Enum):
@@ -8,10 +10,10 @@ class Networks(Enum):
 
 
 class Network(nn.Module):
-    def __init__(self, dim: int, networks: Networks):
+    def __init__(self, dim: int, network: Networks):
         super(Network, self).__init__()
-        if networks == Networks.Small:
-            self.model = nn.Sequential(nn.Conv2d(dim, 8, 3), nn.ReLU(), nn.Conv2d(8, 12, 3), nn.ReLU(), nn.Conv2d(12, 12, 3), nn.ReLU(), nn.Conv2d(12, 12, 3), nn.ReLU(), nn.Conv2d(12, 16, 3), nn.ReLU(), nn.Conv2d(16, 2, 5), nn.Flatten(), nn.Softmax(1))
+        if network == Networks.Small:
+            self.model = nn.Sequential(nn.Conv2d(dim, 8, 3), nn.ReLU(), nn.Conv2d(8, 12, 3), nn.ReLU(), nn.Conv2d(12, 12, 3), nn.ReLU(), nn.Conv2d(12, 12, 3), nn.ReLU(), nn.Conv2d(12, 16, 3), nn.ReLU(), nn.Conv2d(16, 4, 5), nn.Flatten(), nn.Softmax(1))
 
     def forward(self, x: Tensor):
         return self.model(x)
@@ -22,10 +24,11 @@ class Network(nn.Module):
 
 
 class Net:
-    def __init__(self, dim: int, networks: Networks):
-        self.network = Network(dim, networks)
-        self.placeholder = Network(dim, networks)
-        self.target = Network(dim, networks)
+    def __init__(self, dim: int, network: Networks):
+        self.network = Network(dim, network).to(device)
+        self.placeholder = Network(dim, network).to(device)
+        self.target = Network(dim, network).to(device)
 
     def update(self):
-        pass
+        self.target = pickle.loads(pickle.dumps(self.placeholder))
+        self.placeholder = pickle.loads(pickle.dumps(self.network))

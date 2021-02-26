@@ -1,9 +1,8 @@
 from time import time
-from typing import Iterator, List, Tuple
+from typing import Iterator, List
 from collector import Collector
 from game import Game
 from random import choice
-from torch import  device as devicer, cuda
 
 
 class States:
@@ -40,7 +39,7 @@ def loop(game: Game, collector: Collector) -> Iterator[int]:
         while States.running:
             f += 1
             if States.draw:
-                Paint(game)
+                Paint(game, f)
             if States.showPrint:
                 collector.show(game)
                 States.showPrint = False
@@ -66,5 +65,3 @@ def person(game: Game) -> List[int]:
 
 def random(game: Game) -> List[int]:
     return [choice([0, 1, 2, 3]) for _ in range(game.batch)]
-
-device = devicer('cuda' if cuda.is_available() else 'cpu')

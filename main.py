@@ -4,11 +4,10 @@ from collector import Collector
 from auxillaries import loop, person, random
 
 collector = Collector()
-game = Game()
-meta = Agent(game, Networks.Small)
+env = Game()
+agent = Agent(env, Networks.Small)
 
 
-for frame in loop(game, collector):
-    print(meta(game.board))
-    game.step(person(game))
-    print(frame)
+for frame in loop(env, collector):
+    env.step(agent(env))
+    # agent.learn()

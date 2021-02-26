@@ -21,13 +21,14 @@ class Paint:
     size = 50
 
     @staticmethod
-    def __init__(game: Game) -> None:
+    def __init__(game: Game, frame: int) -> None:
         with screen(Colors.gray.c300):
             for shape, color, size, x, y in game.layers.getColorable():
                 if shape == Shape.Circle:
                     Paint.drawCircle(color, size, x, y)
                 elif shape == Shape.Square:
                     Paint.drawRect(color, size, x, y)
+            Paint.write(f"Frames: {frame}", game.layers.width/2, 0)
 
     @staticmethod
     def drawRect(color: Color, size: int, x: int, y: int) -> None:
@@ -43,12 +44,19 @@ class Paint:
         States.draw = True
 
     @staticmethod
+    def write(text: str, x: float, y: float, size: int = 30, color: Color = Colors.gray.c900, center: bool = True) -> None:
+        # pygame.font.init()
+        myfont = Paint.pygame.font.SysFont('Comic Sans MS', size)
+        textsurface = myfont.render(text, True, color.color)
+        Paint.screen.blit(textsurface, (x*Paint.size - (textsurface.get_width()/2)*center, y*Paint.size))
+
+    @ staticmethod
     def stop() -> None:
         States.draw = False
         Paint.pygame.quit()
         Paint.screen = None
 
-    @staticmethod
+    @ staticmethod
     def switch(width: int, height: int) -> None:
         if States.draw:
             Paint.stop()

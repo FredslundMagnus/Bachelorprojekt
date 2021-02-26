@@ -1,4 +1,5 @@
 from torch import tensor, Tensor
+from helper import device
 from layers import Layers, LayerType
 from typing import List, Tuple
 
@@ -13,7 +14,7 @@ class Game:
 
     @property
     def board(self) -> Tensor:
-        return tensor(self.layers.board)
+        return tensor(self.layers.board, device=device)
 
     def step(self, action: List[int]) -> Tuple[Tensor, List[float], List[int], List[dict]]:
         self.layers.step(action)
