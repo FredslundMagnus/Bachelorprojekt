@@ -9,5 +9,6 @@ agent = Agent(env, Networks.Small)
 
 
 for frame in loop(env, collector):
-    env.step(agent(env))
+    actions = agent(env)
+    env.step(actions)
     # agent.learn()
