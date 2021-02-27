@@ -24,9 +24,9 @@ def getvals(defaults):
     return params
 
 
-# def serverRun():
-#     showParams(None)
-#     profilingStats()
+def serverRun(params):
+    showParams(params)
+    profilingStats()
 
 
 # def saveAgent(agent, name: str):

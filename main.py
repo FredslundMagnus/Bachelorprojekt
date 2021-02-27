@@ -2,7 +2,7 @@ from game import Game
 from agent import Agent, Networks, Learners
 from collector import Collector
 from auxillaries import loop, person, random
-from Utils.server import getvals
+from Utils.server import getvals, isServer, serverRun
 
 
 class Defaults:
@@ -30,4 +30,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    (serverRun(getvals(Defaults)) if isServer else main())
