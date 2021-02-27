@@ -15,7 +15,7 @@ class States:
 
 
 def loop(game: Game, collector: Collector) -> Iterator[int]:
-    if False:  # is server
+    if isServer:
         tid, f = time() + 3600 * game.hours - 300, 0
         while time() < tid:
             f += 1
