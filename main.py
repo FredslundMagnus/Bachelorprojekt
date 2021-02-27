@@ -23,7 +23,8 @@ def main(defaults):
     for frame in loop(env, collector):
         actions = agent(env)
         observations, rewards, dones = env.step(actions)
-        # agent.learn(observations, actions, rewards, dones)
+        if frame == 3000:
+            agent.learn(observations, actions, rewards, dones)
         collector.collect(actions)
 
 
