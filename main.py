@@ -1,8 +1,8 @@
+import sys
 from game import Game
 from agent import Agent, Networks, Learners
 from collector import Collector
-from auxillaries import loop, person, random
-from Utils.server import getvals, isServer, serverRun
+from auxillaries import run, loop, person, random
 
 
 class Defaults:
@@ -16,8 +16,7 @@ class Defaults:
     height: int = 15
 
 
-def main():
-    defaults = getvals(Defaults)
+def main(defaults):
     collector = Collector()
     env = Game(**defaults)
     agent = Agent(env, **defaults)
@@ -29,5 +28,4 @@ def main():
         collector.collect(actions)
 
 
-if __name__ == "__main__":
-    (serverRun(getvals(Defaults)) if isServer else main())
+run(Defaults, main)

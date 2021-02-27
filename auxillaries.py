@@ -3,6 +3,8 @@ from typing import Iterator, List
 from collector import Collector
 from game import Game
 from random import choice
+from Utils.server import getvals, isServer, serverRun
+import sys
 
 
 class States:
@@ -65,3 +67,8 @@ def person(game: Game) -> List[int]:
 
 def random(game: Game) -> List[int]:
     return [choice([0, 1, 2, 3]) for _ in range(game.batch)]
+
+
+def run(Defaults, main):
+    if sys.argv[0].split("\\")[-1].split("/")[-1] == "main.py":
+        (serverRun if isServer else main).__call__(getvals(Defaults))
