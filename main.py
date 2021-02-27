@@ -23,7 +23,7 @@ def main(defaults):
     for frame in loop(env, collector):
         actions = agent(env)
         observations, rewards, dones = env.step(actions)
-        agent.learn(observations, actions, rewards, dones)
+        # agent.learn(observations, actions, rewards, dones)
         collector.collect(actions)
 
 

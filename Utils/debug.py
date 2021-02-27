@@ -1,3 +1,4 @@
+import traceback
 from pstats import func_get_function_name, func_std_string, f8, Stats
 import os
 import time
@@ -65,9 +66,12 @@ def profilingStats():
 class Timer:
     def __init__(self) -> None:
         self.start = time.time()
-        cProfile.run(
-            """from auxillaries import getvals
+        try:
+            cProfile.run(
+                """from auxillaries import getvals
 main(getvals(Defaults))""", 'stats')
+        except Exception:
+            self.error = traceback.format_exc()
         self.time = time.time() - self.start
         self.minutes = int(self.time // 60)
         self.hours = int(self.time // 3600)
@@ -89,6 +93,8 @@ def showParams(params):
     disablePrint()
     timer = Timer()
     enablePrint()
+    if timer.error:
+        print(timer.error)
     print('')
 
     for key, value in params.items():
