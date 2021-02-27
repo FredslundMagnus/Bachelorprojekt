@@ -96,8 +96,7 @@ def showParams(params):
     enablePrint()
     if timer.error:
         print(timer.error)
-    print('')
-
+    print("\n# Parameters\n")
     for key, value in params.items():
         print(f'    {(key.capitalize().replace("_", " ") + " :").ljust(28)}{value}')
 
