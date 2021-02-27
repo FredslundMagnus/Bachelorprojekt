@@ -65,7 +65,9 @@ def profilingStats():
 class Timer:
     def __init__(self) -> None:
         self.start = time.time()
-        cProfile.run("main(getvals(Defaults))", 'stats')
+        cProfile.run(
+            """from auxillaries import getvals
+main(getvals(Defaults))""", 'stats')
         self.time = time.time() - self.start
         self.minutes = int(self.time // 60)
         self.hours = int(self.time // 3600)

@@ -1,8 +1,7 @@
-import sys
 from game import Game
 from agent import Agent, Networks, Learners
 from collector import Collector
-from auxillaries import run, loop, person, random, getvals
+from auxillaries import run, loop, person, random
 
 
 class Defaults:
