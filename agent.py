@@ -7,9 +7,9 @@ from typing import List
 
 
 class Agent:
-    def __init__(self, game: Game, network: Networks = Networks.Small, learner: Learners = Learners.DoubleQlearn) -> None:
+    def __init__(self, game: Game, network: Networks = None, learner: Learners = None, **kwargs) -> None:
         self.net = Net(len(game.layers), network)
-        self.learner = Learner(self.net, learner)
+        self.learner = Learner(self.net, learner, **kwargs)
 
     def __call__(self, game: Game) -> Tensor:
         temp: Tensor = self.net.network(game.board)

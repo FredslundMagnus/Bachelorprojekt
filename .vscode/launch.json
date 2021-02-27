@@ -5,11 +5,43 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Current File",
+            "name": "Main Run",
             "type": "python",
             "request": "launch",
-            "program": "main.py",
+            "env": { "PYTHONPATH": "${workspaceRoot}" },
+            "cwd": "${workspaceRoot}",
+            "program": "${workspaceFolder}\\main.py",
             "console": "integratedTerminal"
-        }
+          },
+          {
+            "name": "Simulate Server",
+            "type": "python",
+            "request": "launch",
+            "env": { "PYTHONPATH": "${workspaceRoot}" },
+            "cwd": "${workspaceRoot}",
+            "program": "${workspaceFolder}\\main.py",
+            "console": "integratedTerminal",
+            "args": [
+              "-name",
+              "testing_name",
+              "-learner",
+              "Learners.DoubleQlearn",
+              "-hours",
+              "10",
+              "-batch",
+              "10",
+              "-gamma",
+              "0.54"
+            ]
+          },
+          {
+            "name": "Generate Experiments",
+            "type": "python",
+            "request": "launch",
+            "env": { "PYTHONPATH": "${workspaceRoot}" },
+            "cwd": "${workspaceRoot}",
+            "program": "${workspaceFolder}\\Utils\\generateExperiments.py",
+            "console": "integratedTerminal"
+          }
     ]
 }

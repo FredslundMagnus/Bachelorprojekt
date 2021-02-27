@@ -13,7 +13,7 @@ class Learners(Enum):
 
 
 class Learner():
-    def __init__(self, net: Net, learner: Learners, gamma: float = 0.99) -> None:
+    def __init__(self, net: Net, learner: Learners, gamma: float = None, **kwargs) -> None:
         self.net = net
         self.gamma = gamma
         self.criterion = MSELoss()
