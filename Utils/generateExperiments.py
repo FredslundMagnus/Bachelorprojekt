@@ -28,7 +28,7 @@ def genExperiments(name, n=1, **params):
         file.write(f'bsub -o "../outputs/{name}/Markdown/{name}_{i}.md" -J "{name}_{i}" -P "-name {name}-{i} {" ".join(f"-{name} {value}" for name, value in params.items())}" < submit.sh\n')
 
 
-genExperiments(f"test_run_4", gamma=1, network=Networks.Small, learner=Learners.DoubleQlearn, hours=0.2)
+genExperiments(f"test_run_5", gamma=1, network=Networks.Small, learner=Learners.DoubleQlearn, hours=0.2)
 
 
 file.close()

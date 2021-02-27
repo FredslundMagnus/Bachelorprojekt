@@ -66,6 +66,7 @@ def profilingStats():
 class Timer:
     def __init__(self) -> None:
         self.start = time.time()
+        self.error = None
         try:
             cProfile.run(
                 """from auxillaries import getvals
