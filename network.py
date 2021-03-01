@@ -16,7 +16,7 @@ class Network(nn.Module):
         if network == Networks.Small:
             self.model = nn.Sequential(nn.Conv2d(dim, 8, 3), nn.ReLU(), nn.Conv2d(8, 12, 3), nn.ReLU(), nn.Conv2d(12, 12, 3), nn.ReLU(), nn.Conv2d(12, 12, 3), nn.ReLU(), nn.Conv2d(12, 16, 3), nn.ReLU(), nn.Conv2d(16, 4, 5), nn.Flatten(), nn.Softmax(1))
         elif network == Networks.Large:
-            self.model = nn.Sequential(nn.Conv2d(dim, 16, 3), nn.ReLU(), nn.Conv2d(16, 24, 3), nn.ReLU(), nn.Conv2d(24, 36, 3), nn.ReLU(), nn.Conv2d(36, 24, 3), nn.ReLU(), nn.Conv2d(24, 16, 3), nn.ReLU(), nn.Conv2d(16, 4, 5), nn.Flatten(), nn.Softmax(1))
+            self.model = nn.Sequential(nn.Conv2d(dim, 32, 3), nn.ReLU(), nn.Conv2d(32, 64, 3), nn.ReLU(), nn.Conv2d(64, 64, 3), nn.ReLU(), nn.Conv2d(64, 64, 3), nn.ReLU(), nn.Conv2d(64, 32, 3), nn.ReLU(), nn.Conv2d(32, 4, 5), nn.Flatten(), nn.Softmax(1))
 
     def forward(self, x: Tensor):
         return self.model(x)
