@@ -18,6 +18,7 @@ class Defaults:
     hours: float = 12.0
     width: int = 15
     height: int = 15
+    update: int = 1000
 
 
 def main(defaults):

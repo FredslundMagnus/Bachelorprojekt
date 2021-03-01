@@ -27,11 +27,18 @@ class Network(nn.Module):
 
 
 class Net:
-    def __init__(self, dim: int, network: Networks):
+    def __init__(self, dim: int, network: Networks, update: int = None, **kwargs):
         self.network = Network(dim, network).to(device)
         self.placeholder = Network(dim, network).to(device)
         self.target = Network(dim, network).to(device)
+        self.i = 1
+        self.n = update
 
     def update(self):
         self.target = pickle.loads(pickle.dumps(self.placeholder))
         self.placeholder = pickle.loads(pickle.dumps(self.network))
+
+    def learn(self):
+        self.i += 1
+        if self.i % self.n == 0:
+            self.update()
