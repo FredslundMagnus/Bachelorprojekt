@@ -1,3 +1,4 @@
+from save import Save
 from time import time
 from typing import Iterator, List
 from collector import Collector
@@ -15,7 +16,7 @@ class States:
     draw = False
 
 
-def loop(game: Game, collector: Collector) -> Iterator[int]:
+def loop(game: Game, collector: Collector, save: Save) -> Iterator[int]:
     if isServer:
         tid, f = time() + 3600 * game.hours - 300, 0
         while time() < tid:

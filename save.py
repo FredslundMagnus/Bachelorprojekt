@@ -3,7 +3,7 @@ class Save:
         self.elements = args
 
     def __enter__(self):
-        return
+        return self
 
     def __exit__(self, type, value, traceback):
         self.save()
