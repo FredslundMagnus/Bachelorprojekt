@@ -5,6 +5,7 @@ from typing import List
 import sys
 from network import Networks
 from learner import Learners
+from exploration import Explorations
 isServer = checkServer()
 
 
@@ -19,7 +20,7 @@ def getvals(defaults):
         if s in params:
             if annotations[s] in {int, float, str, bool}:
                 params[s] = annotations[s].__call__(args[i + 1])
-            elif annotations[s] in {Networks, Learners}:
+            elif annotations[s] in {Networks, Learners, Explorations}:
                 params[s] = [e for e in annotations[s] if str(e) == str(args[i + 1])][0]
     return params
 

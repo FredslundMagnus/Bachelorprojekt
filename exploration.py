@@ -3,6 +3,7 @@ from torch.nn.functional import softmax
 from numpy.random import choice
 from enum import Enum
 import torch
+from torch import Tensor
 
 
 class Explorations(Enum):
@@ -18,6 +19,9 @@ class Exploration:
             self.explore = self.greedy
         elif exploration == Explorations.epsilonGreedy:
             self.explore = self.epsilonGreedy
+
+    def explore(self, vals: Tensor) -> Tensor:
+        pass
 
     @property
     def epsilon(self):
