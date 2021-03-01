@@ -9,10 +9,11 @@ class Explorations(Enum):
     greedy = 1
     epsilonGreedy = 0
 
-class Exploration():
+
+class Exploration:
     def __init__(self, exploration: Explorations, K: float = None, **kwargs) -> None:
         self.counter = 1
-        self.K = K
+        self._K = K
         if exploration == Explorations.softmax:
             self.explore = self.softmax
         elif exploration == Explorations.greedy:
@@ -26,7 +27,7 @@ class Exploration():
 
     @property
     def K(self):
-        return max(1, self.K / self.counter)
+        return max(1, self._K / self.counter)
 
     def softmax(self, vals):
         self.counter += 1
