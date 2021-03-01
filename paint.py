@@ -23,11 +23,12 @@ def screen(background: Color) -> None:
 
 class Paint:
     size = 50
+    dim = 0
 
     @staticmethod
     def __init__(game: Game, frame: int) -> None:
         with screen(Colors.gray.c300):
-            for shape, color, size, x, y in game.layers.getColorable():
+            for shape, color, size, x, y in game.layers.getColorable(Paint.dim):
                 if shape == Shape.Circle:
                     Paint.drawCircle(color, size, x, y)
                 elif shape == Shape.Square:

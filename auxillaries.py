@@ -24,21 +24,35 @@ def loop(game: Game, collector: Collector, save: Save) -> Iterator[int]:
             yield f
 
     else:
-        from pynput import keyboard
+        from pynput.keyboard import Key, Listener
         from paint import Paint
 
+        current = set()
+
         def on_press(key):
-            if keyboard.Key.esc == key:
+            current.add(key)
+            ctrl: bool = Key.ctrl_l in current or Key.ctrl_r in current
+            if Key.esc == key:
                 Paint.stop()
                 States.running = False
-            if keyboard.Key.f2 == key:
+            elif Key.f2 == key:
                 States.showPrint = True
-            if keyboard.Key.f3 == key:
+            elif Key.f3 == key:
                 States.save = True
-            if keyboard.Key.f4 == key:
+            elif Key.f4 == key:
                 Paint.switch(game.layers.width, game.layers.height)
+            elif Key.left == key and ctrl:
+                Paint.dim -= 1
+            elif Key.right == key and ctrl:
+                Paint.dim += 1
 
-        keyboard.Listener(on_press=on_press).start()
+        def on_release(key):
+            try:
+                current.remove(key)
+            except KeyError:
+                pass
+
+        Listener(on_press=on_press, on_release=on_release).start()
         f = 0
         while States.running:
             f += 1

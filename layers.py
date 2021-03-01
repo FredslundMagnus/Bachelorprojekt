@@ -204,9 +204,9 @@ class Layers:
         rewards, dones = self.update()
         return rewards, dones
 
-    def getColorable(self):
+    def getColorable(self, dim: int):
         for layer in self.layers:
-            for x, y in layer.positions[0]:
+            for x, y in layer.positions[dim % self.batch]:
                 yield layer.shape, layer.color, layer.size, x, y
 
     def isFree(self, batch: int, pos: Tuple[int, int]):

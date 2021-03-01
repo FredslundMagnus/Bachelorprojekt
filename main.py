@@ -9,7 +9,7 @@ class Defaults:
     name: str = "Agent"
     network1: Networks = Networks.Large
     learner1: Learners = Learners.DoubleQlearn
-    network2: Networks = Networks.Small
+    network2: Networks = Networks.Mini
     learner2: Learners = Learners.DoubleQlearn
     gamma: float = 0.99
     exploration1: Explorations = Explorations.epsilonGreedy
@@ -17,8 +17,8 @@ class Defaults:
     K: float = 10**6
     batch: int = 100
     hours: float = 12.0
-    width: int = 11
-    height: int = 11
+    width: int = 9
+    height: int = 9
     update: int = 1000
 
 
