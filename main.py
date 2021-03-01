@@ -14,11 +14,11 @@ class Defaults:
     gamma: float = 0.99
     exploration1: Explorations = Explorations.epsilonGreedy
     exploration2: Explorations = Explorations.epsilonGreedy
-    K: float = 10**6
+    K: float = 10**5
     batch: int = 100
     hours: float = 12.0
-    width: int = 15
-    height: int = 15
+    width: int = 9
+    height: int = 9
     update: int = 1000
 
 
