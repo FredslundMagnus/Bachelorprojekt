@@ -24,8 +24,8 @@ class Agent(metaclass=ABCMeta):
 
 
 class Teleport_intervention(Agent):
-    def __init__(self, game: Game, network1: Networks = None, learner1: Learners = None, **kwargs) -> None:
-        super().__init__(game, network1, learner1, kwargs)
+    def __init__(self, game: Game, network1: Networks = None, learner1: Learners = None, exploration: Explorations = None, **kwargs) -> None:
+        super().__init__(game, network1, learner1, exploration, kwargs)
 
     def __call__(self, board: Tensor) -> Tensor:
         temp: Tensor = self.net.network(board)
@@ -37,8 +37,8 @@ class Teleport_intervention(Agent):
 
 
 class Mover(Agent):
-    def __init__(self, game: Game, network2: Networks = None, learner2: Learners = None, **kwargs) -> None:
-        super().__init__(game, network2, learner2, kwargs)
+    def __init__(self, game: Game, network2: Networks = None, learner2: Learners = None, exploration: Explorations = None, **kwargs) -> None:
+        super().__init__(game, network2, learner2, exploration, kwargs)
 
     def __call__(self, board: Tensor) -> Tensor:
         temp: Tensor = self.net.network(board)
