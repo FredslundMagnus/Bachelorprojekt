@@ -15,9 +15,9 @@ class Network(nn.Module):
     def __init__(self, dim: int, network: Networks):
         super(Network, self).__init__()
         if network == Networks.Small:
-            self.model = nn.Sequential(nn.Conv2d(dim, 8, 3), nn.ReLU(), nn.Conv2d(8, 12, 3), nn.ReLU(), nn.Conv2d(12, 12, 3), nn.ReLU(), nn.Conv2d(12, 12, 3), nn.ReLU(), nn.Conv2d(12, 16, 3), nn.ReLU(), nn.Conv2d(16, 4, 5), nn.Flatten(), nn.Softmax(1))
+            self.model = nn.Sequential(nn.Conv2d(dim, 8, 3), nn.ReLU(), nn.Conv2d(8, 12, 3), nn.ReLU(), nn.Conv2d(12, 12, 3), nn.ReLU(), nn.Conv2d(12, 12, 3), nn.ReLU(), nn.Conv2d(12, 16, 3), nn.ReLU(), nn.Conv2d(16, 4, 1), nn.Flatten(), nn.Softmax(1))
         elif network == Networks.Large:
-            self.model = nn.Sequential(nn.Conv2d(dim, 32, 3), nn.ReLU(), nn.Conv2d(32, 64, 3), nn.ReLU(), nn.Conv2d(64, 128, 3), nn.ReLU(), nn.Conv2d(128, 64, 3), nn.ReLU(), nn.Conv2d(64, 32, 3), nn.ReLU(), nn.Conv2d(32, 4, 5), nn.Flatten(), nn.Softmax(1))
+            self.model = nn.Sequential(nn.Conv2d(dim, 32, 3), nn.ReLU(), nn.Conv2d(32, 64, 3), nn.ReLU(), nn.Conv2d(64, 128, 3), nn.ReLU(), nn.Conv2d(128, 64, 3), nn.ReLU(), nn.Conv2d(64, 32, 3), nn.ReLU(), nn.Conv2d(32, 4, 1), nn.Flatten(), nn.Softmax(1))
         elif network == Networks.Mini:
             self.model = nn.Sequential(nn.Conv2d(dim, 32, 3), nn.ReLU(), nn.Conv2d(32, 32, 3), nn.ReLU(), nn.Conv2d(32, 4, 5), nn.Flatten(), nn.Softmax(1))
 

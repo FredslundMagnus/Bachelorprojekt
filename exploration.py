@@ -30,14 +30,8 @@ class Exploration:
 
     def greedy(self, vals):
         self.counter += 1
-        vals = torch.flatten(vals.detach(), start_dim=1)
-        return torch.max(vals, dim=1)
+        return torch.argmax(vals.detach(), dim=1)
 
     def epsilonGreedy(self, vals):
         self.counter += 1
-        vals = torch.flatten(vals.detach(), start_dim=1)
-        if random() > self.epsilon:
-            return torch.max(vals, dim=1)
-        else:
-            idx = torch.tensor(choice(vals.shape[1], vals.shape[0]), device=device).long()
-            return torch.gather(vals, 0, idx.unsqueeze(1)).squeeze(1), idx
+        return torch.argmax(vals.detach(), dim=1) if random() > self.epsilon else torch.tensor(choice(vals.shape[1], vals.shape[0]), device=device).long()

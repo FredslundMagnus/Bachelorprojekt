@@ -27,20 +27,22 @@ class Learner():
         pass
 
     def DoubleQlearn(self, value_before: Tensor, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor):
-        vals_next = torch.flatten(self.net.network(state_after), start_dim=1)
-        vals_target_next = torch.flatten(self.net.target(state_after), start_dim=1)
-        value_next = torch.gather(vals_target_next, 0, torch.argmax(vals_next, 1).unsqueeze(1))
+        vals_next = self.net.network(state_after)
+        vals_target_next = self.net.target(state_after)
+        value_next = torch.gather(vals_target_next, 0, torch.argmax(vals_next, 1).unsqueeze(1)).squeeze(1)
         td_target = (value_next.view(-1) * self.gamma * (1 - done) + reward).view(-1).detach()
-        loss_value_network = self.criterion(value_before, td_target)
+        action_value_before = torch.gather(value_before, 0, action.unsqueeze(1)).squeeze(1)
+        loss_value_network = self.criterion(action_value_before, td_target)
         loss_value_network.backward()
         self.optimizer.step()
         self.optimizer.zero_grad()
 
     def Qlearn(self, value_before: Tensor, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor):
-        vals_target_next = torch.flatten(self.net.target(state_after), start_dim=1)
+        vals_target_next = self.net.target(state_after)
         value_next, _ = torch.max(vals_target_next, 1)
         td_target = (value_next.view(-1) * self.gamma * (1 - done) + reward).view(-1).detach()
-        loss_value_network = self.criterion(value_before, td_target)
+        action_value_before = torch.gather(value_before, 0, action.unsqueeze(1)).squeeze(1)
+        loss_value_network = self.criterion(action_value_before, td_target)
         loss_value_network.backward()
         self.optimizer.step()
         self.optimizer.zero_grad()
