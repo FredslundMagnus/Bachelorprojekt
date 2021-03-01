@@ -6,7 +6,7 @@ from auxillaries import run, loop, person, random
 
 class Defaults:
     name: str = "Agent"
-    network1: Networks = Networks.Large
+    network1: Networks = Networks.Small
     learner1: Learners = Learners.DoubleQlearn
     network2: Networks = Networks.Small
     learner2: Learners = Learners.DoubleQlearn
