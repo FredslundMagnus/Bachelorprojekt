@@ -5,6 +5,7 @@ from game import Game
 from random import choice
 from Utils.server import getvals, isServer, serverRun
 import sys
+from torch import tensor
 
 
 class States:
@@ -61,12 +62,12 @@ def person(game: Game) -> List[int]:
                 if event.key in d:
                     action = d[event.key]
     if action == None:
-        return [0 for _ in range(game.batch)]
-    return [action for _ in range(game.batch)]
+        return tensor([0 for _ in range(game.batch)])
+    return tensor([action for _ in range(game.batch)])
 
 
 def random(game: Game) -> List[int]:
-    return [choice([0, 1, 2, 3]) for _ in range(game.batch)]
+    return tensor([choice([0, 1, 2, 3]) for _ in range(game.batch)])
 
 
 def run(Defaults, main):
