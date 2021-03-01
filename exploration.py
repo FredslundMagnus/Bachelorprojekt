@@ -2,11 +2,11 @@ from random import random
 from torch.nn.functional import softmax
 from numpy.random import choice
 from enum import Enum
+import torch
 from torch import Tensor
 
 
 class Explorations(Enum):
-    softmax = 0
     greedy = 1
     epsilonGreedy = 0
 
@@ -15,9 +15,7 @@ class Exploration:
     def __init__(self, exploration: Explorations, K: float = None, **kwargs) -> None:
         self.counter = 1
         self._K = K
-        if exploration == Explorations.softmax:
-            self.explore = self.softmax
-        elif exploration == Explorations.greedy:
+        if exploration == Explorations.greedy:
             self.explore = self.greedy
         elif exploration == Explorations.epsilonGreedy:
             self.explore = self.epsilonGreedy
@@ -33,14 +31,17 @@ class Exploration:
     def K(self):
         return max(1, self._K / self.counter)
 
-    def softmax(self, vals):
-        self.counter += 1
-        return int(choice(44, 1, p=softmax(vals.view(-1) / self.K, dim=0).detach().cpu().numpy()))
-
     def greedy(self, vals):
         self.counter += 1
-        return vals.detach().cpu().numpy().argmax()
+        vals = torch.flatten(vals.detach(), start_dim=1)
+        return torch.max(vals, dim=1)
 
     def epsilonGreedy(self, vals):
         self.counter += 1
-        return int(choice(44, 1)) if random() < self.epsilon else vals.detach().cpu().numpy().argmax()
+        vals = torch.flatten(vals.detach(), start_dim=1)
+
+        if random() > self.epsilon:
+            return torch.max(vals, dim=1)
+        else:
+            idx = torch.tensor(choice(vals.shape[1], vals.shape[0])).long()
+            return torch.gather(vals, 0, idx.unsqueeze(1)).squeeze(1), idx
