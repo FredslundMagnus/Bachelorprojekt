@@ -16,7 +16,8 @@ def screen(background: Color) -> None:
     finally:
         try:
             Paint.pygame.display.update()
-            # Paint.pygame.time.delay(round(1000 / 60))
+            if States.slow:
+                Paint.pygame.time.delay(round(200))
         except Exception as e:
             pass
 

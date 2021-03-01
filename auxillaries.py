@@ -14,6 +14,7 @@ class States:
     showPrint = False
     save = False
     draw = False
+    slow = False
 
 
 def loop(game: Game, collector: Collector, save: Save) -> Iterator[int]:
@@ -45,6 +46,8 @@ def loop(game: Game, collector: Collector, save: Save) -> Iterator[int]:
                 Paint.dim -= 1
             elif Key.right == key and ctrl:
                 Paint.dim += 1
+            elif "'s'" == str(key):
+                States.slow = not States.slow
 
         def on_release(key):
             try:
