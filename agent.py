@@ -32,7 +32,7 @@ class Teleport_intervention(Agent):
         super().__init__(game, network1, learner1, exploration1, **kwargs)
 
     def __call__(self, board: Tensor) -> Tensor:
-        vals: Tensor = self.net.network(board)
+        self.values: Tensor = self.net.network(board)
         self.values, actions = self.exploration.explore(vals)
         return actions
 
@@ -45,7 +45,7 @@ class Mover(Agent):
         super().__init__(game, network2, learner2, exploration2, **kwargs)
 
     def __call__(self, board: Tensor) -> Tensor:
-        vals: Tensor = self.net.network(board)
+        self.values: Tensor = self.net.network(board)
         self.values, actions = self.exploration.explore(vals)
         return actions
 
