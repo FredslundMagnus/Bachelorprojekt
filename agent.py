@@ -21,7 +21,7 @@ class Agent(metaclass=ABCMeta):
         pass
 
 
-class Agent1(Agent):
+class Teleport_intervention(Agent):
     def __init__(self, game: Game, network1: Networks = None, learner1: Learners = None, **kwargs) -> None:
         super().__init__(game, network1, learner1, kwargs)
 
@@ -34,7 +34,7 @@ class Agent1(Agent):
         self.learner.learn(self.values, state_after, action, reward, done)
 
 
-class Agent2(Agent):
+class Mover(Agent):
     def __init__(self, game: Game, network2: Networks = None, learner2: Learners = None, **kwargs) -> None:
         super().__init__(game, network2, learner2, kwargs)
 
