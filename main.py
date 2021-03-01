@@ -1,5 +1,5 @@
 from game import Game
-from agent import Agent1, Networks, Learners
+from agent import Teleport_intervention, Mover, Networks, Learners
 from collector import Collector
 from auxillaries import run, loop, person, random
 
@@ -20,7 +20,7 @@ class Defaults:
 def main(defaults):
     collector = Collector()
     env = Game(**defaults)
-    agent = Agent1(env, **defaults)
+    agent = Mover(env, **defaults)
 
     for frame in loop(env, collector):
         actions = agent(env)
