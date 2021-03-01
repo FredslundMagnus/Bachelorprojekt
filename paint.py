@@ -13,8 +13,11 @@ def screen(background: Color) -> None:
     try:
         yield
     finally:
-        Paint.pygame.display.update()
-        Paint.pygame.time.delay(round(1000 / 60))
+        try:
+            Paint.pygame.display.update()
+            # Paint.pygame.time.delay(round(1000 / 60))
+        except Exception as e:
+            pass
 
 
 class Paint:
@@ -45,7 +48,7 @@ class Paint:
 
     @staticmethod
     def write(text: str, x: float, y: float, size: int = 30, color: Color = Colors.gray.c900, center: bool = True) -> None:
-        # pygame.font.init()
+        pygame.font.init()
         myfont = Paint.pygame.font.SysFont('Comic Sans MS', size)
         textsurface = myfont.render(text, True, color.color)
         Paint.screen.blit(textsurface, (x*Paint.size - (textsurface.get_width()/2)*center, y*Paint.size))

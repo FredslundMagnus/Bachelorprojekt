@@ -9,7 +9,7 @@ from exploration import Exploration
 
 
 class Agent(metaclass=ABCMeta):
-    def __init__(self, game: Game, network: Networks, learner: Learners, exploration: Exploration, kwargs) -> None:
+    def __init__(self, game: Game, network: Networks, learner: Learners, exploration: Exploration, kwargs: dict) -> None:
         self.net = Net(len(game.layers), network)
         self.learner = Learner(self.net, learner, **kwargs)
         self.exploration = Exploration(exploration, **kwargs)
