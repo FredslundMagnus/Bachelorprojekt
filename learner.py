@@ -38,10 +38,10 @@ class Learner():
         self.optimizer.zero_grad()
 
     def Qlearn(self, value_before: Tensor, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor):
-        vals_target_next = self.net.target(state_after)
-        value_next, input_indexes = torch.max(vals_target_next, 1)
+        vals_target_next = torch.flatten(self.net.target(state_after), start_dim=1)
+        value_next, _ = torch.max(vals_target_next, 1)
         td_target = (value_next.view(-1) * self.gamma * (1 - done) + reward).view(-1)
-        td_guess = torch.gather(value_before, 2, action.long().view(-1, 1, 1)).view(-1)
+        td_guess = torch.gather(value_before, 0, action)
         loss_value_network = self.criterion(td_guess, td_target)
         loss_value_network.backward()
         self.optimizer.step()
