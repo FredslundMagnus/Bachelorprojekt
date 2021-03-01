@@ -1,12 +1,13 @@
 class Save:
-    def __init__(self, *args):
+    def __init__(self, *args, name: str = None, **kwargs):
+        self.name = name
         self.elements = args
 
     def __enter__(self):
-        return
+        return self
 
     def __exit__(self, type, value, traceback):
         self.save()
 
     def save(self):
-        pass
+        print(f"Now i shold Save something {self.name}")
