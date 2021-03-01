@@ -27,9 +27,10 @@ class Learner():
         pass
 
     def DoubleQlearn(self, value_before: Tensor, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor):
-        vals_next = self.net.network(state_after)
-        vals_target_next = self.net.target(state_after)
-        value_next = torch.gather(vals_target_next, 2, torch.argmax(vals_next, 2).unsqueeze(2))
+        vals_next = torch.flatten(self.net.network(state_after), start_dim=1)
+        vals_target_next = torch.flatten(self.net.target(state_after), start_dim=1)
+        value_next = torch.gather(vals_target_next, 0, torch.argmax(vals_next, 1).unsqueeze(1))
+        print(self.gamma)
         td_target = (value_next.view(-1) * self.gamma * (1 - done) + reward).view(-1)
         td_guess = torch.gather(value_before, 2, action.long().view(-1, 1, 1)).view(-1)
         loss_value_network = self.criterion(td_guess, td_target)

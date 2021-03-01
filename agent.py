@@ -8,7 +8,7 @@ from abc import ABCMeta, abstractmethod
 
 
 class Agent(metaclass=ABCMeta):
-    def __init__(self, game: Game, network: Networks, learner: Learners, kwargs) -> None:
+    def __init__(self, game: Game, network: Networks, learner: Learners, **kwargs) -> None:
         self.net = Net(len(game.layers), network)
         self.learner = Learner(self.net, learner, kwargs)
 
