@@ -1,5 +1,6 @@
 class Save:
-    def __init__(self, *args):
+    def __init__(self, *args, name: str = None, **kwargs):
+        self.name = name
         self.elements = args
 
     def __enter__(self):
@@ -9,4 +10,4 @@ class Save:
         self.save()
 
     def save(self):
-        print("Now i shold Save something")
+        print(f"Now i shold Save something {self.name}")
