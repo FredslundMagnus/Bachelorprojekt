@@ -7,18 +7,18 @@ from save import Save
 
 class Defaults:
     name: str = "Agent"
-    network1: Networks = Networks.Large
+    network1: Networks = Networks.Small
     learner1: Learners = Learners.Qlearn
-    network2: Networks = Networks.Small
+    network2: Networks = Networks.Mini
     learner2: Learners = Learners.Qlearn
     gamma: float = 0.99
     exploration1: Explorations = Explorations.epsilonGreedy
     exploration2: Explorations = Explorations.epsilonGreedy
-    K: float = 10**6
+    K: float = 10**5
     batch: int = 100
     hours: float = 12.0
-    width: int = 15
-    height: int = 15
+    width: int = 9
+    height: int = 9
     update: int = 1000
 
 
