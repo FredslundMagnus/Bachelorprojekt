@@ -28,8 +28,8 @@ class Teleport_intervention(Agent):
         super().__init__(game, network1, learner1, exploration1, kwargs)
 
     def __call__(self, board: Tensor) -> Tensor:
-        temp: Tensor = self.net.network(board)
-        self.values, actions = torch.max(temp, dim=1)
+        vals: Tensor = self.net.network(board)
+        self.values, actions = self.exploration.explore(vals)
         return actions
 
     def learn(self, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor):
@@ -41,8 +41,8 @@ class Mover(Agent):
         super().__init__(game, network2, learner2, exploration2, kwargs)
 
     def __call__(self, board: Tensor) -> Tensor:
-        temp: Tensor = self.net.network(board)
-        self.values, actions = torch.max(temp, dim=1)
+        vals: Tensor = self.net.network(board)
+        self.values, actions = self.exploration.explore(vals)
         return actions
 
     def learn(self, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor):
