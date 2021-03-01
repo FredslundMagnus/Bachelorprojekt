@@ -2,6 +2,7 @@ from game import Game
 from agent import Teleport_intervention, Mover, Networks, Learners, Explorations
 from collector import Collector
 from auxillaries import run, loop, person, random
+from save import Save
 
 
 class Defaults:
@@ -27,14 +28,15 @@ def main(defaults):
     mover = Mover(env, **defaults)
     # teleporter = Teleport_intervention(env, **defaults)
 
-    for frame in loop(env, collector):
-        # modified_board, intervention = teleporter(env.board)
-        actions = mover(env.board)  # mover(modified_board)
-        observations, rewards, dones = env.step(actions)
-        # modified_observations, modified_rewards, modified_dones = teleporter.modify(observations)
-        mover.learn(observations, actions, rewards, dones)  # mover.learn(modified_observations, actions, modified_rewards, modified_dones)
-        # teleporter.learn(observations, intervention, rewards, dones)
-        collector.collect(actions)
+    with Save(collector, mover):
+        for frame in loop(env, collector):
+            # modified_board, intervention = teleporter(env.board)
+            actions = mover(env.board)  # mover(modified_board)
+            observations, rewards, dones = env.step(actions)
+            # modified_observations, modified_rewards, modified_dones = teleporter.modify(observations)
+            mover.learn(observations, actions, rewards, dones)  # mover.learn(modified_observations, actions, modified_rewards, modified_dones)
+            # teleporter.learn(observations, intervention, rewards, dones)
+            collector.collect(actions)
 
 
 run(Defaults, main)
