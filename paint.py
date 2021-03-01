@@ -13,8 +13,11 @@ def screen(background: Color) -> None:
     try:
         yield
     finally:
-        Paint.pygame.display.update()
-        Paint.pygame.time.delay(round(1000 / 60))
+        try:
+            Paint.pygame.display.update()
+            # Paint.pygame.time.delay(round(1000 / 60))
+        except Exception as e:
+            pass
 
 
 class Paint:
