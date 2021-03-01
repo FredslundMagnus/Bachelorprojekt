@@ -7,6 +7,7 @@ from helper import device
 
 class Networks(Enum):
     Small = 0
+    Large = 1
 
 
 class Network(nn.Module):
@@ -14,6 +15,8 @@ class Network(nn.Module):
         super(Network, self).__init__()
         if network == Networks.Small:
             self.model = nn.Sequential(nn.Conv2d(dim, 8, 3), nn.ReLU(), nn.Conv2d(8, 12, 3), nn.ReLU(), nn.Conv2d(12, 12, 3), nn.ReLU(), nn.Conv2d(12, 12, 3), nn.ReLU(), nn.Conv2d(12, 16, 3), nn.ReLU(), nn.Conv2d(16, 4, 5), nn.Flatten(), nn.Softmax(1))
+        elif network == Networks.Large:
+            self.model = nn.Sequential(nn.Conv2d(dim, 16, 3), nn.ReLU(), nn.Conv2d(16, 24, 3), nn.ReLU(), nn.Conv2d(24, 36, 3), nn.ReLU(), nn.Conv2d(36, 24, 3), nn.ReLU(), nn.Conv2d(24, 16, 3), nn.ReLU(), nn.Conv2d(16, 4, 5), nn.Flatten(), nn.Softmax(1))
 
     def forward(self, x: Tensor):
         return self.model(x)
