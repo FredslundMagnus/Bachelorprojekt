@@ -8,9 +8,9 @@ from save import Save
 class Defaults:
     name: str = "Agent"
     network1: Networks = Networks.Large
-    learner1: Learners = Learners.Qlearn
+    learner1: Learners = Learners.DoubleQlearn
     network2: Networks = Networks.Small
-    learner2: Learners = Learners.Qlearn
+    learner2: Learners = Learners.DoubleQlearn
     gamma: float = 0.99
     exploration1: Explorations = Explorations.epsilonGreedy
     exploration2: Explorations = Explorations.epsilonGreedy

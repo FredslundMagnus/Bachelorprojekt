@@ -26,7 +26,7 @@ class Exploration:
 
     @property
     def epsilon(self):
-        return max(0, 1 - self.counter / self.K)
+        return max(0.1, 1 - self.counter / self.K)
 
     def greedy(self, vals):
         self.counter += 1
