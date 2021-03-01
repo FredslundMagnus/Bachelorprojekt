@@ -7,10 +7,10 @@ from save import Save
 
 class Defaults:
     name: str = "Agent"
-    network1: Networks = Networks.Small
-    learner1: Learners = Learners.Qlearn
+    network1: Networks = Networks.Large
+    learner1: Learners = Learners.DoubleQlearn
     network2: Networks = Networks.Mini
-    learner2: Learners = Learners.Qlearn
+    learner2: Learners = Learners.DoubleQlearn
     gamma: float = 0.99
     exploration1: Explorations = Explorations.epsilonGreedy
     exploration2: Explorations = Explorations.epsilonGreedy
