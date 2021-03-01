@@ -1,6 +1,8 @@
 from typing import List
 import matplotlib.pyplot as plt
 import numpy as np
+from time import sleep
+
 
 class Collector:
     def __init__(self) -> None:
@@ -13,9 +15,13 @@ class Collector:
 
     def show(self, game) -> None:
         plt.plot(self.running_rewards)
-        plt.show(block=True)
+        plt.show(block=False)
         plt.plot(self.running_dones)
-        plt.show(block=True)
+        plt.show(block=False)
+        plt.pause(1)
+
+    def hide(self) -> None:
+        plt.close('all')
 
     def collect(self, rewards: List[float], dones: List[int]):
         self.counter += 1
@@ -27,6 +33,6 @@ class Collector:
 
         if self.counter == self.filter_size:
             self.running_rewards.append(sum(self.rewards)/self.filter_size)
-            self.running_dones.append(sum(self.dones)/self.filter_size)   
-        elif self.counter > self.filter_size:     
+            self.running_dones.append(sum(self.dones)/self.filter_size)
+        elif self.counter > self.filter_size:
             self.running_rewards.append(self.running_rewards[-1] + (average_reward - self.rewards[-self.filter_size])/self.filter_size)

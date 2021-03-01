@@ -15,6 +15,7 @@ class States:
     save = False
     draw = False
     slow = False
+    switchPlot = False
 
 
 def loop(game: Game, collector: Collector, save: Save) -> Iterator[int]:
@@ -37,7 +38,7 @@ def loop(game: Game, collector: Collector, save: Save) -> Iterator[int]:
                 Paint.stop()
                 States.running = False
             elif Key.f2 == key:
-                States.showPrint = True
+                States.switchPlot = True
             elif Key.f7 == key:
                 States.save = True
             elif Key.f4 == key:
@@ -61,9 +62,14 @@ def loop(game: Game, collector: Collector, save: Save) -> Iterator[int]:
             f += 1
             if States.draw:
                 Paint(game, f)
-            if States.showPrint:
-                collector.show(game)
-                States.showPrint = False
+            if States.switchPlot:
+                States.showPrint = not States.showPrint
+                States.switchPlot = False
+                if States.showPrint:
+                    collector.show(game)
+                else:
+                    collector.hide()
+
             if States.save:
                 save.save()
                 States.save = False
