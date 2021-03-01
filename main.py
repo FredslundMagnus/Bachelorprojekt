@@ -20,12 +20,16 @@ class Defaults:
 def main(defaults):
     collector = Collector()
     env = Game(**defaults)
-    agent = Mover(env, **defaults)
+    mover = Mover(env, **defaults)
+    # teleporter = Teleport_intervention(env, **defaults)
 
     for frame in loop(env, collector):
-        actions = agent(env)
+        # modified_board = teleporter(env.board)
+        actions = mover(env.board)  # mover(modified_board)
         observations, rewards, dones = env.step(actions)
-        agent.learn(observations, actions, rewards, dones)
+        # modified_observations, modified_rewards, modified_dones = teleporter.modify(observations)
+        mover.learn(observations, actions, rewards, dones)
+        # teleporter.learn(observations, actions, rewards, dones)
         collector.collect(actions)
 
 
