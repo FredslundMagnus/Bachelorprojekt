@@ -15,7 +15,7 @@ class Explorations(Enum):
 class Exploration:
     def __init__(self, exploration: Explorations, K: float = None, **kwargs) -> None:
         self.counter = 1
-        self._K = K
+        self.K = K
         if exploration == Explorations.greedy:
             self.explore = self.greedy
         elif exploration == Explorations.epsilonGreedy:
@@ -28,10 +28,6 @@ class Exploration:
     def epsilon(self):
         return max(0, 1 - self.counter / self.K)
 
-    @property
-    def K(self):
-        return max(1, self._K / self.counter)
-
     def greedy(self, vals):
         self.counter += 1
         vals = torch.flatten(vals.detach(), start_dim=1)
@@ -40,7 +36,6 @@ class Exploration:
     def epsilonGreedy(self, vals):
         self.counter += 1
         vals = torch.flatten(vals.detach(), start_dim=1)
-
         if random() > self.epsilon:
             return torch.max(vals, dim=1)
         else:
