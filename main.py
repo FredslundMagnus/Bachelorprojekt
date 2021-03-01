@@ -24,12 +24,12 @@ def main(defaults):
     # teleporter = Teleport_intervention(env, **defaults)
 
     for frame in loop(env, collector):
-        # modified_board = teleporter(env.board)
+        # modified_board, intervention = teleporter(env.board)
         actions = mover(env.board)  # mover(modified_board)
         observations, rewards, dones = env.step(actions)
         # modified_observations, modified_rewards, modified_dones = teleporter.modify(observations)
-        mover.learn(observations, actions, rewards, dones)
-        # teleporter.learn(observations, actions, rewards, dones)
+        mover.learn(observations, actions, rewards, dones)  # mover.learn(modified_observations, actions, modified_rewards, modified_dones)
+        # teleporter.learn(observations, intervention, rewards, dones)
         collector.collect(actions)
 
 
