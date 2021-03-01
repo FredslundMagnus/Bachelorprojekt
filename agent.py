@@ -5,12 +5,14 @@ from torch import Tensor
 import torch
 from typing import List
 from abc import ABCMeta, abstractmethod
+from exploration import Exploration
 
 
 class Agent(metaclass=ABCMeta):
-    def __init__(self, game: Game, network: Networks, learner: Learners, kwargs) -> None:
+    def __init__(self, game: Game, network: Networks, learner: Learners, exploration: Exploration, kwargs) -> None:
         self.net = Net(len(game.layers), network)
         self.learner = Learner(self.net, learner, **kwargs)
+        self.exploration = Exploration(exploration, **kwargs)
 
     @abstractmethod
     def __call__(self, board: Tensor) -> Tensor:
