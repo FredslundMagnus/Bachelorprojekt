@@ -1,5 +1,5 @@
 from game import Game
-from agent import Teleport_intervention, Mover, Networks, Learners, Exploration
+from agent import Teleport_intervention, Mover, Networks, Learners, Explorations
 from collector import Collector
 from auxillaries import run, loop, person, random
 
@@ -11,7 +11,7 @@ class Defaults:
     network2: Networks = Networks.Small
     learner2: Learners = Learners.DoubleQlearn
     gamma: float = 0.99
-    Exploration: Exploration = Exploration.epsilonGreedy
+    exploration: Explorations = Explorations.epsilonGreedy
     K: float = 10**5
     batch: int = 100
     hours: float = 12.0

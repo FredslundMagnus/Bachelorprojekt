@@ -4,20 +4,20 @@ from numpy.random import choice
 from enum import Enum
 
 
-class explorations(Enum):
+class Explorations(Enum):
     softmax = 0
     greedy = 1
     epsilonGreedy = 0
 
 class Exploration():
-    def __init__(self, exploration: explorations, K: float = None, **kwargs) -> None:
+    def __init__(self, exploration: Explorations, K: float = None, **kwargs) -> None:
         self.counter = 1
         self.K = K
-        if exploration == explorations.softmax:
+        if exploration == Explorations.softmax:
             self.explore = self.softmax
-        elif exploration == explorations.greedy:
+        elif exploration == Explorations.greedy:
             self.explore = self.greedy
-        elif exploration == explorations.epsilonGreedy:
+        elif exploration == Explorations.epsilonGreedy:
             self.explore = self.epsilonGreedy
 
     @property
