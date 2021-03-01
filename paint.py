@@ -1,10 +1,11 @@
 from layer import Shape
 from typing import Iterator, Tuple
-import pygame
 from game import Game
 from auxillaries import States
 from colors import Color, Colors
-from contextlib import contextmanager
+from contextlib import contextmanager, redirect_stdout
+with redirect_stdout(None):
+    import pygame
 
 
 @contextmanager
