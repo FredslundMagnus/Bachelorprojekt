@@ -9,4 +9,4 @@ class Save:
         self.save()
 
     def save(self):
-        pass
+        print("Now i shold Save something")
