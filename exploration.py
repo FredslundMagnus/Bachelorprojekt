@@ -1,12 +1,24 @@
 from random import random
 from torch.nn.functional import softmax
 from numpy.random import choice
+from enum import Enum
 
+
+class explorations(Enum):
+    softmax = 0
+    greedy = 1
+    epsilonGreedy = 0
 
 class Exploration():
-    def __init__(self, K: float = None) -> None:
+    def __init__(self, exploration: explorations, K: float = None, **kwargs) -> None:
         self.counter = 1
         self.K = K
+        if exploration == explorations.softmax:
+            self.explore = self.softmax
+        elif exploration == explorations.greedy:
+            self.explore = self.greedy
+        elif exploration == explorations.epsilonGreedy:
+            self.explore = self.epsilonGreedy
 
     @property
     def epsilon(self):
