@@ -29,6 +29,7 @@ def main(defaults):
         observations, rewards, dones = env.step(actions)
         # modified_observations, modified_rewards, modified_dones = teleporter.modify(observations)
         mover.learn(observations, actions, rewards, dones)
+        # teleporter.learn(observations, actions, rewards, dones)
         collector.collect(actions)
 
 
