@@ -182,11 +182,13 @@ class Layers:
             self.dict[LayerType.Putter] = self.layers[-1]
             self.types.append(LayerType.Putter)
         self.board = np.zeros((batch, len(self.layers), width, height), dtype=np.float32)
+        self.counter = np.zeros(batch)
 
     def __len__(self) -> int:
         return len(self.layers)
 
     def update(self):
+        self.counter += 1
         rewards = [0.0 for _ in range(self.batch)]
         dones = [0 for _ in range(self.batch)]
         for batch in range(self.batch):
@@ -194,6 +196,12 @@ class Layers:
                 self.restart(batch)
                 rewards[batch] = 10.0
                 dones[batch] = 1
+                self.counter[batch] = 0
+            elif self.counter[batch] == 500:
+                self.restart(batch)
+                rewards[batch] = 0
+                dones[batch] = 1
+                self.counter[batch] = 0
 
         for layer in self.layers:
             layer.update(self.board)
