@@ -48,6 +48,7 @@ def loop(game: Game, collector: Collector, save: Save) -> Iterator[int]:
                 collector.show(game)
                 States.showPrint = False
             if States.save:
+                save.save()
                 States.save = False
             yield f
 
