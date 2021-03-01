@@ -30,3 +30,4 @@ class Collector:
             self.running_dones.append(sum(self.dones)/self.filter_size)   
         elif self.counter > self.filter_size:     
             self.running_rewards.append(self.running_rewards[-1] + (average_reward - self.rewards[-self.filter_size])/self.filter_size)
+            self.running_dones.append(self.running_dones[-1] + (average_done - self.dones[-self.filter_size])/self.filter_size)
