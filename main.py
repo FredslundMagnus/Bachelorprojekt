@@ -11,7 +11,8 @@ class Defaults:
     network2: Networks = Networks.Small
     learner2: Learners = Learners.DoubleQlearn
     gamma: float = 0.99
-    exploration: Explorations = Explorations.epsilonGreedy
+    exploration1: Explorations = Explorations.epsilonGreedy
+    exploration2: Explorations = Explorations.epsilonGreedy
     K: float = 10**5
     batch: int = 100
     hours: float = 12.0
