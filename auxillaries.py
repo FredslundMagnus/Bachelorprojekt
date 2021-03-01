@@ -38,7 +38,7 @@ def loop(game: Game, collector: Collector, save: Save) -> Iterator[int]:
                 States.running = False
             elif Key.f2 == key:
                 States.showPrint = True
-            elif Key.f3 == key:
+            elif Key.f7 == key:
                 States.save = True
             elif Key.f4 == key:
                 Paint.switch(game.layers.width, game.layers.height)
@@ -46,7 +46,7 @@ def loop(game: Game, collector: Collector, save: Save) -> Iterator[int]:
                 Paint.dim -= 1
             elif Key.right == key and ctrl:
                 Paint.dim += 1
-            elif Key.f7 == key:
+            elif Key.f3 == key:
                 States.slow = not States.slow
 
         def on_release(key):
