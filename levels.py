@@ -5,7 +5,7 @@ from random import choice, sample
 
 
 class Maze(Level):
-    def __init__(self, uses: List[LayerType], shape: Tuple[int, int], start: Tuple[int, int], end: Tuple[int, int]) -> None:
+    def __init__(self, uses: List[LayerType], shape: Tuple[int, int], start: Tuple[int, int] = None, end: Tuple[int, int] = None) -> None:
         super().__init__(uses, shape, start, end)
 
     def generate(self):
@@ -18,6 +18,13 @@ class Maze(Level):
         if self.shape[1] % 2 == 0:
             ys[-1] += 1
         self.nodes: Set[Tuple[int, int]] = set([(x, y) for x in xs for y in ys])
+        if self.start == None and self.end == None:
+            self.start, self.end = tuple(sample(list(self.nodes), 2))
+        elif self.start == None:
+            self.start = choice([node for node in self.nodes if node != self.end])
+        elif self.end == None:
+            self.end = choice([node for node in self.nodes if node != self.start])
+
         if self.start not in self.nodes or self.end not in self.nodes:
             return False
         self.lines: Set[Tuple[Tuple[int, int], Tuple[int, int]]] = set()
