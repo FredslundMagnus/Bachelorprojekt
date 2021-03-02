@@ -9,16 +9,18 @@ class Collector:
     def __init__(self) -> None:
         self.counter = 0
         self.filter_size = 1000
-        self.rewards = 0
-        self.dones = 0
+        self.rewards = 10**(-6)
+        self.dones = 10**(-6)
         self.running_rewards = []
         self.running_dones = []
+        self.win_percent = []
         
     def show(self, game) -> None:
         fig = plt.figure()
         move_figure(fig, 0, 0)
         plt.plot(self.running_rewards)
         plt.plot(self.running_dones)
+        plt.plot(self.win_percent)
         plt.pause(5)
         plt.close('all')
 
@@ -36,5 +38,6 @@ class Collector:
         if self.counter % self.filter_size == 0:
             self.running_rewards.append(self.rewards/self.filter_size)
             self.running_dones.append(self.dones/self.filter_size)
-            self.rewards = 0
-            self.dones = 0
+            self.win_percent.append(self.rewards/self.dones)
+            self.rewards = 10**(-6)
+            self.dones = 10**(-6)

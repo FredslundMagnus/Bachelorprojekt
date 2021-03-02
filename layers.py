@@ -196,7 +196,7 @@ class Layers:
         for batch in range(self.batch):
             if all(layer.isDone(batch, self.dict) for layer in self.layers):
                 self.restart(batch)
-                rewards[batch] = 10.0
+                rewards[batch] = 1
                 dones[batch] = 1
                 self.counter[batch] = 0
             elif random() < self.reset_chance:
