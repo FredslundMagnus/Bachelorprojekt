@@ -30,14 +30,16 @@ def loop(game: Game, collector: Collector, save: Save) -> Iterator[int]:
         from paint import Paint
 
         current = set()
+        order = [None, None, None]
 
         def on_press(key):
             current.add(key)
+            order.append(key)
             ctrl: bool = Key.ctrl_l in current or Key.ctrl_r in current
             alt: bool = Key.alt_l in current
             speed = 100
             zoom = 5
-            if Key.esc == key:
+            if [Key.esc, Key.esc, Key.esc] == order[-3:]:
                 Paint.stop()
                 States.running = False
             elif Key.f2 == key:
