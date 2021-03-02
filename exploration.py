@@ -35,5 +35,6 @@ class Exploration:
     def epsilonGreedy(self, vals):
         self.counter += 1
         if self.counter % 10000 == 0:
+            print(vals[0])
             print(f"({str(float(torch.min(vals)))[:4]}, {str(float(torch.max(vals)))[:4]})", end=", ")
         return torch.argmax(vals.detach(), dim=1) if random() > self.epsilon else torch.tensor(choice(vals.shape[1], vals.shape[0]), device=device).long()

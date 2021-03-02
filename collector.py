@@ -19,7 +19,7 @@ class Collector:
         move_figure(fig, 0, 0)
         plt.plot(self.running_rewards)
         plt.plot(self.running_dones)
-        plt.pause(10)
+        plt.pause(5)
         plt.close('all')
 
     def hide(self) -> None:
