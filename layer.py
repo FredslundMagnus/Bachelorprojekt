@@ -79,6 +79,7 @@ class Layer(metaclass=ABCMeta):
     def clear(self, batch: int):
         self._removed[batch] += self._positions[batch]
         self._positions[batch] = []
+        self._added[batch] = []
 
     def elements(self, li: List[List[Tuple[int, int]]]):
         for batch, pos in enumerate(li):
