@@ -20,7 +20,7 @@ class Defaults:
     width: int = 9
     height: int = 9
     update: int = 1000
-    reset_chance: float = 0.005
+    reset_chance: float = 0.002
 
 
 def main(defaults):
