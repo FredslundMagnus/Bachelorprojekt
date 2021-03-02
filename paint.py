@@ -35,6 +35,7 @@ class Paint:
                 elif shape == Shape.Square:
                     Paint.drawRect(color, size, x, y)
             Paint.write(f"Frames: {frame}", game.layers.width/2, 0)
+            Paint.write(f"Game: {Paint.dim}", game.layers.width/2, game.layers.height-1)
 
     @staticmethod
     def drawRect(color: Color, size: int, x: int, y: int) -> None:

@@ -44,9 +44,11 @@ def loop(game: Game, collector: Collector, save: Save) -> Iterator[int]:
             elif Key.f4 == key:
                 Paint.switch(game.layers.width, game.layers.height)
             elif Key.left == key and ctrl:
-                Paint.dim -= 1
+                Paint.dim = (Paint.dim - 1) % 100
+                if Paint.dim < 0:
+                    Paint.dim == 100
             elif Key.right == key and ctrl:
-                Paint.dim += 1
+                Paint.dim = (Paint.dim + 1) % 100
             elif Key.f3 == key:
                 States.slow = not States.slow
 

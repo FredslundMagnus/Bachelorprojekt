@@ -8,7 +8,7 @@ from helper import move_figure
 class Collector:
     def __init__(self) -> None:
         self.counter = 0
-        self.filter_size = 1000
+        self.filter_size = 10000
         self.rewards = []
         self.dones = []
         self.running_rewards = []

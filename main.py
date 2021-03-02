@@ -11,7 +11,7 @@ class Defaults:
     learner1: Learners = Learners.Qlearn
     network2: Networks = Networks.Mini
     learner2: Learners = Learners.Qlearn
-    gamma: float = 0.99
+    gamma: float = 0.95
     exploration1: Explorations = Explorations.epsilonGreedy
     exploration2: Explorations = Explorations.epsilonGreedy
     K: float = 2*10**5
