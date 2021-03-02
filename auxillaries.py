@@ -34,6 +34,9 @@ def loop(game: Game, collector: Collector, save: Save) -> Iterator[int]:
         def on_press(key):
             current.add(key)
             ctrl: bool = Key.ctrl_l in current or Key.ctrl_r in current
+            alt: bool = Key.alt_l in current
+            speed = 100
+            zoom = 5
             if Key.esc == key:
                 Paint.stop()
                 States.running = False
@@ -49,6 +52,18 @@ def loop(game: Game, collector: Collector, save: Save) -> Iterator[int]:
                 Paint.dim = (Paint.dim + 1) % game.layers.batch
             elif Key.f3 == key:
                 States.slow = not States.slow
+            elif Key.right == key and alt:
+                Paint.move(speed, 0, game.layers.width, game.layers.height)
+            elif Key.left == key and alt:
+                Paint.move(-speed, 0, game.layers.width, game.layers.height)
+            elif Key.down == key and alt:
+                Paint.move(0, speed, game.layers.width, game.layers.height)
+            elif Key.up == key and alt:
+                Paint.move(0, -speed, game.layers.width, game.layers.height)
+            elif Key.down == key and ctrl:
+                Paint.zoom(-zoom, game.layers.width, game.layers.height)
+            elif Key.up == key and ctrl:
+                Paint.zoom(zoom, game.layers.width, game.layers.height)
 
         def on_release(key):
             try:
