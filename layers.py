@@ -214,7 +214,7 @@ class Layers:
 
     def getColorable(self, dim: int):
         for layer in self.layers:
-            for x, y in layer.positions[dim % self.batch]:
+            for x, y in layer.positions[dim]:
                 yield layer.shape, layer.color, layer.size, x, y
 
     def isFree(self, batch: int, pos: Tuple[int, int]):
