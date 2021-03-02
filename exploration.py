@@ -33,7 +33,7 @@ class Exploration:
 
     @property
     def K_(self):
-        return max(0.1, self.K / (10*self.counter))
+        return max(0.2, self.K / (5*self.counter))
 
     def greedy(self, vals):
         vals.detach()
@@ -50,6 +50,7 @@ class Exploration:
 
     def softmaxer(self, vals):
         self.counter += 1
-        if self.counter % 10000 == 1:
+        if self.counter % 10000 == 0:
             print(f"({str(float(torch.min(vals[0])))[:4]}, {str(float(torch.max(vals[0])))[:4]})", end=", ")
+            print(softmax(vals / self.K_, dim=1)[0])
         return torch.flatten(torch.multinomial(softmax(vals / self.K_, dim=1), 1, replacement=True))
