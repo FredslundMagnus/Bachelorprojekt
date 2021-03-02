@@ -50,3 +50,4 @@ class Collector:
             self.running_rewards.append(sum(self.temp_rewards)/self.mean_over)
             self.running_dones.append(sum(self.temp_dones)/self.mean_over)
             self.temp_rewards = []
+            self.temp_dones = []
