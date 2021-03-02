@@ -3,15 +3,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 from time import sleep
 from helper import move_figure
-from collections import deque
 
 
 class Collector:
     def __init__(self) -> None:
         self.counter = 0
         self.filter_size = 10000
-        self.rewards = []
-        self.dones = []
+        self.rewards = 0
+        self.dones = 0
         self.running_rewards = []
         self.running_dones = []
         
@@ -31,11 +30,11 @@ class Collector:
         average_reward = sum(rewards)/len(rewards)
         average_done = sum(dones)/len(dones)
 
-        self.rewards.append(average_reward)
-        self.dones.append(average_done)
+        self.rewards += average_reward
+        self.dones += average_done
 
         if self.counter % self.filter_size == 0:
-            self.running_rewards.append(sum(self.rewards)/self.filter_size)
-            self.running_dones.append(sum(self.dones)/self.filter_size)
-            self.rewards = []
-            self.dones = []
+            self.running_rewards.append(self.rewards/self.filter_size)
+            self.running_dones.append(self.dones/self.filter_size)
+            self.rewards = 0
+            self.dones = 0
