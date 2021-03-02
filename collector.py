@@ -18,9 +18,10 @@ class Collector:
     def show(self, game) -> None:
         fig = plt.figure()
         move_figure(fig, 0, 0)
-        plt.plot(self.running_rewards)
-        plt.plot(self.running_dones)
-        plt.plot(self.win_percent)
+        plt.plot(self.running_rewards, label="reward per action")
+        plt.plot(self.running_dones, label="game per action")
+        plt.plot(self.win_percent, label="reward per game")
+        plt.legend(loc="upper left")
         plt.pause(5)
         plt.close('all')
 
