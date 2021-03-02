@@ -33,23 +33,24 @@ class Exploration:
 
     @property
     def K_(self):
-        return max(0.1, self.K / (10*self.counter))
+        return max(0.2, self.K / (5*self.counter))
 
     def greedy(self, vals):
         vals.detach()
         self.counter += 1
         if self.counter % 1000 == 1:
-            print(f"({str(float(torch.min(vals)))[:4]}, {str(float(torch.max(vals)))[:4]})", end=", ")
+            print(f"({str(float(torch.min(vals[0])))[:4]}, {str(float(torch.max(vals[0])))[:4]})", end=", ")
         return torch.argmax(vals, dim=1)
 
     def epsilonGreedy(self, vals):
         self.counter += 1
         if self.counter % 10000 == 0:
-            print(f"({str(float(torch.min(vals)))[:4]}, {str(float(torch.max(vals)))[:4]})", end=", ")
+            print(f"({str(float(torch.min(vals[0])))[:4]}, {str(float(torch.max(vals[0])))[:4]})", end=", ")
         return torch.argmax(vals, dim=1) if random() > self.epsilon else torch.tensor(choice(vals.shape[1], vals.shape[0]), device=device).long()
 
     def softmaxer(self, vals):
         self.counter += 1
-        if self.counter % 10000 == 1:
-            print(f"({str(float(torch.min(vals)))[:4]}, {str(float(torch.max(vals)))[:4]})", end=", ")
+        if self.counter % 10000 == 0:
+            print(f"({str(float(torch.min(vals[0])))[:4]}, {str(float(torch.max(vals[0])))[:4]})", end=", ")
+            print(softmax(vals / self.K_, dim=1)[0])
         return torch.flatten(torch.multinomial(softmax(vals / self.K_, dim=1), 1, replacement=True))
