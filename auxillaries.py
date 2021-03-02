@@ -65,10 +65,7 @@ def loop(game: Game, collector: Collector, save: Save) -> Iterator[int]:
             if States.switchPlot:
                 States.showPrint = not States.showPrint
                 States.switchPlot = False
-                if States.showPrint:
-                    collector.show(game)
-                else:
-                    collector.hide()
+                collector.show(game)
 
             if States.save:
                 save.save()
