@@ -64,10 +64,8 @@ class Layer(metaclass=ABCMeta):
 
     def move(self, batch: int, _from: Tuple[int, int], _to: Tuple[int, int], layers):
         if layers.isFree(batch, _to):
-            self._positions[batch].remove(_from)
-            self._removed[batch].append(_from)
-            self._positions[batch].append(_to)
-            self._added[batch].append(_to)
+            self.remove(batch, _from)
+            self.add(batch, _to)
         layers.check(batch)
 
     def remove(self, batch: int, _pos: Tuple[int, int]):
@@ -79,7 +77,7 @@ class Layer(metaclass=ABCMeta):
         self._added[batch].append(_pos)
 
     def clear(self, batch: int):
-        self._removed[batch] = self._positions[batch]
+        self._removed[batch] += self._positions[batch]
         self._positions[batch] = []
 
     def elements(self, li: List[List[Tuple[int, int]]]):
