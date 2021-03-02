@@ -12,9 +12,9 @@ class Defaults:
     network2: Networks = Networks.Mini
     learner2: Learners = Learners.Qlearn
     gamma: float = 0.95
-    exploration1: Explorations = Explorations.epsilonGreedy
-    exploration2: Explorations = Explorations.epsilonGreedy
-    K: float = 2*10**5
+    exploration1: Explorations = Explorations.softmaxer
+    exploration2: Explorations = Explorations.softmaxer
+    K: float = 5*10**5
     batch: int = 100
     hours: float = 12.0
     width: int = 9

@@ -46,7 +46,7 @@ class Mover(Agent):
 
     def __call__(self, board: Tensor) -> Tensor:
         self.values: Tensor = self.net.network(board)
-        actions = self.exploration.explore(self.values)
+        actions = self.exploration.explore(self.values.detach())
         return actions
 
     def _learn(self, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor):
