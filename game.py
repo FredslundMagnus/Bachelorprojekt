@@ -5,11 +5,11 @@ from typing import List, Tuple
 
 
 class Game:
-    def __init__(self, batch: int = None, hours: float = None, width: int = None, height: int = None, **kwargs) -> None:
+    def __init__(self, batch: int = None, hours: float = None, width: int = None, height: int = None, reset_chance: float = None, **kwargs) -> None:
         super().__init__()
         self.batch: int = batch
         self.hours: float = hours
-        self.layers: Layers = Layers(batch, width, height, LayerType.Blocks, LayerType.Player, LayerType.Goal)
+        self.layers: Layers = Layers(batch, width, height, reset_chance, LayerType.Blocks, LayerType.Player, LayerType.Goal)
         self.layers.update()
 
     @property

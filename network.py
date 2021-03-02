@@ -19,7 +19,7 @@ class Network(nn.Module):
         elif network == Networks.Large:
             self.model = nn.Sequential(nn.Conv2d(dim, 32, 3), nn.LeakyReLU(), nn.Conv2d(32, 64, 3), nn.LeakyReLU(), nn.Conv2d(64, 128, 3), nn.LeakyReLU(), nn.Conv2d(128, 64, 3), nn.LeakyReLU(), nn.Conv2d(64, 32, 3), nn.LeakyReLU(), nn.Conv2d(32, 4, 1), nn.Flatten())
         elif network == Networks.Mini:
-            self.model = nn.Sequential(nn.Conv2d(dim, 64, 3), nn.LeakyReLU(), nn.Conv2d(64, 32, 3), nn.LeakyReLU(), nn.Conv2d(32, 4, 5), nn.Flatten())
+            self.model = nn.Sequential(nn.Conv2d(dim, 64, 3), nn.LeakyReLU(), nn.Conv2d(64, 32, 3), nn.LeakyReLU(), nn.Conv2d(32, 32, 5), nn.LeakyReLU(), nn.Conv2d(32, 4, 1), nn.Flatten())
 
     def forward(self, x: Tensor):
         return self.model(x)

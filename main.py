@@ -14,12 +14,13 @@ class Defaults:
     gamma: float = 0.95
     exploration1: Explorations = Explorations.softmaxer
     exploration2: Explorations = Explorations.softmaxer
-    K: float = 5*10**5
+    K: float = 500000
     batch: int = 100
     hours: float = 12.0
     width: int = 9
     height: int = 9
     update: int = 1000
+    reset_chance: float = 0.005
 
 
 def main(defaults):

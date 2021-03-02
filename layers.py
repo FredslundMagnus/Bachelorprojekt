@@ -4,6 +4,7 @@ from typing import Dict, Tuple, List
 import numpy as np
 from torch import Tensor
 from levels import Maze
+from random import random
 
 
 class Player(Layer):
@@ -143,12 +144,13 @@ class Putter(Layer):
 
 
 class Layers:
-    def __init__(self, batch: int, width: int, height: int, *layers: Tuple[LayerType]) -> None:
+    def __init__(self, batch: int, width: int, height: int, reset_chance: float, *layers: Tuple[LayerType]) -> None:
         self.layers: List[Layer] = []
         self.player: Player = Player(batch, width, height)
         self.width: int = width
         self.height: int = height
         self.batch: int = batch
+        self.reset_chance = reset_chance
         self.types: List[LayerType] = []
         self.dict: Dict[LayerType, Layer] = {LayerType.Player: self.player}
         self.types.append(LayerType.Player)
@@ -197,7 +199,7 @@ class Layers:
                 rewards[batch] = 10.0
                 dones[batch] = 1
                 self.counter[batch] = 0
-            elif self.counter[batch] == 500:
+            elif random() < self.reset_chance:
                 self.restart(batch)
                 rewards[batch] = 0
                 dones[batch] = 1
