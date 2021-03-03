@@ -36,14 +36,14 @@ def teleport(defaults):
             actions = mover(modified_board)
 
             observations, rewards, dones = env.step(actions)
-            modified_observations, modified_rewards, modified_dones = teleporter.modify(teleporter.current_interventions.to(dtype=int), observations, rewards, dones)
+            modified_board, modified_rewards, modified_dones = teleporter.modify(teleporter.current_interventions.to(dtype=int), observations, rewards, dones)
 
-            mover.learn(modified_observations, actions, modified_rewards, modified_dones)
+            mover.learn(modified_board, actions, modified_rewards, modified_dones)
             if frame > 100:
                 board_before, board_after, action, tele_rewards, tele_dones = buffer.sample_data(batch=100)
                 teleporter(board_before)
                 teleporter.learn(board_after, action.long(), tele_rewards, tele_dones)
-            collector.collect(rewards, dones)
+            collector.collect(rewards, dones, modified_rewards, modified_dones)
             first_intervention = False
 
 
@@ -57,7 +57,7 @@ def simple(defaults):
             actions = mover(env.board)
             observations, rewards, dones = env.step(actions)
             mover.learn(observations, actions, rewards, dones)
-            collector.collect(rewards, dones)
+            collector.collect(rewards, dones, rewards, dones)
 
 
 class Defaults:
@@ -73,11 +73,11 @@ class Defaults:
     K: float = 500000
     batch: int = 100
     hours: float = 12.0
-    width: int = 7
-    height: int = 7
+    width: int = 11
+    height: int = 11
     update: int = 1000
     reset_chance: float = 0.002
-    main: function = simple
+    main: function = teleport
 
 
 run(Defaults)
