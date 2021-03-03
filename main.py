@@ -21,7 +21,7 @@ def teleport(defaults):
         modified_dones = torch.ones(env.layers.board.shape[0], device=device)
         first_intervention = True
         modified_board = torch.zeros(env.layers.board.shape[0], env.layers.board.shape[1] + 1, env.layers.board.shape[2], env.layers.board.shape[3], device=device)
-        for frame in loop(env, collector, save):
+        for frame in loop(env, collector, save, teleporter):
             intervention_idx = torch.flatten(torch.nonzero(modified_dones.long()))
             if len(intervention_idx) > 0:
                 needs_intervention_board = env.board[intervention_idx]

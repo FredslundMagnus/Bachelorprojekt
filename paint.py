@@ -31,7 +31,7 @@ class Paint:
     y = 0
 
     @staticmethod
-    def __init__(game: Game, frame: int) -> None:
+    def __init__(game: Game, frame: int, teleporter) -> None:
         with screen(Colors.gray.c300):
             for shape, color, size, x, y in game.layers.getColorable(Paint.dim):
                 if shape == Shape.Circle:
@@ -40,6 +40,10 @@ class Paint:
                     Paint.drawRect(color, size, x, y)
             Paint.write(f"Frames: {frame}", game.layers.width/2, 0)
             Paint.write(f"Game: {Paint.dim}", game.layers.width/2, game.layers.height-1)
+            if teleporter != None:
+                val = int(teleporter.current_interventions[Paint.dim])
+                y, x = divmod(val, game.layers.width)
+                Paint.drawRect(Colors.indigo.transparrent(100), size, x, y)
 
     @staticmethod
     def drawRect(color: Color, size: int, x: int, y: int) -> None:
