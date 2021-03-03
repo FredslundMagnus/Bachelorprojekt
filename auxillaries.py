@@ -16,6 +16,7 @@ class States:
     draw = False
     slow = False
     switchPlot = False
+    isPaused = False
 
 
 def loop(game: Game, collector: Collector, save: Save = None, teleporter=None) -> Iterator[int]:
@@ -26,11 +27,23 @@ def loop(game: Game, collector: Collector, save: Save = None, teleporter=None) -
             yield f
 
     else:
-        from pynput.keyboard import Key, Listener
+        from pynput.keyboard import Key, Listener, Events
         from paint import Paint
 
         current = set()
         order = [None, None, None]
+
+        def waitForResume():
+            action = None
+            while action == None and States.running:
+                with Events() as events:
+                    event = events.get()
+                    if event.__class__ == Events.Press:
+                        if event.key == Key.pause:
+                            action = True
+                            States.isPaused = False
+                        elif event.key in {Key.shift_l, Key.shift_r}:
+                            action = True
 
         def on_press(key):
             current.add(key)
@@ -66,6 +79,8 @@ def loop(game: Game, collector: Collector, save: Save = None, teleporter=None) -
                 Paint.zoom(-zoom, game.layers.width, game.layers.height)
             elif Key.up == key and ctrl:
                 Paint.zoom(zoom, game.layers.width, game.layers.height)
+            elif Key.pause == key:
+                States.isPaused = True
 
         def on_release(key):
             try:
@@ -88,6 +103,8 @@ def loop(game: Game, collector: Collector, save: Save = None, teleporter=None) -
                 if save != None:
                     save.save()
                 States.save = False
+            if States.isPaused:
+                waitForResume()
             yield f
 
 
