@@ -31,6 +31,7 @@ class Layer(metaclass=ABCMeta):
         self._removed: List[List[Tuple[int, int]]] = [[] for _ in range(batch)]
         self._added: List[List[Tuple[int, int]]] = [[] for _ in range(batch)]
         self._layer = Layer.__layer__
+        self._grid = set(self.grid())
         Layer.__layer__ += 1
         for i in range(batch):
             self.clear(i)
@@ -63,7 +64,7 @@ class Layer(metaclass=ABCMeta):
         return not self.isBlocking(batch) or pos not in self.positions[batch]
 
     def move(self, batch: int, _from: Tuple[int, int], _to: Tuple[int, int], layers):
-        if layers.isFree(batch, _to):
+        if _to in self._grid and layers.isFree(batch, _to):
             self.remove(batch, _from)
             self.add(batch, _to)
         layers.check(batch)
