@@ -8,7 +8,7 @@ from helper import move_figure
 class Collector:
     def __init__(self) -> None:
         self.counter = 0
-        self.filter_size = 1000
+        self.filter_size = 10000
         self.rewards = 10**(-6)
         self.dones = 10**(-6)
         self.running_rewards = []
@@ -25,19 +25,34 @@ class Collector:
         fig = plt.figure()
         move_figure(fig, 0, 0)
         plt.plot(self.running_rewards, label="reward per action")
-        plt.plot(self.running_dones, label="game per action")
-        plt.plot(self.win_percent, label="reward per game")
         plt.legend(loc="upper left")
-        plt.pause(5)
-        plt.close('all')
 
         fig = plt.figure()
-        move_figure(fig, 0, 0)
+        move_figure(fig, 600, 0)
+        plt.plot(self.running_dones, label="game length")
+        plt.legend(loc="upper left")
+
+        fig = plt.figure()
+        move_figure(fig, 1200, 0)
+        plt.plot(self.win_percent, label="reward per game")
+        plt.legend(loc="upper left")
+
+        fig = plt.figure()
+        move_figure(fig, 0, 520)
         plt.plot(self.running_Irewards, label="modified reward per action")
-        plt.plot(self.running_Idones, label="modified game per action")
+        plt.legend(loc="upper left")
+
+        fig = plt.figure()
+        move_figure(fig, 600, 520)
+        plt.plot(self.running_Idones, label="modified game length")
+        plt.legend(loc="upper left")
+
+        fig = plt.figure()
+        move_figure(fig, 1200, 520)
         plt.plot(self.Iwin_percent, label="modified reward per game")
         plt.legend(loc="upper left")
-        plt.pause(5)
+
+        plt.pause(10)
         plt.close('all')
 
     def hide(self) -> None:
@@ -59,13 +74,13 @@ class Collector:
 
         if self.counter % self.filter_size == 0:
             self.running_rewards.append(self.rewards/self.filter_size)
-            self.running_dones.append(self.dones/self.filter_size)
+            self.running_dones.append(self.filter_size/self.dones)
             self.win_percent.append(self.rewards/self.dones)
             self.rewards = 10**(-6)
             self.dones = 10**(-6)
 
             self.running_Irewards.append(self.Irewards/self.filter_size)
-            self.running_Idones.append(self.Idones/self.filter_size)
+            self.running_Idones.append(self.filter_size/self.Idones)
             self.Iwin_percent.append(self.Irewards/self.Idones)
             self.Irewards = 10**(-6)
             self.Idones = 10**(-6)
