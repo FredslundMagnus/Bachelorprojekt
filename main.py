@@ -70,7 +70,7 @@ class Defaults:
     exploration2: Explorations = Explorations.epsilonGreedy
     replay_buffer: replay_buffer = replay_buffer
     gamma: float = 0.95
-    K: float = 500000
+    K: float = 100000
     batch: int = 100
     hours: float = 12.0
     width: int = 11
