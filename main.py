@@ -9,17 +9,18 @@ from replay_buffer import replay_buffer
 import torch
 from helper import device
 
+
 def teleport(defaults):
     collector = Collector()
     env = Game(**defaults)
     mover = Mover(env, _extra_dim=1, **defaults)
     teleporter = Teleport_intervention(env, **defaults)
-    buffer = replay_buffer(size = 10000)
+    buffer = replay_buffer(size=10000)
 
     with Save(collector, mover, teleporter, **defaults) as save:
-        modified_dones = torch.ones(env.board.shape[0], device=device)
+        modified_dones = torch.ones(env.layers.board.shape[0], device=device)
         first_intervention = True
-        modified_board = torch.zeros(env.board.shape[0], env.board.shape[1] + 1, env.board.shape[2], env.board.shape[3], device=device)
+        modified_board = torch.zeros(env.layers.board.shape[0], env.layers.board.shape[1] + 1, env.layers.board.shape[2], env.layers.board.shape[3], device=device)
         for frame in loop(env, collector, save):
             intervention_idx = torch.flatten(torch.nonzero(modified_dones.long()))
             if len(intervention_idx) > 0:
@@ -39,7 +40,7 @@ def teleport(defaults):
 
             mover.learn(modified_observations, actions, modified_rewards, modified_dones)
             if frame > 100:
-                board_before, board_after, action, tele_rewards, tele_dones = buffer.sample_data(batch = 100)
+                board_before, board_after, action, tele_rewards, tele_dones = buffer.sample_data(batch=100)
                 teleporter(board_before)
                 teleporter.learn(board_after, action.long(), tele_rewards, tele_dones)
             collector.collect(rewards, dones)
