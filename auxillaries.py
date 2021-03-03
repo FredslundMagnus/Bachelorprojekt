@@ -18,7 +18,7 @@ class States:
     switchPlot = False
 
 
-def loop(game: Game, collector: Collector, save: Save) -> Iterator[int]:
+def loop(game: Game, collector: Collector, save: Save = None) -> Iterator[int]:
     if isServer:
         tid, f = time() + 3600 * game.hours - 300, 0
         while time() < tid:
@@ -85,7 +85,8 @@ def loop(game: Game, collector: Collector, save: Save) -> Iterator[int]:
                 collector.show(game)
 
             if States.save:
-                save.save()
+                if save != None:
+                    save.save()
                 States.save = False
             yield f
 

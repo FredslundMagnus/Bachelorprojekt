@@ -12,7 +12,7 @@ from helper import device
 def teleport(defaults):
     collector = Collector()
     env = Game(**defaults)
-    mover = Mover(env, **defaults)
+    mover = Mover(env, _extra_dim=1, **defaults)
     teleporter = Teleport_intervention(env, **defaults)
     buffer = replay_buffer(size = 10000)
 
@@ -51,7 +51,7 @@ def simple(defaults):
     env = Game(**defaults)
     mover = Mover(env, **defaults)
 
-    with Save(collector, mover, **defaults) as save:
+    with Save(env, collector, mover, **defaults) as save:
         for frame in loop(env, collector, save):
             actions = mover(env.board)
             observations, rewards, dones = env.step(actions)
@@ -76,7 +76,7 @@ class Defaults:
     height: int = 7
     update: int = 1000
     reset_chance: float = 0.002
-    main: function = teleport
+    main: function = simple
 
 
 run(Defaults)

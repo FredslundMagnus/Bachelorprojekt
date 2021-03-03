@@ -11,11 +11,11 @@ from helper import device
 from replay_buffer import replay_buffer
 
 class Agent(metaclass=ABCMeta):
-    def __init__(self, game: Game, network: Networks, learner: Learners, exploration: Explorations, width: int = None, height: int = None, batch: int = None, replay_buffer: replay_buffer = None, **kwargs) -> None:
+    def __init__(self, game: Game, network: Networks, learner: Learners, exploration: Explorations, width: int = None, height: int = None, batch: int = None, replay_buffer: replay_buffer = None, _extra_dim: int = 0, **kwargs) -> None:
         self.batch = batch
         self.height = height
         self.width = width
-        self.net = Net(len(game.layers), width, height, network, **kwargs)
+        self.net = Net(len(game.layers) + _extra_dim, width, height, network, **kwargs)
         self.learner = Learner(self.net, learner, **kwargs)
         self.exploration = Exploration(exploration, **kwargs)
         self.replay_buffer = replay_buffer(self.batch * 100)
@@ -51,16 +51,13 @@ class Teleport_intervention(Agent):
         intervention_layer = torch.nn.functional.one_hot(actions, self.height * self.width).reshape(actions.shape[0], self.height, self.width).unsqueeze(1)
         modified_board = torch.cat((board, intervention_layer), 1)
         return modified_board
-    
-    def modify(self, intervention, board, rewards, dones, modified_done_chance = 0.01):
+
+    def modify(self, intervention, board, rewards, dones, modified_done_chance=0.01):
         modified_board = self.modify_board(intervention, board)
-        modified_rewards = torch.sum(modified_board[:,0,:,:] * modified_board[:,-1,:,:], (1, 2))
+        modified_rewards = torch.sum(modified_board[:, 0, :, :] * modified_board[:, -1, :, :], (1, 2))
         modified_dones = torch.clone(modified_rewards)
         modified_dones[(torch.rand(len(modified_rewards)) < modified_done_chance) == True] = 1
         return modified_board, modified_rewards, modified_dones
-
-
-
 
 
 class Mover(Agent):

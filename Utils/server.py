@@ -6,6 +6,7 @@ from network import Networks
 from learner import Learners
 from exploration import Explorations
 from helper import function
+from os import getenv
 isServer = checkServer()
 
 
@@ -13,6 +14,8 @@ def getvals(defaults):
     annotations = dict(defaults.__annotations__)
     params = {e: defaults.__getattribute__(defaults, e) for e in annotations}
     if not isServer:
+        user = getenv('USERPROFILE').split("\\")[-1]
+        params['name'] = params['name'] + "_" + (user if user != "magnu" else "Magnus")
         return params
     args = sys.argv[1:]
     for i, s_ in enumerate(args):

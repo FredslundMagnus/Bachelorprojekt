@@ -1,8 +1,11 @@
 import pickle
+from Utils.server import isServer
+import os
 
 
 class Save:
     def __init__(self, *args, name: str = None, **kwargs):
+        self.saves = 0
         self.name = name
         self.elements = args
 
@@ -13,20 +16,20 @@ class Save:
         self.save()
 
     def save(self):
-        print(f"Now i shold Save something {self.name}")
+        start = Save.path("outputs", '-'.join(self.name.split('-')[:-1])) if isServer else Save.path("trainlocally", self.name)
+        for element in self.elements:
+            self.saveObject(element, start, element.__class__.__name__)
+        self.saves += 1
 
-# def saveAgent(agent, name: str):
-#     agent.memory.reset(0)
-#     agent.memory = None
-#     agent.remember = None
-#     if isServer:
-#         pickle.dump(agent, open(f"outputs/{'-'.join(name.split('-')[:-1])}/Agents/{name}.agent", "wb"))
-#     else:
-#         pickle.dump(agent, open(f"trainlocally/{'-'.join(name.split('-')[:-1])}/{name}", "wb"))
+    def saveObject(self, element, start, _class):
+        name = f"/{self.name if isServer else (self.name + '-' + str(self.saves))}.{_class}"
+        pickle.dump(element, open(Save.path(start, _class) + name, "wb"))
 
-
-# def saveCollector(collector, name: str):
-#     if isServer:
-#         pickle.dump(collector, open(f"outputs/{'-'.join(name.split('-')[:-1])}/Collectors/{name}.collect", "wb"))
-#     else:
-#         pickle.dump(collector, open(f"trainlocally/{'-'.join(name.split('-')[:-1])}/collect_{name}", "wb"))
+    @staticmethod
+    def path(*args) -> str:
+        path = []
+        for arg in args:
+            path.append(arg)
+            if not os.path.exists("/".join(path)):
+                os.mkdir("/".join(path))
+        return "/".join(path)
