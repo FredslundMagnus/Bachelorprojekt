@@ -185,6 +185,7 @@ class Layers:
             self.types.append(LayerType.Putter)
         self.board = np.zeros((batch, len(self.layers), width, height), dtype=np.float32)
         self.counter = np.zeros(batch)
+        self.types.remove(LayerType.Blocks)
 
     def __len__(self) -> int:
         return len(self.layers)
