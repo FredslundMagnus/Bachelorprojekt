@@ -26,16 +26,16 @@ class Defaults:
 def main(defaults):
     collector = Collector()
     env = Game(**defaults)
-    mover = Teleport_intervention(env, **defaults)
-    # teleporter = Teleport_intervention(env, **defaults)
+    mover = Mover(env, **defaults)
+    teleporter = Teleport_intervention(env, **defaults)
 
     with Save(collector, mover, **defaults) as save:
         for frame in loop(env, collector, save):
-            # modified_board, intervention = teleporter(env.board)
-            actions = mover(env.board)  # mover(modified_board)
+            modified_board, intervention = teleporter(env.board)
+            actions = mover(modified_board) # actions = mover(env.board)
             observations, rewards, dones = env.step(actions)
-            # modified_observations, modified_rewards, modified_dones = teleporter.modify(observations)
-            mover.learn(observations, actions, rewards, dones)  # mover.learn(modified_observations, actions, modified_rewards, modified_dones)
+            modified_observations, modified_rewards, modified_dones = teleporter.modify(intervention, observations, rewards, dones)
+            mover.learn(modified_observations, actions, modified_rewards, modified_dones) # mover.learn(observations, actions, rewards, dones)
             # teleporter.learn(observations, intervention, rewards, dones)
             collector.collect(rewards, dones)
 

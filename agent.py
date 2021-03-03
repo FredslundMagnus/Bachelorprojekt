@@ -36,14 +36,25 @@ class Teleport_intervention(Agent):
     def __call__(self, board: Tensor) -> Tensor:
         self.values: Tensor = self.net.network(board)
         actions = self.exploration.explore(self.values.detach())
-        return actions
+        return self.modify_board(actions, board), actions
 
     def _learn(self, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor):
         self.learner.learn(self.values, state_after, action, reward, done)
 
-    def action_to_intervention(self, actions):
-        intervention = torch.nn.functional.one_hot(actions).reshape(actions.shape[0], self.height, self.width)
-        return intervention
+    def modify_board(self, actions, board):
+        intervention_layer = torch.nn.functional.one_hot(actions, self.height * self.width).reshape(actions.shape[0], self.height, self.width).unsqueeze(1)
+        modified_board = torch.cat((board, intervention_layer), 1)
+        return modified_board
+    
+    def modify(self, intervention, board, rewards, dones):
+        modified_board = self.modify_board(intervention, board)
+        modified_rewards = rewards + torch.sum(modified_board[:,0,:,:] * modified_board[:,-1,:,:], (1, 2))
+        modified_dones = dones
+        return modified_board, modified_rewards, modified_dones
+
+
+
+
 
 class Mover(Agent):
     def __init__(self, game: Game, network2: Networks = None, learner2: Learners = None, exploration2: Explorations = None, **kwargs) -> None:
