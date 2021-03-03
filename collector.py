@@ -33,9 +33,9 @@ class Collector:
 
         fig = plt.figure()
         move_figure(fig, 0, 0)
-        plt.plot(self.running_Irewards, label="modifiedreward per action")
-        plt.plot(self.running_Idones, label="modifiedgame per action")
-        plt.plot(self.Iwin_percent, label="modifiedreward per game")
+        plt.plot(self.running_Irewards, label="modified reward per action")
+        plt.plot(self.running_Idones, label="modified game per action")
+        plt.plot(self.Iwin_percent, label="modified reward per game")
         plt.legend(loc="upper left")
         plt.pause(5)
         plt.close('all')
