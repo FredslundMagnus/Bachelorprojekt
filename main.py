@@ -35,9 +35,9 @@ def teleport(defaults):
             actions = mover(modified_board)
 
             observations, rewards, dones = env.step(actions)
-            modified_observations, modified_rewards, modified_dones = teleporter.modify(teleporter.current_interventions.to(dtype=int), observations, rewards, dones)
+            modified_board, modified_rewards, modified_dones = teleporter.modify(teleporter.current_interventions.to(dtype=int), observations, rewards, dones)
 
-            mover.learn(modified_observations, actions, modified_rewards, modified_dones)
+            mover.learn(modified_board, actions, modified_rewards, modified_dones)
             if frame > 100:
                 board_before, board_after, action, tele_rewards, tele_dones = buffer.sample_data(batch = 100)
                 teleporter(board_before)
