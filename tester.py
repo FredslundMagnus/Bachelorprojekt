@@ -1,8 +1,5 @@
-from collector import Collector
-from game import Game
+from main import *
 from load import Load
-from agent import Mover
-from auxillaries import loop
 
 with Load("Agent", isLocal=True, num=0) as load:
     collector, env, mover = load.items(Collector, Game, Mover)
