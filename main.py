@@ -9,7 +9,7 @@ from helper import function
 def teleport(defaults):
     collector = Collector()
     env = Game(**defaults)
-    mover = Mover(env, **defaults)
+    mover = Mover(env, _extra_dim=1, **defaults)
     teleporter = Teleport_intervention(env, **defaults)
 
     with Save(collector, mover, teleporter, **defaults) as save:
@@ -52,7 +52,7 @@ class Defaults:
     height: int = 11
     update: int = 1000
     reset_chance: float = 0.002
-    main: function = teleport
+    main: function = simple
 
 
 run(Defaults)
