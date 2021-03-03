@@ -11,7 +11,6 @@ class Load:
         self.load()
 
     def __enter__(self):
-
         return self
 
     def __exit__(self, type, value, traceback):
