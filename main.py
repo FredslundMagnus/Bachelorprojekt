@@ -12,7 +12,7 @@ def teleport(defaults):
     mover = Mover(env, _extra_dim=1, **defaults)
     teleporter = Teleport_intervention(env, **defaults)
 
-    with Save(collector, mover, teleporter, **defaults) as save:
+    with Save(env, collector, mover, teleporter, **defaults) as save:
         for frame in loop(env, collector, save):
             modified_board, intervention = teleporter(env.board)
             actions = mover(modified_board)
@@ -28,7 +28,7 @@ def simple(defaults):
     env = Game(**defaults)
     mover = Mover(env, **defaults)
 
-    with Save(collector, mover, **defaults) as save:
+    with Save(env, collector, mover, **defaults) as save:
         for frame in loop(env, collector, save):
             actions = mover(env.board)
             observations, rewards, dones = env.step(actions)
