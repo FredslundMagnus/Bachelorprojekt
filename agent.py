@@ -9,8 +9,10 @@ from exploration import Exploration, Explorations
 
 
 class Agent(metaclass=ABCMeta):
-    def __init__(self, game: Game, network: Networks, learner: Learners, exploration: Explorations, **kwargs) -> None:
-        self.net = Net(len(game.layers), network, **kwargs)
+    def __init__(self, game: Game, network: Networks, learner: Learners, exploration: Explorations, width: int = None, height: int = None, **kwargs) -> None:
+        self.height = height
+        self.width = width
+        self.net = Net(len(game.layers), width, height, network, **kwargs)
         self.learner = Learner(self.net, learner, **kwargs)
         self.exploration = Exploration(exploration, **kwargs)
 
@@ -33,12 +35,15 @@ class Teleport_intervention(Agent):
 
     def __call__(self, board: Tensor) -> Tensor:
         self.values: Tensor = self.net.network(board)
-        self.values, actions = self.exploration.explore(vals)
+        actions = self.exploration.explore(self.values.detach())
         return actions
 
     def _learn(self, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor):
         self.learner.learn(self.values, state_after, action, reward, done)
 
+    def action_to_intervention(self, actions):
+        intervention = torch.nn.functional.one_hot(actions).reshape(actions.shape[0], self.height, self.width)
+        return intervention
 
 class Mover(Agent):
     def __init__(self, game: Game, network2: Networks = None, learner2: Learners = None, exploration2: Explorations = None, **kwargs) -> None:

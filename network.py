@@ -7,19 +7,19 @@ from helper import device
 
 class Networks(Enum):
     Small = 0
-    Large = 1
+    Teleporter = 1
     Mini = 2
 
 
 class Network(nn.Module):
-    def __init__(self, dim: int, network: Networks):
+    def __init__(self, dim: int, width: int, height: int, network: Networks):
         super(Network, self).__init__()
         if network == Networks.Small:
             self.model = nn.Sequential(nn.Conv2d(dim, 8, 3), nn.LeakyReLU(), nn.Conv2d(8, 12, 3), nn.LeakyReLU(), nn.Conv2d(12, 12, 3), nn.LeakyReLU(), nn.Conv2d(12, 12, 3), nn.LeakyReLU(), nn.Conv2d(12, 16, 3), nn.LeakyReLU(), nn.Conv2d(16, 4, 1), nn.Flatten())
-        elif network == Networks.Large:
-            self.model = nn.Sequential(nn.Conv2d(dim, 32, 3), nn.LeakyReLU(), nn.Conv2d(32, 64, 3), nn.LeakyReLU(), nn.Conv2d(64, 128, 3), nn.LeakyReLU(), nn.Conv2d(128, 64, 3), nn.LeakyReLU(), nn.Conv2d(64, 32, 3), nn.LeakyReLU(), nn.Conv2d(32, 4, 1), nn.Flatten())
+        elif network == Networks.Teleporter:
+            self.model = nn.Sequential(nn.Conv2d(dim, 64, 3), nn.LeakyReLU(), nn.Conv2d(64, 32, 3), nn.LeakyReLU(), nn.Flatten(), nn.Linear(32 * (width - 4) * (height - 4), 32), nn.LeakyReLU(), nn.Linear(32, height * width), nn.Flatten())
         elif network == Networks.Mini:
-            self.model = nn.Sequential(nn.Conv2d(dim, 64, 3), nn.LeakyReLU(), nn.Conv2d(64, 32, 3), nn.LeakyReLU(), nn.Conv2d(32, 32, 5), nn.LeakyReLU(), nn.Conv2d(32, 4, 1), nn.Flatten())
+            self.model = nn.Sequential(nn.Conv2d(dim, 64, 3), nn.LeakyReLU(), nn.Conv2d(64, 32, 3), nn.LeakyReLU(), nn.Flatten(), nn.Linear(32 * (width - 4) * (height - 4), 32), nn.LeakyReLU(), nn.Linear(32, 4), nn.Flatten())
 
     def forward(self, x: Tensor):
         return self.model(x)
@@ -30,10 +30,10 @@ class Network(nn.Module):
 
 
 class Net:
-    def __init__(self, dim: int, network: Networks, update: int = None, **kwargs):
-        self.network = Network(dim, network).to(device)
-        self.placeholder = Network(dim, network).to(device)
-        self.target = Network(dim, network).to(device)
+    def __init__(self, dim: int, width: int, height: int, network: Networks, update: int = None, **kwargs):
+        self.network = Network(dim, width, height, network).to(device)
+        self.placeholder = Network(dim, width, height, network).to(device)
+        self.target = Network(dim, width, height, network).to(device)
         self.i = 1
         self.n = update
 

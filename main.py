@@ -7,13 +7,13 @@ from save import Save
 
 class Defaults:
     name: str = "Agent"
-    network1: Networks = Networks.Large
-    learner1: Learners = Learners.Qlearn
+    network1: Networks = Networks.Teleporter
     network2: Networks = Networks.Mini
+    learner1: Learners = Learners.Qlearn
     learner2: Learners = Learners.Qlearn
+    exploration1: Explorations = Explorations.epsilonGreedy
+    exploration2: Explorations = Explorations.epsilonGreedy
     gamma: float = 0.95
-    exploration1: Explorations = Explorations.softmaxer
-    exploration2: Explorations = Explorations.softmaxer
     K: float = 500000
     batch: int = 100
     hours: float = 12.0
@@ -26,7 +26,7 @@ class Defaults:
 def main(defaults):
     collector = Collector()
     env = Game(**defaults)
-    mover = Mover(env, **defaults)
+    mover = Teleport_intervention(env, **defaults)
     # teleporter = Teleport_intervention(env, **defaults)
 
     with Save(collector, mover, **defaults) as save:
