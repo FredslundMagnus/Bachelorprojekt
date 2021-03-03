@@ -11,7 +11,10 @@ class Load:
         return self
 
     def __exit__(self, type, value, traceback):
-        self.save()
+        pass
+
+    def items(self, *args):
+        pass
 
     def load(self):
         start = Load.path("trainlocally" if self.isLocal else "outputs", self.name)
