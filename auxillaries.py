@@ -109,6 +109,6 @@ def random(board: Tensor) -> Tensor:
     return tensor([choice([0, 1, 2, 3]) for _ in range(board.shape[0])])
 
 
-def run(Defaults, main):
+def run(Defaults):
     if sys.argv[0].split("\\")[-1].split("/")[-1] == "main.py":
-        (serverRun if isServer else main).__call__(getvals(Defaults))
+        (serverRun if isServer else Defaults.main).__call__(getvals(Defaults))

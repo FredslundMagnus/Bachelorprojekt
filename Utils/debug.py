@@ -64,13 +64,13 @@ def profilingStats():
 
 
 class Timer:
-    def __init__(self) -> None:
+    def __init__(self, main: str) -> None:
         self.start = time.time()
         self.error = None
         try:
             cProfile.run(
-                """from auxillaries import getvals
-main(getvals(Defaults))""", 'stats')
+                f"""from auxillaries import getvals
+{main}(getvals(Defaults))""", 'stats')
         except Exception:
             self.error = traceback.format_exc()
         self.time = time.time() - self.start
@@ -92,7 +92,9 @@ def checkServer():
 
 def showParams(params):
     disablePrint()
-    timer = Timer()
+    if params['main'].__class__ == checkServer.__class__:
+        params['main'] = params['main'].__name__
+    timer = Timer(params['main'])
     enablePrint()
     if timer.error:
         print(timer.error)

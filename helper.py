@@ -17,3 +17,7 @@ def move_figure(f, x, y):
         # This works for QT and GTK
         # You can also use window.setGeometry
         f.canvas.manager.window.move(x, y)
+
+
+class function:
+    __name__: str
