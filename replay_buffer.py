@@ -14,7 +14,7 @@ class replay_buffer:
 
     def stacker(self, sample):
         arays = list(zip(*sample))
-        return tensor(arays[0]).unsqueeze(1).float().to(device), tensor(arays[1]).float().to(device), tensor(arays[2]).unsqueeze(1).float().to(device), tensor(arays[3]).float().to(device), tensor(arays[4]).float().to(device), tensor(arays[5]).float().to(device), tensor(arays[6]).to(device)
+        return concatenation(arays[0], 0), concatenation(arays[1], 0), concatenation(arays[2], 0), concatenation(arays[3], 0), concatenation(arays[4], 0)
 
     def sample_data(self, batch):
         samples = (random.sample(self.buffer[:min(self.counter, self.replay_size)], min(batch, self.counter)))

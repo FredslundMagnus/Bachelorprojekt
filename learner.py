@@ -44,10 +44,7 @@ class Learner():
         vals_target_next = self.net.target(state_after)
         value_next, _ = torch.max(vals_target_next, 1)
         td_target = (value_next.view(-1) * self.gamma * (1 - done) + reward).view(-1).detach()
-        #print(state_after[0])
         action_value_before = torch.gather(value_before, 1, action.unsqueeze(1)).squeeze(1)
-        #if self.counter % 100 == 0:
-        #    print(action.unsqueeze(1)[0], value_before[0], td_target[0])
         loss_value_network = self.criterion(action_value_before, td_target)
         loss_value_network.backward()
         self.optimizer.step()

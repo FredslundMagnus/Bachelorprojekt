@@ -8,15 +8,17 @@ from abc import ABCMeta, abstractmethod
 from exploration import Exploration, Explorations
 import torch
 from helper import device
-
+from replay_buffer import replay_buffer
 
 class Agent(metaclass=ABCMeta):
-    def __init__(self, game: Game, network: Networks, learner: Learners, exploration: Explorations, width: int = None, height: int = None, **kwargs) -> None:
+    def __init__(self, game: Game, network: Networks, learner: Learners, exploration: Explorations, width: int = None, height: int = None, batch: int = None, replay_buffer: replay_buffer = None, **kwargs) -> None:
+        self.batch = batch
         self.height = height
         self.width = width
         self.net = Net(len(game.layers), width, height, network, **kwargs)
         self.learner = Learner(self.net, learner, **kwargs)
         self.exploration = Exploration(exploration, **kwargs)
+        self.replay_buffer = replay_buffer(self.batch * 100)
 
     @abstractmethod
     def __call__(self, board: Tensor) -> Tensor:
@@ -34,6 +36,8 @@ class Agent(metaclass=ABCMeta):
 class Teleport_intervention(Agent):
     def __init__(self, game: Game, network1: Networks = None, learner1: Learners = None, exploration1: Explorations = None, **kwargs) -> None:
         super().__init__(game, network1, learner1, exploration1, **kwargs)
+        self.current_boards = [None] * self.batch
+        self.current_interventions = torch.zeros(self.batch, device=device)
 
     def __call__(self, board: Tensor) -> Tensor:
         self.values: Tensor = self.net.network(board)
