@@ -1,9 +1,18 @@
 from typing import Tuple
 
 
+class Transparent:
+    def __init__(self, r: int, g: int, b: int, alpha: int) -> None:
+        self.color: Tuple[int, int, int, int] = (r, g, b, alpha)
+
+
 class Color:
     def __init__(self, r: int, g: int, b: int) -> None:
         self.color: Tuple[int, int, int] = (r, g, b)
+
+    def transparrent(self, alpha=255):
+        r, g, b = self.color
+        return Transparent(r, g, b, alpha)
 
 
 class MaterialColor(Color):
@@ -20,6 +29,10 @@ class MaterialColor(Color):
         self.c900: Color = c900
         self.color: Tuple[int, int, int] = c500.color
         self.table: dict[int, Color] = {50: c50, 100: c100, 200: c200, 300: c300, 400: c400, 500: c500, 600: c600, 700: c700, 800: c800, 900: c900}
+
+    def transparrent(self, alpha=255):
+        r, g, b = self.c500.color
+        return Transparent(r, g, b, alpha)
 
     def __getitem__(self, index: int) -> Color:
         return self.table[index]
