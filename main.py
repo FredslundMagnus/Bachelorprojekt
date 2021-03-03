@@ -17,8 +17,8 @@ class Defaults:
     K: float = 500000
     batch: int = 100
     hours: float = 12.0
-    width: int = 9
-    height: int = 9
+    width: int = 11
+    height: int = 11
     update: int = 1000
     reset_chance: float = 0.002
 
@@ -36,7 +36,7 @@ def main(defaults):
             observations, rewards, dones = env.step(actions)
             modified_observations, modified_rewards, modified_dones = teleporter.modify(intervention, observations, rewards, dones)
             mover.learn(modified_observations, actions, modified_rewards, modified_dones) # mover.learn(observations, actions, rewards, dones)
-            # teleporter.learn(observations, intervention, rewards, dones)
+            teleporter.learn(observations, intervention, rewards, dones)
             collector.collect(rewards, dones)
 
 

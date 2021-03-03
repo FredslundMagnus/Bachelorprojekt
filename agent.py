@@ -1,11 +1,13 @@
 from network import Net, Networks
 from game import Game
 from learner import Learner, Learners
-from torch import Tensor
+from torch import Tensor, random
 import torch
 from typing import List
 from abc import ABCMeta, abstractmethod
 from exploration import Exploration, Explorations
+import torch
+from helper import device
 
 
 class Agent(metaclass=ABCMeta):
@@ -46,10 +48,11 @@ class Teleport_intervention(Agent):
         modified_board = torch.cat((board, intervention_layer), 1)
         return modified_board
     
-    def modify(self, intervention, board, rewards, dones):
+    def modify(self, intervention, board, rewards, dones, modified_done_chance = 0.01):
         modified_board = self.modify_board(intervention, board)
-        modified_rewards = rewards + torch.sum(modified_board[:,0,:,:] * modified_board[:,-1,:,:], (1, 2))
-        modified_dones = dones
+        modified_rewards = torch.sum(modified_board[:,0,:,:] * modified_board[:,-1,:,:], (1, 2))
+        modified_dones = torch.clone(modified_rewards)
+        modified_dones[(torch.rand(len(modified_rewards)) < modified_done_chance) == True] = 1
         return modified_board, modified_rewards, modified_dones
 
 
