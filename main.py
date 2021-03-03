@@ -12,7 +12,7 @@ def teleport(defaults):
     mover = Mover(env, **defaults)
     teleporter = Teleport_intervention(env, **defaults)
 
-    with Save(collector, mover, **defaults) as save:
+    with Save(collector, mover, teleporter, **defaults) as save:
         for frame in loop(env, collector, save):
             modified_board, intervention = teleporter(env.board)
             actions = mover(modified_board)  # actions = mover(env.board)
@@ -20,6 +20,19 @@ def teleport(defaults):
             modified_observations, modified_rewards, modified_dones = teleporter.modify(intervention, observations, rewards, dones)
             mover.learn(modified_observations, actions, modified_rewards, modified_dones)  # mover.learn(observations, actions, rewards, dones)
             teleporter.learn(observations, intervention, rewards, dones)
+            collector.collect(rewards, dones)
+
+
+def simple(defaults):
+    collector = Collector()
+    env = Game(**defaults)
+    mover = Mover(env, **defaults)
+
+    with Save(collector, mover, **defaults) as save:
+        for frame in loop(env, collector, save):
+            actions = mover(env.board)
+            observations, rewards, dones = env.step(actions)
+            mover.learn(observations, actions, rewards, dones)
             collector.collect(rewards, dones)
 
 
