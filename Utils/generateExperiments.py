@@ -1,5 +1,5 @@
 
-from main import Defaults, teleport, tester
+from main import Defaults, teleport, simple
 from network import Networks
 from learner import Learners
 
@@ -7,7 +7,7 @@ from learner import Learners
 file = open('Utils/experiments.sh', 'w')
 file.write('#!/bin/sh\n')
 
-features, folders = dict(Defaults.__annotations__), ['', 'Markdown', 'Agents', "Collectors"]
+features, folders = dict(Defaults.__annotations__), ['', 'Markdown']
 
 
 def check(params):
@@ -36,7 +36,7 @@ def genExperiments(name, n=1, **params):
         file.write(f'bsub -o "../outputs/{name}/Markdown/{name}_{i}.md" -J "{name}_{i}" -P "-name {name}-{i} {" ".join(f"-{name} {value}" for name, value in params.items())}" < submit.sh\n')
 
 
-genExperiments(f"test_run_8", gamma=1.0, network1=Networks.Small, learner1=Learners.DoubleQlearn, hours=3, main=teleport)
+genExperiments(f"test_run_9", gamma=1.0, network1=Networks.Small, learner1=Learners.DoubleQlearn, hours=0.3, main=simple)
 
 
 file.close()

@@ -23,7 +23,7 @@
             "console": "integratedTerminal",
             "args": [
               "-name",
-              "testing_name",
+              "testing_name-0",
               "-learner",
               "Learners.DoubleQlearn",
               "-hours",
