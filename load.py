@@ -26,9 +26,9 @@ class Load:
         if "Markdown" in elements:
             elements.remove("Markdown")
         for element in elements:
-            self.d[element] = self.loadObject(element, start, element)
+            self.d[element] = self.loadObject(start, element)
 
-    def loadObject(self, element, start, _class):
+    def loadObject(self, start, _class):
         name = f"/{self.name + self.num}.{_class}"
         return pickle.load(open(Load.path(start, _class) + name, "rb"))
 
