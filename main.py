@@ -43,7 +43,7 @@ def teleport(defaults):
                 board_before, board_after, action, tele_rewards, tele_dones = buffer.sample_data(batch=100)
                 teleporter(board_before)
                 teleporter.learn(board_after, action.long(), tele_rewards, tele_dones)
-            collector.collect(rewards, dones)
+            collector.collect(rewards, dones, modified_rewards, modified_dones)
             first_intervention = False
 
 
@@ -57,13 +57,13 @@ def simple(defaults):
             actions = mover(env.board)
             observations, rewards, dones = env.step(actions)
             mover.learn(observations, actions, rewards, dones)
-            collector.collect(rewards, dones)
+            collector.collect(rewards, dones, rewards, dones)
 
 
 class Defaults:
     name: str = "Agent"
     network1: Networks = Networks.Teleporter
-    network2: Networks = Networks.Mini
+    network2: Networks = Networks.Teleporter
     learner1: Learners = Learners.Qlearn
     learner2: Learners = Learners.Qlearn
     exploration1: Explorations = Explorations.epsilonGreedy
@@ -73,11 +73,11 @@ class Defaults:
     K: float = 500000
     batch: int = 100
     hours: float = 12.0
-    width: int = 7
-    height: int = 7
+    width: int = 11
+    height: int = 11
     update: int = 1000
     reset_chance: float = 0.002
-    main: function = simple
+    main: function = teleport
 
 
 run(Defaults)
