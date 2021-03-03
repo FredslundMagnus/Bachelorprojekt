@@ -63,7 +63,7 @@ def simple(defaults):
 class Defaults:
     name: str = "Agent"
     network1: Networks = Networks.Teleporter
-    network2: Networks = Networks.Teleporter
+    network2: Networks = Networks.Mini
     learner1: Learners = Learners.Qlearn
     learner2: Learners = Learners.Qlearn
     exploration1: Explorations = Explorations.epsilonGreedy
