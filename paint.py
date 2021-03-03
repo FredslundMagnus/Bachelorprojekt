@@ -41,13 +41,15 @@ class Paint:
             Paint.write(f"Frames: {frame}", game.layers.width/2, 0)
             Paint.write(f"Game: {Paint.dim}", game.layers.width/2, game.layers.height-1)
             if teleporter != None:
-                val = int(teleporter.current_interventions[Paint.dim])
-                y, x = divmod(val, game.layers.width)
-                Paint.drawRect(Colors.indigo.transparrent(100), size, x, y)
+                y, x = divmod(int(teleporter.current_interventions[Paint.dim]), game.layers.width)
+                Paint.drawRect(Colors.indigo.transparrent(180), size, x, y)
 
     @staticmethod
     def drawRect(color: Color, size: int, x: int, y: int) -> None:
-        Paint.pygame.draw.rect(Paint.screen, color.color, Paint.pygame.Rect(x*Paint.size + (Paint.size - size*Paint.size) // 2, y*Paint.size + (Paint.size - size*Paint.size) // 2, size*Paint.size, size*Paint.size))
+        rect = Paint.pygame.Rect(x*Paint.size + (Paint.size - size*Paint.size) // 2, y*Paint.size + (Paint.size - size*Paint.size) // 2, size*Paint.size, size*Paint.size)
+        shape_surf = Paint.pygame.Surface(rect.size, Paint.pygame.SRCALPHA)
+        Paint.pygame.draw.rect(shape_surf, color.color, shape_surf.get_rect())
+        Paint.screen.blit(shape_surf, rect)
 
     @staticmethod
     def drawCircle(color: Color, size: int, x: int, y: int) -> None:
