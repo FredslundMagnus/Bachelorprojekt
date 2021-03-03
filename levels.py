@@ -9,8 +9,6 @@ class Maze(Level):
         super().__init__(uses, shape, start, end)
 
     def generate(self):
-        if LayerType.Blocks not in self.uses:
-            return False
         xs = [i for i in range(1, self.shape[0]+1) if i % 2 == 1]
         ys = [i for i in range(1, self.shape[1]+1) if i % 2 == 1]
         if self.shape[0] % 2 == 0:
@@ -35,9 +33,9 @@ class Maze(Level):
             for a in ((x, y) for x in range(min(start[0], end[0]), max(start[0], end[0])+1) for y in range(min(start[1], end[1]), max(start[1], end[1])+1)):
                 self.noBlocks.add(a)
 
-        for pos in self.inverse(self.noBlocks):
-            self.level[LayerType.Blocks].append(pos)
-
+        if LayerType.Blocks in self.uses:
+            for pos in self.inverse(self.noBlocks):
+                self.level[LayerType.Blocks].append(pos)
         if LayerType.Player in self.uses:
             self.level[LayerType.Player].append(self.start)
         if LayerType.Goal in self.uses:
