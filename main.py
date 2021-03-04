@@ -29,13 +29,13 @@ def teleport(defaults):
             for i in range(len(intervention_idx)):
                 batch_idx = intervention_idx[i]
                 if not first_intervention:
-                    buffer.save_data((torch.clone(teleporter.current_boards[batch_idx].unsqueeze(0)), torch.clone(observations[batch_idx].unsqueeze(0)), torch.clone(teleporter.current_interventions[batch_idx].unsqueeze(0)), torch.clone(my_rewards[batch_idx].unsqueeze(0)), torch.clone(dones[batch_idx].unsqueeze(0))))
+                    buffer.save_data((torch.clone(teleporter.current_boards[batch_idx].unsqueeze(0)), torch.clone(observations[batch_idx].unsqueeze(0)), torch.clone(teleporter.current_interventions[batch_idx].unsqueeze(0)), torch.clone(tele_rewards[batch_idx].unsqueeze(0)), torch.clone(dones[batch_idx].unsqueeze(0))))
                 teleporter.current_boards[batch_idx] = env.board[batch_idx]
                 modified_board[batch_idx] = new_boards[i]
                 teleporter.current_interventions[batch_idx] = intervention[i]
             actions = mover(modified_board)
             observations, rewards, dones = env.step(actions)
-            modified_board, modified_rewards, modified_dones, my_rewards = teleporter.modify(teleporter.current_interventions.to(dtype=int), observations, rewards, dones, modified_board)
+            modified_board, modified_rewards, modified_dones, tele_rewards = teleporter.modify(teleporter.current_interventions.to(dtype=int), observations, rewards, dones, modified_board)
             mover.learn(modified_board, actions, modified_rewards, modified_dones)
             if frame > 100:
                 board_before, board_after, action, tele_rewards, tele_dones = buffer.sample_data(batch=100)
