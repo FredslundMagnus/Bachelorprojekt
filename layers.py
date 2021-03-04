@@ -231,6 +231,8 @@ class Layers:
             layer.check(batch, self.dict)
 
     def restart(self, batch: int):
+        if (x := self.dict[LayerType.Player].positions[batch]):
+            self.info[batch]['player_end'] = x[0]
         level = Maze(self.types, (self.width-2, self.height-2)).level
         for layer in self.layers:
             layer.restart(batch, level[layer.type])

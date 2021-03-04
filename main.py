@@ -35,6 +35,7 @@ def teleport(defaults):
                 teleporter.current_interventions[batch_idx] = intervention[i]
             actions = mover(modified_board)
             observations, rewards, dones, info = env.step(actions)
+            print(info)
             modified_board, modified_rewards, modified_dones, my_rewards = teleporter.modify(teleporter.current_interventions.to(dtype=int), observations, rewards, dones, modified_board)
             mover.learn(modified_board, actions, modified_rewards, modified_dones)
             if frame > 100:
