@@ -16,7 +16,7 @@ def teleport(defaults):
     env = Game(**defaults)
     mover = Mover(env, _extra_dim=1, **defaults)
     teleporter = Teleport_intervention(env, **defaults)
-    buffer = replay_buffer(size=10000)
+    buffer = replay_buffer(size=20000)
 
     with Save(collector, mover, teleporter, **defaults) as save:
         modified_dones = torch.ones(env.layers.board.shape[0], device=device)
