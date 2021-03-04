@@ -29,21 +29,16 @@ def teleport(defaults):
             for i in range(len(intervention_idx)):
                 batch_idx = intervention_idx[i]
                 if not first_intervention:
-                    buffer.save_data((teleporter.current_boards[batch_idx].unsqueeze(0), observations[batch_idx].unsqueeze(0), teleporter.current_interventions[batch_idx].unsqueeze(0), rewards[batch_idx].unsqueeze(0), dones[batch_idx].unsqueeze(0)))
+                    buffer.save_data((torch.clone(teleporter.current_boards[batch_idx].unsqueeze(0)), torch.clone(observations[batch_idx].unsqueeze(0)), torch.clone(teleporter.current_interventions[batch_idx].unsqueeze(0)), torch.clone(rewards[batch_idx].unsqueeze(0)), torch.clone(dones[batch_idx].unsqueeze(0))))
                 teleporter.current_boards[batch_idx] = env.board[batch_idx]
                 modified_board[batch_idx] = new_boards[i]
                 teleporter.current_interventions[batch_idx] = intervention[i]
             actions = mover(modified_board)
             observations, rewards, dones = env.step(actions)
             modified_board, modified_rewards, modified_dones = teleporter.modify(teleporter.current_interventions.to(dtype=int), observations, rewards, dones, modified_board)
-            #if modified_rewards[0] != 0 or modified_dones[0] != 0:
-                #print(for_print, modified_board[0], actions[0], modified_rewards[0], modified_dones[0])
             mover.learn(modified_board, actions, modified_rewards, modified_dones)
             if frame > 100:
-                board_before, board_after, action, tele_rewards, tele_dones = buffer.sample_data(batch=10)
-                #if tele_rewards[0] != 0 or tele_dones[0] != 0:
-                if torch.argmax(board_before[0, 1]) == action.long()[0]:
-                    print(board_before[0], board_after[0], action.long()[0], tele_rewards[0], tele_dones[0])
+                board_before, board_after, action, tele_rewards, tele_dones = buffer.sample_data(batch=1)
                 teleporter(board_before)
                 teleporter.learn(board_after, action.long(), tele_rewards, tele_dones)
             collector.collect(rewards, dones, modified_rewards, modified_dones)
@@ -76,8 +71,8 @@ class Defaults:
     K: float = 10000
     batch: int = 100
     hours: float = 12.0
-    width: int = 5
-    height: int = 5
+    width: int = 11
+    height: int = 11
     update: int = 1000
     reset_chance: float = 0.000
     main: function = teleport

@@ -59,8 +59,6 @@ class Teleport_intervention(Agent):
         modified_dones = torch.clone(modified_rewards)
         modified_dones[dones == 1] = 1
         modified_dones[(torch.rand(len(modified_rewards)) < modified_done_chance) == True] = 1
-        #if modified_rewards[0] != 0:
-        #    print(old_modified[0], modified_board[0], modified_dones[0], modified_rewards[0])
         return modified_board, modified_rewards, modified_dones
 
 
