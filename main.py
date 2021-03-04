@@ -48,7 +48,7 @@ def teleport(defaults):
                 board_before, board_after, action, tele_rewards, tele_dones = buffer.sample_data(batch=100)
                 teleporter(board_before)
                 teleporter.learn(board_after, action.long(), tele_rewards, tele_dones)
-            print(rewards[0], dones[0], modified_rewards[0], modified_dones[0], tele_rewards[0])
+            print(rewards[0], dones[0], modified_rewards[0], modified_dones[0], my_rewards[0])
             collector.collect(rewards, dones, modified_rewards, modified_dones)
             first_intervention = False
 
