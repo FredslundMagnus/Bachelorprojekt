@@ -17,7 +17,7 @@ class Learner():
         self.net = net
         self.gamma = gamma
         self.criterion = MSELoss()
-        self.optimizer = Adam(self.net.network.parameters(), lr=1e-4, weight_decay=1e-5)
+        self.optimizer = Adam(self.net.network.parameters(), lr=1e-5, weight_decay=1e-5)
         if learner == Learners.DoubleQlearn:
             self.learn = self.DoubleQlearn
         elif learner == Learners.Qlearn:

@@ -60,17 +60,12 @@ class Collector:
 
     def collect(self, rewards: List[float], dones: List[int], Irewards: List[float], Idones: List[int]):
         self.counter += 1
-        average_reward = sum(rewards)/len(rewards)
-        average_done = sum(dones)/len(dones)
 
-        average_Ireward = sum(Irewards)/len(Irewards)
-        average_Idone = sum(Idones)/len(Idones)
+        self.rewards += sum(rewards)/len(rewards)
+        self.dones += sum(dones)/len(dones)
 
-        self.rewards += average_reward
-        self.dones += average_done
-
-        self.Irewards += average_Ireward
-        self.Idones += average_Idone
+        self.Irewards += sum(Irewards)/len(Irewards)
+        self.Idones += sum(dones)/len(dones)
 
         if self.counter % self.filter_size == 0:
             self.running_rewards.append(self.rewards/self.filter_size)

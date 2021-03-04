@@ -1,3 +1,4 @@
+from layers import Player
 from torch import long
 from game import Game
 from agent import Teleport_intervention, Mover, Networks, Learners, Explorations
@@ -39,14 +40,15 @@ def teleport(defaults):
                 teleporter.current_interventions[batch_idx] = intervention[i]
             actions = mover(modified_board)
             observations, rewards, dones, info = env.step(actions)
-            #print(modified_board[0])
+            #print(intervention[0], actions[0], rewards[0], dones[0])
             modified_board, modified_rewards, modified_dones, my_rewards = teleporter.modify(teleporter.current_interventions.to(dtype=int), observations, rewards, dones, info)
-            #print(modified_board[0], actions[0], modified_rewards[0], modified_dones[0])
-            mover.learn(modified_board, actions, modified_rewards, modified_dones)
+            #print(modified_rewards[0], modified_dones[0], my_rewards[0])
+            #mover.learn(modified_board, actions, modified_rewards, modified_dones)
             if frame > 100:
                 board_before, board_after, action, tele_rewards, tele_dones = buffer.sample_data(batch=100)
                 teleporter(board_before)
                 teleporter.learn(board_after, action.long(), tele_rewards, tele_dones)
+            print(rewards[0], dones[0], modified_rewards[0], modified_dones[0], tele_rewards[0])
             collector.collect(rewards, dones, modified_rewards, modified_dones)
             first_intervention = False
 
@@ -74,11 +76,11 @@ class Defaults:
     exploration2: Explorations = Explorations.epsilonGreedy
     replay_buffer: replay_buffer = replay_buffer
     gamma: float = 0.95
-    K: float = 10000
+    K: float = 250000
     batch: int = 100
     hours: float = 12.0
-    width: int = 5
-    height: int = 5
+    width: int = 11
+    height: int = 11
     update: int = 1000
     reset_chance: float = 0.002
     main: function = teleport
