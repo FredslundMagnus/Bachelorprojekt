@@ -40,8 +40,10 @@ def teleport(defaults):
                 #print(for_print, modified_board[0], actions[0], modified_rewards[0], modified_dones[0])
             mover.learn(modified_board, actions, modified_rewards, modified_dones)
             if frame > 100:
-                board_before, board_after, action, tele_rewards, tele_dones = buffer.sample_data(batch=100)
-                #print(board_before[0], board_after[0], action.long()[0], tele_rewards[0], tele_dones[0])
+                board_before, board_after, action, tele_rewards, tele_dones = buffer.sample_data(batch=10)
+                #if tele_rewards[0] != 0 or tele_dones[0] != 0:
+                if torch.argmax(board_before[0, 1]) == action.long()[0]:
+                    print(board_before[0], board_after[0], action.long()[0], tele_rewards[0], tele_dones[0])
                 teleporter(board_before)
                 teleporter.learn(board_after, action.long(), tele_rewards, tele_dones)
             collector.collect(rewards, dones, modified_rewards, modified_dones)
@@ -77,7 +79,7 @@ class Defaults:
     width: int = 5
     height: int = 5
     update: int = 1000
-    reset_chance: float = 0.002
+    reset_chance: float = 0.000
     main: function = teleport
 
 
