@@ -34,7 +34,7 @@ def teleport(defaults):
                 modified_board[batch_idx] = new_boards[i]
                 teleporter.current_interventions[batch_idx] = intervention[i]
             actions = mover(modified_board)
-            observations, rewards, dones = env.step(actions)
+            observations, rewards, dones, info = env.step(actions)
             modified_board, modified_rewards, modified_dones, my_rewards = teleporter.modify(teleporter.current_interventions.to(dtype=int), observations, rewards, dones, modified_board)
             mover.learn(modified_board, actions, modified_rewards, modified_dones)
             if frame > 100:
@@ -53,7 +53,7 @@ def simple(defaults):
     with Save(env, collector, mover, **defaults) as save:
         for frame in loop(env, collector, save):
             actions = mover(env.board)
-            observations, rewards, dones = env.step(actions)
+            observations, rewards, dones, info = env.step(actions)
             mover.learn(observations, actions, rewards, dones)
             collector.collect(rewards, dones, rewards, dones)
 
