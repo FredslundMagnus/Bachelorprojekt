@@ -209,10 +209,11 @@ class Layers:
             layer.update(self.board)
         return rewards, dones
 
-    def step(self, action: List[int]) -> Tuple[List[float], List[int]]:
+    def step(self, action: List[int]) -> Tuple[List[float], List[int], List[dict]]:
+        self.info = [{} for _ in range(self.batch)]
         self.player.step(action, self)
         rewards, dones = self.update()
-        return rewards, dones
+        return rewards, dones, self.info
 
     def getColorable(self, dim: int):
         for layer in self.layers:
@@ -230,6 +231,8 @@ class Layers:
             layer.check(batch, self.dict)
 
     def restart(self, batch: int):
+        if (x := self.dict[LayerType.Player].positions[batch]):
+            self.info[batch]['player_end'] = x[0]
         level = Maze(self.types, (self.width-2, self.height-2)).level
         for layer in self.layers:
             layer.restart(batch, level[layer.type])
