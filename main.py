@@ -38,7 +38,7 @@ def teleport(defaults):
             modified_board, modified_rewards, modified_dones = teleporter.modify(teleporter.current_interventions.to(dtype=int), observations, rewards, dones, modified_board)
             mover.learn(modified_board, actions, modified_rewards, modified_dones)
             if frame > 100:
-                board_before, board_after, action, tele_rewards, tele_dones = buffer.sample_data(batch=1)
+                board_before, board_after, action, tele_rewards, tele_dones = buffer.sample_data(batch=100)
                 teleporter(board_before)
                 teleporter.learn(board_after, action.long(), tele_rewards, tele_dones)
             collector.collect(rewards, dones, modified_rewards, modified_dones)
@@ -71,10 +71,10 @@ class Defaults:
     K: float = 10000
     batch: int = 100
     hours: float = 12.0
-    width: int = 11
-    height: int = 11
+    width: int = 7
+    height: int = 7
     update: int = 1000
-    reset_chance: float = 0.000
+    reset_chance: float = 0.002
     main: function = teleport
 
 
