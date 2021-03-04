@@ -52,10 +52,13 @@ class Teleport_intervention(Agent):
         modified_board = torch.cat((board, intervention_layer), 1)
         return modified_board
 
-    def modify(self, intervention, board, rewards, dones, old_modified, modified_done_chance=0.01, miss_intervention_cost = -0.2, intervention_cost = 0):
+    def modify(self, intervention, board, rewards, dones, info, modified_done_chance=0.01, miss_intervention_cost = -0.2, intervention_cost = 0):
         modified_board = self.modify_board(intervention, board)
         modified_rewards = torch.sum(modified_board[:, 0] * modified_board[:, -1], (1, 2)) * (1 - rewards)
-        modified_rewards += rewards * torch.sum(old_modified[:, -1] * old_modified[:, -2], (1, 2))
+        for i in range(len(info)):
+            if 'player_end' in info[i]:
+                 modified_rewards[i] += modified_board[i, -1][info[i]['player_end']]
+
         modified_dones = torch.clone(modified_rewards)
         modified_dones[dones == 1] = 1
         rands = torch.rand(len(modified_rewards))
