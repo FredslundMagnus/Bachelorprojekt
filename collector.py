@@ -49,7 +49,7 @@ class Collector:
 
         fig = plt.figure()
         move_figure(fig, 1200, 520)
-        plt.plot(self.Iwin_percent, label="modified reward per game")
+        plt.plot(self.Iwin_percent, label="modified reward per modified game")
         plt.legend(loc="upper left")
 
         plt.pause(10)
