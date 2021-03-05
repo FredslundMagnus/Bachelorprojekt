@@ -6,7 +6,8 @@ import matplotlib
 device = devicer('cuda' if cuda.is_available() else 'cpu')
 
 
-def move_figure(f, x, y):
+def move_figure(f, pos):
+    x, y = pos
     """Move figure's upper left corner to pixel (x, y)"""
     backend = matplotlib.get_backend()
     if backend == 'TkAgg':

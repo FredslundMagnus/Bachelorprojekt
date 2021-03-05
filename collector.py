@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 import matplotlib.pyplot as plt
 import numpy as np
 from time import sleep
@@ -6,51 +6,26 @@ from helper import move_figure
 
 
 class Collector:
-    def __init__(self) -> None:
+    def __init__(self, batch: int = None, **kwargs) -> None:
+        self.batch = batch
         self.counter = 0
         self.filter_size = 1000
-        self.rewards = 10**(-6)
-        self.dones = 10**(-6)
-        self.running_rewards = []
-        self.running_dones = []
-        self.win_percent = []
-
-        self.Irewards = 10**(-6)
-        self.Idones = 10**(-6)
-        self.running_Irewards = []
-        self.running_Idones = []
-        self.Iwin_percent = []
+        self.rewards = []
+        self.dones = []
+        self.data = {}
         
     def show(self, game) -> None:
-        fig = plt.figure()
-        move_figure(fig, 0, 0)
-        plt.plot(self.running_rewards, label="reward per action")
-        plt.legend(loc="upper left")
+        plot_positions = [(0,0), (600,0), (1200, 0), (0, 520), (600, 520), (1200, 520)]
 
-        fig = plt.figure()
-        move_figure(fig, 600, 0)
-        plt.plot(self.running_dones, label="game length")
-        plt.legend(loc="upper left")
-
-        fig = plt.figure()
-        move_figure(fig, 1200, 0)
-        plt.plot(self.win_percent, label="reward per game")
-        plt.legend(loc="upper left")
-
-        fig = plt.figure()
-        move_figure(fig, 0, 520)
-        plt.plot(self.running_Irewards, label="modified reward per action")
-        plt.legend(loc="upper left")
-
-        fig = plt.figure()
-        move_figure(fig, 600, 520)
-        plt.plot(self.running_Idones, label="modified game length")
-        plt.legend(loc="upper left")
-
-        fig = plt.figure()
-        move_figure(fig, 1200, 520)
-        plt.plot(self.Iwin_percent, label="modified reward per modified game")
-        plt.legend(loc="upper left")
+        i = 0
+        for key in self.data:
+            fig = plt.figure()
+            move_figure(fig, plot_positions[i % len(plot_positions)])
+            plt.plot(self.data[key], label=str("reward type: " + str(key[0]) + " done type: " + str(key[1])))
+            plt.xlabel("Seen frames in " + str(self.batch * self.filter_size))
+            plt.ylabel("reward over dones")
+            plt.legend(loc="upper left")
+            i += 1
 
         plt.pause(10)
         plt.close('all')
@@ -58,24 +33,22 @@ class Collector:
     def hide(self) -> None:
         plt.close('all')
 
-    def collect(self, rewards: List[float], dones: List[int], Irewards: List[float], Idones: List[int]):
+    def collect(self, rewards, dones):
         self.counter += 1
-
-        self.rewards += sum(rewards)/len(rewards)
-        self.dones += sum(dones)/len(dones)
-
-        self.Irewards += sum(Irewards)/len(Irewards)
-        self.Idones += sum(Idones)/len(dones)
+        if self.rewards == [] and self.dones == []:
+            self.rewards = [10**(-6)] * len(rewards)
+            self.dones = [10**(-6)] * len(dones)
+        for i in range(len(rewards)):
+            self.rewards[i] += sum(rewards[i])/len(rewards[i])
+        for i in range(len(dones)):
+            self.dones[i] += sum(dones[i])/len(dones[i])
+            
 
         if self.counter % self.filter_size == 0:
-            self.running_rewards.append(self.rewards/self.filter_size)
-            self.running_dones.append(self.filter_size/self.dones)
-            self.win_percent.append(self.rewards/self.dones)
-            self.rewards = 10**(-6)
-            self.dones = 10**(-6)
-
-            self.running_Irewards.append(self.Irewards/self.filter_size)
-            self.running_Idones.append(self.filter_size/self.Idones)
-            self.Iwin_percent.append(self.Irewards/self.Idones)
-            self.Irewards = 10**(-6)
-            self.Idones = 10**(-6)
+            for i in range(len(rewards)):
+                for k in range(len(dones)):
+                    if (i,k) not in self.data:
+                        self.data[(i,k)] = []
+                    self.data[(i,k)].append(self.rewards[i]/self.dones[k])
+            self.rewards = []
+            self.dones = []

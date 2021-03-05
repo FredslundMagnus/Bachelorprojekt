@@ -33,12 +33,12 @@ class Exploration:
 
     @property
     def K_(self):
-        return max(0.02, self.K / (50 * self.counter))
+        return max(0.05, self.K / (5 * self.counter))
 
     def greedy(self, vals):
         vals.detach()
         self.counter += 1
-        if self.counter % 1000 == 1:
+        if self.counter % 10000 == 1:
             print(f"({str(float(torch.min(vals[0])))[:4]}, {str(float(torch.max(vals[0])))[:4]})", end=", ")
         return torch.argmax(vals, dim=1)
 

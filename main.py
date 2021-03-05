@@ -12,7 +12,7 @@ from helper import device
 
 
 def teleport(defaults):
-    collector = Collector()
+    collector = Collector(**defaults)
     env = Game(**defaults)
     mover = Mover(env, _extra_dim=1, **defaults)
     teleporter = Teleport_intervention(env, **defaults)
@@ -48,8 +48,8 @@ def teleport(defaults):
                 board_before, board_after, action, tele_rewards, tele_dones = buffer.sample_data(batch=50)
                 teleporter(board_before)
                 teleporter.learn(board_after, action.long(), tele_rewards, tele_dones)
-            print(rewards[0], dones[0], modified_rewards[0], modified_dones[0], my_rewards[0])
-            collector.collect(rewards, dones, modified_rewards, modified_dones)
+            #print(rewards[0], dones[0], modified_rewards[0], modified_dones[0], my_rewards[0])
+            collector.collect([rewards, modified_rewards, my_rewards], [dones, modified_dones])
             first_intervention = False
 
 
@@ -63,7 +63,7 @@ def simple(defaults):
             actions = mover(env.board)
             observations, rewards, dones, info = env.step(actions)
             mover.learn(observations, actions, rewards, dones)
-            collector.collect(rewards, dones, rewards, dones)
+            collector.collect((rewards), (dones))
 
 
 class Defaults:
@@ -72,11 +72,11 @@ class Defaults:
     network2: Networks = Networks.Mini
     learner1: Learners = Learners.Qlearn
     learner2: Learners = Learners.Qlearn
-    exploration1: Explorations = Explorations.epsilonGreedy
+    exploration1: Explorations = Explorations.softmaxer
     exploration2: Explorations = Explorations.epsilonGreedy
     replay_buffer: replay_buffer = replay_buffer
     gamma: float = 0.95
-    K: float = 500000
+    K: float = 100000
     batch: int = 100
     hours: float = 12.0
     width: int = 11
