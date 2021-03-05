@@ -29,7 +29,7 @@ class Exploration:
 
     @property
     def epsilon(self):
-        return max(0.0, 1 - self.counter / self.K)
+        return max(0.1, 1 - self.counter / self.K)
 
     @property
     def K_(self):
