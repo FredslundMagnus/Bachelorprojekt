@@ -18,13 +18,9 @@ class Collector:
         plot_positions = [(0,0), (600,0), (1200, 0), (0, 520), (600, 520), (1200, 520)]
 
         i = 0
-        plotter = [[]] * len(self.data)
         for key in self.data:
             fig = plt.figure()
             move_figure(fig, plot_positions[i % len(plot_positions)])
-            for j in range(len(self.data[key])):
-                if j > 10:
-                    plotter[i].append(sum(self.data[key][(j - 10):j]) / 10)
             plt.plot(self.data[key], label=str("reward type: " + str(key[0]) + " done type: " + str(key[1])))
             plt.xlabel("Seen frames in " + str(self.batch * self.filter_size))
             plt.ylabel("reward over dones")

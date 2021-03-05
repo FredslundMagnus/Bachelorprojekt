@@ -79,10 +79,10 @@ class Defaults:
     K: float = 10000
     batch: int = 100
     hours: float = 12.0
-    width: int = 11
-    height: int = 11
+    width: int = 7
+    height: int = 7
     update: int = 1000
-    reset_chance: float = 0.002
+    reset_chance: float = 0.005
     main: function = teleport
 
 
