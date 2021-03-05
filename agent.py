@@ -54,10 +54,11 @@ class Teleport_intervention(Agent):
 
     def modify(self, intervention, board, rewards, dones, info, modified_done_chance=0.05, miss_intervention_cost = -0.2, intervention_cost = -0.1):
         modified_board = self.modify_board(intervention, board)
+        modified_rewards = torch.clone(rewards) # Test if reward for mover is good
         modified_rewards = torch.sum(modified_board[:, 0] * modified_board[:, -1], (1, 2)) * (1 - rewards)
-        for i in range(len(info)):
-            if 'player_end' in info[i]:
-                 modified_rewards[i] += modified_board[i, -1][(info[i]['player_end'][1], info[i]['player_end'][0])]
+        #for i in range(len(info)):
+        #    if 'player_end' in info[i]:
+        #         modified_rewards[i] += modified_board[i, -1][(info[i]['player_end'][1], info[i]['player_end'][0])]
 
         modified_dones = torch.clone(modified_rewards)
         modified_dones[dones == 1] = 1
