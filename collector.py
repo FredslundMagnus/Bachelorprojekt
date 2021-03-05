@@ -65,7 +65,7 @@ class Collector:
         self.dones += sum(dones)/len(dones)
 
         self.Irewards += sum(Irewards)/len(Irewards)
-        self.Idones += sum(dones)/len(dones)
+        self.Idones += sum(Idones)/len(dones)
 
         if self.counter % self.filter_size == 0:
             self.running_rewards.append(self.rewards/self.filter_size)

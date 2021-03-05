@@ -17,7 +17,7 @@ class Network(nn.Module):
         if network == Networks.Small:
             self.model = nn.Sequential(nn.Conv2d(dim, 8, 3), nn.LeakyReLU(), nn.Conv2d(8, 12, 3), nn.LeakyReLU(), nn.Conv2d(12, 12, 3), nn.LeakyReLU(), nn.Conv2d(12, 12, 3), nn.LeakyReLU(), nn.Conv2d(12, 16, 3), nn.LeakyReLU(), nn.Conv2d(16, 4, 1), nn.Flatten())
         elif network == Networks.Teleporter:
-            self.model = nn.Sequential(nn.Conv2d(dim, 128, 5), nn.LeakyReLU(), nn.Conv2d(128, 64, 3), nn.LeakyReLU(), nn.Flatten(), nn.Linear(64 * (width - 6) * (height - 6), 128), nn.LeakyReLU(), nn.Linear(128, height * width), nn.Flatten())
+            self.model = nn.Sequential(nn.Conv2d(dim, 128, 5), nn.LeakyReLU(), nn.Conv2d(128, 64, 3), nn.LeakyReLU(), nn.Flatten(), nn.Linear(64 * (width - 6) * (height - 6), 128), nn.LeakyReLU(), nn.Linear(128, 128), nn.LeakyReLU(), nn.Linear(128, height * width), nn.Flatten())
         elif network == Networks.Mini:
             self.model = nn.Sequential(nn.Conv2d(dim, 64, 3), nn.LeakyReLU(), nn.Conv2d(64, 32, 3), nn.LeakyReLU(), nn.Flatten(), nn.Linear(32 * (width - 4) * (height - 4), 32), nn.LeakyReLU(), nn.Linear(32, 4), nn.Flatten())
 
