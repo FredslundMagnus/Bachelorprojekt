@@ -63,7 +63,7 @@ def simple(defaults):
             actions = mover(env.board)
             observations, rewards, dones, info = env.step(actions)
             mover.learn(observations, actions, rewards, dones)
-            collector.collect((rewards), (dones))
+            collector.collect([rewards], [dones])
 
 
 class Defaults:

@@ -27,7 +27,7 @@ class Collector:
             plt.legend(loc="upper left")
             i += 1
 
-        plt.pause(10)
+        plt.pause(15)
         plt.close('all')
 
     def hide(self) -> None:
