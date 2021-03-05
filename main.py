@@ -16,7 +16,7 @@ def teleport(defaults):
     env = Game(**defaults)
     mover = Mover(env, _extra_dim=1, **defaults)
     teleporter = Teleport_intervention(env, **defaults)
-    buffer = replay_buffer(size=20000)
+    buffer = replay_buffer(size=50000)
 
     with Save(collector, mover, teleporter, **defaults) as save:
         modified_dones = torch.ones(env.layers.board.shape[0], device=device)
@@ -45,7 +45,7 @@ def teleport(defaults):
             #print(modified_rewards[0], modified_dones[0], my_rewards[0])
             #mover.learn(modified_board, actions, modified_rewards, modified_dones)
             if frame > 100:
-                board_before, board_after, action, tele_rewards, tele_dones = buffer.sample_data(batch=100)
+                board_before, board_after, action, tele_rewards, tele_dones = buffer.sample_data(batch=50)
                 teleporter(board_before)
                 teleporter.learn(board_after, action.long(), tele_rewards, tele_dones)
             print(rewards[0], dones[0], modified_rewards[0], modified_dones[0], my_rewards[0])
