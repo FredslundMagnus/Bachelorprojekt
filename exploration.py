@@ -33,7 +33,7 @@ class Exploration:
 
     @property
     def K_(self):
-        return max(0.05, self.K / (10 * self.counter))
+        return max(0.025, self.K / (20 * self.counter))
 
     def greedy(self, vals):
         vals.detach()
