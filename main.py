@@ -43,12 +43,12 @@ def teleport(defaults):
             #print(intervention[0], actions[0], rewards[0], dones[0])
             modified_board, modified_rewards, modified_dones, my_rewards = teleporter.modify(teleporter.current_interventions.to(dtype=int), observations, rewards, dones, info)
             #print(modified_rewards[0], modified_dones[0], my_rewards[0])
-            #mover.learn(modified_board, actions, modified_rewards, modified_dones)
+            mover.learn(modified_board, actions, modified_rewards, modified_dones)
             if frame > 100:
                 board_before, board_after, action, tele_rewards, tele_dones = buffer.sample_data(batch=50)
                 teleporter(board_before)
                 teleporter.learn(board_after, action.long(), tele_rewards, tele_dones)
-            #print(rewards[0], dones[0], modified_rewards[0], modified_dones[0], my_rewards[0])
+            print(rewards[0], dones[0], modified_rewards[0], modified_dones[0], my_rewards[0])
             collector.collect([rewards, modified_rewards, my_rewards], [dones, modified_dones])
             first_intervention = False
 
