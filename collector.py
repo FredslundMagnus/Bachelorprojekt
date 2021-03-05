@@ -25,7 +25,7 @@ class Collector:
             for j in range(len(self.data[key])):
                 if j > 10:
                     plotter[i].append(sum(self.data[key][(j - 10):j]) / 10)
-            plt.plot(plotter[i], label=str("reward type: " + str(key[0]) + " done type: " + str(key[1])))
+            plt.plot(self.data[key], label=str("reward type: " + str(key[0]) + " done type: " + str(key[1])))
             plt.xlabel("Seen frames in " + str(self.batch * self.filter_size))
             plt.ylabel("reward over dones")
             plt.legend(loc="upper left")
