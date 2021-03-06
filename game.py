@@ -5,11 +5,13 @@ from typing import List, Tuple
 
 
 class Game:
-    def __init__(self, batch: int = None, hours: float = None, width: int = None, height: int = None, reset_chance: float = None, **kwargs) -> None:
+    def __init__(self, batch: int = None, hours: float = None, width: int = None, height: int = None, reset_chance: float = None, layer_Blocks: bool = None, layer_Goal: bool = None, layer_Gold: bool = None, layer_Keys: bool = None, layer_Door: bool = None, layer_Holder: bool = None, layer_Putter: bool = None, **kwargs) -> None:
         super().__init__()
         self.batch: int = batch
         self.hours: float = hours
-        self.layers: Layers = Layers(batch, width, height, reset_chance, LayerType.Player, LayerType.Blocks, LayerType.Goal)
+        temp1 = [layer_Blocks, layer_Goal, layer_Gold, layer_Keys, layer_Door, layer_Holder, layer_Putter]
+        temp2 = [LayerType.Blocks, LayerType.Goal, LayerType.Gold, LayerType.Keys, LayerType.Door, LayerType.Holder, LayerType.Putter]
+        self.layers: Layers = Layers(batch, width, height, reset_chance, *[layer for use, layer in zip(temp1, temp2) if use])
         self.layers.update()
 
     @property

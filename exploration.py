@@ -14,11 +14,11 @@ class Explorations(Enum):
 
 
 class Exploration:
-    def __init__(self, exploration: Explorations, K: float = None, **kwargs) -> None:
+    def __init__(self, exploration: Explorations, K: float = None, epsilon_cap: float = None, softmax_cap: float = None, **kwargs) -> None:
         self.counter = 1
         self.K = K
-        self.epsilon_cap = 0.1
-        self.softmax_cap = 0.02
+        self.epsilon_cap = epsilon_cap
+        self.softmax_cap = softmax_cap
         if exploration == Explorations.greedy:
             self.explore = self.greedy
         elif exploration == Explorations.epsilonGreedy:

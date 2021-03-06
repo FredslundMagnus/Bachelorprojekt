@@ -66,25 +66,36 @@ def simple(defaults):
 
 class Defaults:
     name: str = "Agent"
+    main: function = teleport
+    hours: float = 12.0
+    batch: int = 100
+    width: int = 11
+    height: int = 11
     network1: Networks = Networks.Teleporter
     network2: Networks = Networks.Mini
     learner1: Learners = Learners.Qlearn
     learner2: Learners = Learners.Qlearn
     exploration1: Explorations = Explorations.softmaxer
     exploration2: Explorations = Explorations.epsilonGreedy
-    gamma: float = 0.95
+
+    layer_Blocks: bool = True
+    layer_Goal: bool = True
+    layer_Gold: bool = False
+    layer_Keys: bool = False
+    layer_Door: bool = False
+    layer_Holder: bool = False
+    layer_Putter: bool = False
+
     K: float = 100000
-    batch: int = 100
-    hours: float = 12.0
-    width: int = 11
-    height: int = 11
+    epsilon_cap: float = 0.1
+    softmax_cap: float = 0.02
+    gamma: float = 0.95
     update: int = 10000
     reset_chance: float = 0.005
     modified_done_chance: float = 0.05
     miss_intervention_cost: float = -0.2
     intervention_cost: float = -0.1
     replay_size: int = 50000
-    main: function = teleport
 
 
 run(Defaults)
