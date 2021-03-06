@@ -4,9 +4,9 @@ from helper import device
 
 
 class ReplayBuffer:
-    def __init__(self, size):
+    def __init__(self, replay_size: int = None, **kwargs):
         self.counter = 0
-        self.replay_size = size
+        self.replay_size = replay_size
         self.buffer = [None for _ in range(self.replay_size)]
 
     def save_data(self, data):
