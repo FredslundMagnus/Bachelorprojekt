@@ -3,7 +3,7 @@ from load import Load
 
 
 def test_simple():
-    with Load("Agent", isLocal=True, num=0) as load:
+    with Load("Agent") as load:
         collector, env, mover = load.items(Collector, Game, Mover)
         for frame in loop(env, collector):
             actions = mover(env.board)
@@ -11,7 +11,7 @@ def test_simple():
 
 
 def test_teleport():
-    with Load("Agent_Magnus", isLocal=True, num=3) as load:
+    with Load("Agent_Magnus") as load:
         collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
         intervention_idx, modified_board = teleporter.pre_process(env)
         for frame in loop(env, collector):

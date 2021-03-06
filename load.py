@@ -3,7 +3,7 @@ import os
 
 
 class Load:
-    def __init__(self, name: str = None, isLocal: bool = True, num: int = 0):
+    def __init__(self, name: str = None, isLocal: bool = False, num: int = 0):
         self.name = name
         self.num = '-' + str(num)
         self.isLocal = isLocal
