@@ -17,17 +17,23 @@ def teleport(defaults):
     buffer = ReplayBuffer(**defaults)
 
     with Save(collector, mover, teleporter, **defaults) as save:
+
+        # --- Kan forhåbentligt flyttes in i Teleporter også ---
         modified_dones = torch.ones(env.layers.board.shape[0], device=device)
         first_intervention = True
         modified_board = torch.zeros(env.layers.board.shape[0], env.layers.board.shape[1] + 1, env.layers.board.shape[2], env.layers.board.shape[3], device=device)
+        # --- Kan forhåbentligt flyttes in i Teleporter også ---
+
         for frame in loop(env, collector, save, teleporter):
+
+            # --- teleporter.prepare() ---
             intervention_idx = torch.flatten(torch.nonzero(modified_dones.long()))
             if len(intervention_idx) > 0:
                 needs_intervention_board = env.board[intervention_idx]
                 new_boards, intervention = teleporter(needs_intervention_board)
             for i in range(len(intervention_idx)):
                 batch_idx = intervention_idx[i]
-                if not first_intervention:
+                if not first_intervention:  # Det her bør stadig være i main
                     # if batch_idx == 0:
                     #    print(teleporter.current_boards[batch_idx].unsqueeze(0), observations[batch_idx].unsqueeze(0), teleporter.current_interventions[batch_idx].unsqueeze(0), my_rewards[batch_idx].unsqueeze(0), dones[batch_idx].unsqueeze(0))
                     # if torch.argmax(teleporter.current_boards[batch_idx][-1]) == teleporter.current_interventions[batch_idx].unsqueeze(0):
@@ -36,19 +42,24 @@ def teleport(defaults):
                 teleporter.current_boards[batch_idx] = env.board[batch_idx]
                 modified_board[batch_idx] = new_boards[i]
                 teleporter.current_interventions[batch_idx] = intervention[i]
+            # --- teleporter.prepare()
+
             actions = mover(modified_board)
             observations, rewards, dones, info = env.step(actions)
             #print(intervention[0], actions[0], rewards[0], dones[0])
             modified_board, modified_rewards, modified_dones, my_rewards = teleporter.modify(teleporter.current_interventions.to(dtype=int), observations, rewards, dones, info)
             #print(modified_rewards[0], modified_dones[0], my_rewards[0])
             mover.learn(modified_board, actions, modified_rewards, modified_dones)
+
+            # Måske uden 100 og så flytte det ind i main, ellers er det fint
             if frame > 100:
                 board_before, board_after, action, tele_rewards, tele_dones = buffer.sample_data(batch=50)
                 teleporter(board_before)
                 teleporter.learn(board_after, action.long(), tele_rewards, tele_dones)
             #print(rewards[0], dones[0], modified_rewards[0], modified_dones[0], my_rewards[0])
             collector.collect([rewards, modified_rewards, my_rewards], [dones, modified_dones])
-            first_intervention = False
+
+            first_intervention = False  # Kan også flyttes ind i Teleporter
 
 
 def simple(defaults):
