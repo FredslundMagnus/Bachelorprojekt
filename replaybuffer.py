@@ -1,6 +1,7 @@
 import random
 from torch import as_tensor as tensor, cat as concatenation, device as devicer, cuda, float32
 from helper import device
+import torch
 
 
 class ReplayBuffer:
@@ -8,6 +9,7 @@ class ReplayBuffer:
         self.counter = 0
         self.replay_size = replay_size
         self.buffer = [None for _ in range(self.replay_size)]
+        self.first_teleporter_save = True
 
     def save_data(self, data):
         self.buffer[self.counter % self.replay_size] = data
@@ -20,3 +22,9 @@ class ReplayBuffer:
     def sample_data(self, batch):
         samples = (random.sample(self.buffer[:min(self.counter, self.replay_size)], min(batch, self.counter)))
         return self.stacker(samples)
+
+    def teleporter_save_data(self, board, obs, interventions, rewards, done, intervention_idx):
+        for idx in intervention_idx:
+            data = (torch.clone(board[idx]).unsqueeze(0), torch.clone(obs[idx]).unsqueeze(0), torch.clone(interventions[idx]).unsqueeze(0), torch.clone(rewards[idx]).unsqueeze(0), torch.clone(done[idx]).unsqueeze(0))
+            self.buffer[self.counter % self.replay_size] = data
+            self.counter += 1

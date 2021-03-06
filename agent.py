@@ -40,6 +40,7 @@ class Teleporter(Agent):
         self.modified_done_chance = modified_done_chance
         self.miss_intervention_cost = miss_intervention_cost
         self.intervention_cost = intervention_cost
+        self.counter = 0
 
     def __call__(self, board: Tensor) -> Tensor:
         self.values: Tensor = self.net.network(board)
@@ -68,8 +69,22 @@ class Teleporter(Agent):
         tele_rewards = self.miss_intervention_cost * torch.clone(modified_dones)
         tele_rewards[modified_rewards == 1] = self.intervention_cost
         tele_rewards[rewards == 1] = 1
+        intervention_idx = torch.flatten(torch.nonzero(modified_dones.long()))
+        return modified_board, modified_rewards, modified_dones, tele_rewards, intervention_idx
 
-        return modified_board, modified_rewards, modified_dones, tele_rewards
+    def interveen(self, board, intervention_idx, modified_board):
+        if len(intervention_idx) > 0:
+            needs_intervention_board = board[intervention_idx]
+            new_boards, intervention = self(needs_intervention_board)
+        for i in range(len(intervention_idx)):
+            batch_idx = intervention_idx[i]
+            self.current_boards[batch_idx] = board[batch_idx]
+            modified_board[batch_idx] = new_boards[i]
+            self.current_interventions[batch_idx] = intervention[i]
+        return modified_board
+
+    def pre_process(self, env):
+        return torch.flatten(torch.nonzero(torch.ones(env.layers.board.shape[0], device=device).long())), torch.zeros(env.layers.board.shape[0], env.layers.board.shape[1] + 1, env.layers.board.shape[2], env.layers.board.shape[3], device=device)
 
 
 class Mover(Agent):
