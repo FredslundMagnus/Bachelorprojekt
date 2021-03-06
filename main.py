@@ -1,4 +1,3 @@
-from random import sample
 from game import Game
 from agent import Teleporter, Mover, Networks, Learners, Explorations
 from collector import Collector
@@ -6,8 +5,6 @@ from auxillaries import run, loop, person, random
 from save import Save
 from helper import function
 from replaybuffer import ReplayBuffer
-import torch
-from helper import device
 
 
 def teleport(defaults):
