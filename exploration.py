@@ -17,6 +17,8 @@ class Exploration:
     def __init__(self, exploration: Explorations, K: float = None, **kwargs) -> None:
         self.counter = 1
         self.K = K
+        self.epsilon_cap = 0.1
+        self.softmax_cap = 0.02
         if exploration == Explorations.greedy:
             self.explore = self.greedy
         elif exploration == Explorations.epsilonGreedy:
@@ -29,11 +31,11 @@ class Exploration:
 
     @property
     def epsilon(self):
-        return max(0.1, 1 - self.counter / self.K)
+        return max(self.epsilon_cap, 1 - self.counter / self.K)
 
     @property
     def K_(self):
-        return max(0.02, self.K / (50 * self.counter))
+        return max(self.softmax_cap, self.softmax_cap * (self.K / self.counter))
 
     def greedy(self, vals):
         vals.detach()
