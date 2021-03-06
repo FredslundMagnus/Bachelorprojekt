@@ -1,12 +1,10 @@
-from layers import Player
-from torch import long
 from game import Game
-from agent import Teleport_intervention, Mover, Networks, Learners, Explorations
+from agent import Teleporter, Mover, Networks, Learners, Explorations
 from collector import Collector
 from auxillaries import run, loop, person, random
 from save import Save
 from helper import function
-from replay_buffer import replay_buffer
+from replaybuffer import ReplayBuffer
 import torch
 from helper import device
 
@@ -15,8 +13,8 @@ def teleport(defaults):
     collector = Collector(**defaults)
     env = Game(**defaults)
     mover = Mover(env, _extra_dim=1, **defaults)
-    teleporter = Teleport_intervention(env, **defaults)
-    buffer = replay_buffer(size=50000)
+    teleporter = Teleporter(env, **defaults)
+    buffer = ReplayBuffer(size=50000)
 
     with Save(collector, mover, teleporter, **defaults) as save:
         modified_dones = torch.ones(env.layers.board.shape[0], device=device)
@@ -30,9 +28,9 @@ def teleport(defaults):
             for i in range(len(intervention_idx)):
                 batch_idx = intervention_idx[i]
                 if not first_intervention:
-                    #if batch_idx == 0:
+                    # if batch_idx == 0:
                     #    print(teleporter.current_boards[batch_idx].unsqueeze(0), observations[batch_idx].unsqueeze(0), teleporter.current_interventions[batch_idx].unsqueeze(0), my_rewards[batch_idx].unsqueeze(0), dones[batch_idx].unsqueeze(0))
-                    #if torch.argmax(teleporter.current_boards[batch_idx][-1]) == teleporter.current_interventions[batch_idx].unsqueeze(0):
+                    # if torch.argmax(teleporter.current_boards[batch_idx][-1]) == teleporter.current_interventions[batch_idx].unsqueeze(0):
                     #    print(teleporter.current_boards[batch_idx].unsqueeze(0), observations[batch_idx].unsqueeze(0), teleporter.current_interventions[batch_idx].unsqueeze(0), my_rewards[batch_idx].unsqueeze(0), dones[batch_idx].unsqueeze(0))
                     buffer.save_data((torch.clone(teleporter.current_boards[batch_idx].unsqueeze(0)), torch.clone(observations[batch_idx].unsqueeze(0)), torch.clone(teleporter.current_interventions[batch_idx].unsqueeze(0)), torch.clone(my_rewards[batch_idx].unsqueeze(0)), torch.clone(dones[batch_idx].unsqueeze(0))))
                 teleporter.current_boards[batch_idx] = env.board[batch_idx]
@@ -74,7 +72,6 @@ class Defaults:
     learner2: Learners = Learners.Qlearn
     exploration1: Explorations = Explorations.softmaxer
     exploration2: Explorations = Explorations.epsilonGreedy
-    replay_buffer: replay_buffer = replay_buffer
     gamma: float = 0.95
     K: float = 100000
     batch: int = 100

@@ -2,7 +2,8 @@ import random
 from torch import as_tensor as tensor, cat as concatenation, device as devicer, cuda, float32
 from helper import device
 
-class replay_buffer:
+
+class ReplayBuffer:
     def __init__(self, size):
         self.counter = 0
         self.replay_size = size
