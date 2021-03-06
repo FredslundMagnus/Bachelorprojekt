@@ -5,11 +5,12 @@ import torch
 
 
 class ReplayBuffer:
-    def __init__(self, replay_size: int = None, **kwargs):
+    def __init__(self, replay_size: int = None, sample_size: int = None, **kwargs):
         self.counter = 0
         self.replay_size = replay_size
         self.buffer = [None for _ in range(self.replay_size)]
         self.first_teleporter_save = True
+        self.sample_size = sample_size
 
     def save_data(self, data):
         self.buffer[self.counter % self.replay_size] = data
@@ -19,8 +20,8 @@ class ReplayBuffer:
         arays = list(zip(*sample))
         return concatenation(arays[0], 0), concatenation(arays[1], 0), concatenation(arays[2], 0).long(), concatenation(arays[3], 0), concatenation(arays[4], 0)
 
-    def sample_data(self, batch):
-        samples = (random.sample(self.buffer[:min(self.counter, self.replay_size)], min(batch, self.counter)))
+    def sample_data(self):
+        samples = (random.sample(self.buffer[:min(self.counter, self.replay_size)], min(self.sample_size, self.counter)))
         return self.stacker(samples)
 
     def teleporter_save_data(self, board, obs, interventions, rewards, done, intervention_idx):

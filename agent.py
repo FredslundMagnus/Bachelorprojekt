@@ -23,12 +23,12 @@ class Agent(metaclass=ABCMeta):
     def __call__(self, board: Tensor) -> Tensor:
         pass
 
-    def learn(self, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor):
+    def learn(self, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor, *args):
         self.net.learn()
-        self._learn(state_after, action, reward, done)
+        self._learn(state_after, action, reward, done, *args)
 
     @abstractmethod
-    def _learn(self, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor):
+    def _learn(self, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor, *args):
         pass
 
 
@@ -47,7 +47,8 @@ class Teleporter(Agent):
         actions = self.exploration.explore(self.values.detach())
         return self.modify_board(actions, board), actions
 
-    def _learn(self, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor):
+    def _learn(self, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor, *args):
+        self(args[0])
         self.learner.learn(self.values, state_after, action, reward, done)
 
     def modify_board(self, actions, board):
@@ -97,5 +98,5 @@ class Mover(Agent):
         actions = self.exploration.explore(self.values.detach())
         return actions
 
-    def _learn(self, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor):
+    def _learn(self, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor, *args):
         self.learner.learn(self.values, state_after, action, reward, done)

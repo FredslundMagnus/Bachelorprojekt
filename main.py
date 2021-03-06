@@ -1,3 +1,4 @@
+from random import sample
 from game import Game
 from agent import Teleporter, Mover, Networks, Learners, Explorations
 from collector import Collector
@@ -16,7 +17,7 @@ def teleport(defaults):
     teleporter = Teleporter(env, **defaults)
     buffer = ReplayBuffer(**defaults)
 
-    with Save(collector, mover, teleporter, **defaults) as save:
+    with Save(env, collector, mover, teleporter, **defaults) as save:
         intervention_idx, modified_board = teleporter.pre_process(env)
         for frame in loop(env, collector, save, teleporter):
             modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
@@ -25,10 +26,8 @@ def teleport(defaults):
             modified_board, modified_rewards, modified_dones, teleport_rewards, intervention_idx = teleporter.modify(teleporter.interventions, observations, rewards, dones, info)
             buffer.teleporter_save_data(teleporter.boards, observations, teleporter.interventions, teleport_rewards, dones, intervention_idx)
             mover.learn(modified_board, actions, modified_rewards, modified_dones)
-            if frame > 50:
-                board_before, board_after, intervention, tele_rewards, tele_dones = buffer.sample_data(batch=50)
-                teleporter(board_before)
-                teleporter.learn(board_after, intervention, tele_rewards, tele_dones)
+            board_before, board_after, intervention, tele_rewards, tele_dones = buffer.sample_data()
+            teleporter.learn(board_after, intervention, tele_rewards, tele_dones, board_before)
             collector.collect([rewards, modified_rewards, teleport_rewards], [dones, modified_dones])
 
 
@@ -61,7 +60,7 @@ class Defaults:
 
     layer_Blocks: bool = True
     layer_Goal: bool = True
-    layer_Gold: bool = False
+    layer_Gold: bool = True
     layer_Keys: bool = False
     layer_Door: bool = False
     layer_Holder: bool = False
@@ -77,6 +76,7 @@ class Defaults:
     miss_intervention_cost: float = -0.2
     intervention_cost: float = -0.1
     replay_size: int = 50000
+    sample_size: int = 50
 
 
 run(Defaults)
