@@ -14,7 +14,7 @@ def test_teleport():
     with Load("teleport_short") as load:
         collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
         intervention_idx, modified_board = teleporter.pre_process(env)
-        for frame in loop(env, collector):
+        for frame in loop(env, collector, teleporter=teleporter):
             modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
             actions = mover(modified_board)
             observations, rewards, dones, info = env.step(actions)
