@@ -80,6 +80,9 @@ class Defaults:
     height: int = 11
     update: int = 10000
     reset_chance: float = 0.005
+    modified_done_chance: float = 0.05
+    miss_intervention_cost: float = -0.2
+    intervention_cost: float = -0.1
     main: function = teleport
 
 

@@ -33,10 +33,13 @@ class Agent(metaclass=ABCMeta):
 
 
 class Teleporter(Agent):
-    def __init__(self, game: Game, network1: Networks = None, learner1: Learners = None, exploration1: Explorations = None, **kwargs) -> None:
+    def __init__(self, game: Game, network1: Networks = None, learner1: Learners = None, exploration1: Explorations = None, modified_done_chance: float = None, miss_intervention_cost: float = None, intervention_cost: float = None, **kwargs) -> None:
         super().__init__(game, network1, learner1, exploration1, **kwargs)
         self.current_boards = [None] * self.batch
         self.current_interventions = torch.zeros(self.batch, device=device)
+        self.modified_done_chance = modified_done_chance
+        self.miss_intervention_cost = miss_intervention_cost
+        self.intervention_cost = intervention_cost
 
     def __call__(self, board: Tensor) -> Tensor:
         self.values: Tensor = self.net.network(board)
@@ -51,7 +54,7 @@ class Teleporter(Agent):
         modified_board = torch.cat((board, intervention_layer), 1)
         return modified_board
 
-    def modify(self, intervention, board, rewards, dones, info, modified_done_chance=0.05, miss_intervention_cost=-0.2, intervention_cost=-0.1):
+    def modify(self, intervention, board, rewards, dones, info):
         modified_board = self.modify_board(intervention, board)
         modified_rewards = torch.sum(modified_board[:, 0] * modified_board[:, -1], (1, 2)) * (1 - rewards)
         for i in range(len(info)):
@@ -61,9 +64,9 @@ class Teleporter(Agent):
         modified_dones = torch.clone(modified_rewards)
         modified_dones[dones == 1] = 1
         rands = torch.rand(len(modified_rewards))
-        modified_dones[rands < modified_done_chance] = 1
-        tele_rewards = miss_intervention_cost * torch.clone(modified_dones)
-        tele_rewards[modified_rewards == 1] = intervention_cost
+        modified_dones[rands < self.modified_done_chance] = 1
+        tele_rewards = self.miss_intervention_cost * torch.clone(modified_dones)
+        tele_rewards[modified_rewards == 1] = self.intervention_cost
         tele_rewards[rewards == 1] = 1
 
         return modified_board, modified_rewards, modified_dones, tele_rewards
