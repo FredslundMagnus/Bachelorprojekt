@@ -35,8 +35,8 @@ class Agent(metaclass=ABCMeta):
 class Teleporter(Agent):
     def __init__(self, game: Game, network1: Networks = None, learner1: Learners = None, exploration1: Explorations = None, modified_done_chance: float = None, miss_intervention_cost: float = None, intervention_cost: float = None, **kwargs) -> None:
         super().__init__(game, network1, learner1, exploration1, **kwargs)
-        self.current_boards = [None] * self.batch
-        self.current_interventions = torch.zeros(self.batch, device=device)
+        self.boards = [None] * self.batch
+        self.interventions = torch.zeros(self.batch, device=device)
         self.modified_done_chance = modified_done_chance
         self.miss_intervention_cost = miss_intervention_cost
         self.intervention_cost = intervention_cost
@@ -56,6 +56,7 @@ class Teleporter(Agent):
         return modified_board
 
     def modify(self, intervention, board, rewards, dones, info):
+        intervention = intervention.to(dtype=int)
         modified_board = self.modify_board(intervention, board)
         modified_rewards = torch.sum(modified_board[:, 0] * modified_board[:, -1], (1, 2)) * (1 - rewards)
         for i in range(len(info)):
@@ -78,9 +79,9 @@ class Teleporter(Agent):
             new_boards, intervention = self(needs_intervention_board)
         for i in range(len(intervention_idx)):
             batch_idx = intervention_idx[i]
-            self.current_boards[batch_idx] = board[batch_idx]
+            self.boards[batch_idx] = board[batch_idx]
             modified_board[batch_idx] = new_boards[i]
-            self.current_interventions[batch_idx] = intervention[i]
+            self.interventions[batch_idx] = intervention[i]
         return modified_board
 
     def pre_process(self, env):

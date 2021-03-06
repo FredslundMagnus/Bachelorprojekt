@@ -17,19 +17,18 @@ def teleport(defaults):
     buffer = ReplayBuffer(**defaults)
 
     with Save(collector, mover, teleporter, **defaults) as save:
-
         intervention_idx, modified_board = teleporter.pre_process(env)
         for frame in loop(env, collector, save, teleporter):
             modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
             actions = mover(modified_board)
             observations, rewards, dones, info = env.step(actions)
-            modified_board, modified_rewards, modified_dones, teleport_rewards, intervention_idx = teleporter.modify(teleporter.current_interventions.to(dtype=int), observations, rewards, dones, info)
-            buffer.teleporter_save_data(teleporter.current_boards, observations, teleporter.current_interventions, teleport_rewards, dones, intervention_idx)
+            modified_board, modified_rewards, modified_dones, teleport_rewards, intervention_idx = teleporter.modify(teleporter.interventions, observations, rewards, dones, info)
+            buffer.teleporter_save_data(teleporter.boards, observations, teleporter.interventions, teleport_rewards, dones, intervention_idx)
             mover.learn(modified_board, actions, modified_rewards, modified_dones)
             if frame > 50:
-                board_before, board_after, action, tele_rewards, tele_dones = buffer.sample_data(batch=50)
+                board_before, board_after, intervention, tele_rewards, tele_dones = buffer.sample_data(batch=50)
                 teleporter(board_before)
-                teleporter.learn(board_after, action.long(), tele_rewards, tele_dones)
+                teleporter.learn(board_after, intervention, tele_rewards, tele_dones)
             collector.collect([rewards, modified_rewards, teleport_rewards], [dones, modified_dones])
 
 

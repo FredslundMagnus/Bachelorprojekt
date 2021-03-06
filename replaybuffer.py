@@ -17,7 +17,7 @@ class ReplayBuffer:
 
     def stacker(self, sample):
         arays = list(zip(*sample))
-        return concatenation(arays[0], 0), concatenation(arays[1], 0), concatenation(arays[2], 0), concatenation(arays[3], 0), concatenation(arays[4], 0)
+        return concatenation(arays[0], 0), concatenation(arays[1], 0), concatenation(arays[2], 0).long(), concatenation(arays[3], 0), concatenation(arays[4], 0)
 
     def sample_data(self, batch):
         samples = (random.sample(self.buffer[:min(self.counter, self.replay_size)], min(batch, self.counter)))
