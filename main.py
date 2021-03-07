@@ -46,8 +46,8 @@ class Defaults:
     main: function = teleport
     hours: float = 12.0
     batch: int = 100
-    width: int = 13
-    height: int = 13
+    width: int = 11
+    height: int = 11
     network1: Networks = Networks.Teleporter
     network2: Networks = Networks.Mini
     learner1: Learners = Learners.Qlearn
