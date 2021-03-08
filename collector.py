@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from time import sleep
 from helper import move_figure
+import torch
 
 
 class Collector:
@@ -39,9 +40,9 @@ class Collector:
             self.rewards = [10**(-6)] * len(rewards)
             self.dones = [10**(-6)] * len(dones)
         for i in range(len(rewards)):
-            self.rewards[i] += sum(rewards[i])/len(rewards[i])
+            self.rewards[i] += torch.sum(rewards[i])/len(rewards[i])
         for i in range(len(dones)):
-            self.dones[i] += sum(dones[i])/len(dones[i])
+            self.dones[i] += torch.sum(dones[i])/len(dones[i])
             
 
         if self.counter % self.filter_size == 0:
@@ -49,6 +50,6 @@ class Collector:
                 for k in range(len(dones)):
                     if (i,k) not in self.data:
                         self.data[(i,k)] = []
-                    self.data[(i,k)].append(self.rewards[i]/self.dones[k])
+                    self.data[(i,k)].append(self.rewards[i].item()/self.dones[k].item())
             self.rewards = []
             self.dones = []
