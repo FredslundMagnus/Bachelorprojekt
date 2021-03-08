@@ -6,13 +6,20 @@ from functools import reduce
 
 class Level(metaclass=ABCMeta):
     def __init__(self, uses: List[LayerType], shape: Tuple[int, int], start: Tuple[int, int], end: Tuple[int, int]) -> None:
-        self.uses: Set[LayerType] = set(uses)
-        self.shape: Tuple[int, int] = shape
-        self.start: Tuple[int, int] = start
-        self.end: Tuple[int, int] = end
-        self.level: Dict[LayerType, List[Tuple[int, int]]] = {e: [] for e in LayerType}
-        if not self.generate():
-            self.level = None
+        trying = True
+        while trying:
+            try:
+                self.uses: Set[LayerType] = set(uses)
+                self.shape: Tuple[int, int] = shape
+                self.start: Tuple[int, int] = start
+                self.end: Tuple[int, int] = end
+                self.level: Dict[LayerType, List[Tuple[int, int]]] = {e: [] for e in LayerType}
+                if not self.generate():
+                    self.level = None
+                trying = False
+
+            except Exception as e:
+                pass
 
     @staticmethod
     def dist2(pos1: Tuple[int, int], pos2: Tuple[int, int]):
