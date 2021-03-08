@@ -21,6 +21,7 @@ def teleport(defaults):
             actions = mover(modified_board)
             observations, rewards, dones, info = env.step(actions)
             modified_board, modified_rewards, modified_dones, teleport_rewards, intervention_idx = teleporter.modify(teleporter.interventions, observations, rewards, dones, info)
+            #print(modified_board[0], modified_rewards[0], modified_dones[0], teleport_rewards[0], rewards[0], dones[0])
             buffer.teleporter_save_data(teleporter.boards, observations, teleporter.interventions, teleport_rewards, dones, intervention_idx)
             mover.learn(modified_board, actions, modified_rewards, modified_dones)
             board_before, board_after, intervention, tele_rewards, tele_dones = buffer.sample_data()
@@ -44,7 +45,7 @@ def simple(defaults):
 class Defaults:
     name: str = "Agent"
     main: function = teleport
-    hours: float = 12.0
+    hours: float = 10.0
     batch: int = 100
     width: int = 11
     height: int = 11
@@ -57,21 +58,21 @@ class Defaults:
 
     layer_Blocks: bool = True
     layer_Goal: bool = True
-    layer_Gold: bool = False
+    layer_Gold: bool = True
     layer_Keys: bool = False
     layer_Door: bool = False
     layer_Holder: bool = False
     layer_Putter: bool = False
 
-    K: float = 100000
-    epsilon_cap: float = 0.1
-    softmax_cap: float = 0.02
-    gamma: float = 0.95
+    K: float = 200000
+    epsilon_cap: float = 0.2
+    softmax_cap: float = 0.03
+    gamma: float = 0.98
     update: int = 10000
-    reset_chance: float = 0.005
+    reset_chance: float = 0.002
     modified_done_chance: float = 0.05
     miss_intervention_cost: float = -0.2
-    intervention_cost: float = -0.1
+    intervention_cost: float = -0.05
     replay_size: int = 50000
     sample_size: int = 50
 

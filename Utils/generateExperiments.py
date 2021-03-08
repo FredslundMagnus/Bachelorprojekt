@@ -36,8 +36,15 @@ def genExperiments(name, n=1, **params):
         file.write(f'bsub -o "../outputs/{name}/Markdown/{name}_{i}.md" -J "{name}_{i}" -P "-name {name}-{i} {" ".join(f"-{name} {value}" for name, value in params.items())}" < submit.sh\n')
 
 
-genExperiments(f"teleport_short", hours=3.0)
-genExperiments(f"teleport_normal", hours=16)
-genExperiments(f"teleport_gold", hours=16, layer_Gold=True)
+#genExperiments(f"teleport_short", hours=3.0)
+#genExperiments(f"teleport_normal", hours=16)
+#genExperiments(f"teleport_gold", hours=16, layer_Gold=True)
+
+genExperiments(f"gold_small", hours=10.0, width=7, height=7)
+genExperiments(f"gold_medium", hours=10.0, width=9, height=9)
+genExperiments(f"gold_big", hours=10.0, width=11, height=11)
+genExperiments(f"gold_small_doubleQ", hours=10.0, width=7, height=7, learner1 = Learners.DoubleQlearn, learner2 = Learners.DoubleQlearn)
+genExperiments(f"gold_medium_doubleQ", hours=10.0, width=9, height=9, learner1 = Learners.DoubleQlearn, learner2 = Learners.DoubleQlearn)
+genExperiments(f"gold_big_doubleQ", hours=10.0, width=11, height=11, learner1 = Learners.DoubleQlearn, learner2 = Learners.DoubleQlearn)
 
 file.close()
