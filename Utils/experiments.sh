@@ -1,25 +1,16 @@
 #!/bin/sh
-mkdir ../outputs/maze_size_13_low_rest_chance/
-mkdir ../outputs/maze_size_13_low_rest_chance/Markdown
-bsub -o "../outputs/maze_size_13_low_rest_chance/Markdown/maze_size_13_low_rest_chance_0.md" -J "maze_size_13_low_rest_chance_0" -P "-name maze_size_13_low_rest_chance-0 -hours 10.0 -width 13 -height 13" < submit.sh
-mkdir ../outputs/maze_size_15_low_rest_chance/
-mkdir ../outputs/maze_size_15_low_rest_chance/Markdown
-bsub -o "../outputs/maze_size_15_low_rest_chance/Markdown/maze_size_15_low_rest_chance_0.md" -J "maze_size_15_low_rest_chance_0" -P "-name maze_size_15_low_rest_chance-0 -hours 10.0 -width 15 -height 15" < submit.sh
-mkdir ../outputs/maze_size_17_low_rest_chance/
-mkdir ../outputs/maze_size_17_low_rest_chance/Markdown
-bsub -o "../outputs/maze_size_17_low_rest_chance/Markdown/maze_size_17_low_rest_chance_0.md" -J "maze_size_17_low_rest_chance_0" -P "-name maze_size_17_low_rest_chance-0 -hours 10.0 -width 17 -height 17" < submit.sh
-mkdir ../outputs/maze_size_19_low_rest_chance/
-mkdir ../outputs/maze_size_19_low_rest_chance/Markdown
-bsub -o "../outputs/maze_size_19_low_rest_chance/Markdown/maze_size_19_low_rest_chance_0.md" -J "maze_size_19_low_rest_chance_0" -P "-name maze_size_19_low_rest_chance-0 -hours 10.0 -width 19 -height 19" < submit.sh
-mkdir ../outputs/maze_size_13_high_rest_chance/
-mkdir ../outputs/maze_size_13_high_rest_chance/Markdown
-bsub -o "../outputs/maze_size_13_high_rest_chance/Markdown/maze_size_13_high_rest_chance_0.md" -J "maze_size_13_high_rest_chance_0" -P "-name maze_size_13_high_rest_chance-0 -hours 10.0 -width 13 -height 13 -reset_chance 0.005" < submit.sh
-mkdir ../outputs/maze_size_15_high_rest_chance/
-mkdir ../outputs/maze_size_15_high_rest_chance/Markdown
-bsub -o "../outputs/maze_size_15_high_rest_chance/Markdown/maze_size_15_high_rest_chance_0.md" -J "maze_size_15_high_rest_chance_0" -P "-name maze_size_15_high_rest_chance-0 -hours 10.0 -width 15 -height 15 -reset_chance 0.005" < submit.sh
-mkdir ../outputs/maze_size_17_high_rest_chance/
-mkdir ../outputs/maze_size_17_high_rest_chance/Markdown
-bsub -o "../outputs/maze_size_17_high_rest_chance/Markdown/maze_size_17_high_rest_chance_0.md" -J "maze_size_17_high_rest_chance_0" -P "-name maze_size_17_high_rest_chance-0 -hours 10.0 -width 17 -height 17 -reset_chance 0.005" < submit.sh
-mkdir ../outputs/maze_size_19_high_rest_chance/
-mkdir ../outputs/maze_size_19_high_rest_chance/Markdown
-bsub -o "../outputs/maze_size_19_high_rest_chance/Markdown/maze_size_19_high_rest_chance_0.md" -J "maze_size_19_high_rest_chance_0" -P "-name maze_size_19_high_rest_chance-0 -hours 10.0 -width 19 -height 19 -reset_chance 0.005" < submit.sh
+mkdir ../outputs/keys_door_small/
+mkdir ../outputs/keys_door_small/Markdown
+bsub -o "../outputs/keys_door_small/Markdown/keys_door_small_0.md" -J "keys_door_small_0" -P "-name keys_door_small-0 -hours 10.0 -width 9 -height 9 -layer_Keys True -layer_Door True" < submit.sh
+mkdir ../outputs/holder_putter_small/
+mkdir ../outputs/holder_putter_small/Markdown
+bsub -o "../outputs/holder_putter_small/Markdown/holder_putter_small_0.md" -J "holder_putter_small_0" -P "-name holder_putter_small-0 -hours 10.0 -width 9 -height 9 -layer_Holder True -layer_Putter True" < submit.sh
+mkdir ../outputs/keys_door_gold_small/
+mkdir ../outputs/keys_door_gold_small/Markdown
+bsub -o "../outputs/keys_door_gold_small/Markdown/keys_door_gold_small_0.md" -J "keys_door_gold_small_0" -P "-name keys_door_gold_small-0 -hours 10.0 -width 9 -height 9 -layer_Keys True -layer_Door True -layer_Gold True" < submit.sh
+mkdir ../outputs/holder_putter_gold_small/
+mkdir ../outputs/holder_putter_gold_small/Markdown
+bsub -o "../outputs/holder_putter_gold_small/Markdown/holder_putter_gold_small_0.md" -J "holder_putter_gold_small_0" -P "-name holder_putter_gold_small-0 -hours 10.0 -width 9 -height 9 -layer_Holder True -layer_Putter True -layer_Gold True" < submit.sh
+mkdir ../outputs/keys_door_holder_putter_gold_small/
+mkdir ../outputs/keys_door_holder_putter_gold_small/Markdown
+bsub -o "../outputs/keys_door_holder_putter_gold_small/Markdown/keys_door_holder_putter_gold_small_0.md" -J "keys_door_holder_putter_gold_small_0" -P "-name keys_door_holder_putter_gold_small-0 -hours 10.0 -width 9 -height 9 -layer_Keys True -layer_Door True -layer_Holder True -layer_Putter True -layer_Gold True" < submit.sh
