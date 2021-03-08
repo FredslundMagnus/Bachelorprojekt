@@ -47,8 +47,8 @@ class Defaults:
     main: function = teleport
     hours: float = 10.0
     batch: int = 100
-    width: int = 19
-    height: int = 19
+    width: int = 13
+    height: int = 13
     network1: Networks = Networks.Teleporter
     network2: Networks = Networks.Mini
     learner1: Learners = Learners.Qlearn
@@ -58,7 +58,7 @@ class Defaults:
 
     layer_Blocks: bool = True
     layer_Goal: bool = True
-    layer_Gold: bool = False
+    layer_Gold: bool = True
     layer_Keys: bool = False
     layer_Door: bool = False
     layer_Holder: bool = False
@@ -69,7 +69,7 @@ class Defaults:
     softmax_cap: float = 0.03
     gamma: float = 0.98
     update: int = 10000
-    reset_chance: float = 0.002
+    reset_chance: float = 0.005
     modified_done_chance: float = 0.05
     miss_intervention_cost: float = -0.2
     intervention_cost: float = -0.05
