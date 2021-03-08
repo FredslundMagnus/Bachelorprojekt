@@ -42,7 +42,7 @@ class Paint:
             Paint.write(f"Game: {Paint.dim}", game.layers.width/2, game.layers.height-1)
             if teleporter != None:
                 y, x = divmod(int(teleporter.interventions[Paint.dim]), game.layers.width)
-                Paint.drawRect(Colors.indigo.transparrent(180), size, x, y)
+                Paint.drawRect(Colors.indigo.transparrent(180), 1, x, y)
 
     @staticmethod
     def drawRect(color: Color, size: int, x: int, y: int) -> None:
