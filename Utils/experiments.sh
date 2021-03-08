@@ -1,19 +1,25 @@
 #!/bin/sh
-mkdir ../outputs/gold_small/
-mkdir ../outputs/gold_small/Markdown
-bsub -o "../outputs/gold_small/Markdown/gold_small_0.md" -J "gold_small_0" -P "-name gold_small-0 -hours 10.0 -width 7 -height 7" < submit.sh
-mkdir ../outputs/gold_medium/
-mkdir ../outputs/gold_medium/Markdown
-bsub -o "../outputs/gold_medium/Markdown/gold_medium_0.md" -J "gold_medium_0" -P "-name gold_medium-0 -hours 10.0 -width 9 -height 9" < submit.sh
-mkdir ../outputs/gold_big/
-mkdir ../outputs/gold_big/Markdown
-bsub -o "../outputs/gold_big/Markdown/gold_big_0.md" -J "gold_big_0" -P "-name gold_big-0 -hours 10.0 -width 11 -height 11" < submit.sh
-mkdir ../outputs/gold_small_doubleQ/
-mkdir ../outputs/gold_small_doubleQ/Markdown
-bsub -o "../outputs/gold_small_doubleQ/Markdown/gold_small_doubleQ_0.md" -J "gold_small_doubleQ_0" -P "-name gold_small_doubleQ-0 -hours 10.0 -width 7 -height 7 -learner1 Learners.DoubleQlearn -learner2 Learners.DoubleQlearn" < submit.sh
-mkdir ../outputs/gold_medium_doubleQ/
-mkdir ../outputs/gold_medium_doubleQ/Markdown
-bsub -o "../outputs/gold_medium_doubleQ/Markdown/gold_medium_doubleQ_0.md" -J "gold_medium_doubleQ_0" -P "-name gold_medium_doubleQ-0 -hours 10.0 -width 9 -height 9 -learner1 Learners.DoubleQlearn -learner2 Learners.DoubleQlearn" < submit.sh
-mkdir ../outputs/gold_big_doubleQ/
-mkdir ../outputs/gold_big_doubleQ/Markdown
-bsub -o "../outputs/gold_big_doubleQ/Markdown/gold_big_doubleQ_0.md" -J "gold_big_doubleQ_0" -P "-name gold_big_doubleQ-0 -hours 10.0 -width 11 -height 11 -learner1 Learners.DoubleQlearn -learner2 Learners.DoubleQlearn" < submit.sh
+mkdir ../outputs/maze_size_13_low_rest_chance/
+mkdir ../outputs/maze_size_13_low_rest_chance/Markdown
+bsub -o "../outputs/maze_size_13_low_rest_chance/Markdown/maze_size_13_low_rest_chance_0.md" -J "maze_size_13_low_rest_chance_0" -P "-name maze_size_13_low_rest_chance-0 -hours 10.0 -width 13 -height 13" < submit.sh
+mkdir ../outputs/maze_size_15_low_rest_chance/
+mkdir ../outputs/maze_size_15_low_rest_chance/Markdown
+bsub -o "../outputs/maze_size_15_low_rest_chance/Markdown/maze_size_15_low_rest_chance_0.md" -J "maze_size_15_low_rest_chance_0" -P "-name maze_size_15_low_rest_chance-0 -hours 10.0 -width 15 -height 15" < submit.sh
+mkdir ../outputs/maze_size_17_low_rest_chance/
+mkdir ../outputs/maze_size_17_low_rest_chance/Markdown
+bsub -o "../outputs/maze_size_17_low_rest_chance/Markdown/maze_size_17_low_rest_chance_0.md" -J "maze_size_17_low_rest_chance_0" -P "-name maze_size_17_low_rest_chance-0 -hours 10.0 -width 17 -height 17" < submit.sh
+mkdir ../outputs/maze_size_19_low_rest_chance/
+mkdir ../outputs/maze_size_19_low_rest_chance/Markdown
+bsub -o "../outputs/maze_size_19_low_rest_chance/Markdown/maze_size_19_low_rest_chance_0.md" -J "maze_size_19_low_rest_chance_0" -P "-name maze_size_19_low_rest_chance-0 -hours 10.0 -width 19 -height 19" < submit.sh
+mkdir ../outputs/maze_size_13_high_rest_chance/
+mkdir ../outputs/maze_size_13_high_rest_chance/Markdown
+bsub -o "../outputs/maze_size_13_high_rest_chance/Markdown/maze_size_13_high_rest_chance_0.md" -J "maze_size_13_high_rest_chance_0" -P "-name maze_size_13_high_rest_chance-0 -hours 10.0 -width 13 -height 13 -reset_chance 0.005" < submit.sh
+mkdir ../outputs/maze_size_15_high_rest_chance/
+mkdir ../outputs/maze_size_15_high_rest_chance/Markdown
+bsub -o "../outputs/maze_size_15_high_rest_chance/Markdown/maze_size_15_high_rest_chance_0.md" -J "maze_size_15_high_rest_chance_0" -P "-name maze_size_15_high_rest_chance-0 -hours 10.0 -width 15 -height 15 -reset_chance 0.005" < submit.sh
+mkdir ../outputs/maze_size_17_high_rest_chance/
+mkdir ../outputs/maze_size_17_high_rest_chance/Markdown
+bsub -o "../outputs/maze_size_17_high_rest_chance/Markdown/maze_size_17_high_rest_chance_0.md" -J "maze_size_17_high_rest_chance_0" -P "-name maze_size_17_high_rest_chance-0 -hours 10.0 -width 17 -height 17 -reset_chance 0.005" < submit.sh
+mkdir ../outputs/maze_size_19_high_rest_chance/
+mkdir ../outputs/maze_size_19_high_rest_chance/Markdown
+bsub -o "../outputs/maze_size_19_high_rest_chance/Markdown/maze_size_19_high_rest_chance_0.md" -J "maze_size_19_high_rest_chance_0" -P "-name maze_size_19_high_rest_chance-0 -hours 10.0 -width 19 -height 19 -reset_chance 0.005" < submit.sh
