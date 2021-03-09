@@ -37,18 +37,27 @@ class Paint:
                 try:
                     Paint.drawImage(x, y, name)
                 except Exception as e:
-                    if shape == Shape.Circle:
-                        Paint.drawCircle(color, size, x, y)
-                    elif shape == Shape.Square:
-                        Paint.drawRect(color, size, x, y)
-            Paint.write(f"Frames: {frame}", game.layers.width/2, 0)
-            Paint.write(f"Game: {Paint.dim}", game.layers.width/2, game.layers.height-1)
+                    try:
+                        if shape == Shape.Circle:
+                            Paint.drawCircle(color, size, x, y)
+                        elif shape == Shape.Square:
+                            Paint.drawRect(color, size, x, y)
+                    except Exception as e:
+                        pass
+            try:
+                Paint.write(f"Frames: {frame}", game.layers.width/2, 0)
+                Paint.write(f"Game: {Paint.dim}", game.layers.width/2, game.layers.height-1)
+            except Exception as e:
+                pass
             if teleporter != None:
                 y, x = divmod(int(teleporter.interventions[Paint.dim]), game.layers.width)
                 try:
                     Paint.drawImage(x, y, "Cheese")
                 except Exception as e:
-                    Paint.drawRect(Colors.indigo.transparrent(180), 1, x, y)
+                    try:
+                        Paint.drawRect(Colors.indigo.transparrent(180), 1, x, y)
+                    except Exception as e:
+                        pass
 
     @staticmethod
     def drawImage(x: int, y: int, name: str) -> None:
@@ -77,6 +86,11 @@ class Paint:
         pygame.font.init()
         myfont = Paint.pygame.font.SysFont('Comic Sans MS', int(size * Paint.size))
         textsurface = myfont.render(text, True, color.color)
+        width, height = textsurface.get_rect().right, textsurface.get_rect().bottom
+        rect = Paint.pygame.Rect(x*Paint.size-width//2-Paint.size//10, y*Paint.size+Paint.size//10, width + Paint.size//5, height-Paint.size//10)
+        shape_surf = Paint.pygame.Surface(rect.size, Paint.pygame.SRCALPHA)
+        Paint.pygame.draw.rect(shape_surf, Colors.white.transparrent(150).color, shape_surf.get_rect())
+        Paint.screen.blit(shape_surf, rect)
         Paint.screen.blit(textsurface, (x*Paint.size - (textsurface.get_width()/2)*center, y*Paint.size))
 
     @staticmethod
