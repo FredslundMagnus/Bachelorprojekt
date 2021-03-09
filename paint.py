@@ -33,16 +33,25 @@ class Paint:
     @staticmethod
     def __init__(game: Game, frame: int, teleporter) -> None:
         with screen(Colors.gray.c300):
-            for shape, color, size, x, y in game.layers.getColorable(Paint.dim):
-                if shape == Shape.Circle:
-                    Paint.drawCircle(color, size, x, y)
-                elif shape == Shape.Square:
-                    Paint.drawRect(color, size, x, y)
+            for shape, color, size, x, y, name in game.layers.getColorable(Paint.dim):
+                try:
+                    Paint.drawImage(x, y, name)
+                except Exception as e:
+                    if shape == Shape.Circle:
+                        Paint.drawCircle(color, size, x, y)
+                    elif shape == Shape.Square:
+                        Paint.drawRect(color, size, x, y)
             Paint.write(f"Frames: {frame}", game.layers.width/2, 0)
             Paint.write(f"Game: {Paint.dim}", game.layers.width/2, game.layers.height-1)
             if teleporter != None:
                 y, x = divmod(int(teleporter.interventions[Paint.dim]), game.layers.width)
                 Paint.drawRect(Colors.indigo.transparrent(180), 1, x, y)
+
+    @staticmethod
+    def drawImage(x: int, y: int, name: str) -> None:
+        myimage = Paint.pygame.transform.scale(Paint.pygame.image.load(f"Drawings/{name}.png"), (Paint.size, Paint.size))
+        rect = Paint.pygame.Rect(x*Paint.size + (Paint.size - Paint.size) // 2, y*Paint.size + (Paint.size - Paint.size) // 2, Paint.size, Paint.size)
+        Paint.screen.blit(myimage, rect)
 
     @staticmethod
     def drawRect(color: Color, size: int, x: int, y: int) -> None:
