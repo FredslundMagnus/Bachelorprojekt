@@ -18,8 +18,8 @@ def screen(background: Color) -> None:
     finally:
         try:
             Paint.pygame.display.update()
-            if States.slow:
-                Paint.pygame.time.delay(round(200))
+            # if States.slow:
+            #     Paint.pygame.time.delay(round(200))
         except Exception as e:
             pass
 
@@ -61,6 +61,8 @@ class Paint:
 
     @staticmethod
     def drawImage(x: int, y: int, name: str) -> None:
+        if not States.slow:
+            raise Exception()
         myimage = Paint.pygame.transform.scale(Paint.pygame.image.load(f"Drawings/{name}.png"), (Paint.size, Paint.size))
         rect = Paint.pygame.Rect(x*Paint.size + (Paint.size - Paint.size) // 2, y*Paint.size + (Paint.size - Paint.size) // 2, Paint.size, Paint.size)
         Paint.screen.blit(myimage, rect)
@@ -86,11 +88,12 @@ class Paint:
         pygame.font.init()
         myfont = Paint.pygame.font.SysFont('Comic Sans MS', int(size * Paint.size))
         textsurface = myfont.render(text, True, color.color)
-        width, height = textsurface.get_rect().right, textsurface.get_rect().bottom
-        rect = Paint.pygame.Rect(x*Paint.size-width//2-Paint.size//10, y*Paint.size+Paint.size//10, width + Paint.size//5, height-Paint.size//10)
-        shape_surf = Paint.pygame.Surface(rect.size, Paint.pygame.SRCALPHA)
-        Paint.pygame.draw.rect(shape_surf, Colors.white.transparrent(150).color, shape_surf.get_rect())
-        Paint.screen.blit(shape_surf, rect)
+        if States.slow:
+            width, height = textsurface.get_rect().right, textsurface.get_rect().bottom
+            rect = Paint.pygame.Rect(x*Paint.size-width//2-Paint.size//10, y*Paint.size+Paint.size//10, width + Paint.size//5, height-Paint.size//10)
+            shape_surf = Paint.pygame.Surface(rect.size, Paint.pygame.SRCALPHA)
+            Paint.pygame.draw.rect(shape_surf, Colors.white.transparrent(150).color, shape_surf.get_rect())
+            Paint.screen.blit(shape_surf, rect)
         Paint.screen.blit(textsurface, (x*Paint.size - (textsurface.get_width()/2)*center, y*Paint.size))
 
     @staticmethod
