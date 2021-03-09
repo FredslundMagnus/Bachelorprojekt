@@ -2,6 +2,7 @@
 from main import Defaults, teleport, simple
 from network import Networks
 from learner import Learners
+from agent import Teleporter, Mover, Networks, Learners, Explorations
 
 
 file = open('Utils/experiments.sh', 'w')
@@ -47,12 +48,12 @@ def genExperiments(name, n=1, **params):
 # genExperiments(f"holder_putter_small", hours=10.0, width=9, height=9, layer_Holder=True, layer_Putter=True)
 # genExperiments(f"keys_door_gold_small", hours=10.0, width=9, height=9, layer_Keys=True, layer_Door=True, layer_Gold=True)
 # genExperiments(f"holder_putter_gold_small", hours=10.0, width=9, height=9, layer_Holder=True, layer_Putter=True, layer_Gold=True)
-genExperiments(f"9x9_K_100000", hours=10.0, width=9, height=9, layer_Keys=True, layer_Door=True, layer_Holder=True, layer_Putter=True, layer_Gold=True, K=100000)
-genExperiments(f"9x9_K_500000", hours=10.0, width=9, height=9, layer_Keys=True, layer_Door=True, layer_Holder=True, layer_Putter=True, layer_Gold=True, K=500000)
-genExperiments(f"9x9_K_100000_epsilon_cap_0.1", hours=10.0, width=9, height=9, layer_Keys=True, layer_Door=True, layer_Holder=True, layer_Putter=True, layer_Gold=True, K=100000, epsilon_cap=0.1)
-genExperiments(f"9x9_K_500000_epsilon_cap_0.1", hours=10.0, width=9, height=9, layer_Keys=True, layer_Door=True, layer_Holder=True, layer_Putter=True, layer_Gold=True, K=500000, epsilon_cap=0.1)
-genExperiments(f"9x9_K_100000_epsilon_cap_0", hours=10.0, width=9, height=9, layer_Keys=True, layer_Door=True, layer_Holder=True, layer_Putter=True, layer_Gold=True, K=100000, epsilon_cap=0)
-genExperiments(f"9x9_K_500000_epsilon_cap_0", hours=10.0, width=9, height=9, layer_Keys=True, layer_Door=True, layer_Holder=True, layer_Putter=True, layer_Gold=True, K=500000, epsilon_cap=0)
+# genExperiments(f"9x9_K_100000", hours=10.0, width=9, height=9, layer_Keys=True, layer_Door=True, layer_Holder=True, layer_Putter=True, layer_Gold=True, K=100000)
+# genExperiments(f"9x9_K_500000", hours=10.0, width=9, height=9, layer_Keys=True, layer_Door=True, layer_Holder=True, layer_Putter=True, layer_Gold=True, K=500000)
+# genExperiments(f"9x9_K_100000_epsilon_cap_0.1", hours=10.0, width=9, height=9, layer_Keys=True, layer_Door=True, layer_Holder=True, layer_Putter=True, layer_Gold=True, K=100000, epsilon_cap=0.1)
+# genExperiments(f"9x9_K_500000_epsilon_cap_0.1", hours=10.0, width=9, height=9, layer_Keys=True, layer_Door=True, layer_Holder=True, layer_Putter=True, layer_Gold=True, K=500000, epsilon_cap=0.1)
+# genExperiments(f"9x9_K_100000_epsilon_cap_0", hours=10.0, width=9, height=9, layer_Keys=True, layer_Door=True, layer_Holder=True, layer_Putter=True, layer_Gold=True, K=100000, epsilon_cap=0)
+# genExperiments(f"9x9_K_500000_epsilon_cap_0", hours=10.0, width=9, height=9, layer_Keys=True, layer_Door=True, layer_Holder=True, layer_Putter=True, layer_Gold=True, K=500000, epsilon_cap=0)
 # genExperiments(f"maze_size_13_low_rest_chance", hours=10.0, width=13, height=13)
 # genExperiments(f"maze_size_15_low_rest_chance", hours=10.0, width=15, height=15)
 # genExperiments(f"maze_size_17_low_rest_chance", hours=10.0, width=17, height=17)
@@ -61,5 +62,12 @@ genExperiments(f"9x9_K_500000_epsilon_cap_0", hours=10.0, width=9, height=9, lay
 # genExperiments(f"maze_size_15_high_rest_chance", hours=10.0, width=15, height=15, reset_chance = 0.005)
 # genExperiments(f"maze_size_17_high_rest_chance", hours=10.0, width=17, height=17, reset_chance = 0.005)
 # genExperiments(f"maze_size_19_high_rest_chance", hours=10.0, width=19, height=19, reset_chance = 0.005)
+genExperiments(f"9x9_gamme0.99_eps_intervention", hours=10.0, width=9, height=9, layer_Keys=True, layer_Door=True, layer_Holder=True, layer_Putter=True, layer_Gold=True, gamma=0.99, exploration1=Explorations.epsilonGreedy)
+genExperiments(f"9x9_gamme0.95", hours=10.0, width=9, height=9, layer_Keys=True, layer_Door=True, layer_Holder=True, layer_Putter=True, layer_Gold=True, gamma=0.95)
+genExperiments(f"9x9_gamme0.99", hours=10.0, width=9, height=9, layer_Keys=True, layer_Door=True, layer_Holder=True, layer_Putter=True, layer_Gold=True, gamma=0.99)
+genExperiments(f"9x9_gamme0.995", hours=10.0, width=9, height=9, layer_Keys=True, layer_Door=True, layer_Holder=True, layer_Putter=True, layer_Gold=True, gamma=0.995)
+genExperiments(f"9x9_gamme0.99_softmax0.05", hours=10.0, width=9, height=9, layer_Keys=True, layer_Door=True, layer_Holder=True, layer_Putter=True, layer_Gold=True, gamma=0.95, softmax_cap=0.05)
+genExperiments(f"9x9_gamme0.99_softmax0.05", hours=10.0, width=9, height=9, layer_Keys=True, layer_Door=True, layer_Holder=True, layer_Putter=True, layer_Gold=True, gamma=0.99, softmax_cap=0.05)
+genExperiments(f"9x9_gamme0.995_softmax0.05", hours=10.0, width=9, height=9, layer_Keys=True, layer_Door=True, layer_Holder=True, layer_Putter=True, layer_Gold=True, gamma=0.995, softmax_cap=0.05)
 
 file.close()
