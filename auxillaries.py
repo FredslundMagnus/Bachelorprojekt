@@ -14,7 +14,7 @@ class States:
     showPrint = False
     save = False
     draw = False
-    slow = False
+    slow = True
     switchPlot = False
     isPaused = False
 
