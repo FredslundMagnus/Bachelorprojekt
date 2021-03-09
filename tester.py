@@ -11,7 +11,7 @@ def test_simple():
 
 
 def test_teleport():
-    with Load("maze_size_15_high_rest_chance") as load:
+    with Load("9x9_K_500000") as load:
         collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
         intervention_idx, modified_board = teleporter.pre_process(env)
         for frame in loop(env, collector, teleporter=teleporter):

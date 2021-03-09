@@ -69,7 +69,7 @@ class Defaults:
     softmax_cap: float = 0.03
     gamma: float = 0.98
     update: int = 10000
-    reset_chance: float = 0.005
+    reset_chance: float = 0.002
     modified_done_chance: float = 0.05
     miss_intervention_cost: float = -0.2
     intervention_cost: float = -0.05
