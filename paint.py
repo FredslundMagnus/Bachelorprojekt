@@ -45,7 +45,10 @@ class Paint:
             Paint.write(f"Game: {Paint.dim}", game.layers.width/2, game.layers.height-1)
             if teleporter != None:
                 y, x = divmod(int(teleporter.interventions[Paint.dim]), game.layers.width)
-                Paint.drawRect(Colors.indigo.transparrent(180), 1, x, y)
+                try:
+                    Paint.drawImage(x, y, "Cheese")
+                except Exception as e:
+                    Paint.drawRect(Colors.indigo.transparrent(180), 1, x, y)
 
     @staticmethod
     def drawImage(x: int, y: int, name: str) -> None:
