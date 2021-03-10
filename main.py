@@ -64,7 +64,7 @@ class Defaults:
     layer_Holder: bool = False
     layer_Putter: bool = False
     layer_Rock: bool = True
-    layer_Dirt: bool = True
+    layer_Dirt: bool = False
 
     K: float = 200000
     epsilon_cap: float = 0.2

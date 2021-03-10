@@ -82,9 +82,7 @@ class Rock(Layer):
         rocks = copy(self.positions[batch])
         for rock in rocks:
             item_under = (rock[0], rock[1] + 1)
-            if rock in layersDict[LayerType.Dirt].positions[batch] or item_under in layersDict[LayerType.Blocks].positions[batch]:
-                pass
-            elif all(item_under not in layer.positions[batch] for _, layer in layersDict.items()) and item_under not in adders:
+            if all(item_under not in layer.positions[batch] for _, layer in layersDict.items()) and item_under not in adders:
                 self.remove(batch, rock)
                 adders.append(item_under)
             elif item_under in layersDict[LayerType.Rock].positions[batch]:
