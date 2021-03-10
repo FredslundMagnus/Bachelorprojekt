@@ -9,8 +9,8 @@ class Game:
         super().__init__()
         self.batch: int = batch
         self.hours: float = hours
-        temp1 = [layer_Blocks, layer_Goal, layer_Gold, layer_Keys, layer_Door, layer_Holder, layer_Putter, layer_Rock, layer_Dirt]
-        temp2 = [LayerType.Blocks, LayerType.Goal, LayerType.Gold, LayerType.Keys, LayerType.Door, LayerType.Holder, LayerType.Putter, LayerType.Rock, LayerType.Dirt]
+        temp1 = [layer_Blocks, layer_Goal, layer_Gold, layer_Keys, layer_Door, layer_Holder, layer_Putter, layer_Dirt, layer_Rock]
+        temp2 = [LayerType.Blocks, LayerType.Goal, LayerType.Gold, LayerType.Keys, LayerType.Door, LayerType.Holder, LayerType.Putter, LayerType.Dirt, LayerType.Rock]
         self.layers: Layers = Layers(batch, width, height, reset_chance, *[layer for use, layer in zip(temp1, temp2) if use])
         self.layers.update()
 

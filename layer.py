@@ -68,20 +68,18 @@ class Layer(metaclass=ABCMeta):
         return not self.isBlocking(batch) or pos not in self.positions[batch]
 
     def move(self, batch: int, _from: Tuple[int, int], _to: Tuple[int, int], layers, action, deltas):
-        if _to[0] < layers.width - 1 and _to[1] < layers.height - 1 and _to[0] > 0 and _to[1] > 0:
-            if _to in self._grid and layers.isFree(batch, _to):
-                if "Rock" not in layers.names:
+        if _to in self._grid and layers.isFree(batch, _to):
+            if "Rock" not in layers.names:
+                self.remove(batch, _from)
+                self.add(batch, _to)
+            elif np.sum(layers.board[batch, :, _to[1], _to[0]]) == 1 or layers.board[batch, layers.Rocks_idx, _to[1] - 1, _to[0]] == 0:
+                self.remove(batch, _from)
+                self.add(batch, _to)              
+        elif "Rock" in layers.names and action[1] == 0:
+            if layers.board[batch, layers.Rocks_idx, _to[1], _to[0]] == 1 and _to[0] < layers.width - 1 and _to[0] > 0:
+                if (np.sum(layers.board[batch, :, _to[1], _to[0] + action[0]]) == 0) and (np.sum(layers.board[batch, :, _to[1] + 1, _to[0]]) == 1):
                     self.remove(batch, _from)
                     self.add(batch, _to)
-                elif np.sum(layers.board[batch, :, _to[1], _to[0]]) == 1 or layers.board[batch, layers.Rocks_idx, _to[1] - 1, _to[0]] == 0:
-                    self.remove(batch, _from)
-                    self.add(batch, _to)              
-            elif "Rock" in layers.names and action[1] == 0:
-                if layers.board[batch, layers.Rocks_idx, _to[1], _to[0]] == 1:
-                    if (np.sum(layers.board[batch, :, _to[1], _to[0] + action[0]]) == 0) and (np.sum(layers.board[batch, :, _to[1] + 1, _to[0]]) == 1):
-                        self.remove(batch, _from)
-                        self.add(batch, _to)
-
         layers.check(batch, action, layers)
 
     def remove(self, batch: int, _pos: Tuple[int, int]):
@@ -102,11 +100,11 @@ class Layer(metaclass=ABCMeta):
             for x, y in pos:
                 yield batch, x, y
 
-    def update(self, board) -> None:
-        No_change = [False] * len(self._removed)
-        for batch in range(len(self._removed)):
-            if len(self._removed[batch]) == 0:
-                No_change[batch] = True
+
+    def update(self, board, No_change) -> None:
+        for batch in range(len(No_change)):
+            if No_change[batch] == 1 and len(self._removed[batch]) != 0:
+                No_change[batch] = 0
 
         for batch, x, y in self.elements(self._removed):
             board[batch, self._layer, y, x] = 0

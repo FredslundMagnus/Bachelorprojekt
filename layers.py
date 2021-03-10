@@ -81,7 +81,9 @@ class Rock(Layer):
             adders.append((pos[0] + action[0], pos[1]))
         rocks = copy(self.positions[batch])
         for rock in rocks:
-            if np.sum(board.board[batch,:,rock[1] + 1, rock[0]]) == 0 and (rock[0], rock[1] + 1) not in adders:
+            if board.board[batch,4,rock[1] + 1, rock[0]] == 1 or board.board[batch,1,rock[1] + 1, rock[0]] == 1:
+                pass
+            elif np.sum(board.board[batch,:,rock[1] + 1, rock[0]]) == 0 and (rock[0], rock[1] + 1) not in adders:
                 self.remove(batch, rock)
                 adders.append((rock[0], rock[1] + 1))
             elif board.board[batch,board.Rocks_idx,rock[1] + 1, rock[0]] == 1:
@@ -93,6 +95,7 @@ class Rock(Layer):
                     adders.append((rock[0] + 1, rock[1]))           
 
         [self.add(batch, x) for x in adders]
+        return self._removed, self._added
 
 class Goal(Layer):
     name = "Goal"
@@ -273,12 +276,10 @@ class Layers:
                 dones[batch] = 1
                 self.counter[batch] = 0
 
+        No_change = [1 for _ in range(self.batch)]
         for layer in self.layers:
-            No_change = layer.update(self.board)
-
-        for batch in range(self.batch):
-            if No_change[batch] == False:
-                self.frames_since_chance[batch] = 0
+            No_change = layer.update(self.board, No_change)
+        self.frames_since_chance = [c*a for c, a in zip(self.frames_since_chance, No_change)]
         return rewards, dones
 
     def step(self, action: List[int]) -> Tuple[List[float], List[int], List[dict]]:
@@ -299,12 +300,18 @@ class Layers:
         return True
 
     def check(self, batch: int, action, board):
+        all_removed = [[]] * batch
         for layer in self.layers:
-            layer.check(batch, self.dict, action, board)
+            if layer.name != "Rock":
+                layer.check(batch, self.dict, action, board)
+        for layer in self.layers:
+            if layer.name == "Rock":
+                removed, added = layer.check(batch, self.dict, action, board)
+        
 
     def restart(self, batch: int):
         if (x := self.dict[LayerType.Player].positions[batch]):
             self.info[batch]['player_end'] = x[0]
-        level = Rocks(self.types, (self.width-2, self.height-2)).level
+        self.level = Rocks(self.types, (self.width-2, self.height-2)).level
         for layer in self.layers:
-            layer.restart(batch, level[layer.type])
+            layer.restart(batch, self.level[layer.type])
