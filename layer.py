@@ -67,8 +67,8 @@ class Layer(metaclass=ABCMeta):
     def isFree(self, batch: int, pos: Tuple[int, int]) -> bool:
         return not self.isBlocking(batch) or pos not in self.positions[batch]
 
-    def move(self, batch: int, _from: Tuple[int, int], _to: Tuple[int, int], layers, action):
-        if _to[0] + action[0] < layers.width and _to[1] + action[1] < layers.height and _to[0] + action[0] > -1 and _to[1] + action[1] > -1:
+    def move(self, batch: int, _from: Tuple[int, int], _to: Tuple[int, int], layers, action, deltas):
+        if _to[0] < layers.width - 1 and _to[1] < layers.height - 1 and _to[0] > 0 and _to[1] > 0:
             if _to in self._grid and layers.isFree(batch, _to):
                 if "Rock" not in layers.names:
                     self.remove(batch, _from)
@@ -103,6 +103,11 @@ class Layer(metaclass=ABCMeta):
                 yield batch, x, y
 
     def update(self, board) -> None:
+        No_change = [False] * len(self._removed)
+        for batch in range(len(self._removed)):
+            if len(self._removed[batch]) == 0:
+                No_change[batch] = True
+
         for batch, x, y in self.elements(self._removed):
             board[batch, self._layer, y, x] = 0
 
@@ -111,6 +116,7 @@ class Layer(metaclass=ABCMeta):
 
         self._removed = [[] for _ in range(self._batch)]
         self._added = [[] for _ in range(self._batch)]
+        return No_change
 
     def grid(self) -> Iterable[Tuple[int, int]]:
         for x in range(self._width):

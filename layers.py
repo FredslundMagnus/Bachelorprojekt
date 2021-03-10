@@ -20,9 +20,7 @@ class Player(Layer):
         deltas = [(1,0), (0,1), (-1,0), (0,-1)]
         for batch, action in enumerate(actions):
             for x, y in self.positions[batch]:
-                if x > 9 or y > 9 or x < 1 or y < 1:
-                    print("how")
-                self.move(batch, (x, y), (x + deltas[action][0], y + deltas[action][1]), layers, deltas[action])
+                self.move(batch, (x, y), (x + deltas[action][0], y + deltas[action][1]), layers, deltas[action], deltas)
 
 
 
@@ -191,6 +189,7 @@ class Putter(Layer):
 
 class Layers:
     def __init__(self, batch: int, width: int, height: int, reset_chance: float, *layers: Tuple[LayerType]) -> None:
+        self.frames_since_chance = [0] * batch
         self.layers: List[Layer] = []
         self.player: Player = Player(batch, width, height)
         self.width: int = width
@@ -259,6 +258,7 @@ class Layers:
 
     def update(self):
         self.counter += 1
+        self.frames_since_chance = [x+1 for x in self.frames_since_chance]
         rewards = [0.0 for _ in range(self.batch)]
         dones = [0 for _ in range(self.batch)]
         for batch in range(self.batch):
@@ -267,14 +267,18 @@ class Layers:
                 rewards[batch] = 1
                 dones[batch] = 1
                 self.counter[batch] = 0
-            elif random() < self.reset_chance:
+            elif random() < self.reset_chance or self.frames_since_chance[batch] > 10:
                 self.restart(batch)
                 rewards[batch] = 0
                 dones[batch] = 1
                 self.counter[batch] = 0
 
         for layer in self.layers:
-            layer.update(self.board)
+            No_change = layer.update(self.board)
+
+        for batch in range(self.batch):
+            if No_change[batch] == False:
+                self.frames_since_chance[batch] = 0
         return rewards, dones
 
     def step(self, action: List[int]) -> Tuple[List[float], List[int], List[dict]]:
