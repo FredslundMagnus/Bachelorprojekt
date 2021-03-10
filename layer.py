@@ -72,9 +72,12 @@ class Layer(metaclass=ABCMeta):
             if "Rock" not in layers.names:
                 self.remove(batch, _from)
                 self.add(batch, _to)
-            elif np.sum(layers.board[batch, :, _to[1], _to[0]]) == 1 or layers.board[batch, layers.Rocks_idx, _to[1] - 1, _to[0]] == 0:
+            elif np.sum(layers.board[batch, :, _to[1], _to[0]]) == 1:
                 self.remove(batch, _from)
-                self.add(batch, _to)              
+                self.add(batch, _to)
+            elif layers.board[batch, layers.Rocks_idx, _to[1] - 1, _to[0]] == 0:
+                self.remove(batch, _from)
+                self.add(batch, _to)
         elif "Rock" in layers.names and action[1] == 0:
             if layers.board[batch, layers.Rocks_idx, _to[1], _to[0]] == 1 and _to[0] < layers.width - 1 and _to[0] > 0:
                 if (np.sum(layers.board[batch, :, _to[1], _to[0] + action[0]]) == 0) and (np.sum(layers.board[batch, :, _to[1] + 1, _to[0]]) == 1):
