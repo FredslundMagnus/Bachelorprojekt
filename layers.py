@@ -83,15 +83,13 @@ class Rock(Layer):
         rocks = set(self.positions[batch])
         s = set(x for _, layer in layersDict.items() for x in layer.positions[batch])
         for rock in rocks:
-            item_under = (rock[0], rock[1] + 1)
+            x, y = rock[0], rock[1]
+            item_under = (x, y + 1)
             if item_under not in s and item_under not in adders:
                 self.remove(batch, rock)
                 adders.add(item_under)
             elif item_under in rocks:
-                left_side = (rock[0] + 1, rock[1])
-                left_down_side = (rock[0] + 1, rock[1] + 1)
-                right_side = (rock[0] - 1, rock[1])
-                right_down_side = (rock[0] - 1, rock[1] + 1)
+                left_side, left_down_side, right_side, right_down_side = (x + 1, y), (x + 1, y + 1), (x - 1, y), (x - 1, y + 1)
                 if right_side not in s and right_down_side not in s and right_side not in adders:
                     self.remove(batch, rock)
                     adders.add(right_side)
