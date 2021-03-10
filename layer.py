@@ -2,6 +2,8 @@ from abc import ABCMeta, abstractproperty
 from typing import Iterable, List, Tuple
 from colors import Color
 from enum import Enum
+import numpy as np
+from copy import copy
 
 
 class LayerType(Enum):
@@ -13,6 +15,8 @@ class LayerType(Enum):
     Door = 5
     Holder = 6
     Putter = 7
+    Dirt = 8
+    Rock = 9
 
 
 class Shape(Enum):
@@ -46,7 +50,7 @@ class Layer(metaclass=ABCMeta):
     def reset(self, batch: int) -> None:
         pass
 
-    def check(self, batch: int, layersDict) -> None:
+    def check(self, batch: int, layersDict, action, board) -> None:
         pass
 
     def isDone(self, batch: int, layersDict) -> bool:
@@ -63,11 +67,17 @@ class Layer(metaclass=ABCMeta):
     def isFree(self, batch: int, pos: Tuple[int, int]) -> bool:
         return not self.isBlocking(batch) or pos not in self.positions[batch]
 
-    def move(self, batch: int, _from: Tuple[int, int], _to: Tuple[int, int], layers):
+    def move(self, batch: int, _from: Tuple[int, int], _to: Tuple[int, int], layers, action):
         if _to in self._grid and layers.isFree(batch, _to):
             self.remove(batch, _from)
             self.add(batch, _to)
-        layers.check(batch)
+        elif "Rock" in layers.names and action[1] == 0:
+            if layers.board[batch, layers.Rocks_idx, _to[1], _to[0]] == 1:
+                if np.sum(layers.board[batch, :, _to[1] + action[1], _to[0] + action[0]]) == 0:
+                    self.remove(batch, _from)
+                    self.add(batch, _to)
+
+        layers.check(batch, action, layers)
 
     def remove(self, batch: int, _pos: Tuple[int, int]):
         self._positions[batch].remove(_pos)

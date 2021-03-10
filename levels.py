@@ -32,7 +32,6 @@ class Maze(Level):
         for start, end in self.lines:
             for a in ((x, y) for x in range(min(start[0], end[0]), max(start[0], end[0])+1) for y in range(min(start[1], end[1]), max(start[1], end[1])+1)):
                 self.noBlocks.add(a)
-
         if LayerType.Blocks in self.uses:
             for pos in self.inverse(self.noBlocks):
                 self.level[LayerType.Blocks].append(pos)
@@ -58,6 +57,8 @@ class Maze(Level):
             self.level[LayerType.Holder].append(choice(self.notUsed))
         if LayerType.Putter in self.uses:
             self.level[LayerType.Putter].append(choice(self.notUsed))
+        if LayerType.Rock in self.uses:
+            self.level[LayerType.Rock].append(choice(self.notUsed))
         return True
 
     def DFS(self, node):
@@ -90,3 +91,24 @@ class Maze(Level):
                 frontier.add(posibility)
                 self.nodes.remove(posibility)
                 self.order.append(posibility)
+
+class Rocks(Level):
+    def __init__(self, uses: List[LayerType], shape: Tuple[int, int], start: Tuple[int, int] = None, end: Tuple[int, int] = None) -> None:
+        super().__init__(uses, shape, start, end)
+
+    def generate(self):
+        self.start = choice(self.notUsed)
+        self.end = choice(self.notUsed)
+
+        if LayerType.Player in self.uses:
+            self.level[LayerType.Player].append(self.start)
+        if LayerType.Goal in self.uses:
+            self.level[LayerType.Goal].append(self.end)
+        if LayerType.Rock in self.uses:
+            for pos in sample(self.notUsed, 10):
+                self.level[LayerType.Rock].append(pos)
+        if LayerType.Dirt in self.uses:
+            for pos in self.notUsed:
+                self.level[LayerType.Dirt].append(pos)
+        return True
+
