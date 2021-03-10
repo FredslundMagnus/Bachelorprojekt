@@ -80,8 +80,8 @@ class Rock(Layer):
             self.remove(batch, pos)
             adders.append((pos[0] + action[0], pos[1]))
         rocks = copy(self.positions[batch])
-        dirts = layersDict[LayerType.Dirt].positions[batch]
-        print(dirts)
+        #dirts = layersDict[LayerType.Dirt].positions[batch]
+        #print(dirts)
         for rock in rocks:
             if board.board[batch,4,rock[1] + 1, rock[0]] == 1 or board.board[batch,1,rock[1] + 1, rock[0]] == 1:
                 pass
