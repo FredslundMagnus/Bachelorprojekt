@@ -80,6 +80,8 @@ class Rock(Layer):
             self.remove(batch, pos)
             adders.append((pos[0] + action[0], pos[1]))
         rocks = copy(self.positions[batch])
+        #dirts = layersDict[LayerType.Dirt].positions[batch]
+        #print(dirts)
         for rock in rocks:
             if board.board[batch,4,rock[1] + 1, rock[0]] == 1 or board.board[batch,1,rock[1] + 1, rock[0]] == 1:
                 pass
@@ -87,12 +89,12 @@ class Rock(Layer):
                 self.remove(batch, rock)
                 adders.append((rock[0], rock[1] + 1))
             elif board.board[batch,board.Rocks_idx,rock[1] + 1, rock[0]] == 1:
-                if np.sum(board.board[batch,:,rock[1]:rock[1] + 2, rock[0] - 1]) == 0 and (rock[0] - 1, rock[1]) not in adders:
+                if np.sum(board.board[batch,:,rock[1]:rock[1] + 2, rock[0] - 1]) == 0 and (rock[0] - 1, rock[1]) not in adders and pos != (rock[0] - 1, rock[1]):
                     self.remove(batch, rock)
-                    adders.append((rock[0] - 1, rock[1]))        
-                elif np.sum(board.board[batch,:,rock[1]:rock[1] + 2, rock[0] + 1]) == 0 and (rock[0] + 1, rock[1]) not in adders:
+                    adders.append((rock[0] - 1, rock[1]))
+                elif np.sum(board.board[batch,:,rock[1]:rock[1] + 2, rock[0] + 1]) == 0 and (rock[0] + 1, rock[1]) not in adders and pos != (rock[0] + 1, rock[1]):
                     self.remove(batch, rock)
-                    adders.append((rock[0] + 1, rock[1]))           
+                    adders.append((rock[0] + 1, rock[1]))         
 
         [self.add(batch, x) for x in adders]
         return self._removed, self._added
@@ -300,13 +302,8 @@ class Layers:
         return True
 
     def check(self, batch: int, action, board):
-        all_removed = [[]] * batch
         for layer in self.layers:
-            if layer.name != "Rock":
-                layer.check(batch, self.dict, action, board)
-        for layer in self.layers:
-            if layer.name == "Rock":
-                removed, added = layer.check(batch, self.dict, action, board)
+            layer.check(batch, self.dict, action, board)
         
 
     def restart(self, batch: int):
