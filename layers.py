@@ -17,11 +17,10 @@ class Player(Layer):
     type = LayerType.Player
 
     def step(self, actions, layers):
-        deltas = [(1,0), (0,1), (-1,0), (0,-1)]
+        deltas = [(1, 0), (0, 1), (-1, 0), (0, -1)]
         for batch, action in enumerate(actions):
             for x, y in self.positions[batch]:
                 self.move(batch, (x, y), (x + deltas[action][0], y + deltas[action][1]), layers, deltas[action])
-
 
 
 class Blocks(Layer):
@@ -53,6 +52,7 @@ class Gold(Layer):
     def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
         return not self.positions[batch]
 
+
 class Dirt(Layer):
     name = "Dirt"
     color = Colors.brown
@@ -64,6 +64,7 @@ class Dirt(Layer):
     def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
         if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch]:
             self.remove(batch, pos)
+
 
 class Rock(Layer):
     name = "Rock"
@@ -80,9 +81,10 @@ class Rock(Layer):
             self.remove(batch, pos)
             adders.append((pos[0] + action[0], pos[1]))
         rocks = copy(self.positions[batch])
+        s = set(x for _, layer in layersDict.items() for x in layer.positions[batch])
         for rock in rocks:
             item_under = (rock[0], rock[1] + 1)
-            if all(item_under not in layer.positions[batch] for _, layer in layersDict.items()) and item_under not in adders:
+            if item_under not in s and item_under not in adders:
                 self.remove(batch, rock)
                 adders.append(item_under)
             elif item_under in layersDict[LayerType.Rock].positions[batch]:
@@ -90,14 +92,15 @@ class Rock(Layer):
                 left_down_side = (rock[0] + 1, rock[1] + 1)
                 right_side = (rock[0] - 1, rock[1])
                 right_down_side = (rock[0] - 1, rock[1] + 1)
-                if all(right_side not in layer.positions[batch] for _, layer in layersDict.items()) and all(right_down_side not in layer.positions[batch] for _, layer in layersDict.items()) and right_side not in adders and pos != right_side:
+                if right_side not in s and right_down_side not in s and right_side not in adders and pos != right_side:
                     self.remove(batch, rock)
                     adders.append(right_side)
-                elif all(left_side not in layer.positions[batch] for _, layer in layersDict.items()) and all(left_down_side not in layer.positions[batch] for _, layer in layersDict.items()) and left_side not in adders and pos != left_side:
+                elif left_side not in s and left_down_side not in s and left_side not in adders and pos != left_side:
                     self.remove(batch, rock)
-                    adders.append(left_side)         
+                    adders.append(left_side)
 
         [self.add(batch, x) for x in adders]
+
 
 class Goal(Layer):
     name = "Goal"
@@ -304,7 +307,6 @@ class Layers:
     def check(self, batch: int, action, board):
         for layer in self.layers:
             layer.check(batch, self.dict, action, board)
-        
 
     def restart(self, batch: int):
         if (x := self.dict[LayerType.Player].positions[batch]):
