@@ -20,7 +20,7 @@ class Player(Layer):
         deltas = [(1,0), (0,1), (-1,0), (0,-1)]
         for batch, action in enumerate(actions):
             for x, y in self.positions[batch]:
-                self.move(batch, (x, y), (x + deltas[action][0], y + deltas[action][1]), layers, deltas[action], deltas)
+                self.move(batch, (x, y), (x + deltas[action][0], y + deltas[action][1]), layers, deltas[action])
 
 
 
@@ -80,24 +80,26 @@ class Rock(Layer):
             self.remove(batch, pos)
             adders.append((pos[0] + action[0], pos[1]))
         rocks = copy(self.positions[batch])
-        #dirts = layersDict[LayerType.Dirt].positions[batch]
-        #print(dirts)
         for rock in rocks:
-            if board.board[batch,4,rock[1] + 1, rock[0]] == 1 or board.board[batch,1,rock[1] + 1, rock[0]] == 1:
+            item_under = (rock[0], rock[1] + 1)
+            if rock in layersDict[LayerType.Dirt].positions[batch] or item_under in layersDict[LayerType.Blocks].positions[batch]:
                 pass
-            elif np.sum(board.board[batch,:,rock[1] + 1, rock[0]]) == 0 and (rock[0], rock[1] + 1) not in adders:
+            elif all(item_under not in layer.positions[batch] for _, layer in layersDict.items()) and item_under not in adders:
                 self.remove(batch, rock)
-                adders.append((rock[0], rock[1] + 1))
-            elif board.board[batch,board.Rocks_idx,rock[1] + 1, rock[0]] == 1:
-                if np.sum(board.board[batch,:,rock[1]:rock[1] + 2, rock[0] - 1]) == 0 and (rock[0] - 1, rock[1]) not in adders and pos != (rock[0] - 1, rock[1]):
+                adders.append(item_under)
+            elif item_under in layersDict[LayerType.Rock].positions[batch]:
+                left_side = (rock[0] + 1, rock[1])
+                left_down_side = (rock[0] + 1, rock[1] + 1)
+                right_side = (rock[0] - 1, rock[1])
+                right_down_side = (rock[0] - 1, rock[1] + 1)
+                if all(right_side not in layer.positions[batch] for _, layer in layersDict.items()) and all(right_down_side not in layer.positions[batch] for _, layer in layersDict.items()) and right_side not in adders and pos != right_side:
                     self.remove(batch, rock)
-                    adders.append((rock[0] - 1, rock[1]))
-                elif np.sum(board.board[batch,:,rock[1]:rock[1] + 2, rock[0] + 1]) == 0 and (rock[0] + 1, rock[1]) not in adders and pos != (rock[0] + 1, rock[1]):
+                    adders.append(right_side)
+                elif all(left_side not in layer.positions[batch] for _, layer in layersDict.items()) and all(left_down_side not in layer.positions[batch] for _, layer in layersDict.items()) and left_side not in adders and pos != left_side:
                     self.remove(batch, rock)
-                    adders.append((rock[0] + 1, rock[1]))         
+                    adders.append(left_side)         
 
         [self.add(batch, x) for x in adders]
-        return self._removed, self._added
 
 class Goal(Layer):
     name = "Goal"
