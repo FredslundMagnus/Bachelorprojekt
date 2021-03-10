@@ -5,6 +5,7 @@ import numpy as np
 from torch import Tensor
 from levels import Maze, Rocks
 from random import random
+from copy import copy
 
 
 class Player(Layer):
@@ -19,6 +20,8 @@ class Player(Layer):
         deltas = [(1,0), (0,1), (-1,0), (0,-1)]
         for batch, action in enumerate(actions):
             for x, y in self.positions[batch]:
+                if x > 9 or y > 9 or x < 1 or y < 1:
+                    print("how")
                 self.move(batch, (x, y), (x + deltas[action][0], y + deltas[action][1]), layers, deltas[action])
 
 
@@ -73,16 +76,25 @@ class Rock(Layer):
     type = LayerType.Rock
 
     def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        adders = []
         pos = layersDict[LayerType.Player].positions[batch][0]
         if pos in self.positions[batch]:
             self.remove(batch, pos)
-            self.add(batch, (pos[0] + action[0], pos[1]))
-        else:
-            for rock in layersDict[LayerType.Rock].positions[batch]:
-                new_rock = (rock[0], rock[1] + 1)
-                if np.sum(board.board[batch,:,rock[1] + 1, rock[0]]) == 0 and pos != new_rock:
+            adders.append((pos[0] + action[0], pos[1]))
+        rocks = copy(self.positions[batch])
+        for rock in rocks:
+            if np.sum(board.board[batch,:,rock[1] + 1, rock[0]]) == 0 and (rock[0], rock[1] + 1) not in adders:
+                self.remove(batch, rock)
+                adders.append((rock[0], rock[1] + 1))
+            elif board.board[batch,board.Rocks_idx,rock[1] + 1, rock[0]] == 1:
+                if np.sum(board.board[batch,:,rock[1]:rock[1] + 2, rock[0] - 1]) == 0 and (rock[0] - 1, rock[1]) not in adders:
                     self.remove(batch, rock)
-                    self.add(batch, (rock[0], rock[1] + 1))
+                    adders.append((rock[0] - 1, rock[1]))        
+                elif np.sum(board.board[batch,:,rock[1]:rock[1] + 2, rock[0] + 1]) == 0 and (rock[0] + 1, rock[1]) not in adders:
+                    self.remove(batch, rock)
+                    adders.append((rock[0] + 1, rock[1]))           
+
+        [self.add(batch, x) for x in adders]
 
 class Goal(Layer):
     name = "Goal"

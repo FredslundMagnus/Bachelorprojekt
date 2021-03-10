@@ -68,14 +68,19 @@ class Layer(metaclass=ABCMeta):
         return not self.isBlocking(batch) or pos not in self.positions[batch]
 
     def move(self, batch: int, _from: Tuple[int, int], _to: Tuple[int, int], layers, action):
-        if _to in self._grid and layers.isFree(batch, _to):
-            self.remove(batch, _from)
-            self.add(batch, _to)
-        elif "Rock" in layers.names and action[1] == 0:
-            if layers.board[batch, layers.Rocks_idx, _to[1], _to[0]] == 1:
-                if np.sum(layers.board[batch, :, _to[1] + action[1], _to[0] + action[0]]) == 0:
+        if _to[0] + action[0] < layers.width and _to[1] + action[1] < layers.height and _to[0] + action[0] > -1 and _to[1] + action[1] > -1:
+            if _to in self._grid and layers.isFree(batch, _to):
+                if "Rock" not in layers.names:
                     self.remove(batch, _from)
                     self.add(batch, _to)
+                elif np.sum(layers.board[batch, :, _to[1], _to[0]]) == 1 or layers.board[batch, layers.Rocks_idx, _to[1] - 1, _to[0]] == 0:
+                    self.remove(batch, _from)
+                    self.add(batch, _to)              
+            elif "Rock" in layers.names and action[1] == 0:
+                if layers.board[batch, layers.Rocks_idx, _to[1], _to[0]] == 1:
+                    if (np.sum(layers.board[batch, :, _to[1], _to[0] + action[0]]) == 0) and (np.sum(layers.board[batch, :, _to[1] + 1, _to[0]]) == 1):
+                        self.remove(batch, _from)
+                        self.add(batch, _to)
 
         layers.check(batch, action, layers)
 

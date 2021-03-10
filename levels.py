@@ -97,15 +97,24 @@ class Rocks(Level):
         super().__init__(uses, shape, start, end)
 
     def generate(self):
-        self.start = choice(self.notUsed)
-        self.end = choice(self.notUsed)
+        self.start = (1, self.shape[1])
+        self.end = (self.shape[0], 1)
+
+        self.level[LayerType.Dirt].append((1, self.shape[1] - 1))
+        self.level[LayerType.Dirt].append((1, self.shape[1] - 2))
+        self.level[LayerType.Dirt].append((2, self.shape[1]))
+        self.level[LayerType.Dirt].append((2, self.shape[1] - 1))
+        self.level[LayerType.Dirt].append((2, self.shape[1] - 2))
+        self.level[LayerType.Dirt].append((3, self.shape[1]))
+        self.level[LayerType.Dirt].append((3, self.shape[1] - 1))
+        self.level[LayerType.Dirt].append((3, self.shape[1] - 2))
 
         if LayerType.Player in self.uses:
             self.level[LayerType.Player].append(self.start)
         if LayerType.Goal in self.uses:
             self.level[LayerType.Goal].append(self.end)
         if LayerType.Rock in self.uses:
-            for pos in sample(self.notUsed, 10):
+            for pos in sample(self.notUsed, 25):
                 self.level[LayerType.Rock].append(pos)
         if LayerType.Dirt in self.uses:
             for pos in self.notUsed:
