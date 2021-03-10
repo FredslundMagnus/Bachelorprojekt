@@ -23,15 +23,7 @@
             "console": "integratedTerminal",
             "args": [
               "-name",
-              "testing_name-0",
-              "-learner",
-              "Learners.DoubleQlearn",
-              "-hours",
-              "10",
-              "-batch",
-              "10",
-              "-gamma",
-              "0.54"
+              "testing_name-0"
             ]
           },
           {
