@@ -85,6 +85,10 @@ class Paint:
                 Paint.images[name] = Paint.pygame.transform.scale(Paint.pygame.image.load(f"Drawings/{(name := layer.name)}.png"), (Paint.size, Paint.size))
             except Exception as e:
                 pass
+        try:
+            Paint.images["Cheese"] = Paint.pygame.transform.scale(Paint.pygame.image.load(f"Drawings/Cheese.png"), (Paint.size, Paint.size))
+        except Exception as e:
+            pass
         States.draw = True
 
     @staticmethod
