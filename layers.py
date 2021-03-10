@@ -76,10 +76,11 @@ class Rock(Layer):
         pos = layersDict[LayerType.Player].positions[batch][0]
         if pos in self.positions[batch]:
             self.remove(batch, pos)
-            self.add(batch, (pos[0] + action[0], pos[1] + action[1]))
+            self.add(batch, (pos[0] + action[0], pos[1]))
         else:
             for rock in layersDict[LayerType.Rock].positions[batch]:
-                if np.sum(board.board[batch,:,rock[1] + 1, rock[0]]) == 0 and (pos[0] + action[0], pos[1] + action[1]) != rock:
+                new_rock = (rock[0], rock[1] + 1)
+                if np.sum(board.board[batch,:,rock[1] + 1, rock[0]]) == 0 and pos != new_rock:
                     self.remove(batch, rock)
                     self.add(batch, (rock[0], rock[1] + 1))
 

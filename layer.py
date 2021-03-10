@@ -71,11 +71,11 @@ class Layer(metaclass=ABCMeta):
         if _to in self._grid and layers.isFree(batch, _to):
             self.remove(batch, _from)
             self.add(batch, _to)
-        elif "Rock" in layers.names:
+        elif "Rock" in layers.names and action[1] == 0:
             if layers.board[batch, layers.Rocks_idx, _to[1], _to[0]] == 1:
-                    if np.sum(layers.board[batch, :, _to[1] + action[1], _to[0] + action[0]]) == 0:
-                        self.remove(batch, _from)
-                        self.add(batch, _to)
+                if np.sum(layers.board[batch, :, _to[1] + action[1], _to[0] + action[0]]) == 0:
+                    self.remove(batch, _from)
+                    self.add(batch, _to)
 
         layers.check(batch, action, layers)
 
