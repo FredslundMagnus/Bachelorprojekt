@@ -1,6 +1,5 @@
-import time
 import os
-from layer import Shape
+from layer import Shape, LayerType
 from typing import Iterator, Tuple
 from game import Game
 from auxillaries import States
@@ -29,6 +28,7 @@ class Paint:
     dim = 0
     x = 0
     y = 0
+    images = {}
 
     @staticmethod
     def __init__(game: Game, frame: int, teleporter) -> None:
@@ -63,9 +63,8 @@ class Paint:
     def drawImage(x: int, y: int, name: str) -> None:
         if not States.slow:
             raise Exception()
-        myimage = Paint.pygame.transform.scale(Paint.pygame.image.load(f"Drawings/{name}.png"), (Paint.size, Paint.size))
-        rect = Paint.pygame.Rect(x*Paint.size + (Paint.size - Paint.size) // 2, y*Paint.size + (Paint.size - Paint.size) // 2, Paint.size, Paint.size)
-        Paint.screen.blit(myimage, rect)
+        rect = Paint.pygame.Rect(x*Paint.size, y*Paint.size, Paint.size, Paint.size)
+        Paint.screen.blit(Paint.images[(name)], rect)
 
     @staticmethod
     def drawRect(color: Color, size: int, x: int, y: int) -> None:
@@ -81,6 +80,11 @@ class Paint:
     @staticmethod
     def start(width: int, height: int) -> None:
         Paint.screen = pygame.display.set_mode([width * Paint.size, height * Paint.size], vsync=True)
+        for layer in LayerType:
+            try:
+                Paint.images[name] = Paint.pygame.transform.scale(Paint.pygame.image.load(f"Drawings/{(name := layer.name)}.png"), (Paint.size, Paint.size))
+            except Exception as e:
+                pass
         States.draw = True
 
     @staticmethod
