@@ -45,7 +45,7 @@ def simple(defaults):
 class Defaults:
     name: str = "Agent"
     main: function = teleport
-    hours: float = 10.0
+    hours: float = 0.15
     batch: int = 100
     width: int = 11
     height: int = 11
@@ -64,7 +64,7 @@ class Defaults:
     layer_Holder: bool = False
     layer_Putter: bool = False
     layer_Rock: bool = True
-    layer_Dirt: bool = False
+    layer_Dirt: bool = True
 
     K: float = 200000
     epsilon_cap: float = 0.2

@@ -75,29 +75,29 @@ class Rock(Layer):
     type = LayerType.Rock
 
     def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
-        adders = []
+        adders = set()
         pos = layersDict[LayerType.Player].positions[batch][0]
         if pos in self.positions[batch]:
             self.remove(batch, pos)
-            adders.append((pos[0] + action[0], pos[1]))
-        rocks = copy(self.positions[batch])
+            adders.add((pos[0] + action[0], pos[1]))
+        rocks = set(self.positions[batch])
         s = set(x for _, layer in layersDict.items() for x in layer.positions[batch])
         for rock in rocks:
             item_under = (rock[0], rock[1] + 1)
             if item_under not in s and item_under not in adders:
                 self.remove(batch, rock)
-                adders.append(item_under)
-            elif item_under in layersDict[LayerType.Rock].positions[batch]:
+                adders.add(item_under)
+            elif item_under in rocks:
                 left_side = (rock[0] + 1, rock[1])
                 left_down_side = (rock[0] + 1, rock[1] + 1)
                 right_side = (rock[0] - 1, rock[1])
                 right_down_side = (rock[0] - 1, rock[1] + 1)
-                if right_side not in s and right_down_side not in s and right_side not in adders and pos != right_side:
+                if right_side not in s and right_down_side not in s and right_side not in adders:
                     self.remove(batch, rock)
-                    adders.append(right_side)
-                elif left_side not in s and left_down_side not in s and left_side not in adders and pos != left_side:
+                    adders.add(right_side)
+                elif left_side not in s and left_down_side not in s and left_side not in adders:
                     self.remove(batch, rock)
-                    adders.append(left_side)
+                    adders.add(left_side)
 
         [self.add(batch, x) for x in adders]
 
