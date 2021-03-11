@@ -13,6 +13,14 @@ class Game:
         temp2 = [LayerType.Blocks, LayerType.Goal, LayerType.Gold, LayerType.Keys, LayerType.Door, LayerType.Holder, LayerType.Putter, LayerType.Dirt, LayerType.Rock]
         self.layers: Layers = Layers(batch, width, height, reset_chance, *[layer for use, layer in zip(temp1, temp2) if use])
         self.layers.update()
+        for i in range(width):
+            for j in range(height):
+                for k in range(batch):
+                    self.layers.all_items[k][(i,j)] = 0
+        for layer in self.layers.dict.items():
+           for i in range(len(layer[1].positions)):
+               for item in layer[1].positions[i]:
+                   self.layers.all_items[i][item] += 1
 
     @property
     def board(self) -> Tensor:

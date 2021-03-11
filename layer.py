@@ -72,18 +72,17 @@ class Layer(metaclass=ABCMeta):
             if "Rock" not in layers.names:
                 self.remove(batch, _from)
                 self.add(batch, _to)
-            elif any(_to in layer.positions[batch] for _, layer in layers.dict.items()):
+            elif layers.all_items[batch][_to] == 1:
                 self.remove(batch, _from)
                 self.add(batch, _to)
             elif (_to[0], _to[1] - 1) not in layers.dict[LayerType.Rock].positions[batch]:
                 self.remove(batch, _from)
                 self.add(batch, _to)
         elif "Rock" in layers.names and action[1] == 0:
-            layers.dict[LayerType.Rock].positions[batch]
             if _to in layers.dict[LayerType.Rock].positions[batch] and _to[0] < layers.width - 1 and _to[0] > 0:
                 push_to = (_to[0] + action[0], _to[1])
                 fall_to = (_to[0], _to[1] + 1)
-                if all(push_to not in layer.positions[batch] for _, layer in layers.dict.items()) and any(fall_to in layer.positions[batch] for _, layer in layers.dict.items()):
+                if layers.all_items[batch][push_to] == 0 and layers.all_items[batch][fall_to] != 0:
                     self.remove(batch, _from)
                     self.add(batch, _to)
         layers.check(batch, action, layers)
@@ -107,16 +106,20 @@ class Layer(metaclass=ABCMeta):
                 yield batch, x, y
 
 
-    def update(self, board, No_change) -> None:
+    def update(self, board, No_change, all_items) -> None:
         for batch in range(len(No_change)):
             if No_change[batch] == 1 and len(self._removed[batch]) != 0:
                 No_change[batch] = 0
 
         for batch, x, y in self.elements(self._removed):
             board[batch, self._layer, y, x] = 0
+            if len(all_items[0]) != 0:
+                all_items[batch][(x,y)] -= 1
 
         for batch, x, y in self.elements(self._added):
             board[batch, self._layer, y, x] = 1
+            if len(all_items[0]) != 0:
+                all_items[batch][(x,y)] += 1
 
         self._removed = [[] for _ in range(self._batch)]
         self._added = [[] for _ in range(self._batch)]

@@ -81,19 +81,19 @@ class Rock(Layer):
             self.remove(batch, pos)
             adders.add((pos[0] + action[0], pos[1]))
         rocks = set(self.positions[batch])
-        s = set(x for _, layer in layersDict.items() for x in layer.positions[batch])
+        s = board.all_items[batch]
         for rock in rocks:
             x, y = rock[0], rock[1]
             item_under = (x, y + 1)
-            if item_under not in s and item_under not in adders:
+            if s[item_under] == 0 and item_under not in adders:
                 self.remove(batch, rock)
                 adders.add(item_under)
             elif item_under in rocks:
                 left_side, left_down_side, right_side, right_down_side = (x + 1, y), (x + 1, y + 1), (x - 1, y), (x - 1, y + 1)
-                if right_side not in s and right_down_side not in s and right_side not in adders:
+                if s[right_side] == 0 and s[right_down_side] == 0 and right_side not in adders and (pos[0], pos[1]) != right_side:
                     self.remove(batch, rock)
                     adders.add(right_side)
-                elif left_side not in s and left_down_side not in s and left_side not in adders:
+                elif s[left_side] == 0 and s[left_down_side] == 0 and left_side not in adders and (pos[0], pos[1]) != left_side:
                     self.remove(batch, rock)
                     adders.add(left_side)
 
@@ -258,6 +258,7 @@ class Layers:
             self.names.append(LayerType.Dirt.name)
         self.board = np.zeros((batch, len(self.layers), width, height), dtype=np.float32)
         self.counter = np.zeros(batch)
+        self.all_items = [{} for _ in range(self.batch)]
 
     def __len__(self) -> int:
         return len(self.layers)
@@ -281,7 +282,7 @@ class Layers:
 
         No_change = [1 for _ in range(self.batch)]
         for layer in self.layers:
-            No_change = layer.update(self.board, No_change)
+            No_change = layer.update(self.board, No_change, self.all_items)
         self.frames_since_chance = [c*a for c, a in zip(self.frames_since_chance, No_change)]
         return rewards, dones
 
