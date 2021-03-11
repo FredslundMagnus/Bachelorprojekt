@@ -120,6 +120,20 @@ class Layer(metaclass=ABCMeta):
             board[batch, self._layer, y, x] = 1
             if len(all_items[0]) != 0:
                 all_items[batch][(x,y)] += 1
+        self._removed = [[] for _ in range(self._batch)]
+        self._added = [[] for _ in range(self._batch)]
+        return No_change
+
+    def NoRock_update(self, board, No_change) -> None:
+        for batch in range(len(No_change)):
+            if No_change[batch] == 1 and len(self._removed[batch]) != 0:
+                No_change[batch] = 0
+
+        for batch, x, y in self.elements(self._removed):
+            board[batch, self._layer, y, x] = 0
+
+        for batch, x, y in self.elements(self._added):
+            board[batch, self._layer, y, x] = 1
 
         self._removed = [[] for _ in range(self._batch)]
         self._added = [[] for _ in range(self._batch)]

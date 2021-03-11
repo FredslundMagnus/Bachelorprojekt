@@ -281,8 +281,14 @@ class Layers:
                 self.counter[batch] = 0
 
         No_change = [1 for _ in range(self.batch)]
-        for layer in self.layers:
-            No_change = layer.update(self.board, No_change, self.all_items)
+
+        if LayerType.Rock in self.types:
+            for layer in self.layers:
+                No_change = layer.update(self.board, No_change, self.all_items)
+        else:
+            for layer in self.layers:
+                No_change = layer.NoRock_update(self.board, No_change) 
+
         self.frames_since_chance = [c*a for c, a in zip(self.frames_since_chance, No_change)]
         return rewards, dones
 
