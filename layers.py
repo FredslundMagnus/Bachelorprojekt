@@ -318,4 +318,4 @@ class Layers:
             self.info[batch]['player_end'] = x[0]
         self.level = Rocks(self.types, (self.width-2, self.height-2)).level
         for layer in self.layers:
-            layer.restart(batch, self.level[layer.type])
+            layer.restart(batch, self.level[layer.type], self.all_items)

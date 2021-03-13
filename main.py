@@ -18,12 +18,11 @@ def teleport(defaults):
         intervention_idx, modified_board = teleporter.pre_process(env)
         for frame in loop(env, collector, save, teleporter):
             modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
-            actions = mover(modified_board)
+            actions = person(modified_board)
             observations, rewards, dones, info = env.step(actions)
             modified_board, modified_rewards, modified_dones, teleport_rewards, intervention_idx = teleporter.modify(teleporter.interventions, observations, rewards, dones, info)
-            #print(modified_board[0], modified_rewards[0], modified_dones[0], teleport_rewards[0], rewards[0], dones[0])
             buffer.teleporter_save_data(teleporter.boards, observations, teleporter.interventions, teleport_rewards, dones, intervention_idx)
-            mover.learn(modified_board, actions, modified_rewards, modified_dones)
+            #mover.learn(modified_board, actions, modified_rewards, modified_dones)
             board_before, board_after, intervention, tele_rewards, tele_dones = buffer.sample_data()
             teleporter.learn(board_after, intervention, tele_rewards, tele_dones, board_before)
             collector.collect([rewards, modified_rewards, teleport_rewards], [dones, modified_dones])
@@ -47,8 +46,8 @@ class Defaults:
     main: function = teleport
     hours: float = 0.15
     batch: int = 100
-    width: int = 11
-    height: int = 11
+    width: int = 9
+    height: int = 9
     network1: Networks = Networks.Teleporter
     network2: Networks = Networks.Mini
     learner1: Learners = Learners.Qlearn
@@ -63,7 +62,7 @@ class Defaults:
     layer_Door: bool = False
     layer_Holder: bool = False
     layer_Putter: bool = False
-    layer_Rock: bool = False
+    layer_Rock: bool = True
     layer_Dirt: bool = True
 
     K: float = 200000
@@ -71,7 +70,7 @@ class Defaults:
     softmax_cap: float = 0.03
     gamma: float = 0.98
     update: int = 10000
-    reset_chance: float = 0.000
+    reset_chance: float = 0.002
     modified_done_chance: float = 0.05
     miss_intervention_cost: float = -0.2
     intervention_cost: float = -0.05

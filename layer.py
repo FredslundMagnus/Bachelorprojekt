@@ -41,8 +41,8 @@ class Layer(metaclass=ABCMeta):
             self.clear(i)
             self.reset(i)
 
-    def restart(self, batch: int, positions: List[Tuple[int, int]]) -> None:
-        self.clear(batch)
+    def restart(self, batch: int, positions: List[Tuple[int, int]], all_items) -> None:
+        self.clear2(batch, all_items)
         for pos in positions:
             self.add(batch, pos)
         self.reset(batch)
@@ -100,6 +100,13 @@ class Layer(metaclass=ABCMeta):
         self._positions[batch] = []
         self._added[batch] = []
 
+    def clear2(self, batch: int, all_items):
+        self._removed[batch] += self._positions[batch]
+        self._positions[batch] = []
+        for item in self._added[batch]:
+            all_items[batch][item] += 1
+        self._added[batch] = []
+
     def elements(self, li: List[List[Tuple[int, int]]]):
         for batch, pos in enumerate(li):
             for x, y in pos:
@@ -113,13 +120,11 @@ class Layer(metaclass=ABCMeta):
 
         for batch, x, y in self.elements(self._removed):
             board[batch, self._layer, y, x] = 0
-            if len(all_items[0]) != 0:
-                all_items[batch][(x,y)] -= 1
+            all_items[batch][(x,y)] -= 1
 
         for batch, x, y in self.elements(self._added):
             board[batch, self._layer, y, x] = 1
-            if len(all_items[0]) != 0:
-                all_items[batch][(x,y)] += 1
+            all_items[batch][(x,y)] += 1
         self._removed = [[] for _ in range(self._batch)]
         self._added = [[] for _ in range(self._batch)]
         return No_change
