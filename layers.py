@@ -287,7 +287,7 @@ class Layers:
                 No_change = layer.update(self.board, No_change, self.all_items)
         else:
             for layer in self.layers:
-                No_change = layer.NoRock_update(self.board, No_change) 
+                No_change = layer.NoRock_update(self.board, No_change)
 
         self.frames_since_chance = [c*a for c, a in zip(self.frames_since_chance, No_change)]
         return rewards, dones
@@ -316,6 +316,6 @@ class Layers:
     def restart(self, batch: int):
         if (x := self.dict[LayerType.Player].positions[batch]):
             self.info[batch]['player_end'] = x[0]
-        self.level = Rocks(self.types, (self.width-2, self.height-2)).level
+        self.level = Maze(self.types, (self.width-2, self.height-2)).level
         for layer in self.layers:
             layer.restart(batch, self.level[layer.type], self.all_items)

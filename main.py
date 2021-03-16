@@ -18,11 +18,11 @@ def teleport(defaults):
         intervention_idx, modified_board = teleporter.pre_process(env)
         for frame in loop(env, collector, save, teleporter):
             modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
-            actions = person(modified_board)
+            actions = mover(modified_board)
             observations, rewards, dones, info = env.step(actions)
             modified_board, modified_rewards, modified_dones, teleport_rewards, intervention_idx = teleporter.modify(teleporter.interventions, observations, rewards, dones, info)
             buffer.teleporter_save_data(teleporter.boards, observations, teleporter.interventions, teleport_rewards, dones, intervention_idx)
-            #mover.learn(modified_board, actions, modified_rewards, modified_dones)
+            mover.learn(modified_board, actions, modified_rewards, modified_dones)
             board_before, board_after, intervention, tele_rewards, tele_dones = buffer.sample_data()
             teleporter.learn(board_after, intervention, tele_rewards, tele_dones, board_before)
             collector.collect([rewards, modified_rewards, teleport_rewards], [dones, modified_dones])
@@ -57,13 +57,13 @@ class Defaults:
 
     layer_Blocks: bool = True
     layer_Goal: bool = True
-    layer_Gold: bool = False
+    layer_Gold: bool = True
     layer_Keys: bool = False
     layer_Door: bool = False
     layer_Holder: bool = False
     layer_Putter: bool = False
-    layer_Rock: bool = True
-    layer_Dirt: bool = True
+    layer_Rock: bool = False
+    layer_Dirt: bool = False
 
     K: float = 200000
     epsilon_cap: float = 0.2
