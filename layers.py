@@ -1,11 +1,10 @@
+from level import Level
 from layer import Layer, Shape, LayerType
 from colors import Colors
 from typing import Dict, Tuple, List
 import numpy as np
-from torch import Tensor
-from levels import Maze, Rocks
+from levels import Levels
 from random import random
-from copy import copy
 
 
 class Player(Layer):
@@ -194,7 +193,7 @@ class Putter(Layer):
 
 
 class Layers:
-    def __init__(self, batch: int, width: int, height: int, reset_chance: float, *layers: Tuple[LayerType]) -> None:
+    def __init__(self, batch: int, width: int, height: int, level: Levels, reset_chance: float, *layers: Tuple[LayerType]) -> None:
         self.frames_since_chance = [0] * batch
         self.layers: List[Layer] = []
         self.player: Player = Player(batch, width, height)
@@ -206,6 +205,7 @@ class Layers:
         self.dict: Dict[LayerType, Layer] = {LayerType.Player: self.player}
         self.types.append(LayerType.Player)
         self.names: List[str] = []
+        self.levelType: Level = level.value
 
         if LayerType.Blocks in layers:
             self.layers.append(Blocks(batch, width, height))
@@ -316,6 +316,6 @@ class Layers:
     def restart(self, batch: int):
         if (x := self.dict[LayerType.Player].positions[batch]):
             self.info[batch]['player_end'] = x[0]
-        self.level = Maze(self.types, (self.width-2, self.height-2)).level
+        self.level = self.levelType(self.types, (self.width-2, self.height-2)).level
         for layer in self.layers:
             layer.restart(batch, self.level[layer.type], self.all_items)

@@ -5,7 +5,7 @@ from functools import reduce
 
 
 class Level(metaclass=ABCMeta):
-    def __init__(self, uses: List[LayerType], shape: Tuple[int, int], start: Tuple[int, int], end: Tuple[int, int]) -> None:
+    def __init__(self, uses: List[LayerType], shape: Tuple[int, int], start: Tuple[int, int] = None, end: Tuple[int, int] = None) -> None:
         trying = True
         while trying:
             try:

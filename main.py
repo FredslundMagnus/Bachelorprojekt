@@ -5,6 +5,7 @@ from auxillaries import run, loop, person, random
 from save import Save
 from helper import function
 from replaybuffer import ReplayBuffer
+from levels import Levels
 
 
 def teleport(defaults):
@@ -44,6 +45,7 @@ def simple(defaults):
 class Defaults:
     name: str = "Agent"
     main: function = teleport
+    level: Levels = Levels.Causal1
     hours: float = 0.15
     batch: int = 100
     width: int = 9

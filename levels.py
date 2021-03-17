@@ -2,12 +2,10 @@ from level import Level
 from layers import LayerType
 from typing import List, Tuple, Set
 from random import choice, sample
+from enum import Enum
 
 
 class Maze(Level):
-    def __init__(self, uses: List[LayerType], shape: Tuple[int, int], start: Tuple[int, int] = None, end: Tuple[int, int] = None) -> None:
-        super().__init__(uses, shape, start, end)
-
     def generate(self):
         xs = [i for i in range(1, self.shape[0]+1) if i % 2 == 1]
         ys = [i for i in range(1, self.shape[1]+1) if i % 2 == 1]
@@ -92,10 +90,8 @@ class Maze(Level):
                 self.nodes.remove(posibility)
                 self.order.append(posibility)
 
-class Rocks(Level):
-    def __init__(self, uses: List[LayerType], shape: Tuple[int, int], start: Tuple[int, int] = None, end: Tuple[int, int] = None) -> None:
-        super().__init__(uses, shape, start, end)
 
+class Rocks(Level):
     def generate(self):
         self.start = (1, self.shape[1])
         self.end = (self.shape[0], 1)
@@ -121,3 +117,18 @@ class Rocks(Level):
                 self.level[LayerType.Dirt].append(pos)
         return True
 
+
+class Causal1(Level):
+    def generate(self):
+        if LayerType.Player in self.uses:
+            self.level[LayerType.Holder].append(choice(self.notUsed))
+        if LayerType.Goal in self.uses:
+            self.level[LayerType.Holder].append(choice(self.notUsed))
+
+        return True
+
+
+class Levels(Enum):
+    Maze = Maze
+    Rocks = Rocks
+    Causal1 = Causal1
