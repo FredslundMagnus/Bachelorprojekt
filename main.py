@@ -5,6 +5,8 @@ from auxillaries import run, loop, person, random
 from save import Save
 from helper import function
 from replaybuffer import ReplayBuffer
+from levels import Levels
+from simulator import Simulator
 
 
 def teleport(defaults):
@@ -13,6 +15,7 @@ def teleport(defaults):
     mover = Mover(env, _extra_dim=1, **defaults)
     teleporter = Teleporter(env, **defaults)
     buffer = ReplayBuffer(**defaults)
+    simulator = Simulator(env, **defaults)
 
     with Save(env, collector, mover, teleporter, **defaults) as save:
         intervention_idx, modified_board = teleporter.pre_process(env)
@@ -21,10 +24,11 @@ def teleport(defaults):
             actions = mover(modified_board)
             observations, rewards, dones, info = env.step(actions)
             modified_board, modified_rewards, modified_dones, teleport_rewards, intervention_idx = teleporter.modify(teleporter.interventions, observations, rewards, dones, info)
-            buffer.teleporter_save_data(teleporter.boards, observations, teleporter.interventions, teleport_rewards, dones, intervention_idx)
+            buffer.teleporter_save_data(teleporter.boards, observations, teleporter.interventions, teleport_rewards, dones, intervention_idx, rewards)
             mover.learn(modified_board, actions, modified_rewards, modified_dones)
-            board_before, board_after, intervention, tele_rewards, tele_dones = buffer.sample_data()
+            board_before, board_after, intervention, tele_rewards, tele_dones, rewards = buffer.sample_data()
             teleporter.learn(board_after, intervention, tele_rewards, tele_dones, board_before)
+            simulator.learn(board_before, board_after, intervention, rewards, tele_dones)
             collector.collect([rewards, modified_rewards, teleport_rewards], [dones, modified_dones])
 
 
@@ -44,10 +48,11 @@ def simple(defaults):
 class Defaults:
     name: str = "Agent"
     main: function = teleport
+    level: Levels = Levels.Causal1
     hours: float = 0.15
     batch: int = 100
-    width: int = 9
-    height: int = 9
+    width: int = 7
+    height: int = 7
     network1: Networks = Networks.Teleporter
     network2: Networks = Networks.Mini
     learner1: Learners = Learners.Qlearn
@@ -58,8 +63,8 @@ class Defaults:
     layer_Blocks: bool = True
     layer_Goal: bool = True
     layer_Gold: bool = True
-    layer_Keys: bool = False
-    layer_Door: bool = False
+    layer_Keys: bool = True
+    layer_Door: bool = True
     layer_Holder: bool = False
     layer_Putter: bool = False
     layer_Rock: bool = False

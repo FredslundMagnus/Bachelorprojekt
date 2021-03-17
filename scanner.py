@@ -3,7 +3,7 @@ from main import *
 from load import Load
 from numpy import ndindex as ranges
 
-with Load("gold_small") as load:
+with Load("gold_9x9") as load:
     collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
     intervention_idx, modified_board = teleporter.pre_process(env)
     counter = {layer: 0 for layer in env.layers.types}

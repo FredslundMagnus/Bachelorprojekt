@@ -5,6 +5,7 @@ import sys
 from network import Networks
 from learner import Learners
 from exploration import Explorations
+from levels import Levels
 from helper import function
 from os import getenv
 isServer = checkServer()
@@ -25,7 +26,7 @@ def getvals(defaults):
                 params[s] = annotations[s].__call__(args[i + 1])
             elif annotations[s] == function:
                 params[s] = str(args[i + 1])
-            elif annotations[s] in {Networks, Learners, Explorations}:
+            elif annotations[s] in {Networks, Learners, Explorations, Levels}:
                 params[s] = [e for e in annotations[s] if str(e) == str(args[i + 1])][0]
     return params
 
