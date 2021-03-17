@@ -4,7 +4,7 @@ from torch.nn import MSELoss
 from torch.optim import Adam
 import torch
 
-class Network(nn.Module):
+class Simulator(nn.Module):
     def __init__(self, dim: int, width: int, height: int):
         self.width = width
         self.height = height
@@ -26,7 +26,7 @@ class Network(nn.Module):
         modified_board = torch.cat((board_before, intervention_layer), 1)
         guess = self.forward(modified_board)
         label = torch.cat((board_after.flatten(), reward, done), dim=1)
-        loss_value_network = self.criterion(guess, label)
-        loss_value_network.backward()
+        loss = self.criterion(guess, label)
+        loss.backward()
         self.optimizer.step()
         self.optimizer.zero_grad()
