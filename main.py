@@ -26,9 +26,9 @@ def teleport(defaults):
             modified_board, modified_rewards, modified_dones, teleport_rewards, intervention_idx = teleporter.modify(teleporter.interventions, observations, rewards, dones, info)
             buffer.teleporter_save_data(teleporter.boards, observations, teleporter.interventions, teleport_rewards, dones, intervention_idx, rewards)
             mover.learn(modified_board, actions, modified_rewards, modified_dones)
-            board_before, board_after, intervention, tele_rewards, tele_dones, rewards = buffer.sample_data()
+            board_before, board_after, intervention, tele_rewards, tele_dones, normal_rewards = buffer.sample_data()
             teleporter.learn(board_after, intervention, tele_rewards, tele_dones, board_before)
-            simulator.learn(board_before, board_after, intervention, rewards, tele_dones)
+            simulator.learn(board_before, board_after, intervention, normal_rewards, tele_dones)
             collector.collect([rewards, modified_rewards, teleport_rewards], [dones, modified_dones])
 
 
@@ -51,8 +51,8 @@ class Defaults:
     level: Levels = Levels.Causal1
     hours: float = 0.15
     batch: int = 100
-    width: int = 7
-    height: int = 7
+    width: int = 9
+    height: int = 9
     network1: Networks = Networks.Teleporter
     network2: Networks = Networks.Mini
     learner1: Learners = Learners.Qlearn

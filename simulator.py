@@ -46,7 +46,7 @@ class Network(nn.Module):
             print(loss_RD.item(), loss_board.item())
 
 class Simulator:
-    def __init__(self, dim: int, width: int, height: int, update: int = None, **kwargs):
+    def __init__(self, dim: int, width: int, height: int, **kwargs):
         self.network = Network(dim, width, height).to(device)
 
     def learn(self, board_before: Tensor, board_after: Tensor, action: Tensor, reward: Tensor, done: Tensor):
