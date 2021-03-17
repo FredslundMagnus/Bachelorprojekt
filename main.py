@@ -60,8 +60,8 @@ class Defaults:
     layer_Blocks: bool = True
     layer_Goal: bool = True
     layer_Gold: bool = True
-    layer_Keys: bool = False
-    layer_Door: bool = False
+    layer_Keys: bool = True
+    layer_Door: bool = True
     layer_Holder: bool = False
     layer_Putter: bool = False
     layer_Rock: bool = False

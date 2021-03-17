@@ -1,7 +1,7 @@
 from level import Level
 from layers import LayerType
 from typing import List, Tuple, Set
-from random import choice, sample
+from random import choice, sample, random
 from enum import Enum
 
 
@@ -120,6 +120,25 @@ class Rocks(Level):
 
 class Causal1(Level):
     def generate(self):
+        door_chance, key_chance, gold_chance = 0.1, 0.1, 0.1
+        gold = choice(self.notUsed)
+        if LayerType.Gold in self.uses:
+            if random() > gold_chance:
+                self.level[LayerType.Gold].append(gold)
+        if LayerType.Door in self.uses:
+            appender = self.level[LayerType.Door].append
+            x, y = gold
+            if x+1 != self.shape[0]+1 and random() > door_chance:
+                appender((x+1, y))
+            if x-1 != 0 and random() > door_chance:
+                appender((x-1, y))
+            if y+1 != self.shape[1]+1 and random() > door_chance:
+                appender((x, y+1))
+            if y-1 != 0 and random() > door_chance:
+                appender((x, y-1))
+        if LayerType.Keys in self.uses:
+            if random() > key_chance:
+                self.level[LayerType.Keys].append(choice(self.notUsed))
         if LayerType.Player in self.uses:
             self.level[LayerType.Player].append(choice(self.notUsed))
         if LayerType.Goal in self.uses:
