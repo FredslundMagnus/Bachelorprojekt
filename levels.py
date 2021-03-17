@@ -121,9 +121,9 @@ class Rocks(Level):
 class Causal1(Level):
     def generate(self):
         if LayerType.Player in self.uses:
-            self.level[LayerType.Holder].append(choice(self.notUsed))
+            self.level[LayerType.Player].append(choice(self.notUsed))
         if LayerType.Goal in self.uses:
-            self.level[LayerType.Holder].append(choice(self.notUsed))
+            self.level[LayerType.Goal].append(choice(self.notUsed))
 
         return True
 
