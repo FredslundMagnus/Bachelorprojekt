@@ -25,7 +25,7 @@ class Simulator(nn.Module):
         intervention_layer = torch.nn.functional.one_hot(action, self.height * self.width).reshape(action.shape[0], self.height, self.width).unsqueeze(1)
         modified_board = torch.cat((board_before, intervention_layer), 1)
         guess = self.forward(modified_board)
-        label = torch.cat((board_after.flatten(), reward, done), dim=1)
+        label = torch.cat(((board_after - board_before).flatten(), reward, done), dim=1)
         loss = self.criterion(guess, label)
         loss.backward()
         self.optimizer.step()
