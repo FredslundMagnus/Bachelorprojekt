@@ -2,6 +2,7 @@
 from main import Defaults, teleport, simple
 from network import Networks
 from learner import Learners
+from levels import Levels
 from agent import Teleporter, Mover, Networks, Learners, Explorations
 
 
