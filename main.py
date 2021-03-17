@@ -6,6 +6,7 @@ from save import Save
 from helper import function
 from replaybuffer import ReplayBuffer
 from levels import Levels
+from simulator import Simulator
 
 
 def teleport(defaults):
@@ -14,6 +15,7 @@ def teleport(defaults):
     mover = Mover(env, _extra_dim=1, **defaults)
     teleporter = Teleporter(env, **defaults)
     buffer = ReplayBuffer(**defaults)
+    simulator = Simulator(**defaults)
 
     with Save(env, collector, mover, teleporter, **defaults) as save:
         intervention_idx, modified_board = teleporter.pre_process(env)

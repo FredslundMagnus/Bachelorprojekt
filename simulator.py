@@ -5,7 +5,7 @@ from torch.optim import Adam
 import torch
 
 class Simulator(nn.Module):
-    def __init__(self, dim: int, width: int, height: int):
+    def __init__(self, dim: int, width: int, height: int, **kwargs):
         self.width = width
         self.height = height
         self.boardmodel = nn.Sequential(nn.Conv2d(dim, 64, 3, padding=1), nn.LeakyReLU(), nn.Conv2d(64, 128, 3, padding=1), nn.Conv2d(128, dim, 3, padding=1), nn.Flatten())
