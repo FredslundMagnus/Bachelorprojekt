@@ -120,7 +120,7 @@ class Rocks(Level):
 
 class Causal1(Level):
     def generate(self):
-        door_chance, key_chance, gold_chance = 0.1, 0.1, 0.1
+        door_chance, key_chance, gold_chance = 0.025, 0.1, 0.1
         gold = choice(self.notUsed)
         if LayerType.Gold in self.uses:
             if random() > gold_chance:
