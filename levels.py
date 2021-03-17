@@ -1,13 +1,11 @@
 from level import Level
 from layers import LayerType
 from typing import List, Tuple, Set
-from random import choice, sample
+from random import choice, sample, random
+from enum import Enum
 
 
 class Maze(Level):
-    def __init__(self, uses: List[LayerType], shape: Tuple[int, int], start: Tuple[int, int] = None, end: Tuple[int, int] = None) -> None:
-        super().__init__(uses, shape, start, end)
-
     def generate(self):
         xs = [i for i in range(1, self.shape[0]+1) if i % 2 == 1]
         ys = [i for i in range(1, self.shape[1]+1) if i % 2 == 1]
@@ -92,10 +90,8 @@ class Maze(Level):
                 self.nodes.remove(posibility)
                 self.order.append(posibility)
 
-class Rocks(Level):
-    def __init__(self, uses: List[LayerType], shape: Tuple[int, int], start: Tuple[int, int] = None, end: Tuple[int, int] = None) -> None:
-        super().__init__(uses, shape, start, end)
 
+class Rocks(Level):
     def generate(self):
         self.start = (1, self.shape[1])
         self.end = (self.shape[0], 1)
@@ -121,3 +117,37 @@ class Rocks(Level):
                 self.level[LayerType.Dirt].append(pos)
         return True
 
+
+class Causal1(Level):
+    def generate(self):
+        door_chance, key_chance, gold_chance = 0.025, 0.1, 0.1
+        gold = choice(self.notUsed)
+        if LayerType.Gold in self.uses:
+            if random() > gold_chance:
+                self.level[LayerType.Gold].append(gold)
+        if LayerType.Door in self.uses:
+            appender = self.level[LayerType.Door].append
+            x, y = gold
+            if x+1 != self.shape[0]+1 and random() > door_chance:
+                appender((x+1, y))
+            if x-1 != 0 and random() > door_chance:
+                appender((x-1, y))
+            if y+1 != self.shape[1]+1 and random() > door_chance:
+                appender((x, y+1))
+            if y-1 != 0 and random() > door_chance:
+                appender((x, y-1))
+        if LayerType.Keys in self.uses:
+            if random() > key_chance:
+                self.level[LayerType.Keys].append(choice(self.notUsed))
+        if LayerType.Player in self.uses:
+            self.level[LayerType.Player].append(choice(self.notUsed))
+        if LayerType.Goal in self.uses:
+            self.level[LayerType.Goal].append(choice(self.notUsed))
+
+        return True
+
+
+class Levels(Enum):
+    Maze = Maze
+    Rocks = Rocks
+    Causal1 = Causal1
