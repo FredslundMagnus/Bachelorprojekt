@@ -19,24 +19,31 @@ class Network(nn.Module):
         self.optimizer_rewarddonemodel = Adam(self.rewarddonemodel.parameters(), lr=1e-5, weight_decay=1e-5)
         self.counter = 0
 
-    def forward(self, x: Tensor):
-        y = self.boardmodel(x)
-        z = self.rewarddonemodel(x)
-        x = torch.cat((y, z), dim=1)
-        return x
+    def boardforward(self, x: Tensor):
+        return self.boardmodel(x)
+
+    def RDforward(self, x: Tensor):
+        return self.rewarddonemodel(x)
 
     def learn(self, board_before: Tensor, board_after: Tensor, action: Tensor, reward: Tensor, done: Tensor):
         self.counter += 1
         intervention_layer = torch.nn.functional.one_hot(action, self.height * self.width).reshape(action.shape[0], self.height, self.width).unsqueeze(1)
         modified_board = torch.cat((board_before, intervention_layer), 1)
-        guess = self.forward(modified_board)
-        label = torch.cat(((board_after - board_before).flatten(start_dim=1), reward.unsqueeze(1), done.unsqueeze(1)), dim=1)
-        loss = self.criterion(guess, label)
-        loss.backward()
+        modified_board_before_no_dones = modified_board[done == 0]
+        guess_board = self.boardforward(modified_board_before_no_dones)
+        label_board = (board_after - board_before)[done == 0].flatten(start_dim=1)
+        guess_RD = self.RDforward(modified_board)
+        label_RD = torch.cat((reward.unsqueeze(1), done.unsqueeze(1)), dim=1)
+        loss_board = self.criterion(guess_board, label_board)
+        loss_board.backward()
         self.optimizer_boardmodel.step()
-        self.optimizer_rewarddonemodel.step()
         self.optimizer_boardmodel.zero_grad()
+        loss_RD = self.criterion(guess_RD, label_RD)
+        loss_RD.backward()
+        self.optimizer_rewarddonemodel.step()
         self.optimizer_rewarddonemodel.zero_grad()
+        if self.counter % 100 == 0:
+            print(loss_RD.item(), loss_board.item())
 
 class Simulator:
     def __init__(self, dim: int, width: int, height: int, update: int = None, **kwargs):
