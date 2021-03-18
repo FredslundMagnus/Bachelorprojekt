@@ -47,7 +47,7 @@ def simple(defaults):
 def simulation(defaults):
     with Load("gold_9x9", num=1) as load:
         env, mover, teleporter = load.items(Game, Mover, Teleporter)
-        env.hours = ??
+        env.hours = 4
         simulator = Simulator(env, env.layers.width, env.layers.height)
         env.layers.levelType = Levels.Maze.value  # Fix
         intervention_idx, modified_board = teleporter.pre_process(env)
