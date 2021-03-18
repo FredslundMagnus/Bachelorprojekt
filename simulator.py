@@ -12,8 +12,8 @@ class Network(nn.Module):
         self.dim = len(game.layers) + 1
         self.width = width
         self.height = height
-        self.boardmodel = nn.Sequential(nn.Conv2d(self.dim, 64, 3, padding=1), nn.LeakyReLU(), nn.Conv2d(64, 128, 3, padding=1), nn.Conv2d(128, self.dim - 1, 3, padding=1), nn.Flatten())
-        self.rewarddonemodel = nn.Sequential(nn.Flatten(), nn.Linear(self.dim * self.height * self.width, 50), nn.LeakyReLU(), nn.Linear(50, 2), nn.LeakyReLU(), nn.Flatten())
+        self.boardmodel = nn.Sequential(nn.Conv2d(self.dim, 64, 3, padding=1), nn.LeakyReLU(), nn.Conv2d(64, 128, 3, padding=1), nn.Conv2d(128, self.dim - 1, 3, padding=1), nn.Flatten(), nn.Sigmoid())
+        self.rewarddonemodel = nn.Sequential(nn.Flatten(), nn.Linear(self.dim * self.height * self.width, 50), nn.LeakyReLU(), nn.Linear(50, 2), nn.LeakyReLU(), nn.Flatten(), nn.Sigmoid())
         self.criterion = MSELoss()
         self.optimizer_boardmodel = Adam(self.boardmodel.parameters(), lr=1e-5, weight_decay=1e-5)
         self.optimizer_rewarddonemodel = Adam(self.rewarddonemodel.parameters(), lr=1e-5, weight_decay=1e-5)
@@ -31,7 +31,7 @@ class Network(nn.Module):
         modified_board = torch.cat((board_before, intervention_layer), 1)
         modified_board_before_no_dones = modified_board[done == 0]
         guess_board = self.boardforward(modified_board_before_no_dones)
-        label_board = (board_after - board_before)[done == 0].flatten(start_dim=1)
+        label_board = ((board_after - board_before)**2)[done == 0].flatten(start_dim=1)
         guess_RD = self.RDforward(modified_board)
         label_RD = torch.cat((reward.unsqueeze(1), done.unsqueeze(1)), dim=1)
         loss_board = self.criterion(guess_board, label_board)
@@ -44,6 +44,8 @@ class Network(nn.Module):
         self.optimizer_rewarddonemodel.zero_grad()
         if self.counter % 100 == 0:
             print(loss_RD.item(), loss_board.item())
+        if self.counter % 4000 == 0:
+            print(guess_board[0].reshape(self.dim - 1, self.width, self.height), label_board[0].reshape(self.dim - 1, self.width, self.height), guess_RD[0], label_RD[0])
 
 class Simulator:
     def __init__(self, dim: int, width: int, height: int, **kwargs):
