@@ -16,7 +16,6 @@ def teleport(defaults):
     mover = Mover(env, _extra_dim=1, **defaults)
     teleporter = Teleporter(env, **defaults)
     buffer = ReplayBuffer(**defaults)
-    simulator = Simulator(env, **defaults)
 
     with Save(env, collector, mover, teleporter, **defaults) as save:
         intervention_idx, modified_board = teleporter.pre_process(env)
@@ -29,7 +28,6 @@ def teleport(defaults):
             mover.learn(modified_board, actions, modified_rewards, modified_dones)
             board_before, board_after, intervention, tele_rewards, tele_dones, normal_rewards = buffer.sample_data()
             teleporter.learn(board_after, intervention, tele_rewards, tele_dones, board_before)
-            simulator.learn(board_before, board_after, intervention, normal_rewards, tele_dones)
             collector.collect([rewards, modified_rewards, teleport_rewards], [dones, modified_dones])
 
 
