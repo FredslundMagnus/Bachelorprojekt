@@ -43,9 +43,11 @@ def simple(defaults):
             mover.learn(observations, actions, rewards, dones)
             collector.collect([rewards], [dones])
 
+
 def simulation(defaults):
     with Load("gold_9x9", num=1) as load:
         env, mover, teleporter = load.items(Game, Mover, Teleporter)
+        env.hours = ??
         simulator = Simulator(env, env.layers.width, env.layers.height)
         env.layers.levelType = Levels.Maze.value  # Fix
         intervention_idx, modified_board = teleporter.pre_process(env)
@@ -61,7 +63,6 @@ def simulation(defaults):
                 board_before, board_after, intervention, _, tele_dones, normal_rewards = buffer.sample_data()
                 lossboard, lossRD = simulator.learn(board_before, board_after, intervention, normal_rewards, tele_dones)
                 collector.collect_loss(lossboard, lossRD)
-                
 
 
 class Defaults:
