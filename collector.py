@@ -30,8 +30,11 @@ class Collector:
             plt.legend(loc="upper left")
             i += 1
         if len(self.lossBoard) > 1:
+            fig = plt.figure()
+            move_figure(fig, plot_positions[i % len(plot_positions)])
             plt.plot(self.lossBoard[:-1])
-            plt.plot(self.lossRD[:-1])     
+            plt.plot(self.lossRD[:-1])
+            i += 1    
 
         plt.pause(10)
         plt.close('all')
