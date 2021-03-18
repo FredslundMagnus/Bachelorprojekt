@@ -29,14 +29,11 @@ class Collector:
             plt.ylabel("reward over dones")
             plt.legend(loc="upper left")
             i += 1
+        if len(self.lossBoard) > 1:
+            plt.plot(self.lossBoard[:-1])
+            plt.plot(self.lossRD[:-1])     
 
         plt.pause(10)
-        plt.close('all')
-
-        plt.plot(self.lossBoard[:-1])
-        plt.plot(self.lossRD[:-1])
-
-        plt.pause(5)
         plt.close('all')
 
     def hide(self) -> None:
