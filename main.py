@@ -7,6 +7,7 @@ from helper import function
 from replaybuffer import ReplayBuffer
 from levels import Levels
 from simulator import Simulator
+from load import Load
 
 
 def teleport(defaults):
@@ -44,10 +45,30 @@ def simple(defaults):
             mover.learn(observations, actions, rewards, dones)
             collector.collect([rewards], [dones])
 
+def simulation(defaults):
+    with Load("gold_9x9", num=1) as load:
+        env, mover, teleporter = load.items(Game, Mover, Teleporter)
+        simulator = Simulator(env, env.layers.width, env.layers.height)
+        env.layers.levelType = Levels.Maze.value  # Fix
+        intervention_idx, modified_board = teleporter.pre_process(env)
+        buffer = ReplayBuffer(**defaults)
+        collector = Collector(**defaults)
+        with Save(env, collector, simulator, **defaults) as save:
+            for frame in loop(env, collector, save, teleporter=teleporter):
+                modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
+                actions = mover(modified_board)
+                observations, rewards, dones, info = env.step(actions)
+                modified_board, _, _, teleport_rewards, intervention_idx = teleporter.modify(teleporter.interventions, observations, rewards, dones, info)
+                buffer.teleporter_save_data(teleporter.boards, observations, teleporter.interventions, teleport_rewards, dones, intervention_idx, rewards)
+                board_before, board_after, intervention, _, tele_dones, normal_rewards = buffer.sample_data()
+                lossboard, lossRD = simulator.learn(board_before, board_after, intervention, normal_rewards, tele_dones)
+                collector.collect_loss(lossboard, lossRD)
+                
+
 
 class Defaults:
     name: str = "Agent"
-    main: function = teleport
+    main: function = simulation
     level: Levels = Levels.Causal1
     hours: float = 0.15
     batch: int = 100

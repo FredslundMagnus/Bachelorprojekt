@@ -14,6 +14,8 @@ class Collector:
         self.rewards = []
         self.dones = []
         self.data = {}
+        self.lossBoard = [0]
+        self.lossRD = [0]
         
     def show(self, game) -> None:
         plot_positions = [(0,0), (600,0), (1200, 0), (0, 520), (600, 520), (1200, 520)]
@@ -28,7 +30,13 @@ class Collector:
             plt.legend(loc="upper left")
             i += 1
 
-        plt.pause(15)
+        plt.pause(10)
+        plt.close('all')
+
+        plt.plot(self.lossBoard[:-1])
+        plt.plot(self.lossRD[:-1])
+
+        plt.pause(5)
         plt.close('all')
 
     def hide(self) -> None:
@@ -53,3 +61,14 @@ class Collector:
                     self.data[(i,k)].append(self.rewards[i].item()/self.dones[k].item())
             self.rewards = []
             self.dones = []
+    
+    def collect_loss(self, lossboard: int, lossRD: int):
+        self.counter += 1
+        self.lossBoard[-1] += lossboard
+        self.lossRD[-1] += lossRD
+
+        if self.counter % self.filter_size == 0:
+            self.lossBoard[-1] /= self.filter_size
+            self.lossRD[-1] /= self.filter_size
+            self.lossBoard.append(0)
+            self.lossRD.append(0)

@@ -42,14 +42,11 @@ class Network(nn.Module):
         loss_RD.backward()
         self.optimizer_rewarddonemodel.step()
         self.optimizer_rewarddonemodel.zero_grad()
-        if self.counter % 100 == 0:
-            print(loss_RD.item(), loss_board.item())
-        if self.counter % 4000 == 0:
-            print(guess_board[0].reshape(self.dim - 1, self.width, self.height), label_board[0].reshape(self.dim - 1, self.width, self.height), guess_RD[0], label_RD[0])
+        return torch.sum(loss_RD).item(), torch.sum(loss_board).item()
 
 class Simulator:
     def __init__(self, dim: int, width: int, height: int, **kwargs):
         self.network = Network(dim, width, height).to(device)
 
     def learn(self, board_before: Tensor, board_after: Tensor, action: Tensor, reward: Tensor, done: Tensor):
-        self.network.learn(board_before, board_after, action, reward, done)
+        return self.network.learn(board_before, board_after, action, reward, done)
