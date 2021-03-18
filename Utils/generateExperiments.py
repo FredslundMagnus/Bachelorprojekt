@@ -70,6 +70,6 @@ def genExperiments(name, n=1, **params):
 # genExperiments(f"9x9_gamme0.99_softmax0.05", hours=10.0, width=9, height=9, layer_Keys=True, layer_Door=True, layer_Holder=True, layer_Putter=True, layer_Gold=True, gamma=0.95, softmax_cap=0.05)
 # genExperiments(f"9x9_gamme0.99_softmax0.05", hours=10.0, width=9, height=9, layer_Keys=True, layer_Door=True, layer_Holder=True, layer_Putter=True, layer_Gold=True, gamma=0.99, softmax_cap=0.05)
 # genExperiments(f"9x9_gamme0.995_softmax0.05", hours=10.0, width=9, height=9, layer_Keys=True, layer_Door=True, layer_Holder=True, layer_Putter=True, layer_Gold=True, gamma=0.995, softmax_cap=0.05)
-genExperiments(f"gold_9x9", n=3, hours=24.0, width=9, height=9)
-genExperiments(f"gold_11x11", n=3, hours=24.0, width=11, height=11)
+
+genExperiments(f"simul_gold_9x9", n=3, hours=4.0)
 file.close()
