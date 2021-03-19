@@ -3,9 +3,9 @@ from main import *
 from load import Load
 from numpy import ndindex as ranges
 
-with Load("gold_9x9", num=2) as load:
+with Load("causal1_9x9", num=2) as load:
     collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
-    env.layers.levelType = Levels.Maze.value  # Fix
+    # env.layers.levelType = Levels.Maze.value  # Fix
     intervention_idx, modified_board = teleporter.pre_process(env)
     counter = {layer: 0 for layer in env.layers.types}
     for frame in loop(env, collector, teleporter=teleporter):

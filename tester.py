@@ -11,9 +11,9 @@ def test_simple():
 
 
 def test_teleport():
-    with Load("gold_9x9", num=1) as load:
+    with Load("causal1_9x9", num=0) as load:
         collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
-        env.layers.levelType = Levels.Maze.value  # Fix
+        # env.layers.levelType = Levels.Maze.value  # Fix
         intervention_idx, modified_board = teleporter.pre_process(env)
         for frame in loop(env, collector, teleporter=teleporter):
             modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
