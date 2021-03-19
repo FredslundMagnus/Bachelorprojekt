@@ -192,6 +192,64 @@ class Putter(Layer):
         return positions[0] == self.positions[batch][0]
 
 
+class Diamond1(Layer):
+    name = "Diamond1"
+    color = Colors.green
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+    type = LayerType.Diamond1
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch]:
+            self.remove(batch, pos)
+
+
+class Diamond2(Layer):
+    name = "Diamond2"
+    color = Colors.blue
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+    type = LayerType.Diamond2
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        blocked = LayerType.Diamond1 in layersDict and bool(layersDict[LayerType.Diamond1].positions[batch])
+        if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch] and not blocked:
+            self.remove(batch, pos)
+
+
+class Diamond3(Layer):
+    name = "Diamond3"
+    color = Colors.red
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+    type = LayerType.Diamond3
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        blocked = LayerType.Diamond2 in layersDict and bool(layersDict[LayerType.Diamond2].positions[batch])
+        if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch] and not blocked:
+            self.remove(batch, pos)
+
+
+class Diamond4(Layer):
+    name = "Diamond4"
+    color = Colors.purple
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+    type = LayerType.Diamond4
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        blocked = LayerType.Diamond3 in layersDict and bool(layersDict[LayerType.Diamond3].positions[batch])
+        if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch] and not blocked:
+            self.remove(batch, pos)
+
+    def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
+        return not self.positions[batch]
+
+
 class Layers:
     def __init__(self, batch: int, width: int, height: int, level: Levels, reset_chance: float, *layers: Tuple[LayerType]) -> None:
         self.frames_since_chance = [0] * batch
@@ -232,6 +290,26 @@ class Layers:
             self.dict[LayerType.Gold] = self.layers[-1]
             self.types.append(LayerType.Gold)
             self.names.append(LayerType.Gold.name)
+        if LayerType.Diamond1 in layers:
+            self.layers.append(Diamond1(batch, width, height))
+            self.dict[LayerType.Diamond1] = self.layers[-1]
+            self.types.append(LayerType.Diamond1)
+            self.names.append(LayerType.Diamond1.name)
+        if LayerType.Diamond2 in layers:
+            self.layers.append(Diamond2(batch, width, height))
+            self.dict[LayerType.Diamond2] = self.layers[-1]
+            self.types.append(LayerType.Diamond2)
+            self.names.append(LayerType.Diamond2.name)
+        if LayerType.Diamond3 in layers:
+            self.layers.append(Diamond3(batch, width, height))
+            self.dict[LayerType.Diamond3] = self.layers[-1]
+            self.types.append(LayerType.Diamond3)
+            self.names.append(LayerType.Diamond3.name)
+        if LayerType.Diamond4 in layers:
+            self.layers.append(Diamond4(batch, width, height))
+            self.dict[LayerType.Diamond4] = self.layers[-1]
+            self.types.append(LayerType.Diamond4)
+            self.names.append(LayerType.Diamond4.name)
         if LayerType.Holder in layers:
             self.layers.append(Holder(batch, width, height))
             self.dict[LayerType.Holder] = self.layers[-1]
