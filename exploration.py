@@ -35,7 +35,7 @@ class Exploration:
 
     @property
     def K_(self):
-        return max(self.softmax_cap, self.softmax_cap * (self.K / self.counter))
+        return max(self.softmax_cap, 10 * self.softmax_cap * (self.K / self.counter))
 
     def greedy(self, vals):
         vals.detach()
