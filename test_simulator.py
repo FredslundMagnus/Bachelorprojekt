@@ -5,9 +5,10 @@ import torch
 import matplotlib.pyplot as plt
 
 def test_simulator():
-    with Load("Agent_Kobo", num=1, isLocal=True) as load:
+    with Load("Agent_Kobo", num=0, isLocal=True) as load:
          with Load("gold_9x9", num=1) as load2:
             env, mover, teleporter = load2.items(Game, Mover, Teleporter)
+            teleporter.modified_done_chance = 0
             simulator, collector = load.items(Simulator, Collector)
             env.layers.levelType = Levels.Maze.value  # Fix
             intervention_idx, modified_board = teleporter.pre_process(env)
