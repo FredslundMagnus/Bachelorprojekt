@@ -6,13 +6,13 @@ from levels import Levels
 
 
 class Game:
-    def __init__(self, batch: int = None, hours: float = None, width: int = None, height: int = None, level: Levels = None, reset_chance: float = None, layer_Blocks: bool = None, layer_Goal: bool = None, layer_Gold: bool = None, layer_Keys: bool = None, layer_Door: bool = None, layer_Holder: bool = None, layer_Putter: bool = None, layer_Rock: bool = None, layer_Dirt: bool = None, **kwargs) -> None:
+    def __init__(self, batch: int = None, hours: float = None, width: int = None, height: int = None, level: Levels = None, reset_chance: float = None, layer_Blocks: bool = None, layer_Goal: bool = None, layer_Gold: bool = None, layer_Keys: bool = None, layer_Door: bool = None, layer_Holder: bool = None, layer_Putter: bool = None, layer_Rock: bool = None, layer_Dirt: bool = None, layer_Diamond1: bool = None, layer_Diamond2: bool = None, layer_Diamond3: bool = None, layer_Diamond4: bool = None, **kwargs) -> None:
         super().__init__()
         self.batch: int = batch
         self.hours: float = hours
         self.level: Levels = level
-        temp1 = [layer_Blocks, layer_Goal, layer_Gold, layer_Keys, layer_Door, layer_Holder, layer_Putter, layer_Dirt, layer_Rock]
-        temp2 = [LayerType.Blocks, LayerType.Goal, LayerType.Gold, LayerType.Keys, LayerType.Door, LayerType.Holder, LayerType.Putter, LayerType.Dirt, LayerType.Rock]
+        temp1 = [layer_Blocks, layer_Goal, layer_Gold, layer_Keys, layer_Door, layer_Holder, layer_Putter, layer_Dirt, layer_Rock, layer_Diamond1, layer_Diamond2, layer_Diamond3, layer_Diamond4]
+        temp2 = [LayerType.Blocks, LayerType.Goal, LayerType.Gold, LayerType.Keys, LayerType.Door, LayerType.Holder, LayerType.Putter, LayerType.Dirt, LayerType.Rock, LayerType.Diamond1, LayerType.Diamond2, LayerType.Diamond3, LayerType.Diamond4]
         self.layers: Layers = Layers(batch, width, height, level, reset_chance, *[layer for use, layer in zip(temp1, temp2) if use])
         for i in range(width):
             for j in range(height):

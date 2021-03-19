@@ -17,6 +17,10 @@ class LayerType(Enum):
     Putter = 7
     Dirt = 8
     Rock = 9
+    Diamond1 = 10
+    Diamond2 = 11
+    Diamond3 = 12
+    Diamond4 = 13
 
 
 class Shape(Enum):
@@ -112,7 +116,6 @@ class Layer(metaclass=ABCMeta):
             for x, y in pos:
                 yield batch, x, y
 
-
     def update(self, board, No_change, all_items) -> None:
         for batch in range(len(No_change)):
             if No_change[batch] == 1 and len(self._removed[batch]) != 0:
@@ -120,11 +123,11 @@ class Layer(metaclass=ABCMeta):
 
         for batch, x, y in self.elements(self._removed):
             board[batch, self._layer, y, x] = 0
-            all_items[batch][(x,y)] -= 1
+            all_items[batch][(x, y)] -= 1
 
         for batch, x, y in self.elements(self._added):
             board[batch, self._layer, y, x] = 1
-            all_items[batch][(x,y)] += 1
+            all_items[batch][(x, y)] += 1
         self._removed = [[] for _ in range(self._batch)]
         self._added = [[] for _ in range(self._batch)]
         return No_change
