@@ -96,8 +96,8 @@ class Defaults:
     layer_Diamond4: bool = True
 
     K: float = 200000
-    epsilon_cap: float = 0.2  # 0.2
-    softmax_cap: float = 0.03
+    epsilon_cap: float = 0.2
+    softmax_cap: float = 0.01
     gamma: float = 0.98
     update: int = 10000
     reset_chance: float = 0  # 0.002
