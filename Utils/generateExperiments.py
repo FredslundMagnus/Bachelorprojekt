@@ -2,7 +2,7 @@
 from main import Defaults, teleport, simple
 from network import Networks
 from learner import Learners
-from levels import Levels
+from levels import Levels, Rocks
 from agent import Teleporter, Mover, Networks, Learners, Explorations
 
 
@@ -72,7 +72,18 @@ def genExperiments(name, n=1, **params):
 # genExperiments(f"9x9_gamme0.995_softmax0.05", hours=10.0, width=9, height=9, layer_Keys=True, layer_Door=True, layer_Holder=True, layer_Putter=True, layer_Gold=True, gamma=0.995, softmax_cap=0.05)
 # genExperiments(f"gold_9x9", n=3, hours=24.0, width=9, height=9)
 # genExperiments(f"gold_11x11", n=3, hours=24.0, width=11, height=11)
-genExperiments(f"causal1_9x9", n=3, hours=12.0, level=Levels.Causal1, main=teleport)
+# genExperiments(f"causal1_9x9", n=3, hours=12.0, level=Levels.Causal1, main=teleport)
+# genExperiments(f"simul_gold_9x9", n=3, hours=4.0)
+genExperiments(f"Rock_level", hours=12.0, level=Levels.Rocks)
+genExperiments(f"Rock_level_Khigh", hours=12.0, level=Levels.Rocks, K=1000000)
+genExperiments(f"Rock_level_epshigh", hours=12.0, level=Levels.Rocks, epsilon_cap=0.2)
+genExperiments(f"Rock_level_epslow", hours=12.0, level=Levels.Rocks, epsilon_cap=0)
+genExperiments(f"Rock_level_softhigh", hours=12.0, level=Levels.Rocks, softmax_cap=0.05)
+genExperiments(f"Rock_level_softlow", hours=12.0, level=Levels.Rocks, softmax_cap=0.01)
+genExperiments(f"Rock_level_gammalow", hours=12.0, level=Levels.Rocks, gamma=0.95)
+genExperiments(f"Rock_level_resethigh", hours=12.0, level=Levels.Rocks, reset_chance=0.005)
+genExperiments(f"Rock_level_modresetlow", hours=12.0, level=Levels.Rocks, modified_done_chance=0.02)
+genExperiments(f"Rock_level_misslow", hours=12.0, level=Levels.Rocks, miss_intervention_cost=-0.1)
+genExperiments(f"Rock_level_interventionlow", hours=12.0, level=Levels.Rocks, intervention_cost=-0.1)
 
-genExperiments(f"simul_gold_9x9", n=3, hours=4.0)
 file.close()

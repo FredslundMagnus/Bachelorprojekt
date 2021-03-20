@@ -43,6 +43,15 @@ class Network(nn.Module):
         self.optimizer_rewarddonemodel.step()
         self.optimizer_rewarddonemodel.zero_grad()
         return torch.sum(loss_RD).item(), torch.sum(loss_board).item()
+    
+    def simulate(self, board_before: Tensor, action: Tensor):
+        intervention_layer = torch.nn.functional.one_hot(action, self.height * self.width).reshape(action.shape[0], self.height, self.width).unsqueeze(1)
+        modified_board = torch.cat((board_before, intervention_layer), 1)
+        guess_board = self.boardforward(modified_board)
+        guess_RD = self.RDforward(modified_board)
+        return guess_board, guess_RD
+
+
 
 class Simulator:
     def __init__(self, dim: int, width: int, height: int, **kwargs):
@@ -50,3 +59,6 @@ class Simulator:
 
     def learn(self, board_before: Tensor, board_after: Tensor, action: Tensor, reward: Tensor, done: Tensor):
         return self.network.learn(board_before, board_after, action, reward, done)
+
+    def simulate(self, board_before: Tensor, action: Tensor):
+        return self.network.simulate(board_before, action)

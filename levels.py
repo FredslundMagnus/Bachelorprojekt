@@ -110,7 +110,7 @@ class Rocks(Level):
         if LayerType.Goal in self.uses:
             self.level[LayerType.Goal].append(self.end)
         if LayerType.Rock in self.uses:
-            for pos in sample(self.notUsed, 30):
+            for pos in sample(self.notUsed, 25):
                 self.level[LayerType.Rock].append(pos)
         if LayerType.Dirt in self.uses:
             for pos in self.notUsed:
@@ -147,7 +147,21 @@ class Causal1(Level):
         return True
 
 
+class Causal2(Level):
+    def generate(self):
+        for layer in [LayerType.Player, LayerType.Goal]:
+            if layer in self.uses:
+                self.level[layer].append(choice(self.notUsed))
+
+        for layer in [LayerType.Diamond1, LayerType.Diamond2, LayerType.Diamond3, LayerType.Diamond4]:
+            if layer in self.uses and random() > 0.1:
+                self.level[layer].append(choice(self.notUsed))
+
+        return True
+
+
 class Levels(Enum):
     Maze = Maze
     Rocks = Rocks
     Causal1 = Causal1
+    Causal2 = Causal2

@@ -25,7 +25,10 @@ class Load:
         if "Markdown" in elements:
             elements.remove("Markdown")
         for element in elements:
-            self.d[element] = self.loadObject(start, element)
+            try:
+                self.d[element] = self.loadObject(start, element)
+            except Exception as e:
+                print(e)
 
     def loadObject(self, start, _class):
         name = f"/{self.name + self.num}.{_class}"
