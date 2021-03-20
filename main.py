@@ -69,8 +69,8 @@ def simulation(defaults):
 class Defaults:
     name: str = "Agent"
     main: function = teleport
-    level: Levels = Levels.Causal2
-    hours: float = 0.15
+    level: Levels = Levels.Rocks
+    hours: float = 12
     batch: int = 100
     width: int = 9
     height: int = 9
@@ -81,29 +81,29 @@ class Defaults:
     exploration1: Explorations = Explorations.softmaxer
     exploration2: Explorations = Explorations.epsilonGreedy
 
-    layer_Blocks: bool = False
+    layer_Blocks: bool = True
     layer_Goal: bool = True
     layer_Gold: bool = False
     layer_Keys: bool = False
     layer_Door: bool = False
     layer_Holder: bool = False
     layer_Putter: bool = False
-    layer_Rock: bool = False
-    layer_Dirt: bool = False
+    layer_Rock: bool = True
+    layer_Dirt: bool = True
     layer_Diamond1: bool = True
     layer_Diamond2: bool = True
     layer_Diamond3: bool = True
     layer_Diamond4: bool = True
 
-    K: float = 100000
+    K: float = 200000
     epsilon_cap: float = 0.1
     softmax_cap: float = 0.02
     gamma: float = 0.98
     update: int = 10000
-    reset_chance: float = 0  # 0.002
-    modified_done_chance: float = 0  # 0.05
-    miss_intervention_cost: float = -0.5  # -0.2
-    intervention_cost: float = -0.1  # -0.05
+    reset_chance: float = 0.002
+    modified_done_chance: float = 0.05
+    miss_intervention_cost: float = -0.2
+    intervention_cost: float = -0.05
     replay_size: int = 50000
     sample_size: int = 50
 
