@@ -9,6 +9,7 @@ from levels import Levels
 from simulator import Simulator
 from load import Load
 
+
 def metateleport(defaults):
     collector = Collector(**defaults)
     env = Game(**defaults)
@@ -21,7 +22,7 @@ def metateleport(defaults):
     with Save(env, collector, mover, teleporter1, teleporter2, **defaults) as save:
         intervention_idx2, modified_board2 = teleporter2.pre_process(env)
         intervention_idx1, _ = teleporter1.pre_process(env)
-        for frame in loop(env, collector, save, teleporter1):
+        for frame in loop(env, collector, save, teleporter1, teleporter2):
             modified_board2 = teleporter2.interveen(env.board, intervention_idx2, modified_board2)
             modified_board1 = teleporter1.interveen(env.board, intervention_idx1, modified_board2)
             actions = mover(modified_board1)
@@ -35,8 +36,6 @@ def metateleport(defaults):
             board_before, board_after, intervention, tele_rewards, tele_dones, normal_rewards = buffer2.sample_data()
             teleporter2.learn(board_after, intervention, tele_rewards, tele_dones, board_before)
             collector.collect([rewards, modified_rewards1, modified_rewards2, tele_rewards], [dones, modified_dones1, modified_dones2])
-
-
 
 
 def teleport(defaults):
@@ -126,12 +125,12 @@ class Defaults:
 
     K: float = 200000
     epsilon_cap: float = 0.1
-    softmax_cap: float = 0.02 # 0.025
+    softmax_cap: float = 0.02  # 0.025
     gamma: float = 0.98
     update: int = 10000
     reset_chance: float = 0.002
-    modified_done_chance: float = 0.05 # 0.04
-    miss_intervention_cost: float = -0.2 # -0.15
+    modified_done_chance: float = 0.05  # 0.04
+    miss_intervention_cost: float = -0.2  # -0.15
     intervention_cost: float = -0.05
     replay_size: int = 100000
     sample_size: int = 50

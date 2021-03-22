@@ -31,7 +31,7 @@ class Paint:
     images = {}
 
     @staticmethod
-    def __init__(game: Game, frame: int, teleporter) -> None:
+    def __init__(game: Game, frame: int, teleporter, teleporter2) -> None:
         with screen(Colors.gray.c300):
             for shape, color, size, x, y, name in game.layers.getColorable(Paint.dim):
                 try:
@@ -56,6 +56,15 @@ class Paint:
                 except Exception as e:
                     try:
                         Paint.drawRect(Colors.indigo.transparrent(180), 1, x, y)
+                    except Exception as e:
+                        pass
+            if teleporter2 != None:
+                y, x = divmod(int(teleporter2.interventions[Paint.dim]), game.layers.width)
+                try:
+                    Paint.drawImage(x, y, "Salad")
+                except Exception as e:
+                    try:
+                        Paint.drawRect(Colors.green.transparrent(180), 0.8, x, y)
                     except Exception as e:
                         pass
 
@@ -87,6 +96,10 @@ class Paint:
                 pass
         try:
             Paint.images["Cheese"] = Paint.pygame.transform.scale(Paint.pygame.image.load(f"Drawings/Cheese.png"), (Paint.size, Paint.size))
+        except Exception as e:
+            pass
+        try:
+            Paint.images["Salad"] = Paint.pygame.transform.scale(Paint.pygame.image.load(f"Drawings/Salad.png"), (Paint.size, Paint.size))
         except Exception as e:
             pass
         States.draw = True
