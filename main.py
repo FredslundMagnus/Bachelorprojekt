@@ -10,6 +10,34 @@ from simulator import Simulator
 from load import Load
 
 
+def metateleport(defaults):
+    collector = Collector(**defaults)
+    env = Game(**defaults)
+    mover = Mover(env, _extra_dim=1, **defaults)
+    teleporter1 = Teleporter(env, _extra_dim=1, **defaults)
+    teleporter2 = Teleporter(env, **defaults)
+    buffer1 = ReplayBuffer(**defaults)
+    buffer2 = ReplayBuffer(**defaults)
+
+    with Save(env, collector, mover, teleporter1, teleporter2, **defaults) as save:
+        intervention_idx2, modified_board2 = teleporter2.pre_process(env)
+        intervention_idx1, _ = teleporter1.pre_process(env)
+        for frame in loop(env, collector, save, teleporter1, teleporter2):
+            modified_board2 = teleporter2.interveen(env.board, intervention_idx2, modified_board2)
+            modified_board1 = teleporter1.interveen(env.board, intervention_idx1, modified_board2)
+            actions = mover(modified_board1)
+            observations, rewards, dones, info = env.step(actions)
+            modified_board1, modified_board2, modified_rewards1, modified_rewards2, modified_dones1, modified_dones2, tele_rewards, intervention_idx1, intervention_idx2 = teleporter2.metamodify(observations, rewards, dones, info, teleporter1.interventions)
+            buffer1.teleporter_save_data(teleporter1.boards, modified_board2, teleporter1.interventions, modified_rewards2, dones, intervention_idx1, rewards)
+            buffer2.teleporter_save_data(teleporter2.boards, observations, teleporter2.interventions, tele_rewards, dones, intervention_idx2, rewards)
+            mover.learn(modified_board1, actions, modified_rewards1, modified_dones1)
+            board_before, board_after, intervention, tele_rewards, tele_dones, normal_rewards = buffer1.sample_data()
+            teleporter1.learn(board_after, intervention, tele_rewards, tele_dones, board_before)
+            board_before, board_after, intervention, tele_rewards, tele_dones, normal_rewards = buffer2.sample_data()
+            teleporter2.learn(board_after, intervention, tele_rewards, tele_dones, board_before)
+            collector.collect([rewards, modified_rewards1, modified_rewards2, tele_rewards], [dones, modified_dones1, modified_dones2])
+
+
 def teleport(defaults):
     collector = Collector(**defaults)
     env = Game(**defaults)
@@ -23,7 +51,7 @@ def teleport(defaults):
             modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
             actions = mover(modified_board)
             observations, rewards, dones, info = env.step(actions)
-            modified_board, modified_rewards, modified_dones, teleport_rewards, intervention_idx = teleporter.modify(teleporter.interventions, observations, rewards, dones, info)
+            modified_board, modified_rewards, modified_dones, teleport_rewards, intervention_idx = teleporter.modify(observations, rewards, dones, info)
             buffer.teleporter_save_data(teleporter.boards, observations, teleporter.interventions, teleport_rewards, dones, intervention_idx, rewards)
             mover.learn(modified_board, actions, modified_rewards, modified_dones)
             board_before, board_after, intervention, tele_rewards, tele_dones, normal_rewards = buffer.sample_data()
@@ -68,7 +96,7 @@ def simulation(defaults):
 
 class Defaults:
     name: str = "Agent"
-    main: function = teleport
+    main: function = metateleport
     level: Levels = Levels.Rocks
     hours: float = 12
     batch: int = 100
@@ -97,12 +125,12 @@ class Defaults:
 
     K: float = 200000
     epsilon_cap: float = 0.1
-    softmax_cap: float = 0.025
+    softmax_cap: float = 0.02  # 0.025
     gamma: float = 0.98
     update: int = 10000
     reset_chance: float = 0.002
-    modified_done_chance: float = 0.04
-    miss_intervention_cost: float = -0.15
+    modified_done_chance: float = 0.05  # 0.04
+    miss_intervention_cost: float = -0.2  # -0.15
     intervention_cost: float = -0.05
     replay_size: int = 100000
     sample_size: int = 50

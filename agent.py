@@ -12,6 +12,7 @@ from helper import device
 
 class Agent(metaclass=ABCMeta):
     def __init__(self, game: Game, network: Networks, learner: Learners, exploration: Explorations, width: int = None, height: int = None, batch: int = None, _extra_dim: int = 0, **kwargs) -> None:
+        self.extradim = _extra_dim
         self.batch = batch
         self.height = height
         self.width = width
@@ -51,13 +52,16 @@ class Teleporter(Agent):
         self(args[0])
         self.learner.learn(self.values, state_after, action, reward, done)
 
-    def modify_board(self, actions, board):
+    def modify_board(self, actions, board, replace = True):
         intervention_layer = torch.nn.functional.one_hot(actions, self.height * self.width).reshape(actions.shape[0], self.height, self.width).unsqueeze(1)
-        modified_board = torch.cat((board, intervention_layer), 1)
+        if self.extradim == 0 or not replace:
+            modified_board = torch.cat((board, intervention_layer), 1)
+        else:
+            modified_board = torch.cat((board[:,:-1], intervention_layer), 1)
         return modified_board
 
-    def modify(self, intervention, board, rewards, dones, info):
-        intervention = intervention.to(dtype=int)
+    def modify(self, board, rewards, dones, info):
+        intervention = self.interventions.to(dtype=int)
         modified_board = self.modify_board(intervention, board)
         modified_rewards = torch.sum(modified_board[:, 0] * modified_board[:, -1], (1, 2)) * (1 - rewards)
         for i in range(len(info)):
@@ -75,18 +79,57 @@ class Teleporter(Agent):
         return modified_board, modified_rewards, modified_dones, tele_rewards, intervention_idx
 
     def interveen(self, board, intervention_idx, modified_board):
+        if self.extradim == 1:
+            modified_board = torch.clone(modified_board)
+            current_board = modified_board
+        else:
+            current_board = board
+
         if len(intervention_idx) > 0:
-            needs_intervention_board = board[intervention_idx]
+            needs_intervention_board = current_board[intervention_idx]
             new_boards, intervention = self(needs_intervention_board)
         for i in range(len(intervention_idx)):
             batch_idx = intervention_idx[i]
-            self.boards[batch_idx] = board[batch_idx]
+            self.boards[batch_idx] = current_board[batch_idx]
             modified_board[batch_idx] = new_boards[i]
             self.interventions[batch_idx] = intervention[i]
         return modified_board
 
     def pre_process(self, env):
         return torch.flatten(torch.nonzero(torch.ones(env.layers.board.shape[0], device=device).long())), torch.zeros(env.layers.board.shape[0], env.layers.board.shape[1] + 1, env.layers.board.shape[2], env.layers.board.shape[3], device=device)
+    
+    def metamodify(self, board, rewards, dones, info, interventions1):
+        intervention1 = interventions1.to(dtype=int)
+        modified_board1 = self.modify_board(intervention1, board, replace=False)
+        modified_rewards1 = torch.sum(modified_board1[:, 0] * modified_board1[:, -1], (1, 2)) * (1 - rewards)
+        for i in range(len(info)):
+            if 'player_end' in info[i]:
+                modified_rewards1[i] += modified_board1[i, -1][(info[i]['player_end'][1], info[i]['player_end'][0])]
+
+        modified_dones1 = torch.clone(modified_rewards1)
+        modified_dones1[dones == 1] = 1
+        rands = torch.rand(len(modified_rewards1))
+        modified_dones1[rands < self.modified_done_chance] = 1
+        
+        modified_rewards2 = self.miss_intervention_cost * torch.clone(modified_dones1)
+        modified_rewards2[modified_rewards1 == 1] = self.intervention_cost
+        intervention2 = self.interventions.to(dtype=int)
+        modified_board2 = self.modify_board(intervention2, board)
+        modified_rewards2 = torch.sum(modified_board2[:, 0] * modified_board2[:, -1], (1, 2)) * (1 - rewards)
+        for i in range(len(info)):
+            if 'player_end' in info[i]:
+                modified_rewards2[i] += modified_board2[i, -1][(info[i]['player_end'][1], info[i]['player_end'][0])]
+        modified_dones2 = torch.clone(modified_rewards2)
+        modified_dones2[dones == 1] = 1
+        rands = torch.rand(len(modified_rewards2))
+        modified_dones2[rands < self.modified_done_chance] = 1
+
+        tele_rewards = self.miss_intervention_cost * torch.clone(modified_dones2)
+        tele_rewards[modified_rewards2 == 1] = self.intervention_cost
+        tele_rewards[rewards == 1] = 1
+        intervention_idx1 = torch.flatten(torch.nonzero(modified_dones1.long()))
+        intervention_idx2 = torch.flatten(torch.nonzero(modified_dones2.long()))
+        return modified_board1, modified_board2, modified_rewards1, modified_rewards2, modified_dones1, modified_dones2, tele_rewards, intervention_idx1, intervention_idx2
 
 
 class Mover(Agent):

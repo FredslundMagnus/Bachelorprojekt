@@ -19,7 +19,7 @@ class States:
     isPaused = False
 
 
-def loop(game: Game, collector: Collector, save: Save = None, teleporter=None) -> Iterator[int]:
+def loop(game: Game, collector: Collector, save: Save = None, teleporter=None, teleporter2=None) -> Iterator[int]:
     if isServer:
         tid, f = time() + 3600 * game.hours - 300, 0
         while time() < tid:
@@ -93,7 +93,7 @@ def loop(game: Game, collector: Collector, save: Save = None, teleporter=None) -
         while States.running:
             f += 1
             if States.draw:
-                Paint(game, f, teleporter)
+                Paint(game, f, teleporter, teleporter2)
             if States.switchPlot:
                 States.showPrint = not States.showPrint
                 States.switchPlot = False
