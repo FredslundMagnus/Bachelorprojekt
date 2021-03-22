@@ -154,7 +154,7 @@ class Causal2(Level):
                 self.level[layer].append(choice(self.notUsed))
 
         for layer in [LayerType.Diamond1, LayerType.Diamond2, LayerType.Diamond3, LayerType.Diamond4]:
-            if layer in self.uses and random() > 0.1:
+            if layer in self.uses and random() > 0.3:
                 self.level[layer].append(choice(self.notUsed))
 
         return True
