@@ -86,6 +86,7 @@ def genExperiments(name, n=1, **params):
 # genExperiments(f"Rock_level_hard_modresetlow", hours=11.0, level=Levels.Rocks, modified_done_chance=0.02)
 # genExperiments(f"Rock_level_hard_misslow", hours=11.0, level=Levels.Rocks, miss_intervention_cost=-0.1)
 # genExperiments(f"Rock_level_hard_interventionlow", hours=11.0, level=Levels.Rocks, intervention_cost=-0.1)
-genExperiments(f"causal2_9x9", n=4, hours=10.0, level=Levels.Causal2)
+# genExperiments(f"causal2_9x9", n=4, hours=10.0, level=Levels.Causal2)
+genExperiments(f"Rock_level_hard_new_parameters", hours=11.0, level=Levels.Rocks)
 
 file.close()
