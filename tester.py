@@ -11,15 +11,16 @@ def test_simple():
 
 
 def test_teleport():
-    with Load("causal2_9x9", num=0) as load:
+    with Load("causal2_9x9_0.3", num=0) as load:
         collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
+        teleporter.extradim = 0
         teleporter.exploration.explore = teleporter.exploration.greedy
         intervention_idx, modified_board = teleporter.pre_process(env)
         for frame in loop(env, collector, teleporter=teleporter):
             modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
             actions = mover(modified_board)
             observations, rewards, dones, info = env.step(actions)
-            modified_board, _, _, _, intervention_idx = teleporter.modify(teleporter.interventions, observations, rewards, dones, info)
+            modified_board, _, _, _, intervention_idx = teleporter.modify(observations, rewards, dones, info)
 
 
 test_teleport()
