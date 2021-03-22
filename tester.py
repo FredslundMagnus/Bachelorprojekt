@@ -11,7 +11,7 @@ def test_simple():
 
 
 def test_teleport():
-    with Load("Rock_level_modresetlow", num=0) as load:
+    with Load("causal2_9x9", num=3) as load:
         collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
         teleporter.exploration.explore = teleporter.exploration.greedy
         intervention_idx, modified_board = teleporter.pre_process(env)
