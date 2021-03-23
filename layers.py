@@ -3,7 +3,7 @@ from layer import Layer, Shape, LayerType
 from colors import Colors
 from typing import Dict, Tuple, List
 import numpy as np
-from levels import Levels
+# from levels import Levels
 from random import random, choice
 
 
@@ -333,7 +333,7 @@ class Bluedoor(Layer):
 
 
 class Layers:
-    def __init__(self, batch: int, width: int, height: int, level: Levels, reset_chance: float, *layers: Tuple[LayerType]) -> None:
+    def __init__(self, batch: int, width: int, height: int, level, reset_chance: float, *layers: Tuple[LayerType]) -> None:
         self.frames_since_chance = [0] * batch
         self.layers: List[Layer] = []
         self.player: Player = Player(batch, width, height)
