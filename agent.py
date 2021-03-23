@@ -115,11 +115,12 @@ class Teleporter(Agent):
         modified_rewards2[modified_rewards1 == 1] = self.intervention_cost
         intervention2 = self.interventions.to(dtype=int)
         modified_board2 = self.modify_board(intervention2, board)
-        modified_rewards2 = torch.sum(modified_board2[:, 0] * modified_board2[:, -1], (1, 2)) * (1 - rewards)
+        modified_rewards2[torch.sum(modified_board2[:, 0] * modified_board2[:, -1], (1, 2)) * (1 - rewards) == 1] = 1
         for i in range(len(info)):
             if 'player_end' in info[i]:
-                modified_rewards2[i] += modified_board2[i, -1][(info[i]['player_end'][1], info[i]['player_end'][0])]
-        modified_dones2 = torch.clone(modified_rewards2)
+                modified_rewards2[i][modified_board2[i, -1][(info[i]['player_end'][1], info[i]['player_end'][0])] == 1] = 1
+        modified_dones2 = torch.zeros(modified_rewards2.shape, device=device)
+        modified_dones2[modified_rewards2 == 1] = 1
         modified_dones2[dones == 1] = 1
         rands = torch.rand(len(modified_rewards2))
         modified_dones2[rands < self.modified_done_chance] = 1

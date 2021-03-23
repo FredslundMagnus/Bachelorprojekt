@@ -8,6 +8,7 @@ from replaybuffer import ReplayBuffer
 from levels import Levels
 from simulator import Simulator
 from load import Load
+import torch
 
 
 def metateleport(defaults):
@@ -28,13 +29,13 @@ def metateleport(defaults):
             actions = mover(modified_board1)
             observations, rewards, dones, info = env.step(actions)
             modified_board1, modified_board2, modified_rewards1, modified_rewards2, modified_dones1, modified_dones2, tele_rewards, intervention_idx1, intervention_idx2 = teleporter2.metamodify(observations, rewards, dones, info, teleporter1.interventions)
-            buffer1.teleporter_save_data(teleporter1.boards, modified_board2, teleporter1.interventions, modified_rewards2, dones, intervention_idx1, rewards)
+            buffer1.teleporter_save_data(teleporter1.boards, modified_board2, teleporter1.interventions, modified_rewards2, modified_dones2, intervention_idx1, rewards)
             buffer2.teleporter_save_data(teleporter2.boards, observations, teleporter2.interventions, tele_rewards, dones, intervention_idx2, rewards)
             mover.learn(modified_board1, actions, modified_rewards1, modified_dones1)
-            board_before, board_after, intervention, tele_rewards, tele_dones, normal_rewards = buffer1.sample_data()
-            teleporter1.learn(board_after, intervention, tele_rewards, tele_dones, board_before)
-            board_before, board_after, intervention, tele_rewards, tele_dones, normal_rewards = buffer2.sample_data()
-            teleporter2.learn(board_after, intervention, tele_rewards, tele_dones, board_before)
+            board_before, board_after, intervention, tel_rewards, tele_dones, normal_rewards = buffer1.sample_data()
+            teleporter1.learn(board_after, intervention, tel_rewards, tele_dones, board_before)
+            board_before, board_after, intervention, tel_rewards, tele_dones, normal_rewards = buffer2.sample_data()
+            teleporter2.learn(board_after, intervention, tel_rewards, tele_dones, board_before)
             collector.collect([rewards, modified_rewards1, modified_rewards2, tele_rewards], [dones, modified_dones1, modified_dones2])
 
 
@@ -116,8 +117,8 @@ class Defaults:
     layer_Door: bool = False
     layer_Holder: bool = False
     layer_Putter: bool = False
-    layer_Rock: bool = True
-    layer_Dirt: bool = True
+    layer_Rock: bool = False
+    layer_Dirt: bool = False
     layer_Diamond1: bool = True
     layer_Diamond2: bool = True
     layer_Diamond3: bool = True
