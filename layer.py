@@ -2,8 +2,6 @@ from abc import ABCMeta, abstractproperty
 from typing import Iterable, List, Tuple
 from colors import Color
 from enum import Enum
-import numpy as np
-from copy import copy
 
 
 class LayerType(Enum):
@@ -21,6 +19,10 @@ class LayerType(Enum):
     Diamond2 = 11
     Diamond3 = 12
     Diamond4 = 13
+    Bluedoor = 14
+    Bluekeys = 15
+    Reddoor = 16
+    Redkeys = 17
 
 
 class Shape(Enum):

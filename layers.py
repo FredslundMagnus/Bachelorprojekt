@@ -4,7 +4,7 @@ from colors import Colors
 from typing import Dict, Tuple, List
 import numpy as np
 from levels import Levels
-from random import random
+from random import random, choice
 
 
 class Player(Layer):
@@ -249,6 +249,85 @@ class Diamond4(Layer):
     def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
         return not self.positions[batch]
 
+class redKeys(Layer):
+    name = "redKeys"
+    color = Colors.red
+    size = 0.4
+    blocking = False
+    shape = Shape.Circle
+    type = LayerType.Redkeys
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        pos = layersDict[LayerType.Player].positions[batch][0]
+        if pos in self.positions[batch]:
+            self.remove(batch, pos)
+        if pos in layersDict[LayerType.Bluekeys].positions[batch] or pos in layersDict[LayerType.Bluekeys]._removed[batch]:
+            while True:
+                new_pos = (choice(range(3, board.width - 3)), choice(range(1, board.height - 1)))
+                if new_pos not in layersDict[LayerType.Bluekeys].positions[batch] and new_pos not in layersDict[LayerType.Redkeys].positions[batch] and new_pos != pos:
+                    break
+            self.add(batch, new_pos)
+
+
+class redDoor(Layer):
+    name = "redDoor"
+    color = Colors.red
+    size = 1
+    shape = Shape.Square
+    type = LayerType.Reddoor
+
+    def __init__(self, batch: int, width: int, height: int) -> None:
+        self._blocking: Dict[int, bool] = {}
+        super().__init__(batch, width, height)
+
+    def reset(self, batch: int) -> None:
+        self._blocking[batch] = True
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        self._blocking[batch] = LayerType.Redkeys in layersDict and bool(layersDict[LayerType.Redkeys].positions[batch])
+
+    def isBlocking(self, batch: int):
+        return self._blocking[batch]
+
+class blueKeys(Layer):
+    name = "blueKeys"
+    color = Colors.lightBlue
+    size = 0.4
+    blocking = False
+    shape = Shape.Circle
+    type = LayerType.Bluekeys
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        pos = layersDict[LayerType.Player].positions[batch][0]
+        if pos in self.positions[batch]:
+            self.remove(batch, pos)
+        if pos in layersDict[LayerType.Redkeys].positions[batch] or pos in layersDict[LayerType.Redkeys]._removed[batch]:
+            while True:
+                new_pos = (choice(range(3, board.width - 3)), choice(range(1, board.height - 1)))
+                if new_pos not in layersDict[LayerType.Bluekeys].positions[batch] and new_pos not in layersDict[LayerType.Redkeys].positions[batch] and new_pos != pos:
+                    break
+            self.add(batch, new_pos)
+
+class blueDoor(Layer):
+    name = "blueDoor"
+    color = Colors.lightBlue
+    size = 1
+    shape = Shape.Square
+    type = LayerType.Bluedoor
+
+    def __init__(self, batch: int, width: int, height: int) -> None:
+        self._blocking: Dict[int, bool] = {}
+        super().__init__(batch, width, height)
+
+    def reset(self, batch: int) -> None:
+        self._blocking[batch] = True
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        self._blocking[batch] = LayerType.Bluekeys in layersDict and bool(layersDict[LayerType.Bluekeys].positions[batch])
+
+    def isBlocking(self, batch: int):
+        return self._blocking[batch]
+
 
 class Layers:
     def __init__(self, batch: int, width: int, height: int, level: Levels, reset_chance: float, *layers: Tuple[LayerType]) -> None:
@@ -334,6 +413,26 @@ class Layers:
             self.dict[LayerType.Dirt] = self.layers[-1]
             self.types.append(LayerType.Dirt)
             self.names.append(LayerType.Dirt.name)
+        if LayerType.Bluedoor in layers:
+            self.layers.append(blueDoor(batch, width, height))
+            self.dict[LayerType.Bluedoor] = self.layers[-1]
+            self.types.append(LayerType.Bluedoor)
+            self.names.append(LayerType.Bluedoor.name)
+        if LayerType.Bluekeys in layers:
+            self.layers.append(blueKeys(batch, width, height))
+            self.dict[LayerType.Bluekeys] = self.layers[-1]
+            self.types.append(LayerType.Bluekeys)
+            self.names.append(LayerType.Bluekeys.name)
+        if LayerType.Reddoor in layers:
+            self.layers.append(redDoor(batch, width, height))
+            self.dict[LayerType.Reddoor] = self.layers[-1]
+            self.types.append(LayerType.Reddoor)
+            self.names.append(LayerType.Reddoor.name)
+        if LayerType.Redkeys in layers:
+            self.layers.append(redKeys(batch, width, height))
+            self.dict[LayerType.Redkeys] = self.layers[-1]
+            self.types.append(LayerType.Redkeys)
+            self.names.append(LayerType.Redkeys.name)
         self.board = np.zeros((batch, len(self.layers), width, height), dtype=np.float32)
         self.counter = np.zeros(batch)
         self.all_items = [{} for _ in range(self.batch)]
