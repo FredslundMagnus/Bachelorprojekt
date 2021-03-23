@@ -249,8 +249,9 @@ class Diamond4(Layer):
     def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
         return not self.positions[batch]
 
-class redKeys(Layer):
-    name = "redKeys"
+
+class Redkeys(Layer):
+    name = "Redkeys"
     color = Colors.red
     size = 0.4
     blocking = False
@@ -269,8 +270,8 @@ class redKeys(Layer):
             self.add(batch, new_pos)
 
 
-class redDoor(Layer):
-    name = "redDoor"
+class Reddoor(Layer):
+    name = "Reddoor"
     color = Colors.red
     size = 1
     shape = Shape.Square
@@ -289,8 +290,9 @@ class redDoor(Layer):
     def isBlocking(self, batch: int):
         return self._blocking[batch]
 
-class blueKeys(Layer):
-    name = "blueKeys"
+
+class Bluekeys(Layer):
+    name = "Bluekeys"
     color = Colors.lightBlue
     size = 0.4
     blocking = False
@@ -308,8 +310,9 @@ class blueKeys(Layer):
                     break
             self.add(batch, new_pos)
 
-class blueDoor(Layer):
-    name = "blueDoor"
+
+class Bluedoor(Layer):
+    name = "Bluedoor"
     color = Colors.lightBlue
     size = 1
     shape = Shape.Square
@@ -359,6 +362,16 @@ class Layers:
             self.dict[LayerType.Door] = self.layers[-1]
             self.types.append(LayerType.Door)
             self.names.append(LayerType.Door.name)
+        if LayerType.Bluedoor in layers:
+            self.layers.append(Bluedoor(batch, width, height))
+            self.dict[LayerType.Bluedoor] = self.layers[-1]
+            self.types.append(LayerType.Bluedoor)
+            self.names.append(LayerType.Bluedoor.name)
+        if LayerType.Reddoor in layers:
+            self.layers.append(Reddoor(batch, width, height))
+            self.dict[LayerType.Reddoor] = self.layers[-1]
+            self.types.append(LayerType.Reddoor)
+            self.names.append(LayerType.Reddoor.name)
         if LayerType.Keys in layers:
             self.layers.append(Keys(batch, width, height))
             self.dict[LayerType.Keys] = self.layers[-1]
@@ -413,23 +426,13 @@ class Layers:
             self.dict[LayerType.Dirt] = self.layers[-1]
             self.types.append(LayerType.Dirt)
             self.names.append(LayerType.Dirt.name)
-        if LayerType.Bluedoor in layers:
-            self.layers.append(blueDoor(batch, width, height))
-            self.dict[LayerType.Bluedoor] = self.layers[-1]
-            self.types.append(LayerType.Bluedoor)
-            self.names.append(LayerType.Bluedoor.name)
         if LayerType.Bluekeys in layers:
-            self.layers.append(blueKeys(batch, width, height))
+            self.layers.append(Bluekeys(batch, width, height))
             self.dict[LayerType.Bluekeys] = self.layers[-1]
             self.types.append(LayerType.Bluekeys)
             self.names.append(LayerType.Bluekeys.name)
-        if LayerType.Reddoor in layers:
-            self.layers.append(redDoor(batch, width, height))
-            self.dict[LayerType.Reddoor] = self.layers[-1]
-            self.types.append(LayerType.Reddoor)
-            self.names.append(LayerType.Reddoor.name)
         if LayerType.Redkeys in layers:
-            self.layers.append(redKeys(batch, width, height))
+            self.layers.append(Redkeys(batch, width, height))
             self.dict[LayerType.Redkeys] = self.layers[-1]
             self.types.append(LayerType.Redkeys)
             self.names.append(LayerType.Redkeys.name)
