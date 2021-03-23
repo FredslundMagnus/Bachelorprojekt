@@ -117,7 +117,7 @@ class Defaults:
     layer_Door: bool = False
     layer_Holder: bool = False
     layer_Putter: bool = False
-    layer_Rock: bool = False
+    layer_Rock: bool = True
     layer_Dirt: bool = True
     layer_Diamond1: bool = False
     layer_Diamond2: bool = False
