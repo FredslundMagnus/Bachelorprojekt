@@ -110,7 +110,7 @@ class Rocks(Level):
         if LayerType.Goal in self.uses:
             self.level[LayerType.Goal].append(self.end)
         if LayerType.Rock in self.uses:
-            for pos in sample(self.notUsed, 30):
+            for pos in sample(self.notUsed, 25):
                 self.level[LayerType.Rock].append(pos)
         if LayerType.Dirt in self.uses:
             for pos in self.notUsed:
