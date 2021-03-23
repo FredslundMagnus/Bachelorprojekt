@@ -264,7 +264,7 @@ class Redkeys(Layer):
             self.remove(batch, pos)
         if pos in layersDict[LayerType.Bluekeys].positions[batch] or pos in layersDict[LayerType.Bluekeys]._removed[batch]:
             while True:
-                new_pos = (choice(range(3, board.width - 3)), choice(range(1, board.height - 1)))
+                new_pos = (choice(range(3, board.width - 3)), choice(range(2, board.height - 2)))
                 if new_pos not in layersDict[LayerType.Bluekeys].positions[batch] and new_pos not in layersDict[LayerType.Redkeys].positions[batch] and new_pos != pos:
                     break
             self.add(batch, new_pos)
@@ -305,7 +305,7 @@ class Bluekeys(Layer):
             self.remove(batch, pos)
         if pos in layersDict[LayerType.Redkeys].positions[batch] or pos in layersDict[LayerType.Redkeys]._removed[batch]:
             while True:
-                new_pos = (choice(range(3, board.width - 3)), choice(range(1, board.height - 1)))
+                new_pos = (choice(range(3, board.width - 3)), choice(range(2, board.height - 2)))
                 if new_pos not in layersDict[LayerType.Bluekeys].positions[batch] and new_pos not in layersDict[LayerType.Redkeys].positions[batch] and new_pos != pos:
                     break
             self.add(batch, new_pos)
