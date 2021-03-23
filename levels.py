@@ -203,15 +203,17 @@ class Causal4(Level):
             self.level[LayerType.Gold].append((1, 1)) 
         if LayerType.Blocks in self.uses:
             for i in range(self.shape[1] - 1):
-                self.level[LayerType.Blocks].append((2, 1 + i))
                 self.level[LayerType.Blocks].append((self.shape[0] - 1, self.shape[1] - i))
+            for i in range(self.shape[1] - 2):
+                self.level[LayerType.Blocks].append((2, 1 + i))
+            self.level[LayerType.Blocks].append((2, self.shape[1]))
             self.level[LayerType.Blocks].remove((self.shape[0] - 1, self.shape[1] - door_pos - 2))
         if LayerType.Rock in self.uses:
             self.level[LayerType.Rock].append((self.shape[0] - 1, self.shape[1] - door_pos - 2))
         if random() > 0.5:
-            self.level[LayerType.Bluedoor].append((2, self.shape[1]))
+            self.level[LayerType.Bluedoor].append((2, self.shape[1] - 1))
         else:
-            self.level[LayerType.Reddoor].append((2, self.shape[1]))
+            self.level[LayerType.Reddoor].append((2, self.shape[1] - 1))
         if random() > 0.5:
             self.level[LayerType.Bluedoor].append((self.shape[0] - 1, 1))
         else:
