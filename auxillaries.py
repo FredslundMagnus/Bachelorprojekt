@@ -50,8 +50,8 @@ def loop(game: Game, collector: Collector, save: Save = None, teleporter=None, t
             order.append(key)
             ctrl: bool = Key.ctrl_l in current or Key.ctrl_r in current
             alt: bool = Key.alt_l in current
-            speed = 100
-            zoom = 5
+            speed = 300
+            zoom = 15
             if [Key.esc, Key.esc, Key.esc] == order[-3:]:
                 Paint.stop()
                 States.running = False
