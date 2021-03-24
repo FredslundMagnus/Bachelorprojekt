@@ -117,7 +117,7 @@ class MetaTeleporter(Teleporter):
         modified_rewards1 = torch.sum(modified_board1[:, 0] * modified_board1[:, -1], (1, 2)) * (1 - rewards)
         for i in range(len(info)):
             if 'player_end' in info[i]:
-                modified_rewards1[i] += modified_board1[i, -1][(info[i]['player_end'][1], info[i]['player_end'][0])]
+                modified_rewards1[i][modified_board1[i, -1][(info[i]['player_end'][1], info[i]['player_end'][0])] == 1] = 1
 
         modified_dones1 = torch.clone(modified_rewards1)
         modified_dones1[dones == 1] = 1
@@ -136,7 +136,7 @@ class MetaTeleporter(Teleporter):
         modified_dones2[modified_rewards2 == 1] = 1
         modified_dones2[dones == 1] = 1
         rands = torch.rand(len(modified_rewards2))
-        modified_dones2[rands < self.modified_done_chance] = 1
+        modified_dones2[rands < self.modified_done_chance/5] = 1
         modified_dones1[modified_dones2 == 1] = 1
 
         tele_rewards = self.miss_intervention_cost * torch.clone(modified_dones2)
