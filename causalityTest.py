@@ -38,10 +38,11 @@ with Load("causal2_9x9", num=2) as load:
         for flipper, mover_ in zip(flippers, movers):
             counter3[(env.layers.types[flipper], env.layers.types[mover_])] += 1
 
-       # print(env.board[0])
+        li = [0] * env.layers.batch
         for batch in range(env.layers.batch):
             env.layers.restart(batch)
-            # print(env.board[0])
+            for layer in env.layers.layers:
+                layer.update(env.layers.board, li, env.layers.all_items)
         rounds += 1
         print(rounds, end=",")
         if rounds == 10:

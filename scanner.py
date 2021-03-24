@@ -24,3 +24,9 @@ with Load("causal2_9x9", num=2) as load:
         actions = mover(modified_board)
         observations, rewards, dones, info = env.step(actions)
         modified_board, _, _, _, intervention_idx = teleporter.modify(observations, rewards, dones, info)
+
+        li = [0] * env.layers.batch
+        for batch in range(env.layers.batch):
+            env.layers.restart(batch)
+            for layer in env.layers.layers:
+                layer.update(env.layers.board, li, env.layers.all_items)
