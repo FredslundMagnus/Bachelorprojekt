@@ -11,7 +11,7 @@ with Load("causal2_9x9", num=2) as load:
     counter = {layer: 0 for layer in env.layers.types}
     for frame in loop(env, collector, teleporter=teleporter):
 
-        results = torch.empty(*(shape := env.board.shape))
+        results = torch.zeros(*(shape := env.board.shape))
         for layer, x, y in ranges(shape[1:]):
             board = env.board
             pixel = board[:, layer, x, y]

@@ -14,7 +14,7 @@ with Load("causal2_9x9", num=2) as load:
     rounds = 0
     for frame in loop(env, collector, teleporter=teleporter):
         intervention_idx, modified_board = teleporter.pre_process(env)
-        results = torch.empty(*(shape := env.board.shape))
+        results = torch.zeros(*(shape := env.board.shape))
         for layer, x, y in ranges(shape[1:]):
             board = env.board
             pixel = board[:, layer, x, y]
