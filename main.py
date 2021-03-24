@@ -132,9 +132,9 @@ class Defaults:
     K: float = 100000
     epsilon_cap: float = 0.1
     softmax_cap: float = 0.025
-    gamma: float = 0.98
+    gamma: float = 0.95
     update: int = 10000
-    reset_chance: float = 0.002
+    reset_chance: float = 0.001
     modified_done_chance: float = 0.03
     miss_intervention_cost: float = -0.15
     intervention_cost: float = -0.05
