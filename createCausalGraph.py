@@ -10,6 +10,7 @@ with Load("causal2_9x9", num=2) as load:
     teleporter.exploration.explore = teleporter.exploration.greedy
     flippables = [LayerType.Diamond1, LayerType.Diamond2, LayerType.Diamond3, LayerType.Diamond4]
     convert = [env.layers.types.index(layer) for layer in flippables]
+    d = {}
     for frame in loop(env, collector, teleporter=teleporter):
         intervention_idx, modified_board = teleporter.pre_process(env)
         modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
@@ -29,10 +30,14 @@ with Load("causal2_9x9", num=2) as load:
                 paths[i].append(f)
             alive = [v1 != v2 for v1, v2 in zip(flippers, list(movers[mask]))]
             flip = [v for v, a in zip(flip, alive) if a]
-            print([v for v, a in zip(paths, alive) if not a])
+            for p in [v for v, a in zip(paths, alive) if not a]:
+                if tuple(p) in d:
+                    d[tuple(p)] += 1
+                else:
+                    d[tuple(p)] = 1
             paths = [v for v, a in zip(paths, alive) if a]
             mask[mask] = alive
-        quit()
+        print(d)
         li = [0] * env.layers.batch
         for batch in range(env.layers.batch):
             env.layers.restart(batch)
