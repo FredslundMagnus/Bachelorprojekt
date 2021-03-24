@@ -97,7 +97,20 @@ class Teleporter(Agent):
 
     def pre_process(self, env):
         return torch.flatten(torch.nonzero(torch.ones(env.layers.board.shape[0], device=device).long())), torch.zeros(env.layers.board.shape[0], env.layers.board.shape[1] + 1, env.layers.board.shape[2], env.layers.board.shape[3], device=device)
-    
+
+class Mover(Agent):
+    def __init__(self, game: Game, network2: Networks = None, learner2: Learners = None, exploration2: Explorations = None, **kwargs) -> None:
+        super().__init__(game, network2, learner2, exploration2, **kwargs)
+
+    def __call__(self, board: Tensor) -> Tensor:
+        self.values: Tensor = self.net.network(board)
+        actions = self.exploration.explore(self.values.detach())
+        return actions
+
+    def _learn(self, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor, *args):
+        self.learner.learn(self.values, state_after, action, reward, done)
+
+class MetaTeleporter(Teleporter):
     def metamodify(self, board, rewards, dones, info, interventions1):
         intervention1 = interventions1.to(dtype=int)
         modified_board1 = self.modify_board(intervention1, board, replace=False)
@@ -131,17 +144,7 @@ class Teleporter(Agent):
         tele_rewards[rewards == 1] = 1
         intervention_idx1 = torch.flatten(torch.nonzero(modified_dones1.long()))
         intervention_idx2 = torch.flatten(torch.nonzero(modified_dones2.long()))
+        
         return modified_board1, modified_board2, modified_rewards1, modified_rewards2, modified_dones1, modified_dones2, tele_rewards, intervention_idx1, intervention_idx2
 
 
-class Mover(Agent):
-    def __init__(self, game: Game, network2: Networks = None, learner2: Learners = None, exploration2: Explorations = None, **kwargs) -> None:
-        super().__init__(game, network2, learner2, exploration2, **kwargs)
-
-    def __call__(self, board: Tensor) -> Tensor:
-        self.values: Tensor = self.net.network(board)
-        actions = self.exploration.explore(self.values.detach())
-        return actions
-
-    def _learn(self, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor, *args):
-        self.learner.learn(self.values, state_after, action, reward, done)

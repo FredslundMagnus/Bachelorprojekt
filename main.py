@@ -1,5 +1,5 @@
 from game import Game
-from agent import Teleporter, Mover, Networks, Learners, Explorations
+from agent import Teleporter, Mover, Networks, Learners, Explorations, MetaTeleporter
 from collector import Collector
 from auxillaries import run, loop, person, random
 from save import Save
@@ -16,7 +16,7 @@ def metateleport(defaults):
     env = Game(**defaults)
     mover = Mover(env, _extra_dim=1, **defaults)
     teleporter1 = Teleporter(env, _extra_dim=1, **defaults)
-    teleporter2 = Teleporter(env, **defaults)
+    teleporter2 = MetaTeleporter(env, **defaults)
     buffer1 = ReplayBuffer(**defaults)
     buffer2 = ReplayBuffer(**defaults)
 
