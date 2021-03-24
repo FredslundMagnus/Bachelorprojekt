@@ -42,7 +42,8 @@ with Load("causal2_9x9", num=2) as load:
             env.layers.restart(batch)
             # print(env.board[0])
         rounds += 1
-        if rounds == 1000:
+        print(rounds, end=",")
+        if rounds == 50:
             break
 
     for k1, k2 in [v for v in sorted(counter3, key=counter3.get, reverse=True) if counter3[v] and v[0].name != "Player" and v[0].name != "Goal"]:
