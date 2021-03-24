@@ -35,8 +35,8 @@ with Load("causal2_9x9", num=2) as load:
                 counter2[env.layers.types[i]] += int(torch.sum(modified_board[å, i] * modified_board[å, -1]).item())
         for flipper, mover_ in zip(flippers, movers):
             counter3[(env.layers.types[flipper], env.layers.types[mover_])] += 1
-        for k in list(sorted(counter3, key=counter3.get, reverse=True))[:10]:
-            print(k, counter3[k])
+        for k1, k2 in list(sorted(counter3, key=counter3.get, reverse=True))[:10]:
+            print(f"{k1.name} -> {k2.name}:", counter3[(k1, k2)])
        # print(env.board[0])
         for batch in range(env.layers.batch):
             env.layers.restart(batch)
