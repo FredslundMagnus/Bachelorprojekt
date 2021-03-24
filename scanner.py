@@ -28,5 +28,5 @@ with Load("causal2_9x9", num=2) as load:
         li = [0] * env.layers.batch
         for batch in range(env.layers.batch):
             env.layers.restart(batch)
-            for layer in env.layers.layers:
-                layer.update(env.layers.board, li, env.layers.all_items)
+        for layer in env.layers.layers:
+            layer.update(env.layers.board, li, env.layers.all_items)

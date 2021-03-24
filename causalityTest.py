@@ -41,11 +41,12 @@ with Load("causal2_9x9", num=2) as load:
         li = [0] * env.layers.batch
         for batch in range(env.layers.batch):
             env.layers.restart(batch)
-            for layer in env.layers.layers:
-                layer.update(env.layers.board, li, env.layers.all_items)
+        for layer in env.layers.layers:
+            layer.update(env.layers.board, li, env.layers.all_items)
         rounds += 1
         print(rounds, end=",")
-        if rounds == 10:
+        if rounds == 200:
+            print("")
             break
 
     for k1, k2 in [v for v in sorted(counter3, key=counter3.get, reverse=True) if counter3[v] and v[0].name != "Player" and v[0].name != "Goal"]:
