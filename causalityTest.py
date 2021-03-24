@@ -31,7 +31,7 @@ with Load("causal2_9x9", num=2) as load:
         counter2 = {layer: 0 for layer in env.layers.types}
         for å in range(100):
             for i in range(len(env.layers.types)):
-                counter2[env.layers.types[i]] += torch.sum(modified_board[å, i] * modified_board[å, -1]).item()
+                counter2[env.layers.types[i]] += int(torch.sum(modified_board[å, i] * modified_board[å, -1]).item())
 
         print(counter2)
         # print(env.board[0])
