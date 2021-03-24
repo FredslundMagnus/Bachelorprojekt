@@ -124,6 +124,7 @@ class Teleporter(Agent):
         modified_dones2[dones == 1] = 1
         rands = torch.rand(len(modified_rewards2))
         modified_dones2[rands < self.modified_done_chance] = 1
+        modified_dones1[modified_dones2 == 1] = 1
 
         tele_rewards = self.miss_intervention_cost * torch.clone(modified_dones2)
         tele_rewards[modified_rewards2 == 1] = self.intervention_cost

@@ -88,8 +88,8 @@ def genExperiments(name, n=1, **params):
 # genExperiments(f"Rock_level_hard_interventionlow", hours=11.0, level=Levels.Rocks, intervention_cost=-0.1)
 # genExperiments(f"causal2_9x9", n=4, hours=10.0, level=Levels.Causal2)
 # genExperiments(f"Rock_level_hard_new_parameters", hours=11.0, level=Levels.Rocks)
-genExperiments(f"Rocks_9x9_META", n=2, hours=11.0, level=Levels.Rocks)
-genExperiments(f"causal2_9x9_META", n=2, hours=11.0, level=Levels.Causal2)
+genExperiments(f"Rocks_9x9_META_attemp2", n=2, hours=11.0, level=Levels.Rocks)
+genExperiments(f"causal2_9x9_META_attempe2", n=2, hours=11.0, level=Levels.Causal1)
 
 
 file.close()

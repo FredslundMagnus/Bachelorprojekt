@@ -29,6 +29,7 @@ def metateleport(defaults):
             actions = mover(modified_board1)
             observations, rewards, dones, info = env.step(actions)
             modified_board1, modified_board2, modified_rewards1, modified_rewards2, modified_dones1, modified_dones2, tele_rewards, intervention_idx1, intervention_idx2 = teleporter2.metamodify(observations, rewards, dones, info, teleporter1.interventions)
+            #print(modified_rewards1[0], modified_rewards2[0], modified_dones1[0], modified_dones2[0], tele_rewards[0], intervention_idx1[0], intervention_idx2[0])
             buffer1.teleporter_save_data(teleporter1.boards, modified_board2, teleporter1.interventions, modified_rewards2, modified_dones2, intervention_idx1, rewards)
             buffer2.teleporter_save_data(teleporter2.boards, observations, teleporter2.interventions, tele_rewards, dones, intervention_idx2, rewards)
             mover.learn(modified_board1, actions, modified_rewards1, modified_dones1)
@@ -97,8 +98,8 @@ def simulation(defaults):
 
 class Defaults:
     name: str = "Agent"
-    main: function = teleport
-    level: Levels = Levels.Causal4
+    main: function = metateleport
+    level: Levels = Levels.Rocks
     hours: float = 12
     batch: int = 100
     width: int = 9
@@ -123,19 +124,19 @@ class Defaults:
     layer_Diamond2: bool = False
     layer_Diamond3: bool = False
     layer_Diamond4: bool = False
-    layer_Reddoors: bool = True
-    layer_Redkeys: bool = True
-    layer_Bluedoors: bool = True
-    layer_Bluekeys: bool = True
+    layer_Reddoors: bool = False
+    layer_Redkeys: bool = False
+    layer_Bluedoors: bool = False
+    layer_Bluekeys: bool = False
 
     K: float = 200000
     epsilon_cap: float = 0.1
-    softmax_cap: float = 0.02  # 0.025
+    softmax_cap: float = 0.025
     gamma: float = 0.98
     update: int = 10000
     reset_chance: float = 0.002
-    modified_done_chance: float = 0.05  # 0.04
-    miss_intervention_cost: float = -0.2  # -0.15
+    modified_done_chance: float = 0.03
+    miss_intervention_cost: float = -0.15
     intervention_cost: float = -0.05
     replay_size: int = 100000
     sample_size: int = 50
