@@ -9,6 +9,7 @@ with Load("causal2_9x9", num=2) as load:
     teleporter.exploration.explore = teleporter.exploration.greedy
     counter = {layer: 0 for layer in env.layers.types}
     counter2 = {layer: 0 for layer in env.layers.types}
+    counter3 = {(layer1, layer2): 0 for layer1 in env.layers.types for layer2 in env.layers.types}
     for frame in loop(env, collector, teleporter=teleporter):
         intervention_idx, modified_board = teleporter.pre_process(env)
         results = torch.empty(*(shape := env.board.shape))
@@ -32,10 +33,12 @@ with Load("causal2_9x9", num=2) as load:
         for å in range(100):
             for i in range(len(env.layers.types)):
                 counter2[env.layers.types[i]] += int(torch.sum(modified_board[å, i] * modified_board[å, -1]).item())
-
-        print(counter2)
-        # print(env.board[0])
+        for flipper, mover_ in zip(flippers, movers):
+            counter3[(env.layers.types[flipper], env.layers.types[mover_])] += 1
+        for k in list(sorted(counter3, key=counter3.get, reverse=True))[:10]:
+            print(k, counter3[k])
+       # print(env.board[0])
         for batch in range(env.layers.batch):
             env.layers.restart(batch)
-        # print(env.board[0])
+            # print(env.board[0])
         quit()
