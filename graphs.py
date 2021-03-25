@@ -50,7 +50,7 @@ class Graph():
         Graph.screen = pygame.display.set_mode([1500, 1000], vsync=True)
         for layer in LayerType:
             try:
-                Graph.images[name] = Graph.pygame.transform.scale(Graph.pygame.image.load(f"Drawings/{(name := layer.name)}.png"), (Graph.size, Graph.size))
+                Graph.images[name] = Graph.pygame.transform.scale(Graph.pygame.image.load(f"Drawings/{(name := layer.name)}.png"), (80, 80))
             except Exception as e:
                 pass
         self.layers = self.mainloop({}, get_flippables=True)
@@ -118,11 +118,13 @@ class Graph():
 
     @staticmethod
     def drawNode(node: Node):
-        Graph.drawImage(node.x, node.y, node.layer.name)
+        Graph.drawCircle(Colors.black, 110, node.x, node.y)
+        Graph.drawCircle(Colors.white, 95, node.x, node.y)
+        Graph.drawImage(node.x, node.y, node.layer.name, 80)
 
     @staticmethod
-    def drawImage(x: int, y: int, name: str) -> None:
-        rect = Graph.pygame.Rect(x, y, Graph.size, Graph.size)
+    def drawImage(x: int, y: int, name: str, size: int) -> None:
+        rect = Graph.pygame.Rect(x-size//2, y-size//2, size, size)
         Graph.screen.blit(Graph.images[(name)], rect)
 
     @staticmethod
@@ -134,7 +136,7 @@ class Graph():
 
     @staticmethod
     def drawCircle(color: Color, size: int, x: int, y: int) -> None:
-        Graph.pygame.draw.circle(Graph.screen, color.color, (x*Graph.size + Graph.size // 2, y*Graph.size + Graph.size // 2), size*Graph.size // 2)
+        Graph.pygame.draw.circle(Graph.screen, color.color, (x, y), size // 2)
 
     @staticmethod
     def write(text: str, x: float, y: float, size: int = 0.6, color: Color = Colors.gray.c900, center: bool = True) -> None:
