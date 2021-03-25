@@ -7,9 +7,10 @@ from layer import LayerType
 import threading
 from abc import abstractproperty
 from widgets import Slider
-
+import math
 with redirect_stdout(None):
     import pygame
+    import pygame.gfxdraw
 
 
 @contextmanager
@@ -32,6 +33,14 @@ class Node():
         self.y = 500
 
 
+class Edge():
+    def __init__(self, fra: Node, til: Node, index: float) -> None:
+        self.fra = fra
+        self.til = til
+        self.value = index
+        self.opacity = 1
+
+
 class Graph():
     size = 80
     dim = 0
@@ -40,9 +49,11 @@ class Graph():
     def __init__(self,  mainloop: function) -> None:
         self.data: dict = {}
         self.mainloop = mainloop
-        self.slider = Slider(Graph.pygame, 1400, Colors.blue)
-        self.slider2 = Slider(Graph.pygame, 1450, Colors.green)
+        self.slider3 = Slider(Graph.pygame, 1350, Colors.brown, start=20)
+        self.slider = Slider(Graph.pygame, 1400, Colors.blue, start=40)
+        self.slider2 = Slider(Graph.pygame, 1450, Colors.orange, start=30)
         self.limit = 100
+        self.cuttoff = 0
         self.start()
 
     def start(self):
@@ -55,6 +66,7 @@ class Graph():
                 pass
         self.layers = self.mainloop({}, get_flippables=True)
         self.nodes = [Node(layer, i) for i, layer in enumerate(self.layers)]
+        self.edges = [Edge(node1, node2, i) for i, node2 in enumerate(self.nodes) for node1 in self.nodes if node1.layer != node2.layer]
         x = threading.Thread(target=self.mainloop, kwargs={'data': self.data})
         x.start()
         self.draw()
@@ -65,10 +77,15 @@ class Graph():
     def updateNotes(self) -> List[function]:
         pass
 
+    @abstractproperty
+    def updateEdges(self) -> List[function]:
+        pass
+
     def draw(self):
         run = True
         while run:
             for event in pygame.event.get():
+                self.cuttoff = self.slider3.handle(event)
                 self.limit = self.slider.handle(event)
                 self.diff = self.slider2.handle(event)
                 if event.type == pygame.QUIT:
@@ -77,10 +94,16 @@ class Graph():
                 self.updateNotes[0].__call__(self.nodes)
             except Exception as e:
                 pass
+            try:
+                self.updateEdges[0].__call__(self.edges)
+            except Exception as e:
+                pass
             with screen(Colors.gray.c300):
+                self.slider3.draw(Graph.screen)
                 self.slider.draw(Graph.screen)
                 self.slider2.draw(Graph.screen)
                 try:
+                    Graph.drawEdges(self.edges, self.limit/100, self.cuttoff/100)
                     Graph.drawNodes(self.nodes, self.diff/100)
                 except Exception as e:
                     print("d", e)
@@ -88,7 +111,7 @@ class Graph():
         Graph.pygame.quit()
 
     @staticmethod
-    def drawNodes(nodes: List[Node], limit):
+    def drawNodes(nodes: List[Node], limit: float):
         start, end = 350, 1150
         values = [node.value for node in nodes]
         for node in nodes:
@@ -115,6 +138,76 @@ class Graph():
     @staticmethod
     def dist(node1: Node, node2: Node) -> float:
         return ((node1.x - node2.x)**2 + (node1.y - node2.y)**2)**(1/2)
+
+    @staticmethod
+    def drawEdges(edges: List[Edge], limit: float, cutoff: float):
+        li = [edge.value for edge in edges]
+        ma, mi = max(li), min(li)
+        for edge in edges:
+            if ma > mi:
+                edge.opacity = edge.value / ma
+            if edge.opacity > cutoff:
+                Graph.drawEdge(edge, limit)
+
+    @staticmethod
+    def drawEdge(edge: Edge, limit):
+        Graph.drawArc(edge.fra.x, edge.til.x, edge.fra.y, edge.til.y, limit, edge.opacity * 10, Colors.red.transparrent(edge.opacity*255).color if edge.fra.x > edge.til.x else Colors.green.transparrent(edge.opacity*255).color)
+
+    @staticmethod
+    def drawArc(x1, x2, y1, y2, curve, width, color):
+        # Graph.drawCircle(Colors.orange, 5, x1-200, y1-200)
+        # Graph.drawCircle(Colors.black, 5, x2-200, y2-200)
+        mid_x = (x1+x2)/2
+        mid_y = (y1+y2)/2
+        vector = [(y2-y1)/2, -(x2-x1)/2]
+        # Graph.drawCircle(Colors.black, 5, mid_x-200, mid_y-200)
+        # Graph.drawCircle(Colors.black, 5, mid_x+vector[0]*curve-200, mid_y+vector[1]*curve-200)
+        if temp := Graph.calculateRadius((x1, y1), (x2, y2), (mid_x+vector[0]*curve, mid_y+vector[1]*curve)):
+            r, x, y = temp
+            r += width/2
+            # Graph.drawCircle(Colors.brown, 5, x, y)
+            start, stop = math.atan2(y1-y, x1-x), math.atan2(y2-y, x2-x)
+            if start > stop:
+                start -= math.pi*2
+            points_outer = []
+            points_inner = []
+            n = round(r*abs(stop-start)/20)
+            if n < 2:
+                n = 2
+            for i in range(n):
+                delta = i/(n-1)
+                phi0 = start + (stop-start)*delta
+                x0 = round(x+r*math.cos(phi0))
+                y0 = round(y+r*math.sin(phi0))
+                points_outer.append([x0, y0])
+                phi1 = stop + (start-stop)*delta
+                x1 = round(x+(r-width)*math.cos(phi1))
+                y1 = round(y+(r-width)*math.sin(phi1))
+                points_inner.append([x1, y1])
+            points = points_outer + points_inner
+
+            Graph.pygame.gfxdraw.aapolygon(Graph.screen, points, color)
+            Graph.pygame.gfxdraw.filled_polygon(Graph.screen, points, color)
+        else:
+            Graph.pygame.draw.line(Graph.screen, color, (int(x1), int(y1)), (int(x2), int(y2)), int(width))
+
+    @staticmethod
+    def calculateRadius(b, c, d):
+        temp = c[0]**2 + c[1]**2
+        bc = (b[0]**2 + b[1]**2 - temp) / 2
+        cd = (temp - d[0]**2 - d[1]**2) / 2
+        det = (b[0] - c[0]) * (c[1] - d[1]) - (c[0] - d[0]) * (b[1] - c[1])
+
+        if abs(det) < 1.0e-10:
+            return None
+
+        # Center of circle
+        cx = (bc*(c[1] - d[1]) - cd*(b[1] - c[1])) / det
+        cy = ((b[0] - c[0]) * cd - (c[0] - d[0]) * bc) / det
+
+        radius = ((cx - b[0])**2 + (cy - b[1])**2)**.5
+
+        return radius, cx, cy
 
     @staticmethod
     def drawNode(node: Node):

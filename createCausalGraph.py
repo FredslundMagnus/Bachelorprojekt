@@ -5,7 +5,7 @@ from main import *
 from load import Load
 from numpy import ndindex as ranges, array
 from helper import restart
-from graphs import Graph, Node
+from graphs import Edge, Graph, Node
 from threading import currentThread
 UI = True
 
@@ -14,6 +14,10 @@ class PathGraph(Graph):
     @property
     def updateNotes(self) -> List[function]:
         return [self.updateNotes1]
+
+    @property
+    def updateEdges(self) -> List[function]:
+        return [self.updateEdges1]
 
     def updateNotes1(self, nodes: List[Node]) -> None:
         counter_pos = [{k: 0 for k in self.layers} for _ in range(len(self.layers))]
@@ -29,6 +33,15 @@ class PathGraph(Graph):
         for node in nodes:
             k = node.layer
             node.value = counter_pos[0][k]/counter_total[k]
+
+    def updateEdges1(self, edges: List[Edge]) -> None:
+        counter = {(layer1, layer2): 0 for layer1 in self.layers for layer2 in self.layers}
+        for path in self.data:
+            for a, b in zip(path[1:], path[:-1]):
+                counter[(a, b)] += self.data[path]
+
+        for edge in edges:
+            edge.value = counter[(edge.fra.layer, edge.til.layer)]
 
 
 def createCausalGraph(data=None, get_flippables=False):

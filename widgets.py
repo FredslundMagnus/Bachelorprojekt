@@ -6,12 +6,12 @@ class Widget:
 
 
 class Slider(Widget):
-    def __init__(self, pygame, x, color: MaterialColor) -> None:
+    def __init__(self, pygame, x, color: MaterialColor, start=0) -> None:
         self.isHolding = False
         self.pygame = pygame
-        self.circle_y = 900
+        self.circle_y = 900 - 8*start
         self.color = color
-        self.value = 0
+        self.value = start
         self.sliderRect = pygame.Rect(x, 100, 10, 800)
 
     def draw(self, screen):
