@@ -9,7 +9,7 @@ from threading import currentThread
 UI = True
 
 
-def createCausalGraph(orders=None, get_flippables=False):
+def createCausalGraph(data=None, get_flippables=False):
     with Load("causal2_9x9", num=2) as load:
         collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
         teleporter.extradim = 0  # fix
@@ -19,8 +19,8 @@ def createCausalGraph(orders=None, get_flippables=False):
             return flippables
         convert = [env.layers.types.index(layer) for layer in flippables]
         d = {}
-        if orders == None:
-            orders = {}
+        if data == None:
+            data = {}
         for frame in loop(env, collector, teleporter=teleporter):
             intervention_idx, modified_board = teleporter.pre_process(env)
             modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
@@ -43,10 +43,10 @@ def createCausalGraph(orders=None, get_flippables=False):
                 for p in [v for v, a in zip(paths, alive) if not a]:
                     if tuple(p) in d:
                         d[tuple(p)] += 1
-                        orders[tuple([flippables[convert.index(k)] for k in p])] += 1
+                        data[tuple([flippables[convert.index(k)] for k in p])] += 1
                     else:
                         d[tuple(p)] = 1
-                        orders[tuple([flippables[convert.index(k)] for k in p])] = 1
+                        data[tuple([flippables[convert.index(k)] for k in p])] = 1
                 paths = [v for v, a in zip(paths, alive) if a]
                 mask[mask] = alive
             # Printer de 10 mest sete paths

@@ -7,6 +7,7 @@ import os
 from typing import Dict, List, Tuple
 from layer import LayerType
 import threading
+from abc import abstractproperty, abstractmethod
 
 with redirect_stdout(None):
     import pygame
@@ -40,7 +41,7 @@ class Graph():
     images = {}
 
     def __init__(self,  mainloop: function) -> None:
-        self.orders: Dict[Tuple[LayerType], int] = {}
+        self.data: dict = {}
         self.mainloop = mainloop
         self.start()
 
@@ -54,24 +55,24 @@ class Graph():
                 pass
         self.layers = self.mainloop({}, get_flippables=True)
         self.nodes = [Node(layer) for layer in self.layers]
-        x = threading.Thread(target=self.mainloop, kwargs={'orders': self.orders})
+        x = threading.Thread(target=self.mainloop, kwargs={'data': self.data})
         x.start()
         self.draw()
         x.do_run = False
         quit()
 
     def update(self) -> None:
-        self.orders
+        self.data
         counter_pos = [{k: 0 for k in self.layers} for _ in range(len(self.layers))]
-        for path in self.orders:
+        for path in self.data:
             for i, k in enumerate(path):
-                counter_pos[i][k] += self.orders[path]
+                counter_pos[i][k] += self.data[path]
 
         counter_total = {k: 0 for k in self.layers}
-        for path in self.orders:
+        for path in self.data:
             for k in counter_total:
                 if k in path:
-                    counter_total[k] += self.orders[path]
+                    counter_total[k] += self.data[path]
         for i, counter in enumerate(counter_pos):
             print("position", i+1)
             for layer, k in zip(self.layers, self.layers):
