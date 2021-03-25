@@ -19,7 +19,7 @@ class Slider(Widget):
         self.pygame.draw.rect(screen, self.color.c200.color, self.pygame.Rect(self.sliderRect.x, self.sliderRect.y, self.sliderRect.w, self.circle_y-self.sliderRect.y))
         self.pygame.draw.circle(screen, self.color.color, (self.sliderRect.w / 2 + self.sliderRect.x, self.sliderRect.y + self.sliderRect.h), self.sliderRect.w/2)
         self.pygame.draw.rect(screen, self.color.color, self.pygame.Rect(self.sliderRect.x, self.circle_y, self.sliderRect.w, self.sliderRect.h - self.circle_y+self.sliderRect.y))
-        self.pygame.draw.circle(screen, self.color.color, (self.sliderRect.w / 2 + self.sliderRect.x, self.circle_y), self.sliderRect.w * 1.5)
+        self.pygame.draw.circle(screen, self.color.c700.color if self.isHolding else self.color.c600.color, (self.sliderRect.w / 2 + self.sliderRect.x, self.circle_y), self.sliderRect.w * 1.5)
 
     def update_value(self, y):
         if y < self.sliderRect.y:
@@ -30,7 +30,7 @@ class Slider(Widget):
             self.value = 100 - (y - self.sliderRect.y) / float(self.sliderRect.h) * 100
 
     def on_slider(self, x, y):
-        if ((x - self.sliderRect.x + self.sliderRect.w / 2) * (x - self.sliderRect.x + self.sliderRect.w / 2) + (y - self.circle_y) * (y - self.circle_y))\
+        if ((x - self.sliderRect.x - self.sliderRect.w / 2) * (x - self.sliderRect.x - self.sliderRect.w / 2) + (y - self.circle_y) * (y - self.circle_y))\
                 <= (self.sliderRect.w * 1.5) * (self.sliderRect.w * 1.5):
             return True
         else:
