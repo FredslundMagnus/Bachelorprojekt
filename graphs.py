@@ -5,7 +5,8 @@ from helper import function
 from layer import LayerType
 from layer import LayerType
 import threading
-from abc import abstractproperty, abstractmethod
+from abc import abstractproperty
+from widgets import Slider
 
 with redirect_stdout(None):
     import pygame
@@ -39,11 +40,12 @@ class Graph():
     def __init__(self,  mainloop: function) -> None:
         self.data: dict = {}
         self.mainloop = mainloop
+        self.slider = Slider(Graph.pygame)
         self.start()
 
     def start(self):
         pygame.event.get()
-        Graph.screen = pygame.display.set_mode([20 * Graph.size, 20 * Graph.size], vsync=True)
+        Graph.screen = pygame.display.set_mode([30 * Graph.size, 20 * Graph.size], vsync=True)
         for layer in LayerType:
             try:
                 Graph.images[name] = Graph.pygame.transform.scale(Graph.pygame.image.load(f"Drawings/{(name := layer.name)}.png"), (Graph.size, Graph.size))
@@ -65,6 +67,7 @@ class Graph():
         run = True
         while run:
             for event in pygame.event.get():
+                self.slider.handle(event)
                 if event.type == pygame.QUIT:
                     run = False
                 if event.type == pygame.MOUSEBUTTONUP:
@@ -73,6 +76,7 @@ class Graph():
                     except Exception as e:
                         print(e)
             with screen(Colors.gray.c300):
+                self.slider.draw(Graph.screen)
                 for node in self.nodes:
                     try:
                         Graph.drawImage(node.x, node.y, node.name)
