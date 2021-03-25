@@ -39,6 +39,7 @@ with Load("causal2_9x9", num=2) as load:
                     d[tuple(p)] = 1
             paths = [v for v, a in zip(paths, alive) if a]
             mask[mask] = alive
+        # Printer de 10 mest sete paths
         # for k in list(sorted(d, key=d.get, reverse=True))[:10]:
         #     print(k, d[k], end=" : ")
         # print("")
@@ -47,15 +48,19 @@ with Load("causal2_9x9", num=2) as load:
         if frame == 100:
             print("")
             break
-    counter_first = {k: 0 for k in convert}
+    counter_pos = [{k: 0 for k in convert} for _ in range(len(flippables))]
     for path in d:
-        counter_first[path[0]] += d[path]
+        for i, k in enumerate(path):
+            counter_pos[i][k] += d[path]
 
     counter_total = {k: 0 for k in convert}
     for path in d:
         for k in counter_total:
             if k in path:
                 counter_total[k] += d[path]
-
-    for layer, k in zip(flippables, convert):
-        print(f"{layer.name}: {100*counter_first[k]//counter_total[k]}%")
+    for i, counter in enumerate(counter_pos):
+        print("position", i+1)
+        for layer, k in zip(flippables, convert):
+            percent = counter_pos[i][k]/counter_total[k]
+            print(f"{layer.name}: {str(100*percent)[:4]}% of {layer.name}'s total {counter_total[k]} times in a path.")
+        print("")
