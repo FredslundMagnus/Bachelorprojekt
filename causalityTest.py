@@ -12,7 +12,6 @@ with Load("causal2_9x9", num=2) as load:
     counter = {layer: 0 for layer in env.layers.types}
     counter2 = {layer: 0 for layer in env.layers.types}
     counter3 = {(layer1, layer2): 0 for layer1 in env.layers.types for layer2 in env.layers.types}
-    rounds = 0
     for frame in loop(env, collector, teleporter=teleporter):
         intervention_idx, modified_board = teleporter.pre_process(env)
         results = torch.zeros(*(shape := env.board.shape))
@@ -24,15 +23,12 @@ with Load("causal2_9x9", num=2) as load:
         flippers = [int(v) for v in list(results.max(dim=3)[0].max(dim=2)[0].argmax(dim=1))]
         for i in flippers:
             counter[env.layers.types[i]] += 1
-        print(results.max(dim=3)[0].max(dim=2)[0].argsort(dim=1))
-        # print(counter)
         modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
         actions = mover(modified_board)
         observations, rewards, dones, info = env.step(actions)
         movers = [torch.sum(torch.sum(modified_board[batch, :-1] * modified_board[batch, -1], dim=1), dim=1).argmax().item() for batch in range(modified_board.shape[0])]
         for i in movers:
             counter2[env.layers.types[i]] += 1
-        # print(counter2)
         counter2 = {layer: 0 for layer in env.layers.types}
         for å in range(100):
             for i in range(len(env.layers.types)):
@@ -41,9 +37,8 @@ with Load("causal2_9x9", num=2) as load:
             counter3[(env.layers.types[flipper], env.layers.types[mover_])] += 1
 
         restart(env)
-        rounds += 1
-        print(rounds, end=",")
-        if rounds == 200:
+        print(frame, end=",")
+        if frame == 200:
             print("")
             break
 
