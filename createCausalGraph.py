@@ -11,6 +11,7 @@ UI = True
 
 
 class PathGraph(Graph):
+    @property
     def updates(self) -> List[function]:
         return [self.update]
 

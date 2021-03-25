@@ -57,7 +57,7 @@ class Graph():
         x.do_run = False
         quit()
 
-    @abstractmethod
+    @abstractproperty
     def updates(self) -> List[function]:
         pass
 
@@ -69,7 +69,7 @@ class Graph():
                     run = False
                 if event.type == pygame.MOUSEBUTTONUP:
                     try:
-                        self.updates()[0].__call__()
+                        self.updates[0].__call__()
                     except Exception as e:
                         print(e)
             with screen(Colors.gray.c300):
