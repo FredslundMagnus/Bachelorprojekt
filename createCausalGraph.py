@@ -28,7 +28,7 @@ class PathGraph(Graph):
                     counter_total[k] += self.data[path]
         for node in nodes:
             k = node.layer
-            node.x = counter_pos[0][k]/counter_total[k]*30
+            node.value = counter_pos[0][k]/counter_total[k]
 
         # for i, counter in enumerate(counter_pos):
         #     print("position", i+1)

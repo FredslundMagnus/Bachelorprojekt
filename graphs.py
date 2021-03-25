@@ -25,14 +25,15 @@ def screen(background: Color) -> None:
 
 
 class Node():
-    def __init__(self, layer: LayerType) -> None:
+    def __init__(self, layer: LayerType, index: float) -> None:
         self.layer = layer
+        self.value = index
         self.x = 10
-        self.y = 10
+        self.y = 500
 
 
 class Graph():
-    size = 50
+    size = 80
     dim = 0
     images = {}
 
@@ -45,14 +46,14 @@ class Graph():
 
     def start(self):
         pygame.event.get()
-        Graph.screen = pygame.display.set_mode([30 * Graph.size, 20 * Graph.size], vsync=True)
+        Graph.screen = pygame.display.set_mode([1500, 1000], vsync=True)
         for layer in LayerType:
             try:
                 Graph.images[name] = Graph.pygame.transform.scale(Graph.pygame.image.load(f"Drawings/{(name := layer.name)}.png"), (Graph.size, Graph.size))
             except Exception as e:
                 pass
         self.layers = self.mainloop({}, get_flippables=True)
-        self.nodes = [Node(layer) for layer in self.layers]
+        self.nodes = [Node(layer, i) for i, layer in enumerate(self.layers)]
         x = threading.Thread(target=self.mainloop, kwargs={'data': self.data})
         x.start()
         self.draw()
@@ -73,19 +74,47 @@ class Graph():
             try:
                 self.updates[0].__call__(self.nodes)
             except Exception as e:
-                print(e)
+                pass
             with screen(Colors.gray.c300):
                 self.slider.draw(Graph.screen)
-                for node in self.nodes:
-                    try:
-                        Graph.drawImage(node.x, node.y, node.layer.name)
-                    except Exception as e:
-                        pass
+                try:
+                    Graph.drawNodes(self.nodes, self.limit)
+                except Exception as e:
+                    print("d", e)
+
         Graph.pygame.quit()
 
     @staticmethod
+    def drawNodes(nodes: List[Node], limit):
+        start, end = 350, 1150
+        values = [node.value for node in nodes]
+        for node in nodes:
+            node.x = ((node.value - min(values))/(max(values)-min(values))) * (end - start) + start
+        diff_check = limit*4
+
+        for i, node1 in enumerate(sorted(nodes, key=lambda x: x.x, reverse=True)):
+            for node2 in list(sorted(nodes, key=lambda x: x.x, reverse=True))[:i]:
+                if (diff := Graph.dist(node1, node2)) < diff_check:
+                    node1.y += (diff_check - diff)/2
+                    node2.y -= (diff_check - diff)/2
+
+        for node in nodes:
+            node.y -= (node.y - 500)*0.05
+
+        for node in nodes:
+            Graph.drawNode(node)
+
+    @staticmethod
+    def dist(node1: Node, node2: Node) -> float:
+        return ((node1.x - node2.x)**2 + (node1.y - node2.y)**2)**(1/2)
+
+    @staticmethod
+    def drawNode(node: Node):
+        Graph.drawImage(node.x, node.y, node.layer.name)
+
+    @staticmethod
     def drawImage(x: int, y: int, name: str) -> None:
-        rect = Graph.pygame.Rect(x*Graph.size, y*Graph.size, Graph.size, Graph.size)
+        rect = Graph.pygame.Rect(x, y, Graph.size, Graph.size)
         Graph.screen.blit(Graph.images[(name)], rect)
 
     @staticmethod
