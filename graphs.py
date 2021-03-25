@@ -27,9 +27,8 @@ def screen(background: Color) -> None:
 class Node():
     def __init__(self, layer: LayerType) -> None:
         self.layer = layer
-        self.x = 10 if layer.name == "Diamond1" else 5
-        self.y = 10 if layer.name == "Diamond2" else 5
-        self.name = layer.name
+        self.x = 10
+        self.y = 10
 
 
 class Graph():
@@ -71,16 +70,15 @@ class Graph():
                 self.limit = self.slider.handle(event)
                 if event.type == pygame.QUIT:
                     run = False
-                if event.type == pygame.MOUSEBUTTONUP:
-                    try:
-                        self.updates[0].__call__()
-                    except Exception as e:
-                        print(e)
+            try:
+                self.updates[0].__call__(self.nodes)
+            except Exception as e:
+                print(e)
             with screen(Colors.gray.c300):
                 self.slider.draw(Graph.screen)
                 for node in self.nodes:
                     try:
-                        Graph.drawImage(node.x, node.y, node.name)
+                        Graph.drawImage(node.x, node.y, node.layer.name)
                     except Exception as e:
                         pass
         Graph.pygame.quit()
