@@ -1,10 +1,7 @@
 from contextlib import contextmanager, redirect_stdout
-import sys
 from colors import Color, Colors
 from helper import function
-from layer import Shape, LayerType
-import os
-from typing import Dict, List, Tuple
+from layer import LayerType
 from layer import LayerType
 import threading
 from abc import abstractproperty, abstractmethod
@@ -36,8 +33,6 @@ class Node():
 class Graph():
     size = 50
     dim = 0
-    # x = 50
-    # y = 50
     images = {}
 
     def __init__(self,  mainloop: function) -> None:
@@ -61,24 +56,9 @@ class Graph():
         x.do_run = False
         quit()
 
+    @abstractmethod
     def update(self) -> None:
-        self.data
-        counter_pos = [{k: 0 for k in self.layers} for _ in range(len(self.layers))]
-        for path in self.data:
-            for i, k in enumerate(path):
-                counter_pos[i][k] += self.data[path]
-
-        counter_total = {k: 0 for k in self.layers}
-        for path in self.data:
-            for k in counter_total:
-                if k in path:
-                    counter_total[k] += self.data[path]
-        for i, counter in enumerate(counter_pos):
-            print("position", i+1)
-            for layer, k in zip(self.layers, self.layers):
-                percent = counter[k]/counter_total[k]
-                print(f"{layer.name}: {str(100*percent)[:4]}% of {layer.name}'s total {counter_total[k]} times in a path.")
-            print("")
+        pass
 
     def draw(self):
         run = True
@@ -87,7 +67,10 @@ class Graph():
                 if event.type == pygame.QUIT:
                     run = False
                 if event.type == pygame.MOUSEBUTTONUP:
-                    self.update()
+                    try:
+                        self.update()
+                    except:
+                        pass
             with screen(Colors.gray.c300):
                 for node in self.nodes:
                     try:
@@ -126,6 +109,5 @@ class Graph():
 
 
 Graph.pygame = pygame
-# os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (Graph.x, Graph.y)
 Graph.pygame.init()
 Graph.clock = Graph.pygame.time.Clock()

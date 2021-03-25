@@ -9,6 +9,26 @@ from threading import currentThread
 UI = True
 
 
+class PathGraph(Graph):
+    def update(self):
+        counter_pos = [{k: 0 for k in self.layers} for _ in range(len(self.layers))]
+        for path in self.data:
+            for i, k in enumerate(path):
+                counter_pos[i][k] += self.data[path]
+
+        counter_total = {k: 0 for k in self.layers}
+        for path in self.data:
+            for k in counter_total:
+                if k in path:
+                    counter_total[k] += self.data[path]
+        for i, counter in enumerate(counter_pos):
+            print("position", i+1)
+            for layer, k in zip(self.layers, self.layers):
+                percent = counter[k]/counter_total[k]
+                print(f"{layer.name}: {str(100*percent)[:4]}% of {layer.name}'s total {counter_total[k]} times in a path.")
+            print("")
+
+
 def createCausalGraph(data=None, get_flippables=False):
     with Load("causal2_9x9", num=2) as load:
         collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
@@ -79,6 +99,6 @@ def createCausalGraph(data=None, get_flippables=False):
 
 
 if UI:
-    Graph(createCausalGraph)
+    PathGraph(createCausalGraph)
 else:
     createCausalGraph()
