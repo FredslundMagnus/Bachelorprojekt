@@ -22,6 +22,8 @@ class ReplayBuffer:
 
     def sample_data(self):
         samples = (random.sample(self.buffer[:min(self.counter, self.replay_size)], min(self.sample_size, self.counter)))
+        if samples == []:
+            return None, None, None, None, None, None
         return self.stacker(samples)
 
     def teleporter_save_data(self, board, obs, interventions, tele_rewards, tele_done, intervention_idx, rewards):

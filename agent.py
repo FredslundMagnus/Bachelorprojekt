@@ -50,8 +50,9 @@ class Teleporter(Agent):
         return self.modify_board(actions, board), actions
 
     def _learn(self, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor, *args):
-        self(args[0])
-        self.learner.learn(self.values, state_after, action, reward, done)
+        if action != None:
+            self(args[0])
+            self.learner.learn(self.values, state_after, action, reward, done)
 
     def modify_board(self, actions, board, replace = True):
         intervention_layer = torch.nn.functional.one_hot(actions, self.height * self.width).reshape(actions.shape[0], self.height, self.width).unsqueeze(1)

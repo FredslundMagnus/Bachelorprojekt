@@ -52,6 +52,8 @@ class Collector:
         plt.close('all')
 
     def collect(self, rewards, dones):
+        if rewards == None:
+            pass
         self.counter += 1
         if self.rewards == [] and self.dones == []:
             self.rewards = [10**(-6)] * len(rewards)
