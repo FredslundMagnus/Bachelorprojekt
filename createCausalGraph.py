@@ -1,3 +1,4 @@
+from typing import List
 from layer import LayerType
 import torch
 from main import *
@@ -10,6 +11,9 @@ UI = True
 
 
 class PathGraph(Graph):
+    def updates(self) -> List[function]:
+        return [self.update]
+
     def update(self):
         counter_pos = [{k: 0 for k in self.layers} for _ in range(len(self.layers))]
         for path in self.data:

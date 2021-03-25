@@ -1,4 +1,5 @@
 from contextlib import contextmanager, redirect_stdout
+from typing import List
 from colors import Color, Colors
 from helper import function
 from layer import LayerType
@@ -57,7 +58,7 @@ class Graph():
         quit()
 
     @abstractmethod
-    def update(self) -> None:
+    def updates(self) -> List[function]:
         pass
 
     def draw(self):
@@ -68,9 +69,9 @@ class Graph():
                     run = False
                 if event.type == pygame.MOUSEBUTTONUP:
                     try:
-                        self.update()
-                    except:
-                        pass
+                        self.updates()[0].__call__()
+                    except Exception as e:
+                        print(e)
             with screen(Colors.gray.c300):
                 for node in self.nodes:
                     try:
