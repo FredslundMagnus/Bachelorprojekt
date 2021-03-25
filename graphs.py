@@ -41,6 +41,7 @@ class Graph():
         self.data: dict = {}
         self.mainloop = mainloop
         self.slider = Slider(Graph.pygame)
+        self.limit = 100
         self.start()
 
     def start(self):
@@ -67,7 +68,7 @@ class Graph():
         run = True
         while run:
             for event in pygame.event.get():
-                self.slider.handle(event)
+                self.limit = self.slider.handle(event)
                 if event.type == pygame.QUIT:
                     run = False
                 if event.type == pygame.MOUSEBUTTONUP:
