@@ -1,6 +1,5 @@
 import os
 from layer import Shape, LayerType
-from typing import Iterator, Tuple
 from game import Game
 from auxillaries import States
 from colors import Color, Colors

@@ -2,7 +2,6 @@
 from torch import device as devicer, cuda
 import matplotlib
 
-
 device = devicer('cuda' if cuda.is_available() else 'cpu')
 
 
