@@ -11,14 +11,14 @@ from helper import device
 
 
 class Agent(metaclass=ABCMeta):
-    def __init__(self, game: Game, network: Networks, learner: Learners, exploration: Explorations, width: int = None, height: int = None, batch: int = None, _extra_dim: int = 0, **kwargs) -> None:
+    def __init__(self, game: Game, network: Networks, learner: Learners, exploration: Explorations, gamma: float = None, K: float = None, width: int = None, height: int = None, batch: int = None, _extra_dim: int = 0, **kwargs) -> None:
         self.extradim = _extra_dim
         self.batch = batch
         self.height = height
         self.width = width
         self.net = Net(len(game.layers) + _extra_dim, width, height, network, **kwargs)
-        self.learner = Learner(self.net, learner, **kwargs)
-        self.exploration = Exploration(exploration, **kwargs)
+        self.learner = Learner(self.net, learner, gamma, **kwargs)
+        self.exploration = Exploration(exploration, K, **kwargs)
 
     @abstractmethod
     def __call__(self, board: Tensor) -> Tensor:
@@ -34,14 +34,15 @@ class Agent(metaclass=ABCMeta):
 
 
 class Teleporter(Agent):
-    def __init__(self, game: Game, network1: Networks = None, learner1: Learners = None, exploration1: Explorations = None, modified_done_chance: float = None, miss_intervention_cost: float = None, intervention_cost: float = None, **kwargs) -> None:
-        super().__init__(game, network1, learner1, exploration1, **kwargs)
+    def __init__(self, game: Game, network1: Networks = None, learner1: Learners = None, exploration1: Explorations = None, gamma1: float = None, K1 : float = None, modified_done_chance: float = None, miss_intervention_cost: float = None, intervention_cost: float = None, **kwargs) -> None:
+        super().__init__(game, network1, learner1, exploration1, gamma1, K1, **kwargs)
         self.boards = [None] * self.batch
         self.interventions = torch.zeros(self.batch, device=device)
         self.modified_done_chance = modified_done_chance
         self.miss_intervention_cost = miss_intervention_cost
         self.intervention_cost = intervention_cost
         self.counter = 0
+        self.K1 = K1
 
     def __call__(self, board: Tensor) -> Tensor:
         self.values: Tensor = self.net.network(board)
@@ -61,6 +62,7 @@ class Teleporter(Agent):
         return modified_board
 
     def modify(self, board, rewards, dones, info):
+        self.counter += 1
         intervention = self.interventions.to(dtype=int)
         modified_board = self.modify_board(intervention, board)
         modified_rewards = torch.sum(modified_board[:, 0] * modified_board[:, -1], (1, 2)) * (1 - rewards)
@@ -71,7 +73,7 @@ class Teleporter(Agent):
         modified_dones = torch.clone(modified_rewards)
         modified_dones[dones == 1] = 1
         rands = torch.rand(len(modified_rewards))
-        modified_dones[rands < self.modified_done_chance] = 1
+        modified_dones[rands < max(self.modified_done_chance/4, self.modified_done_chance * (1 - self.counter/self.K1))] = 1
         tele_rewards = self.miss_intervention_cost * torch.clone(modified_dones)
         tele_rewards[modified_rewards == 1] = self.intervention_cost
         tele_rewards[rewards == 1] = 1
@@ -99,8 +101,8 @@ class Teleporter(Agent):
         return torch.flatten(torch.nonzero(torch.ones(env.layers.board.shape[0], device=device).long())), torch.zeros(env.layers.board.shape[0], env.layers.board.shape[1] + 1, env.layers.board.shape[2], env.layers.board.shape[3], device=device)
 
 class Mover(Agent):
-    def __init__(self, game: Game, network2: Networks = None, learner2: Learners = None, exploration2: Explorations = None, **kwargs) -> None:
-        super().__init__(game, network2, learner2, exploration2, **kwargs)
+    def __init__(self, game: Game, network2: Networks = None, learner2: Learners = None, exploration2: Explorations = None, gamma2: float = None, K2 : float = None, **kwargs) -> None:
+        super().__init__(game, network2, learner2, exploration2, gamma2, K2, **kwargs)
 
     def __call__(self, board: Tensor) -> Tensor:
         self.values: Tensor = self.net.network(board)
