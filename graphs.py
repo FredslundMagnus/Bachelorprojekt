@@ -62,7 +62,7 @@ class Graph():
         quit()
 
     @abstractproperty
-    def updates(self) -> List[function]:
+    def updateNotes(self) -> List[function]:
         pass
 
     def draw(self):
@@ -74,7 +74,7 @@ class Graph():
                 if event.type == pygame.QUIT:
                     run = False
             try:
-                self.updates[0].__call__(self.nodes)
+                self.updateNotes[0].__call__(self.nodes)
             except Exception as e:
                 pass
             with screen(Colors.gray.c300):

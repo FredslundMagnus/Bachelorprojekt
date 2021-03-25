@@ -12,10 +12,10 @@ UI = True
 
 class PathGraph(Graph):
     @property
-    def updates(self) -> List[function]:
-        return [self.update]
+    def updateNotes(self) -> List[function]:
+        return [self.updateNotes1]
 
-    def update(self, nodes: List[Node]) -> None:
+    def updateNotes1(self, nodes: List[Node]) -> None:
         counter_pos = [{k: 0 for k in self.layers} for _ in range(len(self.layers))]
         for path in self.data:
             for i, k in enumerate(path):
@@ -29,13 +29,6 @@ class PathGraph(Graph):
         for node in nodes:
             k = node.layer
             node.value = counter_pos[0][k]/counter_total[k]
-
-        # for i, counter in enumerate(counter_pos):
-        #     print("position", i+1)
-        #     for layer, k in zip(self.layers, self.layers):
-        #         percent = counter[k]/counter_total[k]
-        #         print(f"{layer.name}: {str(100*percent)[:4]}% of {layer.name}'s total {counter_total[k]} times in a path.")
-        #     print("")
 
 
 def createCausalGraph(data=None, get_flippables=False):
