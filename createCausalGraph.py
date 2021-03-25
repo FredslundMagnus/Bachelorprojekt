@@ -5,7 +5,7 @@ from main import *
 from load import Load
 from numpy import ndindex as ranges, array
 from helper import restart
-from graphs import Graph
+from graphs import Graph, Node
 from threading import currentThread
 UI = True
 
@@ -15,7 +15,7 @@ class PathGraph(Graph):
     def updates(self) -> List[function]:
         return [self.update]
 
-    def update(self):
+    def update(self, nodes: List[Node]) -> None:
         counter_pos = [{k: 0 for k in self.layers} for _ in range(len(self.layers))]
         for path in self.data:
             for i, k in enumerate(path):
@@ -26,12 +26,16 @@ class PathGraph(Graph):
             for k in counter_total:
                 if k in path:
                     counter_total[k] += self.data[path]
-        for i, counter in enumerate(counter_pos):
-            print("position", i+1)
-            for layer, k in zip(self.layers, self.layers):
-                percent = counter[k]/counter_total[k]
-                print(f"{layer.name}: {str(100*percent)[:4]}% of {layer.name}'s total {counter_total[k]} times in a path.")
-            print("")
+        for node in nodes:
+            k = node.layer
+            node.x = counter_pos[0][k]/counter_total[k]*30
+
+        # for i, counter in enumerate(counter_pos):
+        #     print("position", i+1)
+        #     for layer, k in zip(self.layers, self.layers):
+        #         percent = counter[k]/counter_total[k]
+        #         print(f"{layer.name}: {str(100*percent)[:4]}% of {layer.name}'s total {counter_total[k]} times in a path.")
+        #     print("")
 
 
 def createCausalGraph(data=None, get_flippables=False):
