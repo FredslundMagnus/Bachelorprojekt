@@ -98,8 +98,8 @@ def simulation(defaults):
 
 class Defaults:
     name: str = "Agent"
-    main: function = metateleport
-    level: Levels = Levels.Causal1
+    main: function = teleport
+    level: Levels = Levels.Causal3
     hours: float = 12
     batch: int = 100
     width: int = 9
@@ -113,29 +113,29 @@ class Defaults:
 
     layer_Blocks: bool = True
     layer_Goal: bool = True
-    layer_Gold: bool = False
+    layer_Gold: bool = True
     layer_Keys: bool = False
     layer_Door: bool = False
     layer_Holder: bool = False
     layer_Putter: bool = False
     layer_Rock: bool = False
-    layer_Dirt: bool = False
+    layer_Dirt: bool = True
     layer_Diamond1: bool = False
     layer_Diamond2: bool = False
     layer_Diamond3: bool = False
     layer_Diamond4: bool = False
-    layer_Reddoors: bool = False
-    layer_Redkeys: bool = False
-    layer_Bluedoors: bool = False
-    layer_Bluekeys: bool = False
+    layer_Reddoors: bool = True
+    layer_Redkeys: bool = True
+    layer_Bluedoors: bool = True
+    layer_Bluekeys: bool = True
 
-    K: float = 100000
+    K: float = 200000
     epsilon_cap: float = 0.1
     softmax_cap: float = 0.025
-    gamma: float = 0.95
+    gamma: float = 0.98
     update: int = 10000
-    reset_chance: float = 0.001
-    modified_done_chance: float = 0.03
+    reset_chance: float = 0.002
+    modified_done_chance: float = 0.04
     miss_intervention_cost: float = -0.15
     intervention_cost: float = -0.05
     replay_size: int = 100000

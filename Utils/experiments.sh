@@ -1,10 +1,7 @@
 #!/bin/sh
-mkdir ../outputs/test_METAk100000new/
-mkdir ../outputs/test_METAk100000new/Markdown
-bsub -o "../outputs/test_METAk100000new/Markdown/test_METAk100000new_0.md" -J "test_METAk100000new_0" -P "-name test_METAk100000new-0 -hours 4.0 -level Levels.Causal1 -K 100000.0" < submit.sh
-mkdir ../outputs/test_METAk500000new/
-mkdir ../outputs/test_METAk500000new/Markdown
-bsub -o "../outputs/test_METAk500000new/Markdown/test_METAk500000new_0.md" -J "test_METAk500000new_0" -P "-name test_METAk500000new-0 -hours 4.0 -level Levels.Causal1 -K 500000.0" < submit.sh
-mkdir ../outputs/test_METAk1000000new/
-mkdir ../outputs/test_METAk1000000new/Markdown
-bsub -o "../outputs/test_METAk1000000new/Markdown/test_METAk1000000new_0.md" -J "test_METAk1000000new_0" -P "-name test_METAk1000000new-0 -hours 4.0 -level Levels.Causal1 -K 1000000.0" < submit.sh
+mkdir ../outputs/causal3_9x9/
+mkdir ../outputs/causal3_9x9/Markdown
+bsub -o "../outputs/causal3_9x9/Markdown/causal3_9x9_0.md" -J "causal3_9x9_0" -P "-name causal3_9x9-0 -hours 12.0 -level Levels.Causal3" < submit.sh
+bsub -o "../outputs/causal3_9x9/Markdown/causal3_9x9_1.md" -J "causal3_9x9_1" -P "-name causal3_9x9-1 -hours 12.0 -level Levels.Causal3" < submit.sh
+bsub -o "../outputs/causal3_9x9/Markdown/causal3_9x9_2.md" -J "causal3_9x9_2" -P "-name causal3_9x9-2 -hours 12.0 -level Levels.Causal3" < submit.sh
+bsub -o "../outputs/causal3_9x9/Markdown/causal3_9x9_3.md" -J "causal3_9x9_3" -P "-name causal3_9x9-3 -hours 12.0 -level Levels.Causal3" < submit.sh

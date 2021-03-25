@@ -93,8 +93,9 @@ def genExperiments(name, n=1, **params):
 # genExperiments(f"Rocks_9x9_META_attempt2_highK", n=1, hours=11.0, level=Levels.Rocks, K=500000)
 # genExperiments(f"causal1_9x9_META_attempt2_highK", n=1, hours=11.0, level=Levels.Causal1, K=500000)
 # genExperiments(f"causal2_9x9_META_attempt2", n=1, hours=11.0, level=Levels.Causal2, layer_Diamond1 = True, layer_Diamond2 = True, layer_Diamond3 = True, layer_Diamond4 = True, layer_Dirt = False, layer_Rock = False, layer_Gold = False)
-genExperiments(f"test_METAk100000new", n=1, hours=4, level=Levels.Causal1, K=100000)
-genExperiments(f"test_METAk500000new", n=1, hours=4, level=Levels.Causal1, K=500000)
-genExperiments(f"test_METAk1000000new", n=1, hours=4, level=Levels.Causal1, K=1000000)
+# genExperiments(f"test_METAk100000new", n=1, hours=4, level=Levels.Causal1, K=100000)
+# genExperiments(f"test_METAk500000new", n=1, hours=4, level=Levels.Causal1, K=500000)
+# genExperiments(f"test_METAk1000000new", n=1, hours=4, level=Levels.Causal1, K=1000000)
+genExperiments(f"causal3_9x9", n=4, hours=12, level=Levels.Causal3)
 
 file.close()
