@@ -3,6 +3,8 @@ import torch
 from main import *
 from load import Load
 from numpy import ndindex as ranges, array
+from helper import restart
+
 
 with Load("causal2_9x9", num=2) as load:
     collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
@@ -12,6 +14,7 @@ with Load("causal2_9x9", num=2) as load:
     convert = [env.layers.types.index(layer) for layer in flippables]
     d = {}
     for frame in loop(env, collector, teleporter=teleporter):
+        restart(env)
         intervention_idx, modified_board = teleporter.pre_process(env)
         modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
         movers = array([torch.sum(torch.sum(modified_board[batch, :-1] * modified_board[batch, -1], dim=1), dim=1).argmax().item() for batch in range(modified_board.shape[0])])
@@ -25,6 +28,9 @@ with Load("causal2_9x9", num=2) as load:
         flip = list(results[mask].max(dim=3)[0].max(dim=2)[0].argsort(dim=1, descending=True))
         paths = [[] for _ in range(len(flip))]
         for i in range(len(flippables)):
+            print(results[mask].max(dim=3)[0].max(dim=2)[0])
+            print(flip)
+            quit()
             flippers = [convert[v[i]] for v in flip]
             for i, f in enumerate(flippers):
                 paths[i].append(f)
@@ -38,8 +44,3 @@ with Load("causal2_9x9", num=2) as load:
             paths = [v for v, a in zip(paths, alive) if a]
             mask[mask] = alive
         print(d)
-        li = [0] * env.layers.batch
-        for batch in range(env.layers.batch):
-            env.layers.restart(batch)
-        for layer in env.layers.layers:
-            layer.update(env.layers.board, li, env.layers.all_items)

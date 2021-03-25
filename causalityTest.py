@@ -3,6 +3,7 @@ import torch
 from main import *
 from load import Load
 from numpy import ndindex as ranges
+from helper import restart
 
 with Load("causal2_9x9", num=2) as load:
     collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
@@ -23,6 +24,7 @@ with Load("causal2_9x9", num=2) as load:
         flippers = [int(v) for v in list(results.max(dim=3)[0].max(dim=2)[0].argmax(dim=1))]
         for i in flippers:
             counter[env.layers.types[i]] += 1
+        print(results.max(dim=3)[0].max(dim=2)[0].argsort(dim=1))
         # print(counter)
         modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
         actions = mover(modified_board)
@@ -38,11 +40,7 @@ with Load("causal2_9x9", num=2) as load:
         for flipper, mover_ in zip(flippers, movers):
             counter3[(env.layers.types[flipper], env.layers.types[mover_])] += 1
 
-        li = [0] * env.layers.batch
-        for batch in range(env.layers.batch):
-            env.layers.restart(batch)
-        for layer in env.layers.layers:
-            layer.update(env.layers.board, li, env.layers.all_items)
+        restart(env)
         rounds += 1
         print(rounds, end=",")
         if rounds == 200:
