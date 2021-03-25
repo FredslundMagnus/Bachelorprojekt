@@ -96,6 +96,9 @@ def genExperiments(name, n=1, **params):
 # genExperiments(f"test_METAk100000new", n=1, hours=4, level=Levels.Causal1, K=100000)
 # genExperiments(f"test_METAk500000new", n=1, hours=4, level=Levels.Causal1, K=500000)
 # genExperiments(f"test_METAk1000000new", n=1, hours=4, level=Levels.Causal1, K=1000000)
-genExperiments(f"causal3_9x9_20hours", n=4, hours=20, level=Levels.Causal3)
+genExperiments(f"causal3_9x9_20hoursONLYMOVERsoftmax", n=1, hours=20, level=Levels.Causal3, main = simple, K2 = 5000000, exploration2 = Explorations.softmaxer, gamma2 = 0.98)
+genExperiments(f"causal3_9x9_20hoursONLYMOVERepsgreed", n=1, hours=20, level=Levels.Causal3, main = simple, K2 = 5000000, exploration2 = Explorations.epsilonGreedy, gamma2 = 0.98)
+genExperiments(f"causal3_9x9_20hoursONLYMOVERsoftmaxgam0995", n=1, hours=20, level=Levels.Causal3, main = simple, K2 = 5000000, exploration2 = Explorations.softmaxer, gamma2 = 0.995)
+genExperiments(f"causal3_9x9_20hoursONLYMOVERepsgreedgam0995", n=1, hours=20, level=Levels.Causal3, main = simple, K2 = 5000000, exploration2 = Explorations.epsilonGreedy, gamma2 = 0.995)
 
 file.close()
