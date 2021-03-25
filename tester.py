@@ -11,7 +11,7 @@ def test_simple():
 
 
 def test_teleport():
-    with Load("Rocks_9x9_META_attempt2_highK", num=0) as load:
+    with Load("causal3_9x9", num=3) as load:
         collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
         teleporter.extradim = 0
         teleporter.exploration.explore = teleporter.exploration.greedy
@@ -23,7 +23,7 @@ def test_teleport():
             modified_board, _, _, _, intervention_idx = teleporter.modify(observations, rewards, dones, info)
 
 def test_metateleport():
-    with Load("causal1_9x9_META_attempt2_highK", num=0) as load:
+    with Load("causal3_9x9", num=0) as load:
         collector, env, mover, teleporter1, teleporter2 = load.items(Collector, Game, Mover, Teleporter, MetaTeleporter)
         teleporter1.exploration.explore = teleporter1.exploration.greedy
         teleporter2.exploration.explore = teleporter2.exploration.greedy

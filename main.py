@@ -104,12 +104,18 @@ class Defaults:
     batch: int = 100
     width: int = 9
     height: int = 9
+
     network1: Networks = Networks.Teleporter
-    network2: Networks = Networks.Mini
+    K1: float = 5000000
     learner1: Learners = Learners.Qlearn
-    learner2: Learners = Learners.Qlearn
     exploration1: Explorations = Explorations.softmaxer
+    gamma1: float = 0.98
+
+    network2: Networks = Networks.Mini
+    K2: float = 1000000
+    learner2: Learners = Learners.Qlearn
     exploration2: Explorations = Explorations.epsilonGreedy
+    gamma2: float = 0.95
 
     layer_Blocks: bool = True
     layer_Goal: bool = True
@@ -129,13 +135,11 @@ class Defaults:
     layer_Bluedoors: bool = True
     layer_Bluekeys: bool = True
 
-    K: float = 200000
-    epsilon_cap: float = 0.1
-    softmax_cap: float = 0.025
-    gamma: float = 0.98
+    epsilon_cap: float = 0.2
+    softmax_cap: float = 0.02
     update: int = 10000
-    reset_chance: float = 0.002
-    modified_done_chance: float = 0.04
+    reset_chance: float = 0.001
+    modified_done_chance: float = 0.05
     miss_intervention_cost: float = -0.15
     intervention_cost: float = -0.05
     replay_size: int = 100000
