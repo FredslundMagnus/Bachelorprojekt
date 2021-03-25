@@ -40,7 +40,8 @@ class Graph():
     def __init__(self,  mainloop: function) -> None:
         self.data: dict = {}
         self.mainloop = mainloop
-        self.slider = Slider(Graph.pygame)
+        self.slider = Slider(Graph.pygame, 1400, Colors.blue)
+        self.slider2 = Slider(Graph.pygame, 1450, Colors.green)
         self.limit = 100
         self.start()
 
@@ -69,6 +70,7 @@ class Graph():
         while run:
             for event in pygame.event.get():
                 self.limit = self.slider.handle(event)
+                self.diff = self.slider2.handle(event)
                 if event.type == pygame.QUIT:
                     run = False
             try:
@@ -77,8 +79,9 @@ class Graph():
                 pass
             with screen(Colors.gray.c300):
                 self.slider.draw(Graph.screen)
+                self.slider2.draw(Graph.screen)
                 try:
-                    Graph.drawNodes(self.nodes, self.limit)
+                    Graph.drawNodes(self.nodes, self.diff/100)
                 except Exception as e:
                     print("d", e)
 
@@ -89,14 +92,19 @@ class Graph():
         start, end = 350, 1150
         values = [node.value for node in nodes]
         for node in nodes:
+            node.y = 500
             node.x = ((node.value - min(values))/(max(values)-min(values))) * (end - start) + start
-        diff_check = limit*4
+        diff_check = (end - start)*limit
 
-        for i, node1 in enumerate(sorted(nodes, key=lambda x: x.x, reverse=True)):
-            for node2 in list(sorted(nodes, key=lambda x: x.x, reverse=True))[:i]:
-                if (diff := Graph.dist(node1, node2)) < diff_check:
+        li = list(sorted(nodes, key=lambda x: x.x, reverse=True))
+        for node1, node2 in zip(li[:-1], li[1:]):
+            if (diff := Graph.dist(node1, node2)) < diff_check:
+                if node1.y > 500:
                     node1.y += (diff_check - diff)/2
                     node2.y -= (diff_check - diff)/2
+                else:
+                    node1.y -= (diff_check - diff)/2
+                    node2.y += (diff_check - diff)/2
 
         for node in nodes:
             node.y -= (node.y - 500)*0.05
