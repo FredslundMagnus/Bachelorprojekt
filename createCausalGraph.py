@@ -82,11 +82,13 @@ class PathGraph(Graph):
 
 
 def createCausalGraph(data=None, get_flippables=False):
-    with Load("causal2_9x9", num=2) as load:
+    # with Load("causal2_9x9", num=2) as load:
+    with Load("causal3_9x9_20hours", num=2) as load:
         collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
         teleporter.extradim = 0  # fix
         teleporter.exploration.explore = teleporter.exploration.greedy
-        flippables = [LayerType.Diamond1, LayerType.Diamond2, LayerType.Diamond3, LayerType.Diamond4]
+        # flippables = [LayerType.Diamond1, LayerType.Diamond2, LayerType.Diamond3, LayerType.Diamond4]
+        flippables = [LayerType.Gold, LayerType.Dirt, LayerType.Bluedoor, LayerType.Bluekeys, LayerType.Reddoor, LayerType.Redkeys]
         if get_flippables:
             return flippables
         convert = [env.layers.types.index(layer) for layer in flippables]
