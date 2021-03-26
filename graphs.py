@@ -6,7 +6,7 @@ from layer import LayerType
 from layer import LayerType
 import threading
 from abc import abstractproperty
-from widgets import Slider
+from widgets import Menu, Slider
 import math
 with redirect_stdout(None):
     import pygame
@@ -49,11 +49,12 @@ class Graph():
     def __init__(self,  mainloop: function) -> None:
         self.data: dict = {}
         self.mainloop = mainloop
-        self.sliders = [
-            Slider(Graph.pygame, 1350, Colors.brown, start=20),
-            Slider(Graph.pygame, 1400, Colors.blue, start=40),
-            Slider(Graph.pygame, 1450, Colors.orange, start=30),
-        ]
+        self.widgets = {
+            "Slider0": Slider(Graph.pygame, 1350, Colors.brown, start=20),
+            "Slider1": Slider(Graph.pygame, 1400, Colors.blue, start=40),
+            "Slider2": Slider(Graph.pygame, 1450, Colors.orange, start=30),
+            "Meny": Menu(Graph.pygame, self.updateEdges, self.updateNotes, Colors.green, 300, Colors.blue),
+        }
         self.start()
 
     def start(self):
@@ -85,8 +86,8 @@ class Graph():
         run = True
         while run:
             for event in pygame.event.get():
-                for slider in self.sliders:
-                    slider.handle(event)
+                for widget in self.widgets.values():
+                    widget.handle(event)
                 if event.type == pygame.QUIT:
                     run = False
             try:
@@ -95,11 +96,11 @@ class Graph():
             except Exception as e:
                 pass
             with screen(Colors.gray.c300):
-                for slider in self.sliders:
-                    slider.draw(Graph.screen)
+                for widget in self.widgets.values():
+                    widget.draw(Graph.screen)
                 try:
-                    Graph.drawEdges(self.edges, self.sliders[1].value/100, self.sliders[0].value/100, self.sliders[2].value/100)
-                    Graph.drawNodes(self.nodes, self.sliders[2].value/100)
+                    Graph.drawEdges(self.edges, self.widgets["Slider1"].value/100, self.widgets["Slider0"].value/100, self.widgets["Slider2"].value/100)
+                    Graph.drawNodes(self.nodes, self.widgets["Slider2"].value/100)
                 except Exception as e:
                     print("d", e)
 
@@ -107,7 +108,7 @@ class Graph():
 
     @staticmethod
     def drawNodes(nodes: List[Node], limit: float):
-        start, end = 350, 1150
+        start, end = 425, 1225
         values = [node.value for node in nodes]
         for node in nodes:
             node.y = 500

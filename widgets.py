@@ -1,8 +1,27 @@
-from colors import MaterialColor
+from typing import List
+from colors import MaterialColor, Color, Colors
+from abc import abstractmethod
+from helper import function
 
 
 class Widget:
-    pass
+    @abstractmethod
+    def handle(self, event) -> None:
+        pass
+
+    @abstractmethod
+    def draw(self, screen) -> None:
+        pass
+
+    def write(self, screen, text: str, x: float, y: float, size: int = 20, color: Color = Colors.gray.c900, center: bool = True) -> None:
+        self.pygame.font.init()
+        myfont = self.pygame.font.SysFont('Comic Sans MS', int(size))
+        textsurface = myfont.render(text, True, color.color)
+        width, height = textsurface.get_rect().right, textsurface.get_rect().bottom
+        rect = self.pygame.Rect(x-width//2, y, width, height)
+        shape_surf = self.pygame.Surface(rect.size, self.pygame.SRCALPHA)
+        screen.blit(shape_surf, rect)
+        screen.blit(textsurface, (x - (textsurface.get_width()/2)*center, y))
 
 
 class Slider(Widget):
@@ -14,7 +33,7 @@ class Slider(Widget):
         self.value = start
         self.sliderRect = pygame.Rect(x, 100, 10, 800)
 
-    def draw(self, screen):
+    def draw(self, screen) -> None:
         self.pygame.draw.circle(screen, self.color.c200.color, (self.sliderRect.w / 2 + self.sliderRect.x, self.sliderRect.y), self.sliderRect.w / 2)
         self.pygame.draw.rect(screen, self.color.c200.color, self.pygame.Rect(self.sliderRect.x, self.sliderRect.y, self.sliderRect.w, self.circle_y-self.sliderRect.y))
         self.pygame.draw.circle(screen, self.color.color, (self.sliderRect.w / 2 + self.sliderRect.x, self.sliderRect.y + self.sliderRect.h), self.sliderRect.w/2)
@@ -36,7 +55,7 @@ class Slider(Widget):
         else:
             return False
 
-    def handle(self, event):
+    def handle(self, event) -> None:
         if event.type == self.pygame.MOUSEBUTTONDOWN and self.on_slider(*event.pos):
             self.isHolding = True
         elif event.type == self.pygame.MOUSEBUTTONUP:
@@ -50,4 +69,63 @@ class Slider(Widget):
             else:
                 self.circle_y = y
             self.update_value(y)
-        return self.value
+
+
+class Button(Widget):
+    def __init__(self, pygame, text: str, color: MaterialColor, width: int, start: int) -> None:
+        self.pygame = pygame
+        self.color = color
+        self.text = text
+        self.width = width
+        self.start = start
+
+    def draw(self, screen) -> None:
+        self.pygame.draw.rect(screen, self.color.color, self.pygame.Rect(self.width*0.18, self.start, self.width*0.64, 40))
+        self.write(screen, self.text, self.width//2, self.start, size=25)
+
+    def handle(self, event) -> None:
+        pass
+
+
+class Row(Widget):
+    def __init__(self, pygame, title: str, functions: List[function], color: MaterialColor, width: int, start: int) -> None:
+        self.pygame = pygame
+        self.color = color
+        self.functions = functions
+        self.title = title
+        self.width = width
+        self.start = start
+        self.buttons: List[Button] = []
+        for i, function in enumerate(self.functions):
+            self.buttons.append(Button(pygame, function.__name__, color, width, self.start + int((i+1.5)*60)))
+
+    def draw(self, screen) -> None:
+        self.write(screen, self.title, self.width//2, self.start, size=40)
+        for button in self.buttons:
+            button.draw(screen)
+
+    def handle(self, event) -> None:
+        pass
+
+
+class Menu(Widget):
+    def __init__(self, pygame, updateEdges: List[function], updateNotes: List[function], color: MaterialColor, width: int, buttonsColor: MaterialColor) -> None:
+        self.pygame = pygame
+        self.color = color
+        self.updateEdges = updateEdges
+        self.updateNotes = updateNotes
+        self.width = width
+        self.rows = [
+            Row(pygame, "Update Notes", updateNotes, buttonsColor, width, 0),
+            Row(pygame, "Update Edges", updateEdges, buttonsColor, width, 500),
+        ]
+
+    def draw(self, screen) -> None:
+        self.pygame.draw.rect(screen, self.color.color, self.pygame.Rect(0, 0, self.width, 1000))
+        self.pygame.draw.rect(screen, self.color.c700.color, self.pygame.Rect(0, 498, self.width, 4))
+        for row in self.rows:
+            row.draw(screen)
+
+    def handle(self, event) -> None:
+        for row in self.rows:
+            row.handle(event)
