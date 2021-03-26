@@ -1,21 +1,28 @@
 from typing import List
+
+from numpy.core.numeric import extend_all
 from layer import LayerType
 import torch
 from main import *
 from load import Load
 from numpy import ndindex as ranges, array
 from helper import restart
-from graphs import Graph, Node
+from graphs import Edge, Graph, Node
 from threading import currentThread
+from random import random
 UI = True
 
 
 class PathGraph(Graph):
     @property
-    def updates(self) -> List[function]:
-        return [self.update]
+    def updateNotes(self) -> List[function]:
+        return [self.updateNotes1, self.updateNotes2]
 
-    def update(self, nodes: List[Node]) -> None:
+    @property
+    def updateEdges(self) -> List[function]:
+        return [self.updateEdges1, self.updateEdges2, self.updateEdges3]
+
+    def updateNotes1(self, nodes: List[Node]) -> None:
         counter_pos = [{k: 0 for k in self.layers} for _ in range(len(self.layers))]
         for path in self.data:
             for i, k in enumerate(path):
@@ -30,12 +37,48 @@ class PathGraph(Graph):
             k = node.layer
             node.value = counter_pos[0][k]/counter_total[k]
 
-        # for i, counter in enumerate(counter_pos):
-        #     print("position", i+1)
-        #     for layer, k in zip(self.layers, self.layers):
-        #         percent = counter[k]/counter_total[k]
-        #         print(f"{layer.name}: {str(100*percent)[:4]}% of {layer.name}'s total {counter_total[k]} times in a path.")
-        #     print("")
+    def updateNotes2(self, nodes: List[Node]) -> None:
+        counter_pos = [{k: 0 for k in self.layers} for _ in range(len(self.layers))]
+        for path in self.data:
+            for i, k in enumerate(path):
+                counter_pos[i][k] += self.data[path]
+
+        for node in nodes:
+            k = node.layer
+            node.value = counter_pos[0][k]
+
+    def updateEdges1(self, edges: List[Edge]) -> None:
+        counter = {(layer1, layer2): 0 for layer1 in self.layers for layer2 in self.layers}
+        for path in self.data:
+            for a, b in zip(path[1:], path[:-1]):
+                counter[(a, b)] += self.data[path]
+
+        for edge in edges:
+            edge.value = counter[(edge.fra.layer, edge.til.layer)]
+
+    def updateEdges2(self, edges: List[Edge]) -> None:
+        counters = [{(layer1, layer2): 0 for layer1 in self.layers for layer2 in self.layers} for i in range(len(self.layers)-1)]
+        for i, counter in enumerate(counters, start=1):
+            for path in self.data:
+                try:
+                    for a, b in zip(path[i:], path[:-i]):
+                        counter[(a, b)] += self.data[path]
+                except Exception:
+                    pass
+        for edge in edges:
+            try:
+                edge.value = counters[0][(edge.fra.layer, edge.til.layer)] / sum([counter[(edge.fra.layer, edge.til.layer)] for counter in counters])
+            except ZeroDivisionError:
+                edge.value = 0
+
+    def updateEdges3(self, edges: List[Edge]) -> None:
+        counter = {(layer1, layer2): 0 for layer1 in self.layers for layer2 in self.layers}
+        for path in self.data:
+            for a, b in zip(path[1:], path[:-1]):
+                counter[(a, b)] += self.data[path]
+
+        for edge in edges:
+            edge.value = counter[(edge.fra.layer, edge.til.layer)] / (counter[(edge.fra.layer, edge.til.layer)] + counter[(edge.til.layer, edge.fra.layer)])
 
 
 def createCausalGraph(data=None, get_flippables=False):
@@ -83,7 +126,6 @@ def createCausalGraph(data=None, get_flippables=False):
             #     print(k, d[k], end=" : ")
             # print("")
             restart(env)
-            print(frame, end=",")
             setattr(currentThread(), "frame", frame)
             if getattr(currentThread(), "do_run", True) == False:
                 print("")
@@ -100,7 +142,7 @@ def createCausalGraph(data=None, get_flippables=False):
                 if k in path:
                     counter_total[k] += d[path]
         for i, counter in enumerate(counter_pos):
-            print("position", i+1)
+            print("Position", i+1)
             for layer, k in zip(flippables, convert):
                 percent = counter_pos[i][k]/counter_total[k]
                 print(f"{layer.name}: {str(100*percent)[:4]}% of {layer.name}'s total {counter_total[k]} times in a path.")
