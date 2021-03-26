@@ -103,7 +103,7 @@ class Graph():
                 self.slider.draw(Graph.screen)
                 self.slider2.draw(Graph.screen)
                 try:
-                    Graph.drawEdges(self.edges, self.limit/100, self.cuttoff/100)
+                    Graph.drawEdges(self.edges, self.limit/100, self.cuttoff/100, self.diff/100)
                     Graph.drawNodes(self.nodes, self.diff/100)
                 except Exception as e:
                     print("d", e)
@@ -140,18 +140,18 @@ class Graph():
         return ((node1.x - node2.x)**2 + (node1.y - node2.y)**2)**(1/2)
 
     @staticmethod
-    def drawEdges(edges: List[Edge], limit: float, cutoff: float):
+    def drawEdges(edges: List[Edge], limit: float, cutoff: float, diff: float):
         li = [edge.value for edge in edges]
         ma, mi = max(li), min(li)
         for edge in edges:
             if ma > mi:
                 edge.opacity = edge.value / ma
             if edge.opacity > cutoff:
-                Graph.drawEdge(edge, limit)
+                Graph.drawEdge(edge, limit, diff)
 
     @staticmethod
-    def drawEdge(edge: Edge, limit):
-        Graph.drawArc(edge.fra.x, edge.til.x, edge.fra.y, edge.til.y, limit, edge.opacity * 10, Colors.red.transparrent(edge.opacity*255).color if edge.fra.x > edge.til.x else Colors.green.transparrent(edge.opacity*255).color)
+    def drawEdge(edge: Edge, curve, diff):
+        Graph.drawArc(edge.fra.x, edge.til.x, edge.fra.y, edge.til.y, curve * min(max((Graph.dist(edge.fra, edge.til)-400*diff) / (800*(1.01-diff)), 0), 1), edge.opacity * 10, Colors.red.transparrent(edge.opacity*255).color if edge.fra.x > edge.til.x else Colors.green.transparrent(edge.opacity*255).color)
 
     @staticmethod
     def drawArc(x1, x2, y1, y2, curve, width, color):
