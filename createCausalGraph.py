@@ -126,7 +126,6 @@ def createCausalGraph(data=None, get_flippables=False):
             #     print(k, d[k], end=" : ")
             # print("")
             restart(env)
-            print(frame, end=",")
             setattr(currentThread(), "frame", frame)
             if getattr(currentThread(), "do_run", True) == False:
                 print("")

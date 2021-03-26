@@ -68,10 +68,10 @@ class Graph():
         self.layers = self.mainloop({}, get_flippables=True)
         self.nodes = [Node(layer, i) for i, layer in enumerate(self.layers)]
         self.edges = [Edge(node1, node2, i) for i, node2 in enumerate(self.nodes) for node1 in self.nodes if node1.layer != node2.layer]
-        x = threading.Thread(target=self.mainloop, kwargs={'data': self.data})
-        x.start()
+        self.x = threading.Thread(target=self.mainloop, kwargs={'data': self.data})
+        self.x.start()
         self.draw()
-        x.do_run = False
+        self.x.do_run = False
         quit()
 
     @abstractproperty
@@ -96,6 +96,7 @@ class Graph():
             except Exception as e:
                 pass
             with screen(Colors.gray.c300):
+                Graph.write(f"Iteration {getattr(self.x, 'frame', 0)}", 825, 20, size=50)
                 for widget in self.widgets.values():
                     widget.draw(Graph.screen)
                 try:
@@ -228,16 +229,15 @@ class Graph():
         Graph.pygame.draw.circle(Graph.screen, color.color, (x, y), size // 2)
 
     @staticmethod
-    def write(text: str, x: float, y: float, size: int = 0.6, color: Color = Colors.gray.c900, center: bool = True) -> None:
-        pygame.font.init()
-        myfont = Graph.pygame.font.SysFont('Comic Sans MS', int(size * Graph.size))
+    def write(text: str, x: float, y: float, size: int = 20, color: Color = Colors.gray.c900, center: bool = True) -> None:
+        Graph.pygame.font.init()
+        myfont = Graph.pygame.font.SysFont('Comic Sans MS', int(size))
         textsurface = myfont.render(text, True, color.color)
         width, height = textsurface.get_rect().right, textsurface.get_rect().bottom
-        rect = Graph.pygame.Rect(x*Graph.size-width//2-Graph.size//10, y*Graph.size+Graph.size//10, width + Graph.size//5, height-Graph.size//10)
+        rect = Graph.pygame.Rect(x-width//2, y, width, height)
         shape_surf = Graph.pygame.Surface(rect.size, Graph.pygame.SRCALPHA)
-        Graph.pygame.draw.rect(shape_surf, Colors.white.transparrent(150).color, shape_surf.get_rect())
         Graph.screen.blit(shape_surf, rect)
-        Graph.screen.blit(textsurface, (x*Graph.size - (textsurface.get_width()/2)*center, y*Graph.size))
+        Graph.screen.blit(textsurface, (x - (textsurface.get_width()/2)*center, y))
 
 
 Graph.pygame = pygame
