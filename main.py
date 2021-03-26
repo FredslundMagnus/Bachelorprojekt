@@ -98,7 +98,7 @@ def simulation(defaults):
 
 class Defaults:
     name: str = "Agent"
-    main: function = simple
+    main: function = teleport
     level: Levels = Levels.Causal3
     hours: float = 12
     batch: int = 100

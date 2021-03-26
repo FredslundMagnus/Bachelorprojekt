@@ -11,7 +11,7 @@ def test_simple():
 
 
 def test_teleport():
-    with Load("causal3_9x9", num=3) as load:
+    with Load("causal3_9x9_20hours", num=2) as load:
         collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
         teleporter.extradim = 0
         teleporter.exploration.explore = teleporter.exploration.greedy
