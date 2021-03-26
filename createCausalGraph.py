@@ -1,4 +1,6 @@
 from typing import List
+
+from numpy.core.numeric import extend_all
 from layer import LayerType
 import torch
 from main import *
@@ -45,8 +47,19 @@ class PathGraph(Graph):
             edge.value = counter[(edge.fra.layer, edge.til.layer)]
 
     def updateEdges2(self, edges: List[Edge]) -> None:
+        counters = [{(layer1, layer2): 0 for layer1 in self.layers for layer2 in self.layers} for i in range(len(self.layers)-1)]
+        for i, counter in enumerate(counters, start=1):
+            for path in self.data:
+                try:
+                    for a, b in zip(path[i:], path[:-i]):
+                        counter[(a, b)] += self.data[path]
+                except Exception:
+                    pass
         for edge in edges:
-            edge.value = random()
+            try:
+                edge.value = counters[0][(edge.fra.layer, edge.til.layer)] / sum([counter[(edge.fra.layer, edge.til.layer)] for counter in counters])
+            except ZeroDivisionError:
+                edge.value = 0
 
 
 def createCausalGraph(data=None, get_flippables=False):
