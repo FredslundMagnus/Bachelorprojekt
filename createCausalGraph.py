@@ -20,7 +20,7 @@ class PathGraph(Graph):
 
     @property
     def updateEdges(self) -> List[function]:
-        return [self.updateEdges1, self.updateEdges2]
+        return [self.updateEdges1, self.updateEdges2, self.updateEdges3]
 
     def updateNotes1(self, nodes: List[Node]) -> None:
         counter_pos = [{k: 0 for k in self.layers} for _ in range(len(self.layers))]
@@ -60,6 +60,15 @@ class PathGraph(Graph):
                 edge.value = counters[0][(edge.fra.layer, edge.til.layer)] / sum([counter[(edge.fra.layer, edge.til.layer)] for counter in counters])
             except ZeroDivisionError:
                 edge.value = 0
+
+    def updateEdges3(self, edges: List[Edge]) -> None:
+        counter = {(layer1, layer2): 0 for layer1 in self.layers for layer2 in self.layers}
+        for path in self.data:
+            for a, b in zip(path[1:], path[:-1]):
+                counter[(a, b)] += self.data[path]
+
+        for edge in edges:
+            edge.value = counter[(edge.fra.layer, edge.til.layer)] / (counter[(edge.fra.layer, edge.til.layer)] + counter[(edge.til.layer, edge.fra.layer)])
 
 
 def createCausalGraph(data=None, get_flippables=False):
