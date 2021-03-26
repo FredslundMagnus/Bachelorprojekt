@@ -94,7 +94,7 @@ class Graph():
                 self.updateNotes[self.widgets["Menu"][0]].__call__(self.nodes)
                 self.updateEdges[self.widgets["Menu"][1]].__call__(self.edges)
             except Exception as e:
-                print(e)
+                pass
             with screen(Colors.gray.c300):
                 for widget in self.widgets.values():
                     widget.draw(Graph.screen)
@@ -102,7 +102,7 @@ class Graph():
                     Graph.drawEdges(self.edges, self.widgets["Slider1"].value/100, self.widgets["Slider0"].value/100, self.widgets["Slider2"].value/100)
                     Graph.drawNodes(self.nodes, self.widgets["Slider2"].value/100)
                 except Exception as e:
-                    print("d", e)
+                    pass
 
         Graph.pygame.quit()
 
