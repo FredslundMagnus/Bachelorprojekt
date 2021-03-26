@@ -51,8 +51,8 @@ class Graph():
         self.mainloop = mainloop
         self.widgets = {
             "Slider0": Slider(Graph.pygame, 1350, Colors.brown, start=20),
-            "Slider1": Slider(Graph.pygame, 1400, Colors.blue, start=40),
-            "Slider2": Slider(Graph.pygame, 1450, Colors.orange, start=30),
+            "Slider1": Slider(Graph.pygame, 1400, Colors.blue, start=100),
+            "Slider2": Slider(Graph.pygame, 1450, Colors.orange, start=0),
             "Menu": Menu(Graph.pygame, self.updateEdges, self.updateNotes, Colors.green, 300, Colors.blue),
         }
         self.start()
