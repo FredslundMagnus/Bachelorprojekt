@@ -49,11 +49,11 @@ class Graph():
     def __init__(self,  mainloop: function) -> None:
         self.data: dict = {}
         self.mainloop = mainloop
-        self.slider3 = Slider(Graph.pygame, 1350, Colors.brown, start=20)
-        self.slider = Slider(Graph.pygame, 1400, Colors.blue, start=40)
-        self.slider2 = Slider(Graph.pygame, 1450, Colors.orange, start=30)
-        self.limit = 100
-        self.cuttoff = 0
+        self.sliders = [
+            Slider(Graph.pygame, 1350, Colors.brown, start=20),
+            Slider(Graph.pygame, 1400, Colors.blue, start=40),
+            Slider(Graph.pygame, 1450, Colors.orange, start=30),
+        ]
         self.start()
 
     def start(self):
@@ -85,26 +85,21 @@ class Graph():
         run = True
         while run:
             for event in pygame.event.get():
-                self.cuttoff = self.slider3.handle(event)
-                self.limit = self.slider.handle(event)
-                self.diff = self.slider2.handle(event)
+                for slider in self.sliders:
+                    slider.handle(event)
                 if event.type == pygame.QUIT:
                     run = False
             try:
                 self.updateNotes[0].__call__(self.nodes)
-            except Exception as e:
-                pass
-            try:
                 self.updateEdges[0].__call__(self.edges)
             except Exception as e:
                 pass
             with screen(Colors.gray.c300):
-                self.slider3.draw(Graph.screen)
-                self.slider.draw(Graph.screen)
-                self.slider2.draw(Graph.screen)
+                for slider in self.sliders:
+                    slider.draw(Graph.screen)
                 try:
-                    Graph.drawEdges(self.edges, self.limit/100, self.cuttoff/100, self.diff/100)
-                    Graph.drawNodes(self.nodes, self.diff/100)
+                    Graph.drawEdges(self.edges, self.sliders[1].value/100, self.sliders[0].value/100, self.sliders[2].value/100)
+                    Graph.drawNodes(self.nodes, self.sliders[2].value/100)
                 except Exception as e:
                     print("d", e)
 
