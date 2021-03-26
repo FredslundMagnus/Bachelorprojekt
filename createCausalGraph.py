@@ -142,7 +142,7 @@ def createCausalGraph(data=None, get_flippables=False):
                 if k in path:
                     counter_total[k] += d[path]
         for i, counter in enumerate(counter_pos):
-            print("position", i+1)
+            print("Position", i+1)
             for layer, k in zip(flippables, convert):
                 percent = counter_pos[i][k]/counter_total[k]
                 print(f"{layer.name}: {str(100*percent)[:4]}% of {layer.name}'s total {counter_total[k]} times in a path.")
