@@ -7,6 +7,7 @@ from numpy import ndindex as ranges, array
 from helper import restart
 from graphs import Edge, Graph, Node
 from threading import currentThread
+from random import random
 UI = True
 
 
@@ -44,13 +45,8 @@ class PathGraph(Graph):
             edge.value = counter[(edge.fra.layer, edge.til.layer)]
 
     def updateEdges2(self, edges: List[Edge]) -> None:
-        counter = {(layer1, layer2): 0 for layer1 in self.layers for layer2 in self.layers}
-        for path in self.data:
-            for a, b in zip(path[1:], path[:-1]):
-                counter[(a, b)] += self.data[path]
-
         for edge in edges:
-            edge.value = counter[(edge.fra.layer, edge.til.layer)]
+            edge.value = random()
 
 
 def createCausalGraph(data=None, get_flippables=False):

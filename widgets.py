@@ -72,19 +72,32 @@ class Slider(Widget):
 
 
 class Button(Widget):
-    def __init__(self, pygame, text: str, color: MaterialColor, width: int, start: int) -> None:
+    def __init__(self, pygame, text: str, color: MaterialColor, width: int, start: int, active: bool) -> None:
         self.pygame = pygame
         self.color = color
         self.text = text
         self.width = width
         self.start = start
+        self.isHolding = False
+        self.active = active
 
     def draw(self, screen) -> None:
-        self.pygame.draw.rect(screen, self.color.color, self.pygame.Rect(self.width*0.18, self.start, self.width*0.64, 40))
-        self.write(screen, self.text, self.width//2, self.start, size=25)
+        self.pygame.draw.rect(screen, self.color.c900.color if self.isHolding else (self.color.c800.color if self.active else self.color.color), self.pygame.Rect(self.width*0.18, self.start, self.width*0.64, 40))
+        self.write(screen, self.text, self.width//2, self.start, size=25, color=(Colors.white if self.active or self.isHolding else Colors.gray.c900))
+
+    def on_button(self, x, y):
+        return x > self.width*0.18 and x < self.width*0.82 and y > self.start and y < self.start+40
 
     def handle(self, event) -> None:
-        pass
+        if event.type == self.pygame.MOUSEBUTTONDOWN and self.on_button(*event.pos) or self.isHolding and event.type == 1024 and self.on_button(*event.pos):
+            self.isHolding = True
+        else:
+            if self.isHolding and event.type == self.pygame.MOUSEBUTTONUP:
+                self.isHolding = False
+                self.active = True
+                return True
+            self.isHolding = False
+        return False
 
 
 class Row(Widget):
@@ -96,8 +109,9 @@ class Row(Widget):
         self.width = width
         self.start = start
         self.buttons: List[Button] = []
+        self.active = 0
         for i, function in enumerate(self.functions):
-            self.buttons.append(Button(pygame, function.__name__, color, width, self.start + int((i+1.5)*60)))
+            self.buttons.append(Button(pygame, function.__name__, color, width, self.start + int((i+1.5)*60), not i))
 
     def draw(self, screen) -> None:
         self.write(screen, self.title, self.width//2, self.start, size=40)
@@ -105,7 +119,12 @@ class Row(Widget):
             button.draw(screen)
 
     def handle(self, event) -> None:
-        pass
+        for i, button in enumerate(self.buttons):
+            if button.handle(event):
+                self.active = i
+                for j, button2 in enumerate(self.buttons):
+                    if j != i:
+                        button2.active = False
 
 
 class Menu(Widget):
@@ -129,3 +148,6 @@ class Menu(Widget):
     def handle(self, event) -> None:
         for row in self.rows:
             row.handle(event)
+
+    def __getitem__(self, index: int) -> int:
+        return self.rows[index].active

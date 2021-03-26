@@ -53,7 +53,7 @@ class Graph():
             "Slider0": Slider(Graph.pygame, 1350, Colors.brown, start=20),
             "Slider1": Slider(Graph.pygame, 1400, Colors.blue, start=40),
             "Slider2": Slider(Graph.pygame, 1450, Colors.orange, start=30),
-            "Meny": Menu(Graph.pygame, self.updateEdges, self.updateNotes, Colors.green, 300, Colors.blue),
+            "Menu": Menu(Graph.pygame, self.updateEdges, self.updateNotes, Colors.green, 300, Colors.blue),
         }
         self.start()
 
@@ -91,10 +91,10 @@ class Graph():
                 if event.type == pygame.QUIT:
                     run = False
             try:
-                self.updateNotes[0].__call__(self.nodes)
-                self.updateEdges[0].__call__(self.edges)
+                self.updateNotes[self.widgets["Menu"][0]].__call__(self.nodes)
+                self.updateEdges[self.widgets["Menu"][1]].__call__(self.edges)
             except Exception as e:
-                pass
+                print(e)
             with screen(Colors.gray.c300):
                 for widget in self.widgets.values():
                     widget.draw(Graph.screen)
