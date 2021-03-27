@@ -14,12 +14,13 @@ environments = {
 }
 
 environment = environments[Levels.Causal3]
+useLayersOnlyOnce = False
 
 
 class PathGraph(Graph):
     @property
     def updateNotes(self) -> List[function]:
-        return [self.updateNotes1, self.updateNotes2, self.updateNotes3, self.updateNotes4]
+        return [self.updateNotes1, self.updateNotes2, self.updateNotes3, self.updateNotes4, self.updateNotes5]
 
     @property
     def updateEdges(self) -> List[function]:
@@ -94,6 +95,37 @@ class PathGraph(Graph):
                 if counter_pos[i][k] / pr_pos[i] > counter_pos[maxi][k] / pr_pos[maxi]:
                     maxi = i
                 node.value = len(self.layers) - maxi
+
+    def updateNotes5(self, nodes: List[Node]) -> None:
+        """
+        Hvert lag får den værdi der svarer til det index hvor den
+        fylder den største procentdel i forhold til de andre index.
+        Fjerner alle tomme indexes for mere kompakt graph.
+        """
+        counter_pos = [{k: 0 for k in self.layers} for _ in range(len(self.layers))]
+        for path in self.data:
+            for i, k in enumerate(path):
+                counter_pos[i][k] += self.data[path]
+
+        pr_pos = [sum(counter.values()) for counter in counter_pos]
+
+        for node in nodes:
+            k = node.layer
+            maxi = 0
+            for i in range(len(self.layers)):
+                if counter_pos[i][k] / pr_pos[i] > counter_pos[maxi][k] / pr_pos[maxi]:
+                    maxi = i
+                node.value = len(self.layers) - maxi
+
+        maxi = max([node.value for node in nodes])
+        li = [[] for _ in range(maxi+1)]
+        for node in nodes:
+            li[node.value].append(node)
+
+        li = [e for e in li if e]
+        for i, _nodes in enumerate(li):
+            for node in _nodes:
+                node.value = i
 
     def updateEdges1(self, edges: List[Edge]) -> None:
         """
@@ -175,10 +207,10 @@ def createCausalGraph(data=None):
                 for p in [v for v, a in zip(paths, alive) if not a]:
                     if tuple(p) in d:
                         d[tuple(p)] += 1
-                        data[tuple([flippables[convert.index(k)] for k in p])] += 1
+                        data[tuple([LayerType.Goal] + [flippables[convert.index(k)] for k in p] + [LayerType.Player])] += 1
                     else:
                         d[tuple(p)] = 1
-                        data[tuple([flippables[convert.index(k)] for k in p])] = 1
+                        data[tuple([LayerType.Goal] + [flippables[convert.index(k)] for k in p] + [LayerType.Player])] = 1
                 paths = [v for v, a in zip(paths, alive) if a]
                 mask[mask] = alive
             # Printer de 10 mest sete paths
@@ -284,4 +316,4 @@ def createCausalGraph2(data=None):
             print("")
 
 
-PathGraph(createCausalGraph, environment[2])
+PathGraph(createCausalGraph if useLayersOnlyOnce else createCausalGraph2, environment[2])
