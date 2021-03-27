@@ -48,7 +48,7 @@ class Graph():
 
     def __init__(self,  mainloop: function, layers: List[LayerType]) -> None:
         self.data: dict = {}
-        self.layers = layers
+        self.layers = layers + [LayerType.Player, LayerType.Goal]
         self.mainloop = mainloop
         self.widgets = {
             "Slider0": Slider(Graph.pygame, 1350, Colors.brown, start=20),

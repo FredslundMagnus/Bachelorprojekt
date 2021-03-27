@@ -175,10 +175,10 @@ def createCausalGraph(data=None):
                 for p in [v for v, a in zip(paths, alive) if not a]:
                     if tuple(p) in d:
                         d[tuple(p)] += 1
-                        data[tuple([flippables[convert.index(k)] for k in p])] += 1
+                        data[tuple([LayerType.Goal] + [flippables[convert.index(k)] for k in p] + [LayerType.Player])] += 1
                     else:
                         d[tuple(p)] = 1
-                        data[tuple([flippables[convert.index(k)] for k in p])] = 1
+                        data[tuple([LayerType.Goal] + [flippables[convert.index(k)] for k in p] + [LayerType.Player])] = 1
                 paths = [v for v, a in zip(paths, alive) if a]
                 mask[mask] = alive
             # Printer de 10 mest sete paths
