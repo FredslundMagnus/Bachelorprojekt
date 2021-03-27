@@ -14,7 +14,7 @@ def test_teleport():
     with Load("causal3_9x9_20hours", num=2) as load:
         collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
         teleporter.extradim = 0
-        teleporter.exploration.explore = teleporter.exploration.greedy
+        #teleporter.exploration.explore = teleporter.exploration.greedy
         intervention_idx, modified_board = teleporter.pre_process(env)
         for frame in loop(env, collector, teleporter=teleporter):
             modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
@@ -37,4 +37,4 @@ def test_metateleport():
             modified_board1, modified_board2, _, _, _, _, _, intervention_idx1, intervention_idx2 = teleporter2.metamodify(observations, rewards, dones, info, teleporter1.interventions)
 
 
-test_simple()
+test_teleport()
