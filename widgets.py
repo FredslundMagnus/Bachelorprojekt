@@ -86,9 +86,12 @@ class Button(Widget):
     def draw(self, screen) -> None:
         self.pygame.draw.rect(screen, self.color.c900.color if self.isHolding else (self.color.c800.color if self.active else self.color.color), self.pygame.Rect(self.width*0.18, self.start, self.width*0.64, 40))
         self.write(screen, self.text, self.width//2, self.start, size=25, color=(Colors.white if self.active or self.isHolding else Colors.gray.c900))
-        if self.isHover:
-            for i, line in enumerate(self.decription.split('\n')):
-                self.write(screen, line, self.width, self.start + i * 25, size=20, center=False)
+        try:
+            if self.isHover:
+                for i, line in enumerate(self.decription.split('\n')):
+                    self.write(screen, line, self.width, self.start + i * 25, size=20, center=False)
+        except Exception:
+            pass
 
     def on_button(self, x, y):
         return x > self.width*0.18 and x < self.width*0.82 and y > self.start and y < self.start+40
