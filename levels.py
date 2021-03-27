@@ -182,17 +182,13 @@ class Causal3(Level):
                 self.level[LayerType.Bluedoor].append((self.shape[0] - 1, 1))
             else:
                 self.level[LayerType.Reddoor].append((self.shape[0] - 1, 1))
-        if LayerType.Dirt in self.uses:
-            for i in range(self.shape[1] - 1):
-                self.level[LayerType.Dirt].append((1, 2 + i))
-                self.level[LayerType.Dirt].append((self.shape[0], self.shape[1] - i - 1))
         if LayerType.Bluekeys in self.uses:
-            for pos in sample(self.notUsed, 2):
-                if random() > 0.2:
+            for pos in sample(self.notUsed, 4):
+                if pos[0] > 2 and pos[0] < self.shape[0] - 2:
                     self.level[LayerType.Bluekeys].append(pos)
         if LayerType.Redkeys in self.uses:
-            for pos in sample(self.notUsed, 2):
-                if random() > 0.2:
+            for pos in sample(self.notUsed, 4):
+                if pos[0] > 2 and pos[0] < self.shape[0] - 2:
                     self.level[LayerType.Redkeys].append(pos)
 
         return True
