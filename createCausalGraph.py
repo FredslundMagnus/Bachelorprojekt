@@ -1,6 +1,4 @@
 from typing import List
-
-from numpy.core.numeric import extend_all
 from layer import LayerType
 import torch
 from main import *
@@ -9,20 +7,29 @@ from numpy import ndindex as ranges, array
 from helper import restart
 from graphs import Edge, Graph, Node
 from threading import currentThread
-from random import random
-UI = True
+
+environments = {
+    Levels.Causal3: ["causal3_9x9_20hours", 2, [LayerType.Gold, LayerType.Dirt, LayerType.Bluedoor, LayerType.Bluekeys, LayerType.Reddoor, LayerType.Redkeys]],
+    Levels.Causal2: ["causal2_9x9", 2, [LayerType.Diamond1, LayerType.Diamond2, LayerType.Diamond3, LayerType.Diamond4]]
+}
+
+environment = environments[Levels.Causal3]
 
 
 class PathGraph(Graph):
     @property
     def updateNotes(self) -> List[function]:
-        return [self.updateNotes1, self.updateNotes2]
+        return [self.updateNotes1, self.updateNotes2, self.updateNotes3, self.updateNotes4]
 
     @property
     def updateEdges(self) -> List[function]:
         return [self.updateEdges1, self.updateEdges2, self.updateEdges3]
 
     def updateNotes1(self, nodes: List[Node]) -> None:
+        """
+        Hvert lag får værdien udfra hvor stor procentdel, (af de gange
+        den indgik i en plan), hvor den var i position 1.
+        """
         counter_pos = [{k: 0 for k in self.layers} for _ in range(len(self.layers))]
         for path in self.data:
             for i, k in enumerate(path):
@@ -38,6 +45,9 @@ class PathGraph(Graph):
             node.value = counter_pos[0][k]/counter_total[k]
 
     def updateNotes2(self, nodes: List[Node]) -> None:
+        """
+        Hvert lag får værdien udfra hvor mange gange den står som nummer 1.
+        """
         counter_pos = [{k: 0 for k in self.layers} for _ in range(len(self.layers))]
         for path in self.data:
             for i, k in enumerate(path):
@@ -47,7 +57,49 @@ class PathGraph(Graph):
             k = node.layer
             node.value = counter_pos[0][k]
 
+    def updateNotes3(self, nodes: List[Node]) -> None:
+        """
+        Hvert lag får den værdi der svarer til det index hvor den
+        fleste gange var på det index.
+        """
+        counter_pos = [{k: 0 for k in self.layers} for _ in range(len(self.layers))]
+        for path in self.data:
+            for i, k in enumerate(path):
+                counter_pos[i][k] += self.data[path]
+
+        for node in nodes:
+            k = node.layer
+            maxi = 0
+            for i in range(len(self.layers)):
+                if counter_pos[i][k] > counter_pos[maxi][k]:
+                    maxi = i
+                node.value = len(self.layers) - maxi
+
+    def updateNotes4(self, nodes: List[Node]) -> None:
+        """
+        Hvert lag får den værdi der svarer til det index hvor den
+        fylder den største procentdel i forhold til de andre index.
+        """
+        counter_pos = [{k: 0 for k in self.layers} for _ in range(len(self.layers))]
+        for path in self.data:
+            for i, k in enumerate(path):
+                counter_pos[i][k] += self.data[path]
+
+        pr_pos = [sum(counter.values()) for counter in counter_pos]
+
+        for node in nodes:
+            k = node.layer
+            maxi = 0
+            for i in range(len(self.layers)):
+                if counter_pos[i][k] / pr_pos[i] > counter_pos[maxi][k] / pr_pos[maxi]:
+                    maxi = i
+                node.value = len(self.layers) - maxi
+
     def updateEdges1(self, edges: List[Edge]) -> None:
+        """
+        Hver edge for værdien hvor mange gange der var en conection direkte fra
+        Fra-noden til Til-noden.
+        """
         counter = {(layer1, layer2): 0 for layer1 in self.layers for layer2 in self.layers}
         for path in self.data:
             for a, b in zip(path[1:], path[:-1]):
@@ -57,6 +109,11 @@ class PathGraph(Graph):
             edge.value = counter[(edge.fra.layer, edge.til.layer)]
 
     def updateEdges2(self, edges: List[Edge]) -> None:
+        """
+        Hver edge for værdien udfra hvor mange gange der var en conection direkte fra
+        Fra-noden til Til-noden divideret med antallet af gange hvor der var 0 eller
+        flere mellem nodes mellem Fra-noden og Til-Noden.
+        """
         counters = [{(layer1, layer2): 0 for layer1 in self.layers for layer2 in self.layers} for i in range(len(self.layers)-1)]
         for i, counter in enumerate(counters, start=1):
             for path in self.data:
@@ -72,6 +129,11 @@ class PathGraph(Graph):
                 edge.value = 0
 
     def updateEdges3(self, edges: List[Edge]) -> None:
+        """
+        Hver edge for værdien hvor mange gange der var en conection direkte fra
+        Fra-noden til Til-noden i forholdet til hvor mange gange der var en 
+        forbindesle enten fra Fra-noden til Til-noden eller den anden vej.
+        """
         counter = {(layer1, layer2): 0 for layer1 in self.layers for layer2 in self.layers}
         for path in self.data:
             for a, b in zip(path[1:], path[:-1]):
@@ -81,16 +143,12 @@ class PathGraph(Graph):
             edge.value = counter[(edge.fra.layer, edge.til.layer)] / (counter[(edge.fra.layer, edge.til.layer)] + counter[(edge.til.layer, edge.fra.layer)])
 
 
-def createCausalGraph(data=None, get_flippables=False):
-    # with Load("causal2_9x9", num=2) as load:
-    with Load("causal3_9x9_20hours", num=2) as load:
+def createCausalGraph(data=None):
+    with Load(environment[0], num=environment[1]) as load:
         collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
         teleporter.extradim = 0  # fix
         teleporter.exploration.explore = teleporter.exploration.greedy
-        # flippables = [LayerType.Diamond1, LayerType.Diamond2, LayerType.Diamond3, LayerType.Diamond4]
-        flippables = [LayerType.Gold, LayerType.Dirt, LayerType.Bluedoor, LayerType.Bluekeys, LayerType.Reddoor, LayerType.Redkeys]
-        if get_flippables:
-            return flippables
+        flippables = environment[2]
         convert = [env.layers.types.index(layer) for layer in flippables]
         d = {}
         if data == None:
@@ -151,7 +209,4 @@ def createCausalGraph(data=None, get_flippables=False):
             print("")
 
 
-if UI:
-    PathGraph(createCausalGraph)
-else:
-    createCausalGraph()
+PathGraph(createCausalGraph, environment[2])

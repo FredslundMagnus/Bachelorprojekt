@@ -46,13 +46,14 @@ class Graph():
     dim = 0
     images = {}
 
-    def __init__(self,  mainloop: function) -> None:
+    def __init__(self,  mainloop: function, layers: List[LayerType]) -> None:
         self.data: dict = {}
+        self.layers = layers
         self.mainloop = mainloop
         self.widgets = {
             "Slider0": Slider(Graph.pygame, 1350, Colors.brown, start=20),
-            "Slider1": Slider(Graph.pygame, 1400, Colors.blue, start=100),
-            "Slider2": Slider(Graph.pygame, 1450, Colors.orange, start=0),
+            "Slider1": Slider(Graph.pygame, 1400, Colors.blue, start=40),
+            "Slider2": Slider(Graph.pygame, 1450, Colors.orange, start=20),
             "Menu": Menu(Graph.pygame, self.updateEdges, self.updateNotes, Colors.green, 300, Colors.blue),
         }
         self.start()
@@ -65,7 +66,6 @@ class Graph():
                 Graph.images[name] = Graph.pygame.transform.scale(Graph.pygame.image.load(f"Drawings/{(name := layer.name)}.png"), (80, 80))
             except Exception as e:
                 pass
-        self.layers = self.mainloop({}, get_flippables=True)
         self.nodes = [Node(layer, i) for i, layer in enumerate(self.layers)]
         self.edges = [Edge(node1, node2, i) for i, node2 in enumerate(self.nodes) for node1 in self.nodes if node1.layer != node2.layer]
         self.x = threading.Thread(target=self.mainloop, kwargs={'data': self.data})
