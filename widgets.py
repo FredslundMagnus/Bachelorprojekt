@@ -188,4 +188,3 @@ class Toggle(Widget):
         elif self.isHolding and event.type == self.pygame.MOUSEBUTTONUP:
             self.isHolding = False
             self.active = not self.active
-            print(self.active)
