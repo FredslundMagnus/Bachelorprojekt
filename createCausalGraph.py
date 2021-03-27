@@ -78,7 +78,7 @@ class PathGraph(Graph):
     def updateNotes4(self, nodes: List[Node]) -> None:
         """
         Hvert lag får den værdi der svarer til det index hvor den
-        fylde den største procentdel i forhold til de andre index.
+        fylder den største procentdel i forhold til de andre index.
         """
         counter_pos = [{k: 0 for k in self.layers} for _ in range(len(self.layers))]
         for path in self.data:
