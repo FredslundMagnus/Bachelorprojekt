@@ -13,7 +13,7 @@ environments = {
     Levels.Causal2: ["causal2_9x9", 2, [LayerType.Diamond1, LayerType.Diamond2, LayerType.Diamond3, LayerType.Diamond4]]
 }
 
-environment = environments[Levels.Causal2]
+environment = environments[Levels.Causal3]
 
 
 class PathGraph(Graph):
