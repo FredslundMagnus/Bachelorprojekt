@@ -14,7 +14,7 @@ environments = {
 }
 
 environment = environments[Levels.Causal3]
-useLayersOnlyOnce = False
+useLayersOnlyOnce = True
 
 
 class PathGraph(Graph):
@@ -190,9 +190,9 @@ def createCausalGraph(data=None):
             modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
             movers = array([torch.sum(torch.sum(modified_board[batch, :-1] * modified_board[batch, -1], dim=1), dim=1).argmax().item() for batch in range(modified_board.shape[0])])
             mask = array([layer in convert for layer in movers])
-            results = torch.zeros((env.board.shape[0], *(shape := (len(flippables), *env.board.shape[2:]))))
+            results = torch.zeros((50, *(shape := (len(flippables), *env.board.shape[2:]))))
             for layer, x, y in ranges(shape):
-                board = env.board
+                board = env.board[:50]
                 pixel = board[:, convert[layer], x, y]
                 board[:, convert[layer], x, y][pixel == 0], board[:, convert[layer], x, y][pixel == 1], board[:, convert[layer], x, y][pixel == 2] = 2, 0, 1
                 results[:, layer, x, y] = teleporter.net.network(board).max(dim=1)[0]
@@ -256,9 +256,9 @@ def createCausalGraph2(data=None):
             modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
             movers = array([torch.sum(torch.sum(modified_board[batch, :-1] * modified_board[batch, -1], dim=1), dim=1).argmax().item() for batch in range(modified_board.shape[0])])
             mask = array([layer in convert for layer in movers])
-            results = torch.zeros((env.board.shape[0], *(shape := (len(flippables), *env.board.shape[2:]))))
+            results = torch.zeros((50, *(shape := (len(flippables), *env.board.shape[2:]))))
             for layer, x, y in ranges(shape):
-                board = env.board
+                board = env.board[:50]
                 pixel = board[:, convert[layer], x, y]
                 board[:, convert[layer], x, y][pixel == 0], board[:, convert[layer], x, y][pixel == 1], board[:, convert[layer], x, y][pixel == 2] = 2, 0, 1
                 results[:, layer, x, y] = teleporter.net.network(board).max(dim=1)[0]
