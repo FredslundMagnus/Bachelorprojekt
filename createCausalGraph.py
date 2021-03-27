@@ -96,7 +96,10 @@ class PathGraph(Graph):
                 node.value = len(self.layers) - maxi
 
     def updateEdges1(self, edges: List[Edge]) -> None:
-        c
+        """
+        Hver edge for værdien hvor mange gange der var en conection direkte fra
+        Fra-noden til Til-noden.
+        """
         counter = {(layer1, layer2): 0 for layer1 in self.layers for layer2 in self.layers}
         for path in self.data:
             for a, b in zip(path[1:], path[:-1]):
