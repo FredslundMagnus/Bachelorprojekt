@@ -1,3 +1,4 @@
+import enum
 from typing import List
 
 from numpy.core.numeric import extend_all
@@ -16,7 +17,7 @@ UI = True
 class PathGraph(Graph):
     @property
     def updateNotes(self) -> List[function]:
-        return [self.updateNotes1, self.updateNotes2]
+        return [self.updateNotes1, self.updateNotes2, self.updateNotes3, self.updateNotes4]
 
     @property
     def updateEdges(self) -> List[function]:
@@ -46,6 +47,36 @@ class PathGraph(Graph):
         for node in nodes:
             k = node.layer
             node.value = counter_pos[0][k]
+
+    def updateNotes3(self, nodes: List[Node]) -> None:
+        counter_pos = [{k: 0 for k in self.layers} for _ in range(len(self.layers))]
+        for path in self.data:
+            for i, k in enumerate(path):
+                counter_pos[i][k] += self.data[path]
+
+        for node in nodes:
+            k = node.layer
+            maxi = 0
+            for i in range(len(self.layers)):
+                if counter_pos[i][k] > counter_pos[maxi][k]:
+                    maxi = i
+                node.value = len(self.layers) - maxi
+
+    def updateNotes4(self, nodes: List[Node]) -> None:
+        counter_pos = [{k: 0 for k in self.layers} for _ in range(len(self.layers))]
+        for path in self.data:
+            for i, k in enumerate(path):
+                counter_pos[i][k] += self.data[path]
+
+        pr_pos = [sum(counter.values()) for counter in counter_pos]
+
+        for node in nodes:
+            k = node.layer
+            maxi = 0
+            for i in range(len(self.layers)):
+                if counter_pos[i][k] / pr_pos[i] > counter_pos[maxi][k] / pr_pos[maxi]:
+                    maxi = i
+                node.value = len(self.layers) - maxi
 
     def updateEdges1(self, edges: List[Edge]) -> None:
         counter = {(layer1, layer2): 0 for layer1 in self.layers for layer2 in self.layers}
