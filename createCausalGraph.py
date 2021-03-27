@@ -267,7 +267,7 @@ def createCausalGraph2(data=None):
             flip = []
             for i in range(results[mask].shape[0]):
                 order = []
-                for _ in range(results[mask].shape[1]):
+                for _ in range(20):
                     maxers = torch.argmax(resulto[i])
                     order.append((maxers//board_size).item())
                     resulto[i][maxers] = -10**6
