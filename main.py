@@ -62,7 +62,7 @@ def teleport(defaults):
 
 
 def simple(defaults):
-    collector = Collector()
+    collector = Collector(**defaults)
     env = Game(**defaults)
     mover = Mover(env, **defaults)
 
@@ -123,7 +123,7 @@ class Defaults:
     layer_Holder: bool = False
     layer_Putter: bool = False
     layer_Rock: bool = False
-    layer_Dirt: bool = True
+    layer_Dirt: bool = False
     layer_Diamond1: bool = False
     layer_Diamond2: bool = False
     layer_Diamond3: bool = False

@@ -3,7 +3,7 @@ from load import Load
 
 
 def test_simple():
-    with Load("Agent") as load:
+    with Load("causal3_9x9_20hoursONLYMOVERsoftmaxgam0995") as load:
         collector, env, mover = load.items(Collector, Game, Mover)
         for frame in loop(env, collector):
             actions = mover(env.board)
@@ -37,4 +37,4 @@ def test_metateleport():
             modified_board1, modified_board2, _, _, _, _, _, intervention_idx1, intervention_idx2 = teleporter2.metamodify(observations, rewards, dones, info, teleporter1.interventions)
 
 
-test_teleport()
+test_simple()
