@@ -1,19 +1,13 @@
 #!/bin/sh
-mkdir ../outputs/causal3_9x9_20hoursONLYMOVERsoftmax/
-mkdir ../outputs/causal3_9x9_20hoursONLYMOVERsoftmax/Markdown
-bsub -o "../outputs/causal3_9x9_20hoursONLYMOVERsoftmax/Markdown/causal3_9x9_20hoursONLYMOVERsoftmax_0.md" -J "causal3_9x9_20hoursONLYMOVERsoftmax_0" -P "-name causal3_9x9_20hoursONLYMOVERsoftmax-0 -hours 12.0 -level Levels.Causal3 -main simple -K2 5000000.0 -exploration2 Explorations.softmaxer -gamma2 0.98" < submit.sh
-mkdir ../outputs/causal3_9x9_20hoursONLYMOVERepsgreed/
-mkdir ../outputs/causal3_9x9_20hoursONLYMOVERepsgreed/Markdown
-bsub -o "../outputs/causal3_9x9_20hoursONLYMOVERepsgreed/Markdown/causal3_9x9_20hoursONLYMOVERepsgreed_0.md" -J "causal3_9x9_20hoursONLYMOVERepsgreed_0" -P "-name causal3_9x9_20hoursONLYMOVERepsgreed-0 -hours 12.0 -level Levels.Causal3 -main simple -K2 5000000.0 -exploration2 Explorations.epsilonGreedy -gamma2 0.98" < submit.sh
-mkdir ../outputs/causal3_9x9_20hoursONLYMOVERsoftmaxgam0995/
-mkdir ../outputs/causal3_9x9_20hoursONLYMOVERsoftmaxgam0995/Markdown
-bsub -o "../outputs/causal3_9x9_20hoursONLYMOVERsoftmaxgam0995/Markdown/causal3_9x9_20hoursONLYMOVERsoftmaxgam0995_0.md" -J "causal3_9x9_20hoursONLYMOVERsoftmaxgam0995_0" -P "-name causal3_9x9_20hoursONLYMOVERsoftmaxgam0995-0 -hours 12.0 -level Levels.Causal3 -main simple -K2 5000000.0 -exploration2 Explorations.softmaxer -gamma2 0.995" < submit.sh
-mkdir ../outputs/causal3_9x9_20hoursONLYMOVERepsgreedgam0995/
-mkdir ../outputs/causal3_9x9_20hoursONLYMOVERepsgreedgam0995/Markdown
-bsub -o "../outputs/causal3_9x9_20hoursONLYMOVERepsgreedgam0995/Markdown/causal3_9x9_20hoursONLYMOVERepsgreedgam0995_0.md" -J "causal3_9x9_20hoursONLYMOVERepsgreedgam0995_0" -P "-name causal3_9x9_20hoursONLYMOVERepsgreedgam0995-0 -hours 12.0 -level Levels.Causal3 -main simple -K2 5000000.0 -exploration2 Explorations.epsilonGreedy -gamma2 0.995" < submit.sh
-mkdir ../outputs/causal3_9x9_20hoursONLYMOVERsoftmaxgam095/
-mkdir ../outputs/causal3_9x9_20hoursONLYMOVERsoftmaxgam095/Markdown
-bsub -o "../outputs/causal3_9x9_20hoursONLYMOVERsoftmaxgam095/Markdown/causal3_9x9_20hoursONLYMOVERsoftmaxgam095_0.md" -J "causal3_9x9_20hoursONLYMOVERsoftmaxgam095_0" -P "-name causal3_9x9_20hoursONLYMOVERsoftmaxgam095-0 -hours 12.0 -level Levels.Causal3 -main simple -K2 5000000.0 -exploration2 Explorations.softmaxer -gamma2 0.95" < submit.sh
-mkdir ../outputs/causal3_9x9_20hoursONLYMOVERepsgreedgam095/
-mkdir ../outputs/causal3_9x9_20hoursONLYMOVERepsgreedgam095/Markdown
-bsub -o "../outputs/causal3_9x9_20hoursONLYMOVERepsgreedgam095/Markdown/causal3_9x9_20hoursONLYMOVERepsgreedgam095_0.md" -J "causal3_9x9_20hoursONLYMOVERepsgreedgam095_0" -P "-name causal3_9x9_20hoursONLYMOVERepsgreedgam095-0 -hours 12.0 -level Levels.Causal3 -main simple -K2 5000000.0 -exploration2 Explorations.epsilonGreedy -gamma2 0.95" < submit.sh
+mkdir ../outputs/causal1_good/
+mkdir ../outputs/causal1_good/Markdown
+bsub -o "../outputs/causal1_good/Markdown/causal1_good_0.md" -J "causal1_good_0" -P "-name causal1_good-0 -hours 20.0 -level Levels.Causal1" < submit.sh
+bsub -o "../outputs/causal1_good/Markdown/causal1_good_1.md" -J "causal1_good_1" -P "-name causal1_good-1 -hours 20.0 -level Levels.Causal1" < submit.sh
+mkdir ../outputs/causal2_good/
+mkdir ../outputs/causal2_good/Markdown
+bsub -o "../outputs/causal2_good/Markdown/causal2_good_0.md" -J "causal2_good_0" -P "-name causal2_good-0 -hours 20.0 -level Levels.Causal2" < submit.sh
+bsub -o "../outputs/causal2_good/Markdown/causal2_good_1.md" -J "causal2_good_1" -P "-name causal2_good-1 -hours 20.0 -level Levels.Causal2" < submit.sh
+mkdir ../outputs/causal3_good/
+mkdir ../outputs/causal3_good/Markdown
+bsub -o "../outputs/causal3_good/Markdown/causal3_good_0.md" -J "causal3_good_0" -P "-name causal3_good-0 -hours 20.0 -level Levels.Causal3" < submit.sh
+bsub -o "../outputs/causal3_good/Markdown/causal3_good_1.md" -J "causal3_good_1" -P "-name causal3_good-1 -hours 20.0 -level Levels.Causal3" < submit.sh
