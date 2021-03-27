@@ -89,7 +89,7 @@ class Button(Widget):
         try:
             if self.isHover:
                 for i, line in enumerate(self.decription.split('\n')):
-                    self.write(screen, line, self.width, self.start + i * 25, size=20, center=False)
+                    self.write(screen, line, self.width, self.start + i * 25 - 25, size=20, center=False)
         except Exception:
             pass
 
