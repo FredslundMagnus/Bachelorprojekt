@@ -1,7 +1,4 @@
-import enum
 from typing import List
-
-from numpy.core.numeric import extend_all
 from layer import LayerType
 import torch
 from main import *
@@ -10,8 +7,13 @@ from numpy import ndindex as ranges, array
 from helper import restart
 from graphs import Edge, Graph, Node
 from threading import currentThread
-from random import random
-UI = True
+
+environments = {
+    Levels.Causal3: ["causal3_9x9_20hours", 2, [LayerType.Gold, LayerType.Dirt, LayerType.Bluedoor, LayerType.Bluekeys, LayerType.Reddoor, LayerType.Redkeys]],
+    Levels.Causal2: ["causal2_9x9", 2, [LayerType.Diamond1, LayerType.Diamond2, LayerType.Diamond3, LayerType.Diamond4]]
+}
+
+environment = environments[Levels.Causal2]
 
 
 class PathGraph(Graph):
@@ -112,16 +114,12 @@ class PathGraph(Graph):
             edge.value = counter[(edge.fra.layer, edge.til.layer)] / (counter[(edge.fra.layer, edge.til.layer)] + counter[(edge.til.layer, edge.fra.layer)])
 
 
-def createCausalGraph(data=None, get_flippables=False):
-    # with Load("causal2_9x9", num=2) as load:
-    with Load("causal3_9x9_20hours", num=2) as load:
+def createCausalGraph(data=None):
+    with Load(environment[0], num=environment[1]) as load:
         collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
         teleporter.extradim = 0  # fix
         teleporter.exploration.explore = teleporter.exploration.greedy
-        # flippables = [LayerType.Diamond1, LayerType.Diamond2, LayerType.Diamond3, LayerType.Diamond4]
-        flippables = [LayerType.Gold, LayerType.Dirt, LayerType.Bluedoor, LayerType.Bluekeys, LayerType.Reddoor, LayerType.Redkeys]
-        if get_flippables:
-            return flippables
+        flippables = environment[2]
         convert = [env.layers.types.index(layer) for layer in flippables]
         d = {}
         if data == None:
@@ -182,7 +180,4 @@ def createCausalGraph(data=None, get_flippables=False):
             print("")
 
 
-if UI:
-    PathGraph(createCausalGraph)
-else:
-    createCausalGraph()
+PathGraph(createCausalGraph, environment[2])

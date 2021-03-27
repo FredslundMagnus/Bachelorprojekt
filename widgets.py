@@ -109,9 +109,9 @@ class Row(Widget):
         self.width = width
         self.start = start
         self.buttons: List[Button] = []
-        self.active = 0
+        self.active = len(functions)-1
         for i, function in enumerate(self.functions):
-            self.buttons.append(Button(pygame, function.__name__, color, width, self.start + int((i+1.5)*60), not i))
+            self.buttons.append(Button(pygame, function.__name__, color, width, self.start + int((i+1.5)*60), self.active == i))
 
     def draw(self, screen) -> None:
         self.write(screen, self.title, self.width//2, self.start, size=40)
