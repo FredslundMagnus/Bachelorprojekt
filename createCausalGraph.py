@@ -26,6 +26,10 @@ class PathGraph(Graph):
         return [self.updateEdges1, self.updateEdges2, self.updateEdges3]
 
     def updateNotes1(self, nodes: List[Node]) -> None:
+        """
+        Hvert lag får værdien udfra hvor stor procentdel, (af de gange
+        den indgik i en plan), hvor den var i position 1.
+        """
         counter_pos = [{k: 0 for k in self.layers} for _ in range(len(self.layers))]
         for path in self.data:
             for i, k in enumerate(path):
@@ -41,6 +45,9 @@ class PathGraph(Graph):
             node.value = counter_pos[0][k]/counter_total[k]
 
     def updateNotes2(self, nodes: List[Node]) -> None:
+        """
+        Hvert lag får værdien udfra hvor mange gange den står som nummer 1.
+        """
         counter_pos = [{k: 0 for k in self.layers} for _ in range(len(self.layers))]
         for path in self.data:
             for i, k in enumerate(path):
@@ -51,6 +58,10 @@ class PathGraph(Graph):
             node.value = counter_pos[0][k]
 
     def updateNotes3(self, nodes: List[Node]) -> None:
+        """
+        Hvert lag får den værdi der svarer til det index hvor den
+        fleste gange var på det index.
+        """
         counter_pos = [{k: 0 for k in self.layers} for _ in range(len(self.layers))]
         for path in self.data:
             for i, k in enumerate(path):
@@ -65,6 +76,10 @@ class PathGraph(Graph):
                 node.value = len(self.layers) - maxi
 
     def updateNotes4(self, nodes: List[Node]) -> None:
+        """
+        Hvert lag får den værdi der svarer til det index hvor den
+        fylde den største procentdel i forhold til de andre index.
+        """
         counter_pos = [{k: 0 for k in self.layers} for _ in range(len(self.layers))]
         for path in self.data:
             for i, k in enumerate(path):
@@ -81,6 +96,7 @@ class PathGraph(Graph):
                 node.value = len(self.layers) - maxi
 
     def updateEdges1(self, edges: List[Edge]) -> None:
+        c
         counter = {(layer1, layer2): 0 for layer1 in self.layers for layer2 in self.layers}
         for path in self.data:
             for a, b in zip(path[1:], path[:-1]):
@@ -90,6 +106,11 @@ class PathGraph(Graph):
             edge.value = counter[(edge.fra.layer, edge.til.layer)]
 
     def updateEdges2(self, edges: List[Edge]) -> None:
+        """
+        Hver edge for værdien udfra hvor mange gange der var en conection direkte fra
+        Fra-noden til Til-noden divideret med antallet af gange hvor der var 0 eller
+        flere mellem nodes mellem Fra-noden og Til-Noden.
+        """
         counters = [{(layer1, layer2): 0 for layer1 in self.layers for layer2 in self.layers} for i in range(len(self.layers)-1)]
         for i, counter in enumerate(counters, start=1):
             for path in self.data:
@@ -105,6 +126,11 @@ class PathGraph(Graph):
                 edge.value = 0
 
     def updateEdges3(self, edges: List[Edge]) -> None:
+        """
+        Hver edge for værdien hvor mange gange der var en conection direkte fra
+        Fra-noden til Til-noden i forholdet til hvor mange gange der var en 
+        forbindesle enten fra Fra-noden til Til-noden eller den anden vej.
+        """
         counter = {(layer1, layer2): 0 for layer1 in self.layers for layer2 in self.layers}
         for path in self.data:
             for a, b in zip(path[1:], path[:-1]):
