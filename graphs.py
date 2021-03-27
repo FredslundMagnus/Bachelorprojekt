@@ -6,7 +6,7 @@ from layer import LayerType
 from layer import LayerType
 import threading
 from abc import abstractproperty
-from widgets import Menu, Slider
+from widgets import Menu, Slider, Toggle
 import math
 with redirect_stdout(None):
     import pygame
@@ -50,13 +50,27 @@ class Graph():
         self.data: dict = {}
         self.layers = layers + [LayerType.Player, LayerType.Goal]
         self.mainloop = mainloop
+        self.isMinimised = False
         self.widgets = {
             "Slider0": Slider(Graph.pygame, 1350, Colors.brown, start=20),
             "Slider1": Slider(Graph.pygame, 1400, Colors.blue, start=40),
             "Slider2": Slider(Graph.pygame, 1450, Colors.orange, start=14),
             "Menu": Menu(Graph.pygame, self.updateEdges, self.updateNotes, Colors.green, 300, Colors.blue),
+            "Toggle": Toggle(Graph.pygame, Colors.green)
         }
         self.start()
+
+    def minimize(self, nodes):
+        if self.widgets["Toggle"].active:
+            maxi = max([node.value for node in nodes])
+            li = [[] for _ in range(maxi+1)]
+            for node in nodes:
+                li[node.value].append(node)
+
+            li = [e for e in li if e]
+            for i, _nodes in enumerate(li):
+                for node in _nodes:
+                    node.value = i
 
     def start(self):
         pygame.event.get()
