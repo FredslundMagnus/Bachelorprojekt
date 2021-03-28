@@ -37,17 +37,6 @@ def genExperiments(name, n=1, **params):
     for i in range(n):
         file.write(f'bsub -o "../outputs/{name}/Markdown/{name}_{i}.md" -J "{name}_{i}" -P "-name {name}-{i} {" ".join(f"-{name} {value}" for name, value in params.items())}" < submit.sh\n')
 
-
-causal1 = {"layer_Blocks", "layer_Goal", "layer_Gold", "layer_Keys", "layer_Door"}
-causal2 = {"layer_Goal", "layer_Diamond1", "layer_Diamond2", "layer_Diamond3", "layer_Diamond4"}
-causal3 = {"layer_Blocks", "layer_Goal", "layer_Gold", "layer_Reddoors", "layer_Redkeys", "layer_Bluedoors", "layer_Bluekeys"}
-
-all = ["layer_Blocks", "layer_Goal", "layer_Gold", "layer_Keys", "layer_Door", "layer_Holder", "layer_Putter", "layer_Rock", "layer_Dirt", "layer_Diamond1", "layer_Diamond2", "layer_Diamond3", "layer_Diamond4", "layer_Reddoors", "layer_Redkeys", "layer_Bluedoors", "layer_Bluekeys"]
-
-causal1 = {layer: (layer in causal1) for layer in all}
-causal2 = {layer: (layer in causal2) for layer in all}
-causal3 = {layer: (layer in causal3) for layer in all}
-
 #genExperiments(f"teleport_short", hours=3.0)
 #genExperiments(f"teleport_normal", hours=16)
 #genExperiments(f"teleport_gold", hours=16, layer_Gold=True)
@@ -117,7 +106,7 @@ causal3 = {layer: (layer in causal3) for layer in all}
 # genExperiments(f"causal3_good", n=2, hours=20, level=Levels.Causal3)
 
 
-genExperiments(f"causal1_good_24h", n=3, hours=24, level=Levels.Causal1, **causal1)
-genExperiments(f"causal2_good_24h", n=3, hours=24, level=Levels.Causal2, **causal2)
+genExperiments(f"causal1_good_24h", n=3, hours=24, level=Levels.Causal1)
+genExperiments(f"causal2_good_24h", n=3, hours=24, level=Levels.Causal2)
 
 file.close()

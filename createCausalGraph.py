@@ -9,12 +9,12 @@ from graphs import Edge, Graph, Node
 from threading import currentThread
 
 environments = {
-    Levels.Causal3: ["causal3_9x9_20hours", 2, [LayerType.Gold, LayerType.Dirt, LayerType.Bluedoor, LayerType.Bluekeys, LayerType.Reddoor, LayerType.Redkeys]],
+    Levels.Causal3: ["causal3_9x9_20hours", 2, [LayerType.Gold, LayerType.Bluedoor, LayerType.Bluekeys, LayerType.Reddoor, LayerType.Redkeys]],
     Levels.Causal2: ["causal2_9x9_0.3", 0, [LayerType.Diamond1, LayerType.Diamond2, LayerType.Diamond3, LayerType.Diamond4]],  # causal2_good_24h
     Levels.Causal1: ["causal1_good_24h", 0, [LayerType.Gold, LayerType.Keys, LayerType.Door]],  # Not ready yet
 }
 
-environment = environments[Levels.Causal2]
+environment = environments[Levels.Causal3]
 useLayersOnlyOnce = True
 
 
