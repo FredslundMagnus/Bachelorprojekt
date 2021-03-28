@@ -11,9 +11,17 @@ class Game:
         self.batch: int = batch
         self.hours: float = hours
         self.level: Levels = level
+        self.uses = {
+            Levels.Causal1: {LayerType.Blocks, LayerType.Goal, LayerType.Gold, LayerType.Keys, LayerType.Door},
+            Levels.Causal2: {LayerType.Blocks, LayerType.Goal, LayerType.Diamond1, LayerType.Diamond2, LayerType.Diamond3, LayerType.Diamond4},
+            Levels.Causal3: {LayerType.Blocks, LayerType.Goal, LayerType.Gold, LayerType.Bluedoor, LayerType.Bluekeys, LayerType.Reddoor, LayerType.Redkeys},
+            Levels.Causal4: {LayerType.Blocks, LayerType.Goal, LayerType.Gold, LayerType.Bluedoor, LayerType.Bluekeys, LayerType.Reddoor, LayerType.Redkeys, LayerType.Rock, LayerType.Dirt},
+            Levels.Rocks: {LayerType.Blocks, LayerType.Goal, LayerType.Rock, LayerType.Dirt},
+            Levels.Maze: {LayerType.Blocks, LayerType.Goal, LayerType.Gold, LayerType.Door, LayerType.Keys, LayerType.Holder, LayerType.Putter},
+        }
         temp1 = [layer_Blocks, layer_Goal, layer_Gold, layer_Keys, layer_Door, layer_Holder, layer_Putter, layer_Dirt, layer_Rock, layer_Diamond1, layer_Diamond2, layer_Diamond3, layer_Diamond4, layer_Reddoors, layer_Redkeys, layer_Bluedoors, layer_Bluekeys]
         temp2 = [LayerType.Blocks, LayerType.Goal, LayerType.Gold, LayerType.Keys, LayerType.Door, LayerType.Holder, LayerType.Putter, LayerType.Dirt, LayerType.Rock, LayerType.Diamond1, LayerType.Diamond2, LayerType.Diamond3, LayerType.Diamond4, LayerType.Reddoor, LayerType.Redkeys, LayerType.Bluedoor, LayerType.Bluekeys]
-        self.layers: Layers = Layers(batch, width, height, level, reset_chance, *[layer for use, layer in zip(temp1, temp2) if use])
+        self.layers: Layers = Layers(batch, width, height, level, reset_chance, *[layer for use, layer in zip(temp1, temp2) if use and (layer in self.uses[level])])
         for i in range(width):
             for j in range(height):
                 for k in range(batch):

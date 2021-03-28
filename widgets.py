@@ -163,3 +163,28 @@ class Menu(Widget):
 
     def __getitem__(self, index: int) -> int:
         return self.rows[index].active
+
+
+class Toggle(Widget):
+    def __init__(self, pygame, color: MaterialColor) -> None:
+        self.pygame = pygame
+        self.color = color
+        self.isHolding = False
+        self.active = True
+
+    def draw(self, screen) -> None:
+        self.write(screen, "Minimize", 1405, 15, size=20)
+        self.pygame.draw.rect(screen, self.color.color, self.pygame.Rect(1389, 54, 32, 32))
+        self.pygame.draw.rect(screen, Colors.white.color, self.pygame.Rect(1391, 56, 28, 28))
+        if self.active:
+            self.pygame.draw.rect(screen, self.color.color, self.pygame.Rect(1393, 58, 24, 24))
+
+    def on_button(self, x, y):
+        return x > 1384 and x < 1416 and y > 59 and y < 91
+
+    def handle(self, event) -> None:
+        if event.type == self.pygame.MOUSEBUTTONDOWN and self.on_button(*event.pos) or self.isHolding and event.type == 1024 and self.on_button(*event.pos):
+            self.isHolding = True
+        elif self.isHolding and event.type == self.pygame.MOUSEBUTTONUP:
+            self.isHolding = False
+            self.active = not self.active

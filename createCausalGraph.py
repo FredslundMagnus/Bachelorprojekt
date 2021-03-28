@@ -9,11 +9,13 @@ from graphs import Edge, Graph, Node
 from threading import currentThread
 
 environments = {
-    Levels.Causal3: ["causal3_9x9_20hours", 2, [LayerType.Gold, LayerType.Dirt, LayerType.Bluedoor, LayerType.Bluekeys, LayerType.Reddoor, LayerType.Redkeys]],
-    Levels.Causal2: ["causal2_9x9", 2, [LayerType.Diamond1, LayerType.Diamond2, LayerType.Diamond3, LayerType.Diamond4]]
+    Levels.Causal3: ["causal3_9x9_20hours", 2, [LayerType.Gold, LayerType.Bluedoor, LayerType.Bluekeys, LayerType.Reddoor, LayerType.Redkeys]],
+    Levels.Causal2: ["causal2_9x9_0.3", 0, [LayerType.Diamond1, LayerType.Diamond2, LayerType.Diamond3, LayerType.Diamond4]],  # causal2_good_24h
+    Levels.Causal1: ["causal1_good_24h", 0, [LayerType.Gold, LayerType.Keys, LayerType.Door]],  # Not ready yet
 }
 
 environment = environments[Levels.Causal3]
+useLayersOnlyOnce = True
 
 
 class PathGraph(Graph):
@@ -95,6 +97,8 @@ class PathGraph(Graph):
                     maxi = i
                 node.value = len(self.layers) - maxi
 
+        self.minimize(nodes)
+
     def updateEdges1(self, edges: List[Edge]) -> None:
         """
         Hver edge for værdien hvor mange gange der var en conection direkte fra
@@ -109,6 +113,23 @@ class PathGraph(Graph):
             edge.value = counter[(edge.fra.layer, edge.til.layer)]
 
     def updateEdges2(self, edges: List[Edge]) -> None:
+        """
+        Hver edge for værdien hvor mange gange der var en conection direkte fra
+        Fra-noden til Til-noden i forholdet til hvor mange gange der var en 
+        forbindesle enten fra Fra-noden til Til-noden eller den anden vej.
+        """
+        counter = {(layer1, layer2): 0 for layer1 in self.layers for layer2 in self.layers}
+        for path in self.data:
+            for a, b in zip(path[1:], path[:-1]):
+                counter[(a, b)] += self.data[path]
+
+        for edge in edges:
+            try:
+                edge.value = counter[(edge.fra.layer, edge.til.layer)] / (counter[(edge.fra.layer, edge.til.layer)] + counter[(edge.til.layer, edge.fra.layer)])
+            except ZeroDivisionError:
+                edge.value = 0
+
+    def updateEdges3(self, edges: List[Edge]) -> None:
         """
         Hver edge for værdien udfra hvor mange gange der var en conection direkte fra
         Fra-noden til Til-noden divideret med antallet af gange hvor der var 0 eller
@@ -128,20 +149,6 @@ class PathGraph(Graph):
             except ZeroDivisionError:
                 edge.value = 0
 
-    def updateEdges3(self, edges: List[Edge]) -> None:
-        """
-        Hver edge for værdien hvor mange gange der var en conection direkte fra
-        Fra-noden til Til-noden i forholdet til hvor mange gange der var en 
-        forbindesle enten fra Fra-noden til Til-noden eller den anden vej.
-        """
-        counter = {(layer1, layer2): 0 for layer1 in self.layers for layer2 in self.layers}
-        for path in self.data:
-            for a, b in zip(path[1:], path[:-1]):
-                counter[(a, b)] += self.data[path]
-
-        for edge in edges:
-            edge.value = counter[(edge.fra.layer, edge.til.layer)] / (counter[(edge.fra.layer, edge.til.layer)] + counter[(edge.til.layer, edge.fra.layer)])
-
 
 def createCausalGraph(data=None):
     with Load(environment[0], num=environment[1]) as load:
@@ -156,11 +163,11 @@ def createCausalGraph(data=None):
         for frame in loop(env, collector, teleporter=teleporter):
             intervention_idx, modified_board = teleporter.pre_process(env)
             modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
-            movers = array([torch.sum(torch.sum(modified_board[batch, :-1] * modified_board[batch, -1], dim=1), dim=1).argmax().item() for batch in range(modified_board.shape[0])])
+            movers = array([torch.sum(torch.sum(modified_board[batch, :-1] * modified_board[batch, -1], dim=1), dim=1).argmax().item() for batch in range(modified_board.shape[0])])[:50]
             mask = array([layer in convert for layer in movers])
-            results = torch.zeros((env.board.shape[0], *(shape := (len(flippables), *env.board.shape[2:]))))
+            results = torch.zeros((50, *(shape := (len(flippables), *env.board.shape[2:]))))
             for layer, x, y in ranges(shape):
-                board = env.board
+                board = env.board[:50]
                 pixel = board[:, convert[layer], x, y]
                 board[:, convert[layer], x, y][pixel == 0], board[:, convert[layer], x, y][pixel == 1], board[:, convert[layer], x, y][pixel == 2] = 2, 0, 1
                 results[:, layer, x, y] = teleporter.net.network(board).max(dim=1)[0]
@@ -175,10 +182,10 @@ def createCausalGraph(data=None):
                 for p in [v for v, a in zip(paths, alive) if not a]:
                     if tuple(p) in d:
                         d[tuple(p)] += 1
-                        data[tuple([flippables[convert.index(k)] for k in p])] += 1
+                        data[tuple([LayerType.Goal] + [flippables[convert.index(k)] for k in p] + [LayerType.Player])] += 1
                     else:
                         d[tuple(p)] = 1
-                        data[tuple([flippables[convert.index(k)] for k in p])] = 1
+                        data[tuple([LayerType.Goal] + [flippables[convert.index(k)] for k in p] + [LayerType.Player])] = 1
                 paths = [v for v, a in zip(paths, alive) if a]
                 mask[mask] = alive
             # Printer de 10 mest sete paths
@@ -209,4 +216,79 @@ def createCausalGraph(data=None):
             print("")
 
 
-PathGraph(createCausalGraph, environment[2])
+def createCausalGraph2(data=None):
+    with Load(environment[0], num=environment[1]) as load:
+        collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
+        teleporter.extradim = 0  # fix
+        teleporter.exploration.explore = teleporter.exploration.greedy
+        flippables = environment[2]
+        convert = [env.layers.types.index(layer) for layer in flippables]
+        d = {}
+        if data == None:
+            data = {}
+        for frame in loop(env, collector, teleporter=teleporter):
+            intervention_idx, modified_board = teleporter.pre_process(env)
+            modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
+            movers = array([torch.sum(torch.sum(modified_board[batch, :-1] * modified_board[batch, -1], dim=1), dim=1).argmax().item() for batch in range(modified_board.shape[0])])[:50]
+            mask = array([layer in convert for layer in movers])
+            results = torch.zeros((50, *(shape := (len(flippables), *env.board.shape[2:]))))
+            for layer, x, y in ranges(shape):
+                board = env.board[:50]
+                pixel = board[:, convert[layer], x, y]
+                board[:, convert[layer], x, y][pixel == 0], board[:, convert[layer], x, y][pixel == 1], board[:, convert[layer], x, y][pixel == 2] = 2, 0, 1
+                results[:, layer, x, y] = teleporter.net.network(board).max(dim=1)[0]
+            board_size = (results[mask].shape[2] * results[mask].shape[3])
+            resulto = results[mask].flatten(start_dim=1)
+            flip = []
+            for i in range(results[mask].shape[0]):
+                order = []
+                for _ in range(20):
+                    maxers = torch.argmax(resulto[i])
+                    order.append((maxers//board_size).item())
+                    resulto[i][maxers] = -10**6
+                flip.append(torch.tensor(order))
+            paths = [[] for _ in range(len(flip))]
+            for i in range(len(flippables)):
+                flippers = [convert[v[i]] for v in flip]
+                for i, f in enumerate(flippers):
+                    paths[i].append(f)
+                alive = [v1 != v2 for v1, v2 in zip(flippers, list(movers[mask]))]
+                flip = [v for v, a in zip(flip, alive) if a]
+                for p in [v for v, a in zip(paths, alive) if not a]:
+                    if tuple(p) in d:
+                        d[tuple(p)] += 1
+                        data[tuple([LayerType.Goal] + [flippables[convert.index(k)] for k in p] + [LayerType.Player])] += 1
+                    else:
+                        d[tuple(p)] = 1
+                        data[tuple([LayerType.Goal] + [flippables[convert.index(k)] for k in p] + [LayerType.Player])] = 1
+                paths = [v for v, a in zip(paths, alive) if a]
+                mask[mask] = alive
+            # Printer de 10 mest sete paths
+            # for k in list(sorted(d, key=d.get, reverse=True))[:10]:
+            #     print(k, d[k], end=" : ")
+            # print("")
+            restart(env)
+            setattr(currentThread(), "frame", frame)
+            if getattr(currentThread(), "do_run", True) == False:
+                print("")
+                break
+
+        counter_pos = [{k: 0 for k in convert} for _ in range(len(flippables))]
+        for path in d:
+            for i, k in enumerate(path):
+                counter_pos[i][k] += d[path]
+
+        counter_total = {k: 0 for k in convert}
+        for path in d:
+            for k in counter_total:
+                if k in path:
+                    counter_total[k] += d[path]
+        for i, counter in enumerate(counter_pos):
+            print("Position", i+1)
+            for layer, k in zip(flippables, convert):
+                percent = counter_pos[i][k]/counter_total[k]
+                print(f"{layer.name}: {str(100*percent)[:4]}% of {layer.name}'s total {counter_total[k]} times in a path.")
+            print("")
+
+
+PathGraph(createCausalGraph if useLayersOnlyOnce else createCausalGraph2, environment[2])

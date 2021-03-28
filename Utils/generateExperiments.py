@@ -37,7 +37,6 @@ def genExperiments(name, n=1, **params):
     for i in range(n):
         file.write(f'bsub -o "../outputs/{name}/Markdown/{name}_{i}.md" -J "{name}_{i}" -P "-name {name}-{i} {" ".join(f"-{name} {value}" for name, value in params.items())}" < submit.sh\n')
 
-
 #genExperiments(f"teleport_short", hours=3.0)
 #genExperiments(f"teleport_normal", hours=16)
 #genExperiments(f"teleport_gold", hours=16, layer_Gold=True)
@@ -102,8 +101,12 @@ def genExperiments(name, n=1, **params):
 # genExperiments(f"causal3_9x9_20hoursONLYMOVERepsgreedgam0995", n=1, hours=12, level=Levels.Causal3, main = simple, K2 = 5000000, exploration2 = Explorations.epsilonGreedy, gamma2 = 0.995)
 # genExperiments(f"causal3_9x9_20hoursONLYMOVERsoftmaxgam095", n=1, hours=12, level=Levels.Causal3, main = simple, K2 = 5000000, exploration2 = Explorations.softmaxer, gamma2 = 0.95)
 # genExperiments(f"causal3_9x9_20hoursONLYMOVERepsgreedgam095", n=1, hours=12, level=Levels.Causal3, main = simple, K2 = 5000000, exploration2 = Explorations.epsilonGreedy, gamma2 = 0.95)
-genExperiments(f"causal1_good", n=2, hours=20, level=Levels.Causal1)
-genExperiments(f"causal2_good", n=2, hours=20, level=Levels.Causal2)
-genExperiments(f"causal3_good", n=2, hours=20, level=Levels.Causal3)
+# genExperiments(f"causal1_good", n=2, hours=20, level=Levels.Causal1)
+# genExperiments(f"causal2_good", n=2, hours=20, level=Levels.Causal2)
+# genExperiments(f"causal3_good", n=2, hours=20, level=Levels.Causal3)
+
+
+genExperiments(f"causal1_good_24h", n=3, hours=24, level=Levels.Causal1)
+genExperiments(f"causal2_good_24h", n=3, hours=24, level=Levels.Causal2)
 
 file.close()
