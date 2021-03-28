@@ -15,7 +15,7 @@ environments = {
 }
 
 environment = environments[Levels.Causal2]
-useLayersOnlyOnce = False
+useLayersOnlyOnce = True
 
 
 class PathGraph(Graph):
@@ -25,7 +25,7 @@ class PathGraph(Graph):
 
     @property
     def updateEdges(self) -> List[function]:
-        return [self.updateEdges1, self.updateEdges2, self.updateEdges3]
+        return [self.updateEdges1, self.updateEdges2, self.updateEdges3, self.updateEdges4]
 
     def updateNotes1(self, nodes: List[Node]) -> None:
         """
@@ -144,7 +144,30 @@ class PathGraph(Graph):
                 counter[(a, b)] += self.data[path]
 
         for edge in edges:
-            edge.value = counter[(edge.fra.layer, edge.til.layer)] / (counter[(edge.fra.layer, edge.til.layer)] + counter[(edge.til.layer, edge.fra.layer)])
+            try:
+                edge.value = counter[(edge.fra.layer, edge.til.layer)] / (counter[(edge.fra.layer, edge.til.layer)] + counter[(edge.til.layer, edge.fra.layer)])
+            except ZeroDivisionError:
+                edge.value = 0
+
+    def updateEdges4(self, edges: List[Edge]) -> None:
+        """
+        Hver edge for værdien udfra hvor mange gange der var en conection direkte fra
+        Fra-noden til Til-noden divideret med antallet af gange hvor der var 0 eller
+        flere mellem nodes mellem Fra-noden og Til-Noden.
+        """
+        counters = [{(layer1, layer2): 0 for layer1 in self.layers for layer2 in self.layers} for i in range(len(self.layers)-1)]
+        for i, counter in enumerate(counters, start=1):
+            for path in self.data:
+                try:
+                    for a, b in zip(path[i:], path[:-i]):
+                        counter[(a, b)] += self.data[path]
+                except Exception:
+                    pass
+        for edge in edges:
+            try:
+                edge.value = counters[0][(edge.fra.layer, edge.til.layer)]**2 / sum([counter[(edge.fra.layer, edge.til.layer)] for counter in counters])
+            except ZeroDivisionError:
+                edge.value = 0
 
 
 def createCausalGraph(data=None):
