@@ -153,7 +153,8 @@ class PathGraph(Graph):
         """
         Hver edge for værdien udfra hvor mange gange der var en conection direkte fra
         Fra-noden til Til-noden divideret med antallet af gange hvor der var 0 eller
-        flere mellem nodes mellem Fra-noden og Til-Noden.
+        flere mellem nodes mellem Fra-noden og Til-Noden, ganget med hvor mange gange 
+        der var en conection direkte fra Fra-noden til Til-noden.
         """
         counters = [{(layer1, layer2): 0 for layer1 in self.layers for layer2 in self.layers} for i in range(len(self.layers)-1)]
         for i, counter in enumerate(counters, start=1):
