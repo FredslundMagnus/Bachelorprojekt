@@ -15,7 +15,7 @@ environments = {
     Levels.Causal1: ["causal1_good_24h", 0, [LayerType.Gold, LayerType.Keys, LayerType.Door]],
 }
 
-environment = environments[Levels.Causal1]
+environment = environments[Levels.Causal3]
 useLayersOnlyOnce = False
 
 
@@ -106,23 +106,29 @@ class PathGraph(Graph):
         self.minimize(nodes)
 
     def updateNotes5(self, nodes: List[Node]) -> None:
+        """
+        Hvert lag får den værdi der svarer til det index den
+        fylder den største procentdel af i forhold til antallet af gange det lag er med.
+        """
+        occurences = {k: 0 for k in self.layers}
         total = 0
         for value in self.data.values():
             total += value
         l = len(self)
         counter_pos = [{k: 0 for k in self.layers} for _ in range(l)]
         for path in self.data:
-            if self.data[path] > total//500:
+            if self.data[path] > total//200:
                 for i, k in enumerate(path):
                     counter_pos[i][k] += self.data[path]
-
         pr_pos = [sum(counter.values()) for counter in counter_pos]
-
+        for item in counter_pos:
+            for key, value in item.items():
+                occurences[key] += value
         for node in nodes:
             k = node.layer
             maxi = 0
             for i in range(l):
-                if counter_pos[i][k] / pr_pos[i] > counter_pos[maxi][k] / pr_pos[maxi]:
+                if pr_pos[i] != 0 and counter_pos[i][k] / pr_pos[i] > counter_pos[maxi][k] / pr_pos[maxi]:
                     maxi = i
                 node.value = l - maxi
 
