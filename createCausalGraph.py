@@ -15,14 +15,14 @@ environments = {
     Levels.Causal1: ["causal1_good_24h", 0, [LayerType.Gold, LayerType.Keys, LayerType.Door]],
 }
 
-environment = environments[Levels.Causal2]
-useLayersOnlyOnce = True
+environment = environments[Levels.Causal1]
+useLayersOnlyOnce = False
 
 
 class PathGraph(Graph):
     @property
     def updateNotes(self) -> List[function]:
-        return [self.updateNotes1, self.updateNotes2, self.updateNotes3, self.updateNotes4]
+        return [self.updateNotes1, self.updateNotes2, self.updateNotes3, self.updateNotes4, self.updateNotes5]
 
     @property
     def updateEdges(self) -> List[function]:
@@ -37,6 +37,7 @@ class PathGraph(Graph):
         den indgik i en plan), hvor den var i position 1.
         """
         counter_pos = [{k: 0 for k in self.layers} for _ in range(len(self.layers))]
+        print(dict(sorted(self.data.items(), key=lambda item: item[1])))
         for path in self.data:
             for i, k in enumerate(path):
                 counter_pos[i][k] += self.data[path]
@@ -91,6 +92,29 @@ class PathGraph(Graph):
         for path in self.data:
             for i, k in enumerate(path):
                 counter_pos[i][k] += self.data[path]
+
+        pr_pos = [sum(counter.values()) for counter in counter_pos]
+
+        for node in nodes:
+            k = node.layer
+            maxi = 0
+            for i in range(l):
+                if counter_pos[i][k] / pr_pos[i] > counter_pos[maxi][k] / pr_pos[maxi]:
+                    maxi = i
+                node.value = l - maxi
+
+        self.minimize(nodes)
+
+    def updateNotes5(self, nodes: List[Node]) -> None:
+        total = 0
+        for value in self.data.values():
+            total += value
+        l = len(self)
+        counter_pos = [{k: 0 for k in self.layers} for _ in range(l)]
+        for path in self.data:
+            if self.data[path] > total//500:
+                for i, k in enumerate(path):
+                    counter_pos[i][k] += self.data[path]
 
         pr_pos = [sum(counter.values()) for counter in counter_pos]
 
@@ -336,12 +360,13 @@ def createCausalGraph3(data=None):
                 alive = [v1 != v2 for v1, v2 in zip(inters, posers)]
                 flip = [v for v, a in zip(flip, alive) if a]
                 for p in [v for v, a in zip(paths, alive) if not a]:
-                    if tuple(p) in d:
-                        d[tuple(p)] += 1
-                        data[tuple([LayerType.Goal] + [flippables[convert.index(k)] for k in p] + [LayerType.Player])] += 1
-                    else:
-                        d[tuple(p)] = 1
-                        data[tuple([LayerType.Goal] + [flippables[convert.index(k)] for k in p] + [LayerType.Player])] = 1
+                    if len(p) < 10:
+                        if tuple(p) in d:
+                            d[tuple(p)] += 1
+                            data[tuple([LayerType.Goal] + [flippables[convert.index(k)] for k in p] + [LayerType.Player])] += 1
+                        else:
+                            d[tuple(p)] = 1
+                            data[tuple([LayerType.Goal] + [flippables[convert.index(k)] for k in p] + [LayerType.Player])] = 1
                 paths = [v for v, a in zip(paths, alive) if a]
                 positions = [v for v, a in zip(positions, alive) if a]  # This
                 inters = [v for v, a in zip(inters, alive) if a]  # This
