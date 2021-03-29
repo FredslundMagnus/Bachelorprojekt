@@ -1,14 +1,13 @@
-from game import Game
+from game import Game, Levels
 from agent import Teleporter, Mover, Networks, Learners, Explorations, MetaTeleporter
 from collector import Collector
-from auxillaries import run, loop, person, random
-from save import Save
+from auxillaries import run, loop, person, random, Save
+# from save import Save
 from helper import function
 from replaybuffer import ReplayBuffer
-from levels import Levels
+# from levels import Levels
 from simulator import Simulator
 from load import Load
-import torch
 
 
 def metateleport(defaults):
@@ -118,16 +117,16 @@ class Defaults:
     layer_Blocks: bool = True
     layer_Goal: bool = True
     layer_Gold: bool = True
-    layer_Keys: bool = False
-    layer_Door: bool = False
-    layer_Holder: bool = False
-    layer_Putter: bool = False
-    layer_Rock: bool = False
-    layer_Dirt: bool = False
-    layer_Diamond1: bool = False
-    layer_Diamond2: bool = False
-    layer_Diamond3: bool = False
-    layer_Diamond4: bool = False
+    layer_Keys: bool = True
+    layer_Door: bool = True
+    layer_Holder: bool = True
+    layer_Putter: bool = True
+    layer_Rock: bool = True
+    layer_Dirt: bool = True
+    layer_Diamond1: bool = True
+    layer_Diamond2: bool = True
+    layer_Diamond3: bool = True
+    layer_Diamond4: bool = True
     layer_Reddoors: bool = True
     layer_Redkeys: bool = True
     layer_Bluedoors: bool = True

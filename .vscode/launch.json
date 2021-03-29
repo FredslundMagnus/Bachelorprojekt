@@ -34,6 +34,15 @@
             "cwd": "${workspaceRoot}",
             "program": "${workspaceFolder}\\Utils\\generateExperiments.py",
             "console": "integratedTerminal"
+          },
+          {
+            "name": "Create Causal Graph",
+            "type": "python",
+            "request": "launch",
+            "env": { "PYTHONPATH": "${workspaceRoot}" },
+            "cwd": "${workspaceRoot}",
+            "program": "${workspaceFolder}\\createCausalGraph.py",
+            "console": "integratedTerminal"
           }
     ]
 }
