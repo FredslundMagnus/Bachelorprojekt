@@ -290,5 +290,78 @@ def createCausalGraph2(data=None):
                 print(f"{layer.name}: {str(100*percent)[:4]}% of {layer.name}'s total {counter_total[k]} times in a path.")
             print("")
 
+def createCausalGraph3(data=None):
+    with Load(environment[0], num=environment[1]) as load:
+        collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
+        teleporter.extradim = 0  # fix
+        teleporter.exploration.explore = teleporter.exploration.greedy
+        flippables = environment[2]
+        convert = [env.layers.types.index(layer) for layer in flippables]
+        d = {}
+        if data == None:
+            data = {}
+        for frame in loop(env, collector, teleporter=teleporter):
+            intervention_idx, modified_board = teleporter.pre_process(env)
+            modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
+            movers = array([torch.sum(torch.sum(modified_board[batch, :-1] * modified_board[batch, -1], dim=1), dim=1).argmax().item() for batch in range(modified_board.shape[0])])[:50]
+            mask = array([layer in convert for layer in movers])
+            interventions = torch.argmax(modified_board[:50][mask, -1].flatten(start_dim=1), dim=1)
+            inters = [x.item() for x in interventions]
+            results = torch.zeros((50, *(shape := (len(flippables), *env.board.shape[2:])))).to(device)
+            for layer, x, y in ranges(shape):
+                board = env.board[:50]
+                pixel = board[:, convert[layer], x, y]
+                board[:, convert[layer], x, y][pixel == 0], board[:, convert[layer], x, y][pixel == 1], board[:, convert[layer], x, y][pixel == 2] = 2, 0, 1
+                results[:, layer, x, y] = teleporter.net.network(board).max(dim=1)[0]
+            board_size = (results[mask].shape[2] * results[mask].shape[3])
+            resulto = torch.argsort(results[mask].flatten(start_dim=1), dim=1, descending=True)
+            positions = resulto % board_size
+            flip = []
+            for i in range(resulto.shape[0]):
+                flip.append(resulto[i]//board_size)
+            paths = [[] for _ in range(len(flip))]
+            for i in range(len(flippables)):
+                flippers = [convert[v[i]] for v in flip]
+                posers = [v[i].item() for v in positions]
+                for i, f in enumerate(flippers):
+                    paths[i].append(f)
+                alive = [v1 != v2 for v1, v2 in zip(inters, posers)]
+                flip = [v for v, a in zip(flip, alive) if a]
+                for p in [v for v, a in zip(paths, alive) if not a]:
+                    if tuple(p) in d:
+                        d[tuple(p)] += 1
+                        data[tuple([LayerType.Goal] + [flippables[convert.index(k)] for k in p] + [LayerType.Player])] += 1
+                    else:
+                        d[tuple(p)] = 1
+                        data[tuple([LayerType.Goal] + [flippables[convert.index(k)] for k in p] + [LayerType.Player])] = 1
+                paths = [v for v, a in zip(paths, alive) if a]
+                mask[mask] = alive
+            # Printer de 10 mest sete paths
+            # for k in list(sorted(d, key=d.get, reverse=True))[:10]:
+            #     print(k, d[k], end=" : ")
+            # print("")
+            restart(env)
+            setattr(currentThread(), "frame", frame)
+            if getattr(currentThread(), "do_run", True) == False:
+                print("")
+                break
 
-PathGraph(createCausalGraph if useLayersOnlyOnce else createCausalGraph2, environment[2])
+        counter_pos = [{k: 0 for k in convert} for _ in range(len(flippables))]
+        for path in d:
+            for i, k in enumerate(path):
+                counter_pos[i][k] += d[path]
+
+        counter_total = {k: 0 for k in convert}
+        for path in d:
+            for k in counter_total:
+                if k in path:
+                    counter_total[k] += d[path]
+        for i, counter in enumerate(counter_pos):
+            print("Position", i+1)
+            for layer, k in zip(flippables, convert):
+                percent = counter_pos[i][k]/counter_total[k]
+                print(f"{layer.name}: {str(100*percent)[:4]}% of {layer.name}'s total {counter_total[k]} times in a path.")
+            print("")
+
+
+PathGraph(createCausalGraph if useLayersOnlyOnce else createCausalGraph3, environment[2])
