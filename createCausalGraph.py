@@ -15,7 +15,7 @@ environments = {
     Levels.Causal1: ["causal1_good_24h", 0, [LayerType.Gold, LayerType.Keys, LayerType.Door]],
 }
 
-environment = environments[Levels.Causal3]
+environment = environments[Levels.Causal1]
 useLayersOnlyOnce = False
 
 
@@ -178,6 +178,31 @@ class PathGraph(Graph):
                         counter[(a, b)] += self.data[path]
                 except Exception:
                     pass
+        for edge in edges:
+            try:
+                edge.value = counters[0][(edge.fra.layer, edge.til.layer)] / sum([counter[(edge.fra.layer, edge.til.layer)] for counter in counters])
+            except ZeroDivisionError:
+                edge.value = 0
+
+    def updateEdges4(self, edges: List[Edge]) -> None:
+        """
+        Hver edge for værdien udfra hvor mange gange der var en conection direkte fra
+        Fra-noden til Til-noden divideret med antallet af gange hvor der var 0 eller
+        flere mellem nodes mellem Fra-noden og Til-Noden.
+        """
+        total = 0
+        for value in self.data.values():
+            total += value
+
+        counters = [{(layer1, layer2): 0 for layer1 in self.layers for layer2 in self.layers} for i in range(len(self.layers)-1)]
+        for i, counter in enumerate(counters, start=1):
+            if self.data[path] > total//200:
+                for path in self.data:
+                    try:
+                        for a, b in zip(path[i:], path[:-i]):
+                            counter[(a, b)] += self.data[path]
+                    except Exception:
+                        pass
         for edge in edges:
             try:
                 edge.value = counters[0][(edge.fra.layer, edge.til.layer)] / sum([counter[(edge.fra.layer, edge.til.layer)] for counter in counters])
