@@ -15,7 +15,7 @@ environments = {
     Levels.Causal1: ["causal1_good_24h", 0, [LayerType.Gold, LayerType.Keys, LayerType.Door]],  # Not ready yet
 }
 
-environment = environments[Levels.Causal3]
+environment = environments[Levels.Causal2]
 useLayersOnlyOnce = False
 
 
@@ -27,6 +27,9 @@ class PathGraph(Graph):
     @property
     def updateEdges(self) -> List[function]:
         return [self.updateEdges1, self.updateEdges2, self.updateEdges3]
+
+    def __len__(self) -> int:
+        return max([len(path) for path in self.data])
 
     def updateNotes1(self, nodes: List[Node]) -> None:
         """
@@ -83,7 +86,8 @@ class PathGraph(Graph):
         Hvert lag får den værdi der svarer til det index hvor den
         fylder den største procentdel i forhold til de andre index.
         """
-        counter_pos = [{k: 0 for k in self.layers} for _ in range(len(self.layers))]
+        l = len(self)
+        counter_pos = [{k: 0 for k in self.layers} for _ in range(l)]
         for path in self.data:
             for i, k in enumerate(path):
                 counter_pos[i][k] += self.data[path]
@@ -93,10 +97,10 @@ class PathGraph(Graph):
         for node in nodes:
             k = node.layer
             maxi = 0
-            for i in range(len(self.layers)):
+            for i in range(l):
                 if counter_pos[i][k] / pr_pos[i] > counter_pos[maxi][k] / pr_pos[maxi]:
                     maxi = i
-                node.value = len(self.layers) - maxi
+                node.value = l - maxi
 
         self.minimize(nodes)
 
