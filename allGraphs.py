@@ -74,8 +74,8 @@ def expand(state: FrozenSet[LayerType], hide: LayerType) -> Iterable[FrozenSet[L
             yield frozenset(list(state) + list(c))
 
 
-def transform(old_states: List[FrozenSet[LayerType]], new_states: List[FrozenSet[LayerType]], dones: List[float], rewards: List[float], data: Dict[LayerType, Dict[FrozenSet[LayerType], float]]) -> None:
-    for old_state, new_state, done, reward in zip(old_states, new_states, dones, rewards):
+def transform(old_states: List[FrozenSet[LayerType]], new_states: List[FrozenSet[LayerType]], dones: Tensor, rewards: Tensor, data: Dict[LayerType, Dict[FrozenSet[LayerType], float]]) -> None:
+    for old_state, new_state, done, reward in zip(old_states, new_states, dones.tolist(), rewards.tolist()):
         if reward:
             for overkill in expand(old_state, None):
                 data[LayerType.Goal][overkill] *= alpha
@@ -103,7 +103,7 @@ def runner(data=None):
         rewards = tensor([0 for _ in range(env.batch)])
         for frame in loop(env, collector, teleporter=teleporter):
             new_states = [state for state in states(env.board, convert)]
-            transform(old_states, new_states, dones.tolist(), rewards.tolist(), data)
+            transform(old_states, new_states, dones, rewards, data)
             interventions = [bestIntervention(state, data) for state in new_states]
             modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)  # Only on the intervention layers
             actions = mover(modified_board)
