@@ -1,4 +1,4 @@
-from torch import Tensor
+from torch import Tensor, tensor
 from layer import LayerType
 from itertools import combinations as combi
 from main import *
@@ -62,15 +62,20 @@ def states(board: Tensor, convert: List[int]) -> Iterable[FrozenSet[LayerType]]:
     for batch in range(board.shape[0]):
         state = []
         for layer, i in zip(environment[2], convert):
-            if board[batch, i].sum().item():
+            if not board[batch, i].sum().item():
                 state.append(layer)
         yield frozenset(state)
 
 
-def transform(old_states: Iterable[FrozenSet[LayerType]], new_states: Iterable[FrozenSet[LayerType]], data: Dict[LayerType, Dict[FrozenSet[LayerType], float]]) -> None:
-    for old_state, new_state in zip(old_states, new_states):
-        if old_state != new_state:
-            pass  # Do something
+def transform(old_states: List[FrozenSet[LayerType]], new_states: List[FrozenSet[LayerType]], dones: List[float], data: Dict[LayerType, Dict[FrozenSet[LayerType], float]]) -> None:
+    for old_state, new_state, done in zip(old_states, new_states, dones):
+        if done:
+            data[LayerType.Goal]
+            old_state
+        else:
+            if old_state != new_state:
+                for layer in new_state.difference(old_state):
+                    data[layer]
 
 
 def runner(data=None):
@@ -85,9 +90,11 @@ def runner(data=None):
         teleporter.exploration.explore = teleporter.exploration.greedy
         convert = [env.layers.types.index(layer) for layer in environment[2]]
         intervention_idx, modified_board = teleporter.pre_process(env)
+        old_states = [state for state in states(env.board, convert)]
+        dones = tensor([0 for _ in range(env.batch)])
         for frame in loop(env, collector, teleporter=teleporter):
-            new_states = states(env.board, convert)
-            transform(old_states, new_states, data)
+            new_states = [state for state in states(env.board, convert)]
+            transform(old_states, new_states, dones.tolist(), data)
             interventions = [bestIntervention(state, data) for state in new_states]
             modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)  # Only on the intervention layers
             actions = mover(modified_board)
