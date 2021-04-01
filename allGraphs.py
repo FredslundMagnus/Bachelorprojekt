@@ -52,7 +52,7 @@ def bestIntervention(state: FrozenSet[LayerType], data: Dict[LayerType, Dict[Fro
         temp = 0
         for key, value in data[layer].items():
             if not satatisfied(key, state):
-                temp += value * (1-gamma)
+                temp += value * (1-alpha)
         if temp >= maxV:
             maxV, maxL = temp, layer
     return maxL
