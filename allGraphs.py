@@ -17,7 +17,7 @@ environments = {
 }
 
 environment = environments[Levels.Causal2]
-gamma = 0.99
+alpha = 0.9
 
 
 class AllGraph(Graph):
@@ -52,7 +52,7 @@ def bestIntervention(state: FrozenSet[LayerType], data: Dict[LayerType, Dict[Fro
         temp = 0
         for key, value in data[layer].items():
             if not satatisfied(key, state):
-                temp += value * (1-gamma)
+                temp += value * (1-alpha)
         if temp >= maxV:
             maxV, maxL = temp, layer
     return maxL
@@ -67,15 +67,22 @@ def states(board: Tensor, convert: List[int]) -> Iterable[FrozenSet[LayerType]]:
         yield frozenset(state)
 
 
-def transform(old_states: List[FrozenSet[LayerType]], new_states: List[FrozenSet[LayerType]], dones: List[float], data: Dict[LayerType, Dict[FrozenSet[LayerType], float]]) -> None:
-    for old_state, new_state, done in zip(old_states, new_states, dones):
-        if done:
-            data[LayerType.Goal]
-            old_state
-        else:
-            if old_state != new_state:
-                for layer in new_state.difference(old_state):
-                    data[layer]
+def expand(state: FrozenSet[LayerType], hide: LayerType) -> Iterable[FrozenSet[LayerType]]:
+    extras = [layer for layer in environment[2] if layer not in state and layer != hide]
+    for i in range(1, len(extras) + 1):
+        for c in combi(extras, i):
+            yield frozenset(list(state) + list(c))
+
+
+def transform(old_states: List[FrozenSet[LayerType]], new_states: List[FrozenSet[LayerType]], dones: Tensor, rewards: Tensor, data: Dict[LayerType, Dict[FrozenSet[LayerType], float]]) -> None:
+    for old_state, new_state, done, reward in zip(old_states, new_states, dones.tolist(), rewards.tolist()):
+        if reward:
+            for overkill in expand(old_state, None):
+                data[LayerType.Goal][overkill] *= alpha
+        elif not done and old_state != new_state:
+            for layer in new_state.difference(old_state):
+                for overkill in expand(old_state, layer):
+                    data[layer][overkill] *= alpha
 
 
 def runner(data=None):
@@ -92,9 +99,10 @@ def runner(data=None):
         intervention_idx, modified_board = teleporter.pre_process(env)
         old_states = [state for state in states(env.board, convert)]
         dones = tensor([0 for _ in range(env.batch)])
+        rewards = tensor([0 for _ in range(env.batch)])
         for frame in loop(env, collector, teleporter=teleporter):
             new_states = [state for state in states(env.board, convert)]
-            transform(old_states, new_states, dones.tolist(), data)
+            transform(old_states, new_states, dones, rewards, data)
             interventions = [bestIntervention(state, data) for state in new_states]
             modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)  # Only on the intervention layers
             actions = mover(modified_board)
