@@ -150,4 +150,43 @@ class MetaTeleporter(Teleporter):
         
         return modified_board1, modified_board2, modified_rewards1, modified_rewards2, modified_dones1, modified_dones2, tele_rewards, intervention_idx1, intervention_idx2
 
+class CFAgent(Agent):
+    def __init__(self, game: Game, network1: Networks = None, learner1: Learners = None, exploration1: Explorations = None, gamma1: float = None, K1 : float = None, modified_done_chance: float = None, miss_intervention_cost: float = None, intervention_cost: float = None, **kwargs) -> None:
+        super().__init__(game, network1, learner1, exploration1, gamma1, K1, **kwargs)
+        self.boards = [None] * self.batch
+        self.counterfactuals = torch.zeros(self.batch, device=device)
+        self.counter = 0
+        self.K1 = K1
+
+    def __call__(self, board: Tensor) -> Tensor:
+        self.values: Tensor = self.net.network(board)
+        actions = self.exploration.explore(self.values.detach())
+        return actions
+
+    def _learn(self, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor, *args):
+        if action != None:
+            self(args[0])
+            self.learner.learn(self.values, state_after, action, reward, done)
+
+    def pre_process(self, env):
+        return torch.ones(env.layers.board.shape[0], device=device).long()
+
+    def counterfact(self, env, dones):
+        CF_dones = torch.flatten(torch.nonzero(dones))
+        counterfactuals = []
+        if len(CF_dones) > 0:
+            needs_intervention_board = env.board[CF_dones]
+            actions = self(needs_intervention_board)
+            for action in actions:
+                counterfactuals.append((action.item() % self.width, action.item()// self.height))
+            for layer in env.layers.layers:
+                for i in range(len(CF_dones)):
+                    batch_idx = CF_dones[i]
+                    if counterfactuals[i] in layer._positions[batch_idx]:
+                        layer.remove(batch_idx, counterfactuals[i])
+                        self.boards[batch_idx] = env.board[batch_idx]
+                        self.counterfactuals[batch_idx] = actions[i]
+
+
+
 
