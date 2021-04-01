@@ -43,6 +43,15 @@
             "cwd": "${workspaceRoot}",
             "program": "${workspaceFolder}\\createCausalGraph.py",
             "console": "integratedTerminal"
+          },
+          {
+            "name": "Create All Graphs",
+            "type": "python",
+            "request": "launch",
+            "env": { "PYTHONPATH": "${workspaceRoot}" },
+            "cwd": "${workspaceRoot}",
+            "program": "${workspaceFolder}\\allGraphs.py",
+            "console": "integratedTerminal"
           }
     ]
 }

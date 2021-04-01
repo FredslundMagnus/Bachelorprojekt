@@ -17,7 +17,7 @@ environments = {
 }
 
 environment = environments[Levels.Causal2]
-gamma = 0.99
+alpha = 0.9
 
 
 class AllGraph(Graph):
@@ -67,15 +67,24 @@ def states(board: Tensor, convert: List[int]) -> Iterable[FrozenSet[LayerType]]:
         yield frozenset(state)
 
 
+def expand(state: FrozenSet[LayerType], hide: LayerType) -> Iterable[FrozenSet[LayerType]]:
+    extras = [layer for layer in environment[2] if layer not in state and layer != hide]
+    for i in range(1, len(extras) + 1):
+        for c in combi(extras, i):
+            yield frozenset(list(state) + list(c))
+
+
 def transform(old_states: List[FrozenSet[LayerType]], new_states: List[FrozenSet[LayerType]], dones: List[float], data: Dict[LayerType, Dict[FrozenSet[LayerType], float]]) -> None:
     for old_state, new_state, done in zip(old_states, new_states, dones):
         if done:
-            data[LayerType.Goal]
-            old_state
+            for overkill in expand(old_state, None):
+                data[LayerType.Goal][overkill] *= alpha
         else:
             if old_state != new_state:
                 for layer in new_state.difference(old_state):
                     data[layer]
+                    for overkill in expand(old_state, layer):
+                        data[layer][overkill] *= alpha
 
 
 def runner(data=None):
