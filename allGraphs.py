@@ -100,7 +100,6 @@ def runner(data=None):
             actions = mover(modified_board)
             observations, rewards, dones, info = env.step(actions)
             modified_board, modified_rewards, modified_dones, teleport_rewards, intervention_idx = teleporter.modify(observations, rewards, dones, info)
-
             old_states = new_states
             setattr(currentThread(), "frame", frame)
             if getattr(currentThread(), "do_run", True) == False:
