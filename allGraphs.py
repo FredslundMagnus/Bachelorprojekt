@@ -92,7 +92,6 @@ def runner(data=None):
         data[layer] = {c: 1 for c in combinations(layer)}
     data[LayerType.Goal] = {c: 1 for c in combinations(None)}
     with Load(environment[0], num=environment[1]) as load:
-
         collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
         teleporter.extradim = 0  # fix
         teleporter.exploration.explore = teleporter.exploration.greedy
