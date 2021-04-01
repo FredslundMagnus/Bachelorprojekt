@@ -1,10 +1,10 @@
 from game import Game, Levels
-from agent import Teleporter, Mover, Networks, Learners, Explorations, MetaTeleporter
+from agent import Teleporter, Mover, Networks, Learners, Explorations, MetaTeleporter, CFAgent
 from collector import Collector
 from auxillaries import run, loop, person, random, Save
 # from save import Save
 from helper import function
-from replaybuffer import ReplayBuffer
+from replaybuffer import ReplayBuffer, CFReplayBuffer
 # from levels import Levels
 from simulator import Simulator
 from load import Load
@@ -92,10 +92,35 @@ def simulation(defaults):
                 lossboard, lossRD = simulator.learn(board_before, board_after, intervention, normal_rewards, tele_dones)
                 collector.collect_loss(lossboard, lossRD)
 
+def CFagent(defaults):
+    env = Game(**defaults)
+    mover = Mover(env, _extra_dim=1, **defaults)
+    teleporter = Teleporter(env, **defaults)
+    buffer = ReplayBuffer(**defaults)
+    CFagent = CFAgent(env, **defaults)
+    CFbuffer = CFReplayBuffer(**defaults)
+
+    with Save(env, mover, **defaults) as save:
+        intervention_idx, modified_board = teleporter.pre_process(env)
+        dones = CFagent.pre_process(env)
+        for frame in loop(env, save):
+            CFagent.counterfact(env, dones)
+            modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
+            actions = person(modified_board)
+            observations, rewards, dones, info = env.step(actions)
+            modified_board, modified_rewards, modified_dones, teleport_rewards, intervention_idx = teleporter.modify(observations, rewards, dones, info)
+            buffer.teleporter_save_data(teleporter.boards, observations, teleporter.interventions, teleport_rewards, dones, intervention_idx, rewards)
+            #mover.learn(modified_board, actions, modified_rewards, modified_dones)
+            board_before, board_after, intervention, tele_rewards, tele_dones, normal_rewards = buffer.sample_data()
+            teleporter.learn(board_after, intervention, tele_rewards, tele_dones, board_before)
+            #CFbuffer.CF_save_data(CFagent.boards, observations, CFagent.counterfactuals, dones, rewards)
+            #board_before2, board_after2, counterfactuals2, dones2, rewards2 = CFbuffer.sample_data()
+            #CFagent.learn(board_before2, board_after2, counterfactuals2, dones2, rewards2)
+
 
 class Defaults:
     name: str = "Agent"
-    main: function = teleport
+    main: function = CFagent
     level: Levels = Levels.Causal3
     hours: float = 12
     batch: int = 100
