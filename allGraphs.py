@@ -67,8 +67,10 @@ def states(board: Tensor, convert: List[int]) -> Iterable[FrozenSet[LayerType]]:
         yield frozenset(state)
 
 
-def transform(old_state: FrozenSet[LayerType], new_state: FrozenSet[LayerType], data: Dict[LayerType, Dict[FrozenSet[LayerType], float]]) -> None:
-    pass
+def transform(old_states: Iterable[FrozenSet[LayerType]], new_states: Iterable[FrozenSet[LayerType]], data: Dict[LayerType, Dict[FrozenSet[LayerType], float]]) -> None:
+    for old_state, new_state in zip(old_states, new_states):
+        if old_state != new_state:
+            pass  # Do something
 
 
 def runner(data=None):
@@ -85,10 +87,7 @@ def runner(data=None):
         intervention_idx, modified_board = teleporter.pre_process(env)
         for frame in loop(env, collector, teleporter=teleporter):
             new_states = states(env.board, convert)
-            for old_state, new_state in zip(old_states, new_states):
-                if old_state != new_state:
-                    transform(old_state, new_state, data)
-
+            transform(old_states, new_states, data)
             interventions = [bestIntervention(state, data) for state in new_states]
             modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)  # Only on the intervention layers
             actions = mover(modified_board)
