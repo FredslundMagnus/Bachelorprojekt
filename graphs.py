@@ -46,9 +46,9 @@ class Graph():
     dim = 0
     images = {}
 
-    def __init__(self,  mainloop: function, layers: List[LayerType]) -> None:
+    def __init__(self,  mainloop: function, layers: List[LayerType], usePlayer=True) -> None:
         self.data: dict = {}
-        self.layers = layers + [LayerType.Player, LayerType.Goal]
+        self.layers = layers + ([LayerType.Player, LayerType.Goal] if usePlayer else [LayerType.Goal])
         self.mainloop = mainloop
         self.isMinimised = False
         self.widgets = {
