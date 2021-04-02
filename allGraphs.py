@@ -144,14 +144,18 @@ def compress(state: FrozenSet[LayerType]) -> Iterable[FrozenSet[LayerType]]:
 def bestIntervention(state: FrozenSet[LayerType], data: Dict[LayerType, Dict[FrozenSet[LayerType], float]]) -> LayerType:
     maxV, maxL = 0, None
     for layer in [layer for layer in (environment[2] + [LayerType.Goal]) if layer not in state]:
-        temp = 0
+
         chanceForFlip = 1
         for partial in compress(state):
             chanceForFlip *= (1 - data[layer][partial])
         chanceForFlip = 1 - chanceForFlip
 
+        temp = 0
         for overkill in expand(state, layer):
             temp += data[layer][overkill] * (1-alpha) * chanceForFlip
+
+        for partial in compress(state):
+            temp += data[layer][overkill] * (1-alpha) * (1-chanceForFlip)
 
         if temp >= maxV:
             maxV, maxL = temp, layer
