@@ -8,6 +8,7 @@ from abc import ABCMeta, abstractmethod
 from exploration import Exploration, Explorations
 import torch
 from helper import device
+from torch.nn.functional import softmax
 
 
 class Agent(metaclass=ABCMeta):
@@ -160,8 +161,20 @@ class CFAgent(Agent):
 
     def __call__(self, board: Tensor) -> Tensor:
         self.values: Tensor = self.net.network(board)
-        actions = self.exploration.explore(self.values.detach())
+        return self.values
+
+    def choose_action(self, board: Tensor, teleporter) -> Tensor:
+        teleporter(board)
+        tele_values = teleporter.values.detach()
+        values = self.net.network(board)
+        learning_scores = self.convert_values(values.detach(), tele_values)
+        actions = self.exploration.explore(learning_scores)
         return actions
+
+    def convert_values(self, values, tele_values):
+        learning_scores = 1/(values - 0.5) * softmax(tele_values/0.02, dim=1)
+        print(learning_scores)
+        return learning_scores
 
     def _learn(self, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor, *args):
         if action != None:
@@ -171,12 +184,12 @@ class CFAgent(Agent):
     def pre_process(self, env):
         return torch.ones(env.layers.board.shape[0], device=device).long()
 
-    def counterfact(self, env, dones):
+    def counterfact(self, env, dones, teleporter):
         CF_dones = torch.flatten(torch.nonzero(dones))
         counterfactuals = []
         if len(CF_dones) > 0:
             needs_intervention_board = env.board[CF_dones]
-            actions = self(needs_intervention_board)
+            actions = self.choose_action(needs_intervention_board, teleporter)
             for action in actions:
                 counterfactuals.append((action.item() % self.width, action.item()// self.height))
             for i in range(len(CF_dones)):

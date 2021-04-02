@@ -105,7 +105,7 @@ def CFagent(defaults):
         intervention_idx, modified_board = teleporter.pre_process(env)
         dones = CFagent.pre_process(env)
         for frame in loop(env, save):
-            CFagent.counterfact(env, dones)
+            CFagent.counterfact(env, dones, teleporter)
             modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
             actions = mover(modified_board)
             observations, rewards, dones, info = env.step(actions)
@@ -116,14 +116,13 @@ def CFagent(defaults):
             teleporter.learn(board_after, intervention, tele_rewards, tele_dones, board_before)
             CFbuffer.CF_save_data(CFagent.boards, observations, CFagent.counterfactuals, rewards, dones)
             CFboard, CFobs, CF, CFrewards, CFdones = CFbuffer.sample_data()
-            print(CFrewards)
             CFagent.learn(CFobs, CF, CFrewards, CFdones, CFboard)
 
 
 class Defaults:
     name: str = "Agent"
     main: function = CFagent
-    level: Levels = Levels.Causal3
+    level: Levels = Levels.Causal1
     hours: float = 12
     batch: int = 100
     width: int = 9
