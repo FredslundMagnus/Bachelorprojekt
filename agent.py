@@ -164,16 +164,20 @@ class CFAgent(Agent):
         return self.values
 
     def choose_action(self, board: Tensor, teleporter) -> Tensor:
+        self.counter += 1
         teleporter(board)
         tele_values = teleporter.values.detach()
         values = self.net.network(board)
+        # if self.counter % 100 == 0:
+        #    print(values)
         learning_scores = self.convert_values(values.detach(), tele_values)
         actions = self.exploration.explore(learning_scores)
         return actions
 
     def convert_values(self, values, tele_values):
-        learning_scores = (0.5-abs(values - 0.5)) * softmax(tele_values/0.02, dim=1)
-        print(f"({str(float(torch.min(learning_scores[0])))[:4]}, {str(float(torch.max(learning_scores[0])))[:4]})", end=", ")
+        learning_scores = 10 * ((1 - abs(2 * values - 1)) * softmax(tele_values/0.02, dim=1))
+        learning_scores[learning_scores < 0] = 0
+        # print(f"({str(float(torch.min(learning_scores[0])))[:4]}, {str(float(torch.max(learning_scores[0])))[:4]})", end=", ")
         return learning_scores
 
     def _learn(self, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor, *args):
