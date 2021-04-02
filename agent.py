@@ -188,10 +188,10 @@ class CFAgent(Agent):
                         self.counterfactuals[batch_idx] = actions[i]
         if any([x.name == "Rock" for x in env.layers.types]):
             for layer in env.layers.layers:
-                No_change = layer.update(env.board, [1 for _ in range(self.batch)], env.layers.all_items)
+                layer.update(env.board, [1 for _ in range(self.batch)], env.layers.all_items)
         else:
-            for layer in env.layers:
-                No_change = layer.NoRock_update(env.board, No_change)
+            for layer in env.layers.layers:
+                layer.NoRock_update(env.board, [1 for _ in range(self.batch)])
 
 
 
