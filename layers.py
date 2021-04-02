@@ -84,17 +84,18 @@ class Rock(Layer):
         for rock in rocks:
             x, y = rock[0], rock[1]
             item_under = (x, y + 1)
-            if s[item_under] == 0 and item_under not in adders:
-                self.remove(batch, rock)
-                adders.add(item_under)
-            elif item_under in rocks:
-                left_side, left_down_side, right_side, right_down_side = (x + 1, y), (x + 1, y + 1), (x - 1, y), (x - 1, y + 1)
-                if s[right_side] == 0 and s[right_down_side] == 0 and right_side not in adders and (pos[0], pos[1]) != right_side:
+            if item_under in s:
+                if s[item_under] == 0 and item_under not in adders:
                     self.remove(batch, rock)
-                    adders.add(right_side)
-                elif s[left_side] == 0 and s[left_down_side] == 0 and left_side not in adders and (pos[0], pos[1]) != left_side:
-                    self.remove(batch, rock)
-                    adders.add(left_side)
+                    adders.add(item_under)
+                elif item_under in rocks:
+                    left_side, left_down_side, right_side, right_down_side = (x + 1, y), (x + 1, y + 1), (x - 1, y), (x - 1, y + 1)
+                    if s[right_side] == 0 and s[right_down_side] == 0 and right_side not in adders and (pos[0], pos[1]) != right_side:
+                        self.remove(batch, rock)
+                        adders.add(right_side)
+                    elif s[left_side] == 0 and s[left_down_side] == 0 and left_side not in adders and (pos[0], pos[1]) != left_side:
+                        self.remove(batch, rock)
+                        adders.add(left_side)
 
         [self.add(batch, x) for x in adders]
 

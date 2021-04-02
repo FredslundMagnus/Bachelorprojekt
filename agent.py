@@ -186,6 +186,12 @@ class CFAgent(Agent):
                         layer.remove(batch_idx, counterfactuals[i])
                         self.boards[batch_idx] = env.board[batch_idx]
                         self.counterfactuals[batch_idx] = actions[i]
+        if any([x.name == "Rock" for x in env.layers.types]):
+            for layer in env.layers.layers:
+                No_change = layer.update(env.board, [1 for _ in range(self.batch)], env.layers.all_items)
+        else:
+            for layer in env.layers:
+                No_change = layer.NoRock_update(env.board, No_change)
 
 
 
