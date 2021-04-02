@@ -1,4 +1,5 @@
 from abc import abstractmethod
+from os import remove
 from layers import Diamond1
 from torch import Tensor, tensor
 from layer import LayerType
@@ -19,7 +20,7 @@ environments = {
 }
 
 environment = environments[Levels.Causal2]
-alpha = 0.9
+alpha = 0.1
 
 
 class AllGraph(Graph):
@@ -29,7 +30,7 @@ class AllGraph(Graph):
 
     @property
     def updateEdges(self) -> List[function]:
-        return [self.updateEdges1]
+        return [self.updateEdges0, self.updateEdges1, self.updateEdges2, self.updateEdges2]
 
     @abstractmethod
     def mostProbable(dict: Dict[FrozenSet[LayerType], float]):
@@ -41,25 +42,59 @@ class AllGraph(Graph):
         """
 
         mostProbables = {}
+        ls = {}
         for layer in self.layers:
             mostProbables[layer] = AllGraph.mostProbable(self.data[layer])
+            ls[layer] = len(mostProbables[layer])
+        curentSets = set(frozenset())
+        removed = set()
+        layers = {layer for layer in self.layers}
+        i = 0
+        while any(layers) and i < 10:
+            for layer in layers:
+                if mostProbables[layer] in curentSets:
+                    [node for node in nodes if node.layer == layer][0].value = i
+                    removed.add(layer)
+            layers = {layer for layer in self.layers if layer not in removed}
+            curentSets = set(compress(removed))
+            i += 1
 
-        for node in nodes:
-            node.value
+    def updateEdges0(self, edges: List[Edge]) -> None:
+        """
+        Ikke normaliseret
+        """
+        for edge in edges:
+            edge.value = 0
+            for s, v in self.data[edge.til.layer].items():
+                if edge.fra.layer in s:
+                    edge.value += v
 
     def updateEdges1(self, edges: List[Edge]) -> None:
         """
-        Hver edge for værdien hvor mange gange der var en conection direkte fra
-        Fra-noden til Til-noden.
+        Normaliseret med fra nodes
         """
-        # counter = {(layer1, layer2): 0 for layer1 in self.layers for layer2 in self.layers}
-        # for path in self.data:
-        #     for a, b in zip(path[1:], path[:-1]):
-        #         counter[(a, b)] += self.data[path]
+        self.updateEdges0(edges)
+        for edge in edges:
+            edge.value /= sum(self.data[edge.fra.layer].values())
 
-        # for edge in edges:
-        #     edge.value = counter[(edge.fra.layer, edge.til.layer)]
-        pass
+    def updateEdges2(self, edges: List[Edge]) -> None:
+        """
+        Normaliseret med til nodes
+        """
+        self.updateEdges0(edges)
+        for edge in edges:
+            edge.value /= sum(self.data[edge.til.layer].values())
+
+    def updateEdges2(self, edges: List[Edge]) -> None:
+        """
+        Normaliseret med antal gange fra og til var mulige
+        """
+        self.updateEdges0(edges)
+        for edge in edges:
+            try:
+                edge.value /= sum([1 for key in self.data[edge.fra.layer] if edge.til.layer in key])
+            except Exception as e:
+                edge.value = 0
 
 
 def combinations(layer: LayerType) -> Iterable[FrozenSet[LayerType]]:
