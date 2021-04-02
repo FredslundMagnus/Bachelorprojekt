@@ -100,12 +100,13 @@ def CFagent(defaults):
     buffer = ReplayBuffer(**defaults)
     CFagent = CFAgent(env, **defaults)
     CFbuffer = CFReplayBuffer(**defaults)
+    collector = Collector(**defaults)
 
-    with Save(env, mover, **defaults) as save:
+    with Save(env, collector, mover, teleporter, CFagent, **defaults) as save:
         intervention_idx, modified_board = teleporter.pre_process(env)
         dones = CFagent.pre_process(env)
-        for frame in loop(env, save):
-            CFagent.counterfact(env, dones)
+        for frame in loop(env, collector, save, teleporter):
+            CFagent.counterfact(env, dones, teleporter)
             modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
             actions = mover(modified_board)
             observations, rewards, dones, info = env.step(actions)
@@ -114,16 +115,16 @@ def CFagent(defaults):
             mover.learn(modified_board, actions, modified_rewards, modified_dones)
             board_before, board_after, intervention, tele_rewards, tele_dones, normal_rewards = buffer.sample_data()
             teleporter.learn(board_after, intervention, tele_rewards, tele_dones, board_before)
+            collector.collect([rewards, modified_rewards, teleport_rewards], [dones, modified_dones])
             CFbuffer.CF_save_data(CFagent.boards, observations, CFagent.counterfactuals, rewards, dones)
             CFboard, CFobs, CF, CFrewards, CFdones = CFbuffer.sample_data()
-            print(CFrewards)
             CFagent.learn(CFobs, CF, CFrewards, CFdones, CFboard)
 
 
 class Defaults:
     name: str = "Agent"
     main: function = CFagent
-    level: Levels = Levels.Causal3
+    level: Levels = Levels.Causal1
     hours: float = 12
     batch: int = 100
     width: int = 9

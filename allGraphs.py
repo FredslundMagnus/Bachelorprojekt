@@ -1,29 +1,25 @@
 from abc import abstractmethod
-from os import remove
 from paint import Paint
-from layers import Diamond1
 from torch import Tensor, tensor, cat
 from layer import LayerType
 from itertools import combinations as combi
 from main import *
 from load import Load
-from numpy import ndindex as ranges, array
-from helper import restart
 from graphs import Edge, Graph, Node
 from threading import currentThread
-from helper import device
 from typing import FrozenSet, Dict, Iterable, List
 
 environments = {
+    Levels.Causal5: ["causal5_test", 0, [LayerType.Pink1, LayerType.Brown1, LayerType.Pink2, LayerType.Brown2, LayerType.Pink3, LayerType.Brown3]],
     Levels.Causal3: ["causal3_9x9_20hours", 2, [LayerType.Gold, LayerType.Bluedoor, LayerType.Bluekeys, LayerType.Reddoor, LayerType.Redkeys]],
     Levels.Causal2: ["causal2_good_24h", 1, [LayerType.Diamond1, LayerType.Diamond2, LayerType.Diamond3, LayerType.Diamond4]],  # causal2_9x9_0.3, 0
     Levels.Causal1: ["causal1_good_24h", 0, [LayerType.Gold, LayerType.Keys, LayerType.Door]],
 }
 
 environment = environments[Levels.Causal2]
-alpha = 0.1
-useBestIntervention = True
-GAME_UI = True
+alpha = 0.95
+useBestIntervention = False
+GAME_UI = False
 
 
 class AllGraph(Graph):
@@ -33,7 +29,7 @@ class AllGraph(Graph):
 
     @property
     def updateEdges(self) -> List[function]:
-        return [self.updateEdges0, self.updateEdges1, self.updateEdges2, self.updateEdges2]
+        return [self.updateEdges0, self.updateEdges1, self.updateEdges2, self.updateEdges3, self.updateEdges4]
 
     @abstractmethod
     def mostProbable(dict: Dict[FrozenSet[LayerType], float]):
@@ -88,7 +84,7 @@ class AllGraph(Graph):
         for edge in edges:
             edge.value /= sum(self.data[edge.til.layer].values())
 
-    def updateEdges2(self, edges: List[Edge]) -> None:
+    def updateEdges3(self, edges: List[Edge]) -> None:
         """
         Normaliseret med antal gange fra og til var mulige
         """
@@ -98,6 +94,16 @@ class AllGraph(Graph):
                 edge.value /= sum([1 for key in self.data[edge.fra.layer] if edge.til.layer in key])
             except Exception as e:
                 edge.value = 0
+
+    def updateEdges4(self, edges: List[Edge]) -> None:
+        """
+        Max-værdien fra Fra-nodes til Til-nodes
+        """
+        for edge in edges:
+            edge.value = 0
+            for s, v in self.data[edge.til.layer].items():
+                if edge.fra.layer in s:
+                    edge.value = max(edge.value, v)
 
 
 def combinations(layer: LayerType) -> Iterable[FrozenSet[LayerType]]:
