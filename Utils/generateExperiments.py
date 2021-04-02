@@ -104,9 +104,11 @@ def genExperiments(name, n=1, **params):
 # genExperiments(f"causal1_good", n=2, hours=20, level=Levels.Causal1)
 # genExperiments(f"causal2_good", n=2, hours=20, level=Levels.Causal2)
 # genExperiments(f"causal3_good", n=2, hours=20, level=Levels.Causal3)
+# genExperiments(f"causal1_good_24h", n=3, hours=24, level=Levels.Causal1)
+# genExperiments(f"causal2_good_24h", n=3, hours=24, level=Levels.Causal2)
 
 
-genExperiments(f"causal1_good_24h", n=3, hours=24, level=Levels.Causal1)
-genExperiments(f"causal2_good_24h", n=3, hours=24, level=Levels.Causal2)
+genExperiments(f"causal5_test", n=3, hours=6, level=Levels.Causal5, main=teleport)
+genExperiments(f"causal5_good", n=3, hours=20, level=Levels.Causal5, main=teleport)
 
 file.close()
