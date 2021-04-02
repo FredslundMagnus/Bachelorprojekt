@@ -52,8 +52,8 @@ class CFReplayBuffer:
             return None, None, None, None, None
         return self.stacker(samples)
 
-    def CF_save_data(self, board, observations, counterfactuals, CF_dones, rewards):
-        for idx in CF_dones:
-            data = (torch.clone(board[idx]).unsqueeze(0), torch.clone(observations[idx]).unsqueeze(0), torch.clone(counterfactuals[idx]).unsqueeze(0), torch.clone(CF_dones[idx]).unsqueeze(0), torch.clone(rewards[idx]).unsqueeze(0))
+    def CF_save_data(self, board, observations, counterfactuals, rewards, CF_dones):
+        for idx in torch.flatten(torch.nonzero(CF_dones)):
+            data = (torch.clone(board[idx]).unsqueeze(0), torch.clone(observations[idx]).unsqueeze(0), torch.clone(counterfactuals[idx]).unsqueeze(0), torch.clone(rewards[idx]).unsqueeze(0), torch.clone(CF_dones[idx]).unsqueeze(0))
             self.buffer[self.counter % self.replay_size] = data
             self.counter += 1

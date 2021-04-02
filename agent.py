@@ -179,13 +179,13 @@ class CFAgent(Agent):
             actions = self(needs_intervention_board)
             for action in actions:
                 counterfactuals.append((action.item() % self.width, action.item()// self.height))
-            for layer in env.layers.layers:
-                for i in range(len(CF_dones)):
-                    batch_idx = CF_dones[i]
+            for i in range(len(CF_dones)):
+                batch_idx = CF_dones[i]
+                self.boards[batch_idx] = env.board[batch_idx]
+                self.counterfactuals[batch_idx] = actions[i]
+                for layer in env.layers.layers:
                     if counterfactuals[i] in layer._positions[batch_idx]:
                         layer.remove(batch_idx, counterfactuals[i])
-                        self.boards[batch_idx] = env.board[batch_idx]
-                        self.counterfactuals[batch_idx] = actions[i]
         if any([x.name == "Rock" for x in env.layers.types]):
             for layer in env.layers.layers:
                 layer.update(env.board, [1 for _ in range(self.batch)], env.layers.all_items)

@@ -106,16 +106,17 @@ def CFagent(defaults):
         for frame in loop(env, save):
             CFagent.counterfact(env, dones)
             modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
-            actions = person(modified_board)
+            actions = mover(modified_board)
             observations, rewards, dones, info = env.step(actions)
             modified_board, modified_rewards, modified_dones, teleport_rewards, intervention_idx = teleporter.modify(observations, rewards, dones, info)
             buffer.teleporter_save_data(teleporter.boards, observations, teleporter.interventions, teleport_rewards, dones, intervention_idx, rewards)
-            #mover.learn(modified_board, actions, modified_rewards, modified_dones)
+            mover.learn(modified_board, actions, modified_rewards, modified_dones)
             board_before, board_after, intervention, tele_rewards, tele_dones, normal_rewards = buffer.sample_data()
             teleporter.learn(board_after, intervention, tele_rewards, tele_dones, board_before)
-            #CFbuffer.CF_save_data(CFagent.boards, observations, CFagent.counterfactuals, dones, rewards)
-            #board_before2, board_after2, counterfactuals2, dones2, rewards2 = CFbuffer.sample_data()
-            #CFagent.learn(board_before2, board_after2, counterfactuals2, dones2, rewards2)
+            CFbuffer.CF_save_data(CFagent.boards, observations, CFagent.counterfactuals, rewards, dones)
+            CFboard, CFobs, CF, CFrewards, CFdones = CFbuffer.sample_data()
+            print(CFrewards)
+            CFagent.learn(CFobs, CF, CFrewards, CFdones, CFboard)
 
 
 class Defaults:
