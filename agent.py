@@ -173,7 +173,6 @@ class CFAgent(Agent):
 
     def convert_values(self, values, tele_values):
         learning_scores = 1/(values - 0.5) * softmax(tele_values/0.02, dim=1)
-        print(learning_scores)
         return learning_scores
 
     def _learn(self, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor, *args):
