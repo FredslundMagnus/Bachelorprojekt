@@ -92,6 +92,7 @@ def simulation(defaults):
                 lossboard, lossRD = simulator.learn(board_before, board_after, intervention, normal_rewards, tele_dones)
                 collector.collect_loss(lossboard, lossRD)
 
+
 def CFagent(defaults):
     env = Game(**defaults)
     mover = Mover(env, _extra_dim=1, **defaults)
@@ -147,16 +148,26 @@ class Defaults:
     layer_Door: bool = True
     layer_Holder: bool = True
     layer_Putter: bool = True
+
     layer_Rock: bool = True
     layer_Dirt: bool = True
+
     layer_Diamond1: bool = True
     layer_Diamond2: bool = True
     layer_Diamond3: bool = True
     layer_Diamond4: bool = True
+
     layer_Reddoors: bool = True
     layer_Redkeys: bool = True
     layer_Bluedoors: bool = True
     layer_Bluekeys: bool = True
+
+    layer_Pink1: bool = True
+    layer_Pink2: bool = True
+    layer_Pink3: bool = True
+    layer_Brown1: bool = True
+    layer_Brown2: bool = True
+    layer_Brown3: bool = True
 
     epsilon_cap: float = 0.2
     softmax_cap: float = 0.02

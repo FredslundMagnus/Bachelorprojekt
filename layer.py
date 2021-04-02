@@ -23,6 +23,12 @@ class LayerType(Enum):
     Bluekeys = 15
     Reddoor = 16
     Redkeys = 17
+    Pink1 = 18
+    Pink2 = 19
+    Pink3 = 20
+    Brown1 = 21
+    Brown2 = 22
+    Brown3 = 23
 
 
 class Shape(Enum):

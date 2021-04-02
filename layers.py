@@ -333,6 +333,94 @@ class Bluedoor(Layer):
         return self._blocking[batch]
 
 
+class Pink1(Layer):
+    name = "Pink1"
+    color = Colors.green
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+    type = LayerType.Pink1
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch]:
+            self.remove(batch, pos)
+
+
+class Pink2(Layer):
+    name = "Pink2"
+    color = Colors.blue
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+    type = LayerType.Pink2
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        blocked = LayerType.Pink1 in layersDict and bool(layersDict[LayerType.Pink1].positions[batch])
+        if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch] and not blocked:
+            self.remove(batch, pos)
+
+
+class Pink3(Layer):
+    name = "Pink3"
+    color = Colors.red
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+    type = LayerType.Pink3
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        blocked = LayerType.Pink2 in layersDict and bool(layersDict[LayerType.Pink2].positions[batch])
+        if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch] and not blocked:
+            self.remove(batch, pos)
+
+    def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
+        return not self.positions[batch]
+
+
+class Brown1(Layer):
+    name = "Brown1"
+    color = Colors.green
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+    type = LayerType.Brown1
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch]:
+            self.remove(batch, pos)
+
+
+class Brown2(Layer):
+    name = "Brown2"
+    color = Colors.blue
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+    type = LayerType.Brown2
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        blocked = LayerType.Brown1 in layersDict and bool(layersDict[LayerType.Brown1].positions[batch])
+        if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch] and not blocked:
+            self.remove(batch, pos)
+
+
+class Brown3(Layer):
+    name = "Brown3"
+    color = Colors.red
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+    type = LayerType.Brown3
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        blocked = LayerType.Brown2 in layersDict and bool(layersDict[LayerType.Brown2].positions[batch])
+        if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch] and not blocked:
+            self.remove(batch, pos)
+
+    def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
+        return not self.positions[batch]
+
+
 class Layers:
     def __init__(self, batch: int, width: int, height: int, level, reset_chance: float, *layers: Tuple[LayerType]) -> None:
         self.frames_since_chance = [0] * batch
@@ -383,6 +471,36 @@ class Layers:
             self.dict[LayerType.Gold] = self.layers[-1]
             self.types.append(LayerType.Gold)
             self.names.append(LayerType.Gold.name)
+        if LayerType.Pink1 in layers:
+            self.layers.append(Pink1(batch, width, height))
+            self.dict[LayerType.Pink1] = self.layers[-1]
+            self.types.append(LayerType.Pink1)
+            self.names.append(LayerType.Pink1.name)
+        if LayerType.Pink2 in layers:
+            self.layers.append(Pink2(batch, width, height))
+            self.dict[LayerType.Pink2] = self.layers[-1]
+            self.types.append(LayerType.Pink2)
+            self.names.append(LayerType.Pink2.name)
+        if LayerType.Pink3 in layers:
+            self.layers.append(Pink3(batch, width, height))
+            self.dict[LayerType.Pink3] = self.layers[-1]
+            self.types.append(LayerType.Pink3)
+            self.names.append(LayerType.Pink3.name)
+        if LayerType.Brown1 in layers:
+            self.layers.append(Brown1(batch, width, height))
+            self.dict[LayerType.Brown1] = self.layers[-1]
+            self.types.append(LayerType.Brown1)
+            self.names.append(LayerType.Brown1.name)
+        if LayerType.Brown2 in layers:
+            self.layers.append(Brown2(batch, width, height))
+            self.dict[LayerType.Brown2] = self.layers[-1]
+            self.types.append(LayerType.Brown2)
+            self.names.append(LayerType.Brown2.name)
+        if LayerType.Brown3 in layers:
+            self.layers.append(Brown3(batch, width, height))
+            self.dict[LayerType.Brown3] = self.layers[-1]
+            self.types.append(LayerType.Brown3)
+            self.names.append(LayerType.Brown3.name)
         if LayerType.Diamond1 in layers:
             self.layers.append(Diamond1(batch, width, height))
             self.dict[LayerType.Diamond1] = self.layers[-1]

@@ -159,15 +159,16 @@ class Causal2(Level):
 
         return True
 
-class Causal3(Level):    
+
+class Causal3(Level):
     def generate(self):
         if LayerType.Player in self.uses:
             self.level[LayerType.Player].append((self.shape[0]//2, self.shape[1]//2))
         if LayerType.Goal in self.uses:
-            self.level[LayerType.Goal].append((self.shape[0], self.shape[1])) 
+            self.level[LayerType.Goal].append((self.shape[0], self.shape[1]))
         if LayerType.Gold in self.uses:
             if random() > 0.2:
-                self.level[LayerType.Gold].append((1, 1)) 
+                self.level[LayerType.Gold].append((1, 1))
         if LayerType.Blocks in self.uses:
             for i in range(self.shape[1] - 1):
                 self.level[LayerType.Blocks].append((2, 1 + i))
@@ -193,15 +194,16 @@ class Causal3(Level):
 
         return True
 
-class Causal4(Level):    
+
+class Causal4(Level):
     def generate(self):
         door_pos = choice(range(3))
         if LayerType.Player in self.uses:
             self.level[LayerType.Player].append((self.shape[0]//2, self.shape[1]//2))
         if LayerType.Goal in self.uses:
-            self.level[LayerType.Goal].append((self.shape[0], self.shape[1])) 
+            self.level[LayerType.Goal].append((self.shape[0], self.shape[1]))
         if LayerType.Gold in self.uses:
-            self.level[LayerType.Gold].append((1, 1)) 
+            self.level[LayerType.Gold].append((1, 1))
         if LayerType.Blocks in self.uses:
             for i in range(self.shape[1] - 1):
                 self.level[LayerType.Blocks].append((self.shape[0] - 1, self.shape[1] - i))
@@ -240,6 +242,20 @@ class Causal4(Level):
 
         return True
 
+
+class Causal5(Level):
+    def generate(self):
+        for layer in [LayerType.Player, LayerType.Goal]:
+            if layer in self.uses:
+                self.level[layer].append(choice(self.notUsed))
+
+        for layer in [LayerType.Pink1, LayerType.Pink2, LayerType.Pink3, LayerType.Brown1, LayerType.Brown2, LayerType.Brown3]:
+            if layer in self.uses and random() > 0.25:
+                self.level[layer].append(choice(self.notUsed))
+
+        return True
+
+
 class Levels(Enum):
     Maze = Maze
     Rocks = Rocks
@@ -247,3 +263,4 @@ class Levels(Enum):
     Causal2 = Causal2
     Causal3 = Causal3
     Causal4 = Causal4
+    Causal5 = Causal5
