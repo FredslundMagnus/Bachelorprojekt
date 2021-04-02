@@ -18,8 +18,8 @@ environments = {
 
 environment = environments[Levels.Causal5]
 alpha = 0.95
-useBestIntervention = False
-GAME_UI = False
+useBestIntervention = True
+GAME_UI = True
 
 
 class AllGraph(Graph):
@@ -155,7 +155,7 @@ def bestIntervention(state: FrozenSet[LayerType], data: Dict[LayerType, Dict[Fro
             temp += data[layer][overkill] * (1-alpha) * chanceForFlip
 
         for partial in compress(state):
-            temp += data[layer][overkill] * (1-alpha) * (1-chanceForFlip)
+            temp += data[layer][partial] * (1-alpha) * (1-chanceForFlip)
 
         if temp >= maxV:
             maxV, maxL = temp, layer
