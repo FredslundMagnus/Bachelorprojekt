@@ -1,9 +1,9 @@
 
-from main import Defaults, teleport, simple
+from main import Defaults, teleport, simple, CFagent
 from network import Networks
 from learner import Learners
 from levels import Levels, Rocks
-from agent import Teleporter, Mover, Networks, Learners, Explorations
+from agent import CFAgent, Teleporter, Mover, Networks, Learners, Explorations
 
 
 file = open('Utils/experiments.sh', 'w')
@@ -106,9 +106,16 @@ def genExperiments(name, n=1, **params):
 # genExperiments(f"causal3_good", n=2, hours=20, level=Levels.Causal3)
 # genExperiments(f"causal1_good_24h", n=3, hours=24, level=Levels.Causal1)
 # genExperiments(f"causal2_good_24h", n=3, hours=24, level=Levels.Causal2)
-
-
-genExperiments(f"causal5_test", n=3, hours=6, level=Levels.Causal5, main=teleport)
-genExperiments(f"causal5_good", n=3, hours=20, level=Levels.Causal5, main=teleport)
+# genExperiments(f"causal5_test", n=3, hours=6, level=Levels.Causal5, main=teleport)
+# genExperiments(f"causal5_good", n=3, hours=20, level=Levels.Causal5, main=teleport)
+genExperiments(f"causal1_CFagent_convert1", n=1, hours=13, level=Levels.Causal1, main=CFagent, CF_convert=0)
+genExperiments(f"causal1_CFagent_convert2", n=1, hours=13, level=Levels.Causal1, main=CFagent, CF_convert=1)
+genExperiments(f"causal1_CFagent_convert3", n=1, hours=13, level=Levels.Causal1, main=CFagent, CF_convert=2)
+genExperiments(f"causal2_CFagent_convert1", n=1, hours=13, level=Levels.Causal2, main=CFagent, CF_convert=0)
+genExperiments(f"causal2_CFagent_convert2", n=1, hours=13, level=Levels.Causal2, main=CFagent, CF_convert=1)
+genExperiments(f"causal2_CFagent_convert3", n=1, hours=13, level=Levels.Causal2, main=CFagent, CF_convert=2)
+genExperiments(f"causal3_CFagent_convert1", n=1, hours=13, level=Levels.Causal3, main=CFagent, CF_convert=0)
+genExperiments(f"causal3_CFagent_convert2", n=1, hours=13, level=Levels.Causal3, main=CFagent, CF_convert=1)
+genExperiments(f"causal3_CFagent_convert3", n=1, hours=13, level=Levels.Causal3, main=CFagent, CF_convert=2)
 
 file.close()
