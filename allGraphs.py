@@ -1,6 +1,8 @@
 from abc import abstractmethod
+from os import remove
+from paint import Paint
 from layers import Diamond1
-from torch import Tensor, tensor
+from torch import Tensor, tensor, cat
 from layer import LayerType
 from itertools import combinations as combi
 from main import *
@@ -19,7 +21,9 @@ environments = {
 }
 
 environment = environments[Levels.Causal2]
-alpha = 0.9
+alpha = 0.1
+useBestIntervention = True
+GAME_UI = True
 
 
 class AllGraph(Graph):
@@ -29,7 +33,7 @@ class AllGraph(Graph):
 
     @property
     def updateEdges(self) -> List[function]:
-        return [self.updateEdges1]
+        return [self.updateEdges0, self.updateEdges1, self.updateEdges2, self.updateEdges2]
 
     @abstractmethod
     def mostProbable(dict: Dict[FrozenSet[LayerType], float]):
@@ -41,25 +45,59 @@ class AllGraph(Graph):
         """
 
         mostProbables = {}
+        ls = {}
         for layer in self.layers:
             mostProbables[layer] = AllGraph.mostProbable(self.data[layer])
+            ls[layer] = len(mostProbables[layer])
+        curentSets = set(frozenset())
+        removed = set()
+        layers = {layer for layer in self.layers}
+        i = 0
+        while any(layers) and i < 10:
+            for layer in layers:
+                if mostProbables[layer] in curentSets:
+                    [node for node in nodes if node.layer == layer][0].value = i
+                    removed.add(layer)
+            layers = {layer for layer in self.layers if layer not in removed}
+            curentSets = set(compress(removed))
+            i += 1
 
-        for node in nodes:
-            node.value
+    def updateEdges0(self, edges: List[Edge]) -> None:
+        """
+        Ikke normaliseret
+        """
+        for edge in edges:
+            edge.value = 0
+            for s, v in self.data[edge.til.layer].items():
+                if edge.fra.layer in s:
+                    edge.value += v
 
     def updateEdges1(self, edges: List[Edge]) -> None:
         """
-        Hver edge for værdien hvor mange gange der var en conection direkte fra
-        Fra-noden til Til-noden.
+        Normaliseret med fra nodes
         """
-        # counter = {(layer1, layer2): 0 for layer1 in self.layers for layer2 in self.layers}
-        # for path in self.data:
-        #     for a, b in zip(path[1:], path[:-1]):
-        #         counter[(a, b)] += self.data[path]
+        self.updateEdges0(edges)
+        for edge in edges:
+            edge.value /= sum(self.data[edge.fra.layer].values())
 
-        # for edge in edges:
-        #     edge.value = counter[(edge.fra.layer, edge.til.layer)]
-        pass
+    def updateEdges2(self, edges: List[Edge]) -> None:
+        """
+        Normaliseret med til nodes
+        """
+        self.updateEdges0(edges)
+        for edge in edges:
+            edge.value /= sum(self.data[edge.til.layer].values())
+
+    def updateEdges2(self, edges: List[Edge]) -> None:
+        """
+        Normaliseret med antal gange fra og til var mulige
+        """
+        self.updateEdges0(edges)
+        for edge in edges:
+            try:
+                edge.value /= sum([1 for key in self.data[edge.fra.layer] if edge.til.layer in key])
+            except Exception as e:
+                edge.value = 0
 
 
 def combinations(layer: LayerType) -> Iterable[FrozenSet[LayerType]]:
@@ -77,7 +115,7 @@ def satatisfied(key: FrozenSet[LayerType], state: FrozenSet[LayerType]) -> bool:
 
 def bestIntervention(state: FrozenSet[LayerType], data: Dict[LayerType, Dict[FrozenSet[LayerType], float]]) -> LayerType:
     maxV, maxL = 0, None
-    for layer in environment[2]:
+    for layer in [layer for layer in (environment[2] + [LayerType.Goal]) if layer not in state]:
         temp = 0
         for key, value in data[layer].items():
             if not satatisfied(key, state):
@@ -128,7 +166,7 @@ def transformNot(boards: Tensor, states: List[FrozenSet[LayerType]], player: int
                     data[layer][undershoot] *= alpha
 
 
-def runner(data=None):
+def runnerBestIntervention(data=None):
     if data == None:
         data = {}
     for layer in environment[2]:
@@ -136,6 +174,40 @@ def runner(data=None):
     data[LayerType.Goal] = {c: 1 for c in combinations(None)}
     with Load(environment[0], num=environment[1]) as load:
         collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
+        if GAME_UI:
+            Paint.switch(env.layers.width, env.layers.height)
+        convert = [env.layers.types.index(layer) for layer in environment[2]]
+        player = env.layers.types.index(LayerType.Player)
+        goal = env.layers.types.index(LayerType.Goal)
+        old_states = [state for state in states(env.board, convert)]
+        dones = tensor([0 for _ in range(env.batch)])
+        rewards = tensor([0 for _ in range(env.batch)])
+        for frame in loop(env, collector, teleporter=teleporter):
+            new_states = [state for state in states(env.board, convert)]
+            transform(old_states, new_states, dones, rewards, data)
+            transformNot(env.board, new_states, player, goal, convert, data)
+            interventions = tensor([[env.layers.types.index(bestIntervention(state, data)) == i for i in range(env.board.shape[1])] for state in new_states])
+            modification = env.board[interventions].unsqueeze(1)
+            teleporter.interventions = [m.flatten().argmax().item() for m in list(modification)]
+            modified_board = cat((env.board, modification), dim=1)
+            actions = mover(modified_board)
+            _, rewards, dones, _ = env.step(actions)
+            old_states = new_states
+            setattr(currentThread(), "frame", frame)
+            if getattr(currentThread(), "do_run", True) == False:
+                break
+
+
+def runnerNormalTeleport(data=None):
+    if data == None:
+        data = {}
+    for layer in environment[2]:
+        data[layer] = {c: 1 for c in combinations(layer)}
+    data[LayerType.Goal] = {c: 1 for c in combinations(None)}
+    with Load(environment[0], num=environment[1]) as load:
+        collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
+        if GAME_UI:
+            Paint.switch(env.layers.width, env.layers.height)
         teleporter.extradim = 0  # fix
         teleporter.exploration.explore = teleporter.exploration.greedy
         convert = [env.layers.types.index(layer) for layer in environment[2]]
@@ -146,22 +218,20 @@ def runner(data=None):
         dones = tensor([0 for _ in range(env.batch)])
         rewards = tensor([0 for _ in range(env.batch)])
         for frame in loop(env, collector, teleporter=teleporter):
-            # for layer in [LayerType.Diamond1, LayerType.Diamond2, LayerType.Diamond3, LayerType.Diamond4, LayerType.Goal]:
-            #     print(f"\n\n{layer.name}\n", {key: value for key, value in data[layer].items() if value > 0.001})
-            #     print(f"\n", [key for key, value in data[layer].items() if value > 0.001])
             new_states = [state for state in states(env.board, convert)]
             transform(old_states, new_states, dones, rewards, data)
             transformNot(env.board, new_states, player, goal, convert, data)
-            interventions = [bestIntervention(state, data) for state in new_states]
-            modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)  # Only on the intervention layers
+            modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
             actions = mover(modified_board)
             observations, rewards, dones, info = env.step(actions)
-            modified_board, modified_rewards, modified_dones, teleport_rewards, intervention_idx = teleporter.modify(observations, rewards, dones, info)
+            modified_board, _, _, _, intervention_idx = teleporter.modify(observations, rewards, dones, info)
             old_states = new_states
             setattr(currentThread(), "frame", frame)
             if getattr(currentThread(), "do_run", True) == False:
                 break
 
 
-# runner()
-AllGraph(runner, environment[2], usePlayer=False)
+if GAME_UI:
+    runnerBestIntervention() if useBestIntervention else runnerNormalTeleport()
+else:
+    AllGraph(runnerBestIntervention if useBestIntervention else runnerNormalTeleport, environment[2], usePlayer=False)
