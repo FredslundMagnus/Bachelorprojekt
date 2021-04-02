@@ -172,7 +172,8 @@ class CFAgent(Agent):
         return actions
 
     def convert_values(self, values, tele_values):
-        learning_scores = 1/(values - 0.5) * softmax(tele_values/0.02, dim=1)
+        learning_scores = (0.5-abs(values - 0.5)) * softmax(tele_values/0.02, dim=1)
+        print(f"({str(float(torch.min(learning_scores[0])))[:4]}, {str(float(torch.max(learning_scores[0])))[:4]})", end=", ")
         return learning_scores
 
     def _learn(self, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor, *args):
