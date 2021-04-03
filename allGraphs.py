@@ -16,10 +16,10 @@ environments = {
     Levels.Causal1: ["causal1_good_24h", 0, [LayerType.Gold, LayerType.Keys, LayerType.Door]],
 }
 
-environment = environments[Levels.Causal2]
+environment = environments[Levels.Causal5]
 alpha = 0.95
 useBestIntervention = True
-GAME_UI = True
+GAME_UI = False
 
 
 class AllGraph(Graph):
@@ -29,7 +29,7 @@ class AllGraph(Graph):
 
     @property
     def updateEdges(self) -> List[function]:
-        return [self.updateEdges0, self.updateEdges1, self.updateEdges2, self.updateEdges3, self.updateEdges4]
+        return [self.updateEdges0, self.updateEdges1, self.updateEdges2, self.updateEdges3, self.updateEdges4, self.updateEdges5]
 
     @abstractmethod
     def mostProbable(dict: Dict[FrozenSet[LayerType], float]):
@@ -104,6 +104,17 @@ class AllGraph(Graph):
             for s, v in self.data[edge.til.layer].items():
                 if edge.fra.layer in s:
                     edge.value = max(edge.value, v)
+
+    def updateEdges5(self, edges: List[Edge]) -> None:
+        """
+        Chance for Fra-nodes til Til-nodes
+        """
+        for edge in edges:
+            edge.value = 1
+            for s, v in self.data[edge.til.layer].items():
+                if edge.fra.layer in s:
+                    edge.value *= 1 - v
+            edge.value = 1 - edge.value
 
 
 def combinations(layer: LayerType) -> Iterable[FrozenSet[LayerType]]:
