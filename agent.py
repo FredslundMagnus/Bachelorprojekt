@@ -172,7 +172,7 @@ class CFAgent(Agent):
         # if self.counter % 100 == 0:
         #    print(values)
         learning_scores = self.convert_values(values.detach(), tele_values)
-        actions = self.exploration.explore(learning_scores)
+        actions = torch.argmax(learning_scores.detach(), dim=1)
         return actions
 
     def convert_values(self, values, tele_values):
@@ -209,6 +209,7 @@ class CFAgent(Agent):
                 for layer in env.layers.layers:
                     if counterfactuals[i] in layer._positions[batch_idx]:
                         layer.remove(batch_idx, counterfactuals[i])
+                        env.layers.board[batch_idx, :, counterfactuals[i][1], counterfactuals[i][0]] = 0
         if any([x.name == "Rock" for x in env.layers.types]):
             for layer in env.layers.layers:
                 layer.update(env.board, [1 for _ in range(self.batch)], env.layers.all_items)
