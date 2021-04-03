@@ -10,7 +10,7 @@ from threading import currentThread
 from typing import FrozenSet, Dict, Iterable, List
 
 environments = {
-    Levels.Causal5: ["causal5_test", 0, [LayerType.Pink1, LayerType.Brown1, LayerType.Pink2, LayerType.Brown2, LayerType.Pink3, LayerType.Brown3]],
+    Levels.Causal5: ["causal5_good", 0, [LayerType.Pink1, LayerType.Brown1, LayerType.Pink2, LayerType.Brown2, LayerType.Pink3, LayerType.Brown3]],
     Levels.Causal3: ["causal3_9x9_20hours", 2, [LayerType.Gold, LayerType.Bluedoor, LayerType.Bluekeys, LayerType.Reddoor, LayerType.Redkeys]],
     Levels.Causal2: ["causal2_good_24h", 1, [LayerType.Diamond1, LayerType.Diamond2, LayerType.Diamond3, LayerType.Diamond4]],  # causal2_9x9_0.3, 0
     Levels.Causal1: ["causal1_good_24h", 0, [LayerType.Gold, LayerType.Keys, LayerType.Door]],
@@ -18,8 +18,8 @@ environments = {
 
 environment = environments[Levels.Causal2]
 alpha = 0.95
-useBestIntervention = False
-GAME_UI = False
+useBestIntervention = True
+GAME_UI = True
 
 
 class AllGraph(Graph):
@@ -119,18 +119,6 @@ def satatisfied(key: FrozenSet[LayerType], state: FrozenSet[LayerType]) -> bool:
     return True
 
 
-def bestIntervention(state: FrozenSet[LayerType], data: Dict[LayerType, Dict[FrozenSet[LayerType], float]]) -> LayerType:
-    maxV, maxL = 0, None
-    for layer in [layer for layer in (environment[2] + [LayerType.Goal]) if layer not in state]:
-        temp = 0
-        for key, value in data[layer].items():
-            if not satatisfied(key, state):
-                temp += value * (1-alpha)
-        if temp >= maxV:
-            maxV, maxL = temp, layer
-    return maxL
-
-
 def states(board: Tensor, convert: List[int]) -> Iterable[FrozenSet[LayerType]]:
     for batch in range(board.shape[0]):
         state = []
@@ -153,6 +141,27 @@ def compress(state: FrozenSet[LayerType]) -> Iterable[FrozenSet[LayerType]]:
             yield frozenset(c)
 
 
+def bestIntervention(state: FrozenSet[LayerType], data: Dict[LayerType, Dict[FrozenSet[LayerType], float]]) -> LayerType:
+    maxV, maxL = 0, None
+    for layer in [layer for layer in (environment[2] + [LayerType.Goal]) if layer not in state]:
+
+        chanceForFlip = 1
+        for partial in compress(state):
+            chanceForFlip *= (1 - data[layer][partial])
+        chanceForFlip = min(1 - chanceForFlip, 0.99)
+
+        temp = 0
+        for overkill in expand(state, layer):
+            temp += data[layer][overkill] * (1-alpha) * chanceForFlip
+
+        for partial in compress(state):
+            temp += data[layer][partial] * (1-alpha) * (1-chanceForFlip)
+
+        if temp >= maxV:
+            maxV, maxL = temp, layer
+    return maxL
+
+
 def transform(old_states: List[FrozenSet[LayerType]], new_states: List[FrozenSet[LayerType]], dones: Tensor, rewards: Tensor, data: Dict[LayerType, Dict[FrozenSet[LayerType], float]]) -> None:
     for old_state, new_state, done, reward in zip(old_states, new_states, dones.tolist(), rewards.tolist()):
         if reward:
@@ -170,6 +179,11 @@ def transformNot(boards: Tensor, states: List[FrozenSet[LayerType]], player: int
             if (board[player] * board[i]).sum().item():
                 for undershoot in compress(state):
                     data[layer][undershoot] *= alpha
+
+
+def getInterventions(env: Game, state: FrozenSet[LayerType], data: Dict[LayerType, Dict[FrozenSet[LayerType], float]]) -> List[bool]:
+    best = env.layers.types.index(bestIntervention(state, data))
+    return [best == i for i in range(env.board.shape[1])]
 
 
 def runnerBestIntervention(data=None):
@@ -192,7 +206,7 @@ def runnerBestIntervention(data=None):
             new_states = [state for state in states(env.board, convert)]
             transform(old_states, new_states, dones, rewards, data)
             transformNot(env.board, new_states, player, goal, convert, data)
-            interventions = tensor([[env.layers.types.index(bestIntervention(state, data)) == i for i in range(env.board.shape[1])] for state in new_states])
+            interventions = tensor([getInterventions(env, state, data) for state in new_states])
             modification = env.board[interventions].unsqueeze(1)
             teleporter.interventions = [m.flatten().argmax().item() for m in list(modification)]
             modified_board = cat((env.board, modification), dim=1)

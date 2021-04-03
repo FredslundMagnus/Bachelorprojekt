@@ -162,17 +162,18 @@ class Graph():
 
     @staticmethod
     def drawEdge(edge: Edge, curve, diff):
-        Graph.drawArc(edge.fra.x, edge.til.x, edge.fra.y, edge.til.y, curve * min(max((Graph.dist(edge.fra, edge.til)-400*diff) / (800*(1.01-diff)), 0), 1), edge.opacity * 10, Colors.red.transparrent(edge.opacity*255).color if edge.fra.x > edge.til.x else Colors.green.transparrent(edge.opacity*255).color)
+        Graph.drawArc(edge.fra.x, edge.til.x, edge.fra.y, edge.til.y, curve * min(max((Graph.dist(edge.fra, edge.til)-400*diff) / (800*(1.01-diff)), 0), 1), edge.opacity * 10, Colors.gray.c900.transparrent(edge.opacity*255).color)  # Colors.red.transparrent(edge.opacity*255).color if edge.fra.x > edge.til.x else Colors.green.transparrent(edge.opacity*255).color
 
     @staticmethod
     def drawArc(x1, x2, y1, y2, curve, width, color):
-        # Graph.drawCircle(Colors.orange, 5, x1-200, y1-200)
-        # Graph.drawCircle(Colors.black, 5, x2-200, y2-200)
+        size = 20
+        # Graph.drawCircle(Colors.orange, 5, x1, y1)
+        # Graph.drawCircle(Colors.black, 5, x2, y2)
         mid_x = (x1+x2)/2
         mid_y = (y1+y2)/2
         vector = [(y2-y1)/2, -(x2-x1)/2]
-        # Graph.drawCircle(Colors.black, 5, mid_x-200, mid_y-200)
-        # Graph.drawCircle(Colors.black, 5, mid_x+vector[0]*curve-200, mid_y+vector[1]*curve-200)
+        # Graph.drawCircle(Colors.black, 5, mid_x, mid_y)
+        # Graph.drawCircle(Colors.black, 5, mid_x+vector[0]*curve, mid_y+vector[1]*curve)
         if temp := Graph.calculateRadius((x1, y1), (x2, y2), (mid_x+vector[0]*curve, mid_y+vector[1]*curve)):
             r, x, y = temp
             r += width/2
@@ -195,12 +196,33 @@ class Graph():
                 x1 = round(x+(r-width)*math.cos(phi1))
                 y1 = round(y+(r-width)*math.sin(phi1))
                 points_inner.append([x1, y1])
+
             points = points_outer + points_inner
 
             Graph.pygame.gfxdraw.aapolygon(Graph.screen, points, color)
             Graph.pygame.gfxdraw.filled_polygon(Graph.screen, points, color)
+            r = (r-width/2)
+            phi = stop-(55) / r
+            x = round(x+r*math.cos(phi))
+            y = round(y+r*math.sin(phi))
+            # Graph.drawCircle(Colors.pink, 10, x, y)
+            # Graph.drawCircle(Colors.pink, 10, x + 40 * math.cos(phi), y + 40 * math.sin(phi))
+            # Graph.drawCircle(Colors.pink, 10, x - 40 * math.cos(phi), y - 40 * math.sin(phi))
+            # Graph.drawCircle(Colors.pink, 10, x + 40 * math.sin(phi), y - 40 * math.cos(phi))
+            # Graph.drawCircle(Colors.pink, 10, x + size * (math.cos(phi) + math.sin(phi)), y + size * (math.sin(phi) - math.cos(phi)))
+            # Graph.drawCircle(Colors.pink, 10, x - size * (math.cos(phi) - math.sin(phi)), y - size * (math.sin(phi) + math.cos(phi)))
+            Graph.drawLine(color, x, y, x + size * (math.cos(phi) + math.sin(phi)), y + size * (math.sin(phi) - math.cos(phi)), int(width))
+            Graph.drawLine(color, x, y, x - size * (math.cos(phi) - math.sin(phi)), y - size * (math.sin(phi) + math.cos(phi)), int(width))
         else:
             Graph.pygame.draw.line(Graph.screen, color, (int(x1), int(y1)), (int(x2), int(y2)), int(width))
+            v = [x1-x2, y1-y2]
+            l = sum([c*c for c in v])**(1/2)
+            try:
+                v = [c/l for c in v]
+                Graph.drawLine(color, x2 + 55 * v[0], y2 + 55 * v[1], x2 + (size + 55) * v[0] + size * v[1], y2 + (size + 55) * v[1] - size * v[0], int(width))
+                Graph.drawLine(color, x2 + 55 * v[0], y2 + 55 * v[1], x2 + (size + 55) * v[0] - size * v[1], y2 + (size + 55) * v[1] + size * v[0], int(width))
+            except Exception as e:
+                pass
 
     @staticmethod
     def calculateRadius(b, c, d):
@@ -222,7 +244,7 @@ class Graph():
 
     @staticmethod
     def drawNode(node: Node):
-        Graph.drawCircle(Colors.black, 110, node.x, node.y)
+        Graph.drawCircle(Colors.gray.c900, 110, node.x, node.y)
         Graph.drawCircle(Colors.white, 95, node.x, node.y)
         Graph.drawImage(node.x, node.y, node.layer.name, 80)
 
@@ -252,6 +274,21 @@ class Graph():
         shape_surf = Graph.pygame.Surface(rect.size, Graph.pygame.SRCALPHA)
         Graph.screen.blit(shape_surf, rect)
         Graph.screen.blit(textsurface, (x - (textsurface.get_width()/2)*center, y))
+
+    @staticmethod
+    def drawLine(color, x0: float, y0: float, x1: float, y1: float, width: float) -> None:
+        v = [x0-x1, y0-y1]
+        l = sum([c*c for c in v])**(1/2)
+        v = [c/l for c in v]
+        w = width/2
+        v1 = [x0 + w * (v[0] + v[1]), y0 + w * (v[1] - v[0])]
+        v2 = [x0 + w * (v[0] - v[1]), y0 + w * (v[1] + v[0])]
+        v3 = [x1 - w * (v[0] + v[1]), y1 - w * (v[1] - v[0])]
+        v4 = [x1 - w * (v[0] - v[1]), y1 - w * (v[1] + v[0])]
+        Graph.pygame.gfxdraw.aapolygon(Graph.screen, (v1, v2, v3, v4), color)
+        Graph.pygame.gfxdraw.filled_polygon(Graph.screen, (v1, v2, v3, v4), color)
+        # Graph.pygame.draw.polygon(Graph.screen, color, )
+        # Graph.pygame.draw.aaline(Graph.screen, color, (x0, y0), (x1, y1), width)
 
 
 Graph.pygame = pygame
