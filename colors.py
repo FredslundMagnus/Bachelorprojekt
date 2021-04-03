@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Dict, Tuple
 
 
 class Transparent:
@@ -28,7 +28,7 @@ class MaterialColor(Color):
         self.c800: Color = c800
         self.c900: Color = c900
         self.color: Tuple[int, int, int] = c500.color
-        self.table: dict[int, Color] = {50: c50, 100: c100, 200: c200, 300: c300, 400: c400, 500: c500, 600: c600, 700: c700, 800: c800, 900: c900}
+        self.table: Dict[int, Color] = {50: c50, 100: c100, 200: c200, 300: c300, 400: c400, 500: c500, 600: c600, 700: c700, 800: c800, 900: c900}
 
     def transparrent(self, alpha=255):
         r, g, b = self.c500.color

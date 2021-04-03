@@ -152,12 +152,13 @@ class MetaTeleporter(Teleporter):
         return modified_board1, modified_board2, modified_rewards1, modified_rewards2, modified_dones1, modified_dones2, tele_rewards, intervention_idx1, intervention_idx2
 
 class CFAgent(Agent):
-    def __init__(self, game: Game, network1: Networks = None, learner1: Learners = None, exploration1: Explorations = None, gamma1: float = None, K1 : float = None, modified_done_chance: float = None, miss_intervention_cost: float = None, intervention_cost: float = None, **kwargs) -> None:
-        super().__init__(game, network1, learner1, exploration1, gamma1, K1, **kwargs)
+    def __init__(self, game: Game, CF_convert: int = None, network1: Networks = None, learner1: Learners = None, exploration2: Explorations = None, gamma1: float = None, K1 : float = None, **kwargs) -> None:
+        super().__init__(game, network1, learner1, exploration2, gamma1, K1, **kwargs)
         self.boards = [None] * self.batch
         self.counterfactuals = torch.zeros(self.batch, device=device)
         self.counter = 0
         self.K1 = K1
+        self.convert_function = CF_convert
 
     def __call__(self, board: Tensor) -> Tensor:
         self.values: Tensor = self.net.network(board)
@@ -175,9 +176,14 @@ class CFAgent(Agent):
         return actions
 
     def convert_values(self, values, tele_values):
-        learning_scores = 10 * ((1 - abs(2 * values - 1)) * softmax(tele_values/0.02, dim=1))
-        learning_scores[learning_scores < 0] = 0
-        # print(f"({str(float(torch.min(learning_scores[0])))[:4]}, {str(float(torch.max(learning_scores[0])))[:4]})", end=", ")
+        if self.convert_function == 0:
+            learning_scores = 10 * ((1 - abs(2 * values - 1)) * softmax(tele_values/0.02, dim=1))
+            learning_scores[learning_scores < 0] = 0
+            # print(f"({str(float(torch.min(learning_scores[0])))[:4]}, {str(float(torch.max(learning_scores[0])))[:4]})", end=", ")
+        elif self.convert_function == 1:
+            learning_scores = values  
+        elif self.convert_function == 2:
+            learning_scores = tele_values  
         return learning_scores
 
     def _learn(self, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor, *args):

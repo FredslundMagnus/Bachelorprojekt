@@ -18,8 +18,8 @@ environments = {
 
 environment = environments[Levels.Causal2]
 alpha = 0.95
-useBestIntervention = False
-GAME_UI = False
+useBestIntervention = True
+GAME_UI = True
 
 
 class AllGraph(Graph):
@@ -119,18 +119,6 @@ def satatisfied(key: FrozenSet[LayerType], state: FrozenSet[LayerType]) -> bool:
     return True
 
 
-def bestIntervention(state: FrozenSet[LayerType], data: Dict[LayerType, Dict[FrozenSet[LayerType], float]]) -> LayerType:
-    maxV, maxL = 0, None
-    for layer in [layer for layer in (environment[2] + [LayerType.Goal]) if layer not in state]:
-        temp = 0
-        for key, value in data[layer].items():
-            if not satatisfied(key, state):
-                temp += value * (1-alpha)
-        if temp >= maxV:
-            maxV, maxL = temp, layer
-    return maxL
-
-
 def states(board: Tensor, convert: List[int]) -> Iterable[FrozenSet[LayerType]]:
     for batch in range(board.shape[0]):
         state = []
@@ -151,6 +139,27 @@ def compress(state: FrozenSet[LayerType]) -> Iterable[FrozenSet[LayerType]]:
     for i in range(len(state) + 1):
         for c in combi(state, i):
             yield frozenset(c)
+
+
+def bestIntervention(state: FrozenSet[LayerType], data: Dict[LayerType, Dict[FrozenSet[LayerType], float]]) -> LayerType:
+    maxV, maxL = 0, None
+    for layer in [layer for layer in (environment[2] + [LayerType.Goal]) if layer not in state]:
+
+        chanceForFlip = 1
+        for partial in compress(state):
+            chanceForFlip *= (1 - data[layer][partial])
+        chanceForFlip = min(1 - chanceForFlip, 0.99)
+
+        temp = 0
+        for overkill in expand(state, layer):
+            temp += data[layer][overkill] * (1-alpha) * chanceForFlip
+
+        for partial in compress(state):
+            temp += data[layer][partial] * (1-alpha) * (1-chanceForFlip)
+
+        if temp >= maxV:
+            maxV, maxL = temp, layer
+    return maxL
 
 
 def transform(old_states: List[FrozenSet[LayerType]], new_states: List[FrozenSet[LayerType]], dones: Tensor, rewards: Tensor, data: Dict[LayerType, Dict[FrozenSet[LayerType], float]]) -> None:
