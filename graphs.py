@@ -166,7 +166,7 @@ class Graph():
 
     @staticmethod
     def drawArc(x1, x2, y1, y2, curve, width, color):
-        size = 30
+        size = 20
         # Graph.drawCircle(Colors.orange, 5, x1, y1)
         # Graph.drawCircle(Colors.black, 5, x2, y2)
         mid_x = (x1+x2)/2
