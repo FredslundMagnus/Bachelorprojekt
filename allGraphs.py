@@ -16,7 +16,7 @@ environments = {
     Levels.Causal1: ["causal1_good_24h", 0, [LayerType.Gold, LayerType.Keys, LayerType.Door]],
 }
 
-environment = environments[Levels.Causal5]
+environment = environments[Levels.Causal2]
 alpha = 0.95
 useBestIntervention = True
 GAME_UI = False
@@ -213,16 +213,22 @@ def runnerBestIntervention(data=None):
         old_states = [state for state in states(env.board, convert)]
         dones = tensor([0 for _ in range(env.batch)])
         rewards = tensor([0 for _ in range(env.batch)])
+        eatCheese, interventions = ([True] * env.batch, [None] * env.batch)  # New
         for frame in loop(env, collector, teleporter=teleporter):
             new_states = [state for state in states(env.board, convert)]
             transform(old_states, new_states, dones, rewards, data)
             transformNot(env.board, new_states, player, goal, convert, data)
-            interventions = tensor([getInterventions(env, state, data) for state in new_states])
-            modification = env.board[interventions].unsqueeze(1)
+            stateChanged = [old != new for old, new in zip(old_states, new_states)]  # New
+            shouldInterviene = [cond1 or cond2 for cond1, cond2 in zip(stateChanged, eatCheese)]  # New
+            # interventions = tensor([getInterventions(env, state, data) for state in new_states]) # Old
+            interventions = [(getInterventions(env, state, data) if should else old) for state, should, old in zip(new_states, shouldInterviene, interventions)]  # New
+            modification = env.board[tensor(interventions)].unsqueeze(1)
             teleporter.interventions = [m.flatten().argmax().item() for m in list(modification)]
             modified_board = cat((env.board, modification), dim=1)
             actions = mover(modified_board)
             _, rewards, dones, _ = env.step(actions)
+            playerPositions = [(t := env.layers.dict[LayerType.Player].positions[i][0])[1] * env.layers.width + t[0] for i in range(env.batch)]  # New
+            eatCheese = [intervention == player_pos for intervention, player_pos in zip(teleporter.interventions, playerPositions)]  # New
             old_states = new_states
             setattr(currentThread(), "frame", frame)
             if getattr(currentThread(), "do_run", True) == False:
