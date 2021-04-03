@@ -277,7 +277,18 @@ class Graph():
 
     @staticmethod
     def drawLine(color, x0: float, y0: float, x1: float, y1: float, width: float) -> None:
-        Graph.pygame.draw.line(Graph.screen, color, (x0, y0), (x1, y1), width)
+        v = [x0-x1, y0-y1]
+        l = sum([c*c for c in v])**(1/2)
+        v = [c/l for c in v]
+        w = width/2
+        v1 = [x0 + w * (v[0] + v[1]), y0 + w * (v[1] - v[0])]
+        v2 = [x0 + w * (v[0] - v[1]), y0 + w * (v[1] + v[0])]
+        v3 = [x1 - w * (v[0] + v[1]), y1 - w * (v[1] - v[0])]
+        v4 = [x1 - w * (v[0] - v[1]), y1 - w * (v[1] + v[0])]
+        Graph.pygame.gfxdraw.aapolygon(Graph.screen, (v1, v2, v3, v4), color)
+        Graph.pygame.gfxdraw.filled_polygon(Graph.screen, (v1, v2, v3, v4), color)
+        # Graph.pygame.draw.polygon(Graph.screen, color, )
+        # Graph.pygame.draw.aaline(Graph.screen, color, (x0, y0), (x1, y1), width)
 
 
 Graph.pygame = pygame

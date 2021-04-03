@@ -19,7 +19,7 @@ environments = {
 environment = environments[Levels.Causal2]
 alpha = 0.95
 useBestIntervention = True
-GAME_UI = False
+GAME_UI = True
 
 
 class AllGraph(Graph):
