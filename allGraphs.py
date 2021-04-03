@@ -181,6 +181,11 @@ def transformNot(boards: Tensor, states: List[FrozenSet[LayerType]], player: int
                     data[layer][undershoot] *= alpha
 
 
+def getInterventions(env: Game, state: FrozenSet[LayerType], data: Dict[LayerType, Dict[FrozenSet[LayerType], float]]) -> List[bool]:
+    best = env.layers.types.index(bestIntervention(state, data))
+    return [best == i for i in range(env.board.shape[1])]
+
+
 def runnerBestIntervention(data=None):
     if data == None:
         data = {}
@@ -201,7 +206,7 @@ def runnerBestIntervention(data=None):
             new_states = [state for state in states(env.board, convert)]
             transform(old_states, new_states, dones, rewards, data)
             transformNot(env.board, new_states, player, goal, convert, data)
-            interventions = tensor([[env.layers.types.index(bestIntervention(state, data)) == i for i in range(env.board.shape[1])] for state in new_states])
+            interventions = tensor([getInterventions(env, state, data) for state in new_states])
             modification = env.board[interventions].unsqueeze(1)
             teleporter.interventions = [m.flatten().argmax().item() for m in list(modification)]
             modified_board = cat((env.board, modification), dim=1)
