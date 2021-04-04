@@ -177,7 +177,9 @@ class CFAgent(Agent):
 
     def convert_values(self, values, tele_values):
         if self.convert_function == 0:
-            learning_scores = 10 * ((1 - abs(2 * values - 1)) * softmax(tele_values/0.02, dim=1))
+            values[values > 1] = 1
+            values[values < 0] = 0
+            learning_scores = ((1 - abs(2 * values - 1)) * softmax(tele_values/0.1, dim=1))
             learning_scores[learning_scores < 0] = 0
             # print(f"({str(float(torch.min(learning_scores[0])))[:4]}, {str(float(torch.max(learning_scores[0])))[:4]})", end=", ")
         elif self.convert_function == 1:
