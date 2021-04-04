@@ -13,13 +13,19 @@ def test_simple():
 def test_teleport():
     with Load("causal1_good_24h", num=0) as load:
         collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
-        #teleporter.exploration.explore = teleporter.exploration.greedy
+        teleporter.exploration.explore = teleporter.exploration.greedy
         intervention_idx, modified_board = teleporter.pre_process(env)
+        all_rewards = 0
+        all_dones = 0
         for frame in loop(env, collector, teleporter=teleporter):
             modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
             actions = mover(modified_board)
             observations, rewards, dones, info = env.step(actions)
             modified_board, _, _, _, intervention_idx = teleporter.modify(observations, rewards, dones, info)
+            all_rewards += sum(rewards)
+            all_dones += sum(dones)
+            if frame % 1000 == 0:
+                print("performance is " + str((all_rewards/all_dones).item()))
 
 def test_metateleport():
     with Load("causal3_9x9", num=0) as load:
@@ -36,7 +42,7 @@ def test_metateleport():
             modified_board1, modified_board2, _, _, _, _, _, intervention_idx1, intervention_idx2 = teleporter2.metamodify(observations, rewards, dones, info, teleporter1.interventions)
 
 def test_CFagent():
-    with Load("causal2_CFagent_convert3", num=0) as load:
+    with Load("Newcausal1_CFagent_convert3", num=0) as load:
         collector, env, mover, teleporter, CFagent = load.items(Collector, Game, Mover, Teleporter, CFAgent)
         teleporter.exploration.explore = teleporter.exploration.greedy
         intervention_idx, modified_board = teleporter.pre_process(env)
@@ -48,4 +54,4 @@ def test_CFagent():
             observations, rewards, dones, info = env.step(actions)
             modified_board, _, _, _, intervention_idx = teleporter.modify(observations, rewards, dones, info)
 
-test_CFagent()
+test_teleport()
