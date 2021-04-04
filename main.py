@@ -158,9 +158,9 @@ class Defaults:
     layer_Diamond3: bool = True
     layer_Diamond4: bool = True
 
-    layer_Reddoors: bool = True
+    layer_Reddoor: bool = True
     layer_Redkeys: bool = True
-    layer_Bluedoors: bool = True
+    layer_Bluedoor: bool = True
     layer_Bluekeys: bool = True
 
     layer_Pink1: bool = True
