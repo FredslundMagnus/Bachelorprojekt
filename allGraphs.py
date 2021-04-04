@@ -19,7 +19,7 @@ environments = {
 environment = environments[Levels.Causal2]
 alpha = 0.95
 useBestIntervention = True
-GAME_UI = True
+GAME_UI = False
 
 
 class AllGraph(Graph):
@@ -29,7 +29,7 @@ class AllGraph(Graph):
 
     @property
     def updateEdges(self) -> List[function]:
-        return [self.updateEdges0, self.updateEdges1, self.updateEdges2, self.updateEdges3, self.updateEdges4]
+        return [self.updateEdges0, self.updateEdges1, self.updateEdges2, self.updateEdges3, self.updateEdges4, self.updateEdges5]
 
     @abstractmethod
     def mostProbable(dict: Dict[FrozenSet[LayerType], float]):
@@ -104,6 +104,17 @@ class AllGraph(Graph):
             for s, v in self.data[edge.til.layer].items():
                 if edge.fra.layer in s:
                     edge.value = max(edge.value, v)
+
+    def updateEdges5(self, edges: List[Edge]) -> None:
+        """
+        Chance for Fra-nodes til Til-nodes
+        """
+        for edge in edges:
+            edge.value = 1
+            for s, v in self.data[edge.til.layer].items():
+                if edge.fra.layer in s:
+                    edge.value *= 1 - v
+            edge.value = 1 - edge.value
 
 
 def combinations(layer: LayerType) -> Iterable[FrozenSet[LayerType]]:
@@ -202,16 +213,22 @@ def runnerBestIntervention(data=None):
         old_states = [state for state in states(env.board, convert)]
         dones = tensor([0 for _ in range(env.batch)])
         rewards = tensor([0 for _ in range(env.batch)])
+        eatCheese, interventions = ([True] * env.batch, [None] * env.batch)  # New
         for frame in loop(env, collector, teleporter=teleporter):
             new_states = [state for state in states(env.board, convert)]
             transform(old_states, new_states, dones, rewards, data)
             transformNot(env.board, new_states, player, goal, convert, data)
-            interventions = tensor([getInterventions(env, state, data) for state in new_states])
-            modification = env.board[interventions].unsqueeze(1)
+            stateChanged = [old != new for old, new in zip(old_states, new_states)]  # New
+            shouldInterviene = [cond1 or cond2 for cond1, cond2 in zip(stateChanged, eatCheese)]  # New
+            # interventions = tensor([getInterventions(env, state, data) for state in new_states]) # Old
+            interventions = [(getInterventions(env, state, data) if should else old) for state, should, old in zip(new_states, shouldInterviene, interventions)]  # New
+            modification = env.board[tensor(interventions)].unsqueeze(1)
             teleporter.interventions = [m.flatten().argmax().item() for m in list(modification)]
             modified_board = cat((env.board, modification), dim=1)
             actions = mover(modified_board)
             _, rewards, dones, _ = env.step(actions)
+            playerPositions = [(t := env.layers.dict[LayerType.Player].positions[i][0])[1] * env.layers.width + t[0] for i in range(env.batch)]  # New
+            eatCheese = [intervention == player_pos for intervention, player_pos in zip(teleporter.interventions, playerPositions)]  # New
             old_states = new_states
             setattr(currentThread(), "frame", frame)
             if getattr(currentThread(), "do_run", True) == False:
