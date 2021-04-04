@@ -174,10 +174,6 @@ class Layer(metaclass=ABCMeta):
     def shape(self) -> Shape:
         pass
 
-    # @abstractproperty
-    # def type(self) -> LayerType:
-    #     pass
-
     @property
     def blocking(self) -> bool:
         pass
