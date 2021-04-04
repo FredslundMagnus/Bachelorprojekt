@@ -1,19 +1,18 @@
+import inspect
+import sys
 from level import Level
 from layer import Layer, Shape, LayerType
 from colors import Colors
 from typing import Dict, Tuple, List
 import numpy as np
-# from levels import Levels
 from random import random, choice
 
 
 class Player(Layer):
-    name = "Player"
     color = Colors.blue
     size = 1
     blocking = True
     shape = Shape.Circle
-    type = LayerType.Player
 
     def step(self, actions, layers):
         deltas = [(1, 0), (0, 1), (-1, 0), (0, -1)]
@@ -23,12 +22,10 @@ class Player(Layer):
 
 
 class Blocks(Layer):
-    name = "Block"
     color = Colors.gray
     size = 1
     blocking = True
     shape = Shape.Square
-    type = LayerType.Blocks
 
     def reset(self, batch: int) -> None:
         for x, y in self.grid():
@@ -37,12 +34,10 @@ class Blocks(Layer):
 
 
 class Gold(Layer):
-    name = "Gold"
     color = Colors.yellow
     size = 0.6
     blocking = False
     shape = Shape.Circle
-    type = LayerType.Gold
 
     def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
         if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch]:
@@ -53,12 +48,10 @@ class Gold(Layer):
 
 
 class Dirt(Layer):
-    name = "Dirt"
     color = Colors.brown
     size = 1
     blocking = False
     shape = Shape.Square
-    type = LayerType.Dirt
 
     def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
         if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch]:
@@ -66,12 +59,10 @@ class Dirt(Layer):
 
 
 class Rock(Layer):
-    name = "Rock"
     color = Colors.deepOrange
     size = 0.6
     blocking = True
     shape = Shape.Circle
-    type = LayerType.Rock
 
     def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
         adders = set()
@@ -101,12 +92,10 @@ class Rock(Layer):
 
 
 class Goal(Layer):
-    name = "Goal"
     color = Colors.green
     size = 1
     blocking = False
     shape = Shape.Square
-    type = LayerType.Goal
 
     def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
         positions = layersDict[LayerType.Player].positions[batch]
@@ -114,12 +103,10 @@ class Goal(Layer):
 
 
 class Keys(Layer):
-    name = "Keys"
     color = Colors.purple
     size = 0.4
     blocking = False
     shape = Shape.Circle
-    type = LayerType.Keys
 
     def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
         if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch]:
@@ -127,11 +114,9 @@ class Keys(Layer):
 
 
 class Door(Layer):
-    name = "Door"
     color = Colors.purple
     size = 1
     shape = Shape.Square
-    type = LayerType.Door
 
     def __init__(self, batch: int, width: int, height: int) -> None:
         self._blocking: Dict[int, bool] = {}
@@ -148,21 +133,17 @@ class Door(Layer):
 
 
 class Holder(Layer):
-    name = "Holder"
     color = Colors.orange.c300
     size = 1
     blocking = False
     shape = Shape.Square
-    type = LayerType.Holder
 
 
 class Putter(Layer):
-    name = "Putter"
     color = Colors.orange.c700
     size = 0.4
     blocking = False
     shape = Shape.Square
-    type = LayerType.Putter
 
     def __init__(self, batch: int, width: int, height: int) -> None:
         self._carried: Dict[int, bool] = {}
@@ -194,12 +175,10 @@ class Putter(Layer):
 
 
 class Diamond1(Layer):
-    name = "Diamond1"
     color = Colors.green
     size = 0.2
     blocking = False
     shape = Shape.Square
-    type = LayerType.Diamond1
 
     def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
         if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch]:
@@ -207,12 +186,10 @@ class Diamond1(Layer):
 
 
 class Diamond2(Layer):
-    name = "Diamond2"
     color = Colors.blue
     size = 0.2
     blocking = False
     shape = Shape.Square
-    type = LayerType.Diamond2
 
     def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
         blocked = LayerType.Diamond1 in layersDict and bool(layersDict[LayerType.Diamond1].positions[batch])
@@ -221,12 +198,10 @@ class Diamond2(Layer):
 
 
 class Diamond3(Layer):
-    name = "Diamond3"
     color = Colors.red
     size = 0.2
     blocking = False
     shape = Shape.Square
-    type = LayerType.Diamond3
 
     def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
         blocked = LayerType.Diamond2 in layersDict and bool(layersDict[LayerType.Diamond2].positions[batch])
@@ -235,12 +210,10 @@ class Diamond3(Layer):
 
 
 class Diamond4(Layer):
-    name = "Diamond4"
     color = Colors.purple
     size = 0.2
     blocking = False
     shape = Shape.Square
-    type = LayerType.Diamond4
 
     def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
         blocked = LayerType.Diamond3 in layersDict and bool(layersDict[LayerType.Diamond3].positions[batch])
@@ -252,12 +225,10 @@ class Diamond4(Layer):
 
 
 class Redkeys(Layer):
-    name = "Redkeys"
     color = Colors.red
     size = 0.4
     blocking = False
     shape = Shape.Circle
-    type = LayerType.Redkeys
 
     def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
         pos = layersDict[LayerType.Player].positions[batch][0]
@@ -272,11 +243,9 @@ class Redkeys(Layer):
 
 
 class Reddoor(Layer):
-    name = "Reddoor"
     color = Colors.red
     size = 1
     shape = Shape.Square
-    type = LayerType.Reddoor
 
     def __init__(self, batch: int, width: int, height: int) -> None:
         self._blocking: Dict[int, bool] = {}
@@ -293,12 +262,10 @@ class Reddoor(Layer):
 
 
 class Bluekeys(Layer):
-    name = "Bluekeys"
     color = Colors.lightBlue
     size = 0.4
     blocking = False
     shape = Shape.Circle
-    type = LayerType.Bluekeys
 
     def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
         pos = layersDict[LayerType.Player].positions[batch][0]
@@ -313,11 +280,9 @@ class Bluekeys(Layer):
 
 
 class Bluedoor(Layer):
-    name = "Bluedoor"
     color = Colors.lightBlue
     size = 1
     shape = Shape.Square
-    type = LayerType.Bluedoor
 
     def __init__(self, batch: int, width: int, height: int) -> None:
         self._blocking: Dict[int, bool] = {}
@@ -334,12 +299,10 @@ class Bluedoor(Layer):
 
 
 class Pink1(Layer):
-    name = "Pink1"
     color = Colors.green
     size = 0.2
     blocking = False
     shape = Shape.Square
-    type = LayerType.Pink1
 
     def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
         if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch]:
@@ -347,12 +310,10 @@ class Pink1(Layer):
 
 
 class Pink2(Layer):
-    name = "Pink2"
     color = Colors.blue
     size = 0.2
     blocking = False
     shape = Shape.Square
-    type = LayerType.Pink2
 
     def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
         blocked = LayerType.Pink1 in layersDict and bool(layersDict[LayerType.Pink1].positions[batch])
@@ -361,12 +322,10 @@ class Pink2(Layer):
 
 
 class Pink3(Layer):
-    name = "Pink3"
     color = Colors.red
     size = 0.2
     blocking = False
     shape = Shape.Square
-    type = LayerType.Pink3
 
     def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
         blocked = LayerType.Pink2 in layersDict and bool(layersDict[LayerType.Pink2].positions[batch])
@@ -378,12 +337,10 @@ class Pink3(Layer):
 
 
 class Brown1(Layer):
-    name = "Brown1"
     color = Colors.green
     size = 0.2
     blocking = False
     shape = Shape.Square
-    type = LayerType.Brown1
 
     def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
         if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch]:
@@ -391,12 +348,10 @@ class Brown1(Layer):
 
 
 class Brown2(Layer):
-    name = "Brown2"
     color = Colors.blue
     size = 0.2
     blocking = False
     shape = Shape.Square
-    type = LayerType.Brown2
 
     def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
         blocked = LayerType.Brown1 in layersDict and bool(layersDict[LayerType.Brown1].positions[batch])
@@ -405,12 +360,10 @@ class Brown2(Layer):
 
 
 class Brown3(Layer):
-    name = "Brown3"
     color = Colors.red
     size = 0.2
     blocking = False
     shape = Shape.Square
-    type = LayerType.Brown3
 
     def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
         blocked = LayerType.Brown2 in layersDict and bool(layersDict[LayerType.Brown2].positions[batch])
@@ -433,131 +386,32 @@ class Layers:
         self.types: List[LayerType] = []
         self.dict: Dict[LayerType, Layer] = {LayerType.Player: self.player}
         self.types.append(LayerType.Player)
-        self.names: List[str] = []
         self.levelType: Level = level.value
+        abovePlayer = {LayerType.Putter}
 
-        if LayerType.Blocks in layers:
-            self.layers.append(Blocks(batch, width, height))
-            self.dict[LayerType.Blocks] = self.layers[-1]
-            self.types.append(LayerType.Blocks)
-            self.names.append(LayerType.Blocks.name)
-        if LayerType.Goal in layers:
-            self.layers.append(Goal(batch, width, height))
-            self.dict[LayerType.Goal] = self.layers[-1]
-            self.types.append(LayerType.Goal)
-            self.names.append(LayerType.Goal.name)
-        if LayerType.Door in layers:
-            self.layers.append(Door(batch, width, height))
-            self.dict[LayerType.Door] = self.layers[-1]
-            self.types.append(LayerType.Door)
-            self.names.append(LayerType.Door.name)
-        if LayerType.Bluedoor in layers:
-            self.layers.append(Bluedoor(batch, width, height))
-            self.dict[LayerType.Bluedoor] = self.layers[-1]
-            self.types.append(LayerType.Bluedoor)
-            self.names.append(LayerType.Bluedoor.name)
-        if LayerType.Reddoor in layers:
-            self.layers.append(Reddoor(batch, width, height))
-            self.dict[LayerType.Reddoor] = self.layers[-1]
-            self.types.append(LayerType.Reddoor)
-            self.names.append(LayerType.Reddoor.name)
-        if LayerType.Keys in layers:
-            self.layers.append(Keys(batch, width, height))
-            self.dict[LayerType.Keys] = self.layers[-1]
-            self.types.append(LayerType.Keys)
-            self.names.append(LayerType.Keys.name)
-        if LayerType.Gold in layers:
-            self.layers.append(Gold(batch, width, height))
-            self.dict[LayerType.Gold] = self.layers[-1]
-            self.types.append(LayerType.Gold)
-            self.names.append(LayerType.Gold.name)
-        if LayerType.Pink1 in layers:
-            self.layers.append(Pink1(batch, width, height))
-            self.dict[LayerType.Pink1] = self.layers[-1]
-            self.types.append(LayerType.Pink1)
-            self.names.append(LayerType.Pink1.name)
-        if LayerType.Pink2 in layers:
-            self.layers.append(Pink2(batch, width, height))
-            self.dict[LayerType.Pink2] = self.layers[-1]
-            self.types.append(LayerType.Pink2)
-            self.names.append(LayerType.Pink2.name)
-        if LayerType.Pink3 in layers:
-            self.layers.append(Pink3(batch, width, height))
-            self.dict[LayerType.Pink3] = self.layers[-1]
-            self.types.append(LayerType.Pink3)
-            self.names.append(LayerType.Pink3.name)
-        if LayerType.Brown1 in layers:
-            self.layers.append(Brown1(batch, width, height))
-            self.dict[LayerType.Brown1] = self.layers[-1]
-            self.types.append(LayerType.Brown1)
-            self.names.append(LayerType.Brown1.name)
-        if LayerType.Brown2 in layers:
-            self.layers.append(Brown2(batch, width, height))
-            self.dict[LayerType.Brown2] = self.layers[-1]
-            self.types.append(LayerType.Brown2)
-            self.names.append(LayerType.Brown2.name)
-        if LayerType.Brown3 in layers:
-            self.layers.append(Brown3(batch, width, height))
-            self.dict[LayerType.Brown3] = self.layers[-1]
-            self.types.append(LayerType.Brown3)
-            self.names.append(LayerType.Brown3.name)
-        if LayerType.Diamond1 in layers:
-            self.layers.append(Diamond1(batch, width, height))
-            self.dict[LayerType.Diamond1] = self.layers[-1]
-            self.types.append(LayerType.Diamond1)
-            self.names.append(LayerType.Diamond1.name)
-        if LayerType.Diamond2 in layers:
-            self.layers.append(Diamond2(batch, width, height))
-            self.dict[LayerType.Diamond2] = self.layers[-1]
-            self.types.append(LayerType.Diamond2)
-            self.names.append(LayerType.Diamond2.name)
-        if LayerType.Diamond3 in layers:
-            self.layers.append(Diamond3(batch, width, height))
-            self.dict[LayerType.Diamond3] = self.layers[-1]
-            self.types.append(LayerType.Diamond3)
-            self.names.append(LayerType.Diamond3.name)
-        if LayerType.Diamond4 in layers:
-            self.layers.append(Diamond4(batch, width, height))
-            self.dict[LayerType.Diamond4] = self.layers[-1]
-            self.types.append(LayerType.Diamond4)
-            self.names.append(LayerType.Diamond4.name)
-        if LayerType.Holder in layers:
-            self.layers.append(Holder(batch, width, height))
-            self.dict[LayerType.Holder] = self.layers[-1]
-            self.types.append(LayerType.Holder)
-            self.names.append(LayerType.Holder.name)
+        for layer in [layer for layer in layers if layer not in abovePlayer]:
+            self.add(layer, layers)
+
         self.layers.append(self.player)
-        if LayerType.Putter in layers:
-            self.layers.append(Putter(batch, width, height))
-            self.dict[LayerType.Putter] = self.layers[-1]
-            self.types.append(LayerType.Putter)
-            self.names.append(LayerType.Putter.name)
-        if LayerType.Rock in layers:
-            self.layers.append(Rock(batch, width, height))
-            self.dict[LayerType.Rock] = self.layers[-1]
-            self.types.append(LayerType.Rock)
-            self.names.append(LayerType.Rock.name)
-            for i in range(len(self.layers)):
-                if self.layers[i].name == "Rock":
-                    self.Rocks_idx = i
-        if LayerType.Dirt in layers:
-            self.layers.append(Dirt(batch, width, height))
-            self.dict[LayerType.Dirt] = self.layers[-1]
-            self.types.append(LayerType.Dirt)
-            self.names.append(LayerType.Dirt.name)
-        if LayerType.Bluekeys in layers:
-            self.layers.append(Bluekeys(batch, width, height))
-            self.dict[LayerType.Bluekeys] = self.layers[-1]
-            self.types.append(LayerType.Bluekeys)
-            self.names.append(LayerType.Bluekeys.name)
-        if LayerType.Redkeys in layers:
-            self.layers.append(Redkeys(batch, width, height))
-            self.dict[LayerType.Redkeys] = self.layers[-1]
-            self.types.append(LayerType.Redkeys)
-            self.names.append(LayerType.Redkeys.name)
+
+        for layer in [layer for layer in layers if layer in abovePlayer]:
+            self.add(layer, layers)
+
+        for i, layer in enumerate(self.layers):
+            if layer.type == LayerType.Rock:
+                self.Rocks_idx = i
+
         self.board = np.zeros((batch, len(self.layers), width, height), dtype=np.float32)
         self.counter = np.zeros(batch)
         self.all_items = [{} for _ in range(self.batch)]
+
+    def add(self, layerType: LayerType, layers: Tuple[LayerType]):
+        if layerType in layers:
+            for _, Class in inspect.getmembers(sys.modules[__name__], inspect.isclass):
+                if Layer in inspect.getmro(Class) and Class.__name__ == layerType.name:
+                    self.layers.append(Class(self.batch, self.width, self.height))
+                    self.dict[layerType] = self.layers[-1]
+                    self.types.append(layerType)
 
     def __len__(self) -> int:
         return len(self.layers)
