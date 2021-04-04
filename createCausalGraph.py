@@ -16,8 +16,9 @@ environments = {
     Levels.Causal1: ["causal1_good_24h", 0, [LayerType.Gold, LayerType.Keys, LayerType.Door]],
 }
 
-environment = environments[Levels.Causal1]
+environment = environments[Levels.Causal5]
 useLayersOnlyOnce = False
+usePlayer = False
 
 
 class PathGraph(Graph):
@@ -243,10 +244,10 @@ def createCausalGraph(data=None):
                 for p in [v for v, a in zip(paths, alive) if not a]:
                     if tuple(p) in d:
                         d[tuple(p)] += 1
-                        data[tuple([LayerType.Goal] + [flippables[convert.index(k)] for k in p] + [LayerType.Player])] += 1
+                        data[tuple([LayerType.Goal] + [flippables[convert.index(k)] for k in p] + ([LayerType.Player] if usePlayer else []))] += 1
                     else:
                         d[tuple(p)] = 1
-                        data[tuple([LayerType.Goal] + [flippables[convert.index(k)] for k in p] + [LayerType.Player])] = 1
+                        data[tuple([LayerType.Goal] + [flippables[convert.index(k)] for k in p] + ([LayerType.Player] if usePlayer else []))] = 1
                 paths = [v for v, a in zip(paths, alive) if a]
                 mask[mask] = alive
 
@@ -315,10 +316,10 @@ def createCausalGraph2(data=None):
                 for p in [v for v, a in zip(paths, alive) if not a]:
                     if tuple(p) in d:
                         d[tuple(p)] += 1
-                        data[tuple([LayerType.Goal] + [flippables[convert.index(k)] for k in p] + [LayerType.Player])] += 1
+                        data[tuple([LayerType.Goal] + [flippables[convert.index(k)] for k in p] + ([LayerType.Player] if usePlayer else []))] += 1
                     else:
                         d[tuple(p)] = 1
-                        data[tuple([LayerType.Goal] + [flippables[convert.index(k)] for k in p] + [LayerType.Player])] = 1
+                        data[tuple([LayerType.Goal] + [flippables[convert.index(k)] for k in p] + ([LayerType.Player] if usePlayer else []))] = 1
                 paths = [v for v, a in zip(paths, alive) if a]
                 mask[mask] = alive
             # Printer de 10 mest sete paths
@@ -395,10 +396,10 @@ def createCausalGraph3(data=None):
                     if len(p) < 10:
                         if tuple(p) in d:
                             d[tuple(p)] += 1
-                            data[tuple([LayerType.Goal] + [flippables[convert.index(k)] for k in p] + [LayerType.Player])] += 1
+                            data[tuple([LayerType.Goal] + [flippables[convert.index(k)] for k in p] + ([LayerType.Player] if usePlayer else []))] += 1
                         else:
                             d[tuple(p)] = 1
-                            data[tuple([LayerType.Goal] + [flippables[convert.index(k)] for k in p] + [LayerType.Player])] = 1
+                            data[tuple([LayerType.Goal] + [flippables[convert.index(k)] for k in p] + ([LayerType.Player] if usePlayer else []))] = 1
                 paths = [v for v, a in zip(paths, alive) if a]
                 positions = [v for v, a in zip(positions, alive) if a]  # This
                 inters = [v for v, a in zip(inters, alive) if a]  # This
@@ -412,4 +413,4 @@ def createCausalGraph3(data=None):
                 break
 
 
-PathGraph(createCausalGraph if useLayersOnlyOnce else createCausalGraph3, environment[2])
+PathGraph(createCausalGraph if useLayersOnlyOnce else createCausalGraph3, environment[2], usePlayer=usePlayer)
