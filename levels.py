@@ -297,7 +297,7 @@ class Causal6(Level):
                 self.level[layer].append(choice(self.notUsed))
 
         for layer in [LayerType.Greendown, LayerType.Greenup, LayerType.Greenstar, LayerType.Yellowstar, LayerType.Bluestar]:
-            if layer in self.uses and random() > 0.25:
+            if layer in self.uses and random() > 0.2:
                 self.level[layer].append(choice(self.notUsed))
 
         return True
