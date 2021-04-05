@@ -479,8 +479,10 @@ class Coconut(Layer):
             if item_over in layersDict[LayerType.Rock].falling[batch]:
                 self.remove(batch, nut)
                 layersDict[LayerType.Gold].add(batch, nut)
-
         [self.add(batch, x) for x in adders]
+        
+    def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
+        return not self.positions[batch]
 
 
 class Layers:
