@@ -465,7 +465,10 @@ class Coconut(Layer):
             item_under = (x, y + 1)
             item_over = (x, y - 1)
             if item_under in s:
-                if s[item_under] == 0 and item_under not in adders:
+                if item_over in layersDict[LayerType.Rock].falling[batch]:
+                    self.remove(batch, nut)
+                    layersDict[LayerType.Gold].add(batch, nut)
+                elif s[item_under] == 0 and item_under not in adders:
                     self.remove(batch, nut)
                     adders.add(item_under)
                 elif item_under in nuts:
@@ -476,11 +479,8 @@ class Coconut(Layer):
                     elif s[left_side] == 0 and s[left_down_side] == 0 and left_side not in adders and (pos[0], pos[1]) != left_side:
                         self.remove(batch, nut)
                         adders.add(left_side)
-            if item_over in layersDict[LayerType.Rock].falling[batch]:
-                self.remove(batch, nut)
-                layersDict[LayerType.Gold].add(batch, nut)
         [self.add(batch, x) for x in adders]
-        
+
     def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
         return not self.positions[batch]
 
