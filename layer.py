@@ -48,6 +48,8 @@ class Layer(metaclass=ABCMeta):
         self._added: List[List[Tuple[int, int]]] = [[] for _ in range(batch)]
         self._layer = Layer.__layer__
         self._grid = set(self.grid())
+        self.name = self.__class__.__name__
+        self.type = [layer for layer in LayerType if layer.name == self.name][0]
         Layer.__layer__ += 1
         for i in range(batch):
             self.clear(i)
@@ -81,7 +83,7 @@ class Layer(metaclass=ABCMeta):
 
     def move(self, batch: int, _from: Tuple[int, int], _to: Tuple[int, int], layers, action):
         if _to in self._grid and layers.isFree(batch, _to):
-            if "Rock" not in layers.names:
+            if LayerType.Rock not in layers.dict:
                 self.remove(batch, _from)
                 self.add(batch, _to)
             elif layers.all_items[batch][_to] == 1:
@@ -90,7 +92,7 @@ class Layer(metaclass=ABCMeta):
             elif (_to[0], _to[1] - 1) not in layers.dict[LayerType.Rock].positions[batch]:
                 self.remove(batch, _from)
                 self.add(batch, _to)
-        elif "Rock" in layers.names and action[1] == 0:
+        elif LayerType.Rock in layers.dict and action[1] == 0:
             if _to in layers.dict[LayerType.Rock].positions[batch] and _to[0] < layers.width - 1 and _to[0] > 0:
                 push_to = (_to[0] + action[0], _to[1])
                 fall_to = (_to[0], _to[1] + 1)
@@ -170,10 +172,6 @@ class Layer(metaclass=ABCMeta):
 
     @abstractproperty
     def shape(self) -> Shape:
-        pass
-
-    @abstractproperty
-    def type(self) -> LayerType:
         pass
 
     @property
