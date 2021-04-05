@@ -257,6 +257,7 @@ class Causal5(Level):
 
         return True
 
+
 class Coconuts(Level):
     def generate(self):
         if LayerType.Player in self.uses:
@@ -271,7 +272,7 @@ class Coconuts(Level):
                     self.level[LayerType.Blocks].remove((randint(1, self.shape[0]), 4))
             else:
                 for _ in range(2):
-                    self.level[LayerType.Blocks].remove((randint(2, self.shape[0] - 1), 4))          
+                    self.level[LayerType.Blocks].remove((randint(2, self.shape[0] - 1), 4))
         if LayerType.Rock in self.uses:
             for _ in range(3):
                 pos = (randint(2, self.shape[0] - 2), randint(1, 3))
@@ -289,7 +290,6 @@ class Coconuts(Level):
         return True
 
 
-
 class Causal6(Level):
     def generate(self):
         for layer in [LayerType.Player, LayerType.Goal]:
@@ -297,7 +297,7 @@ class Causal6(Level):
                 self.level[layer].append(choice(self.notUsed))
 
         for layer in [LayerType.Greendown, LayerType.Greenup, LayerType.Greenstar, LayerType.Yellowstar, LayerType.Bluestar]:
-            if layer in self.uses and random() > 0.3:
+            if layer in self.uses and random() > 0.25:
                 self.level[layer].append(choice(self.notUsed))
 
         return True

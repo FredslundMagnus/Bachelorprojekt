@@ -427,6 +427,9 @@ class Bluestar(Layer):
         if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch] and not blocked:
             self.remove(batch, pos)
 
+    def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
+        return not self.positions[batch] or not (LayerType.Yellowstar in layersDict and bool(layersDict[LayerType.Yellowstar].positions[batch]))
+
 
 class Yellowstar(Layer):
     color = Colors.blue
@@ -438,6 +441,10 @@ class Yellowstar(Layer):
         blocked = LayerType.Greenstar in layersDict and bool(layersDict[LayerType.Greenstar].positions[batch])
         if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch] and not blocked:
             self.remove(batch, pos)
+
+    def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
+        return not self.positions[batch] or not (LayerType.Bluestar in layersDict and bool(layersDict[LayerType.Bluestar].positions[batch]))
+
 
 class Coconut(Layer):
     color = Colors.deepOrange
