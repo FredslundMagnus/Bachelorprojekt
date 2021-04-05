@@ -234,11 +234,13 @@ class Causal4(Level):
             self.level[LayerType.Dirt].remove((1, self.shape[1]))
             self.level[LayerType.Dirt].remove((self.shape[0], self.shape[1] - door_pos - 1))
         if LayerType.Bluekeys in self.uses:
-            for pos in sample(self.notUsed, 2):
-                self.level[LayerType.Bluekeys].append(pos)
+            for pos in sample(self.notUsed, 3):
+                if pos[0] > 2 and pos[0] < self.shape[0] - 2 and pos[1] < self.shape[1] - 1 and pos[1] > 0:
+                    self.level[LayerType.Bluekeys].append(pos)
         if LayerType.Redkeys in self.uses:
-            for pos in sample(self.notUsed, 2):
-                self.level[LayerType.Redkeys].append(pos)
+            for pos in sample(self.notUsed, 3):
+                if pos[0] > 2 and pos[0] < self.shape[0] - 2 and pos[1] < self.shape[1] - 1 and pos[1] > 0:
+                    self.level[LayerType.Redkeys].append(pos)
 
         return True
 

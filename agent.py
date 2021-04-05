@@ -9,6 +9,7 @@ from exploration import Exploration, Explorations
 import torch
 from helper import device
 from torch.nn.functional import softmax
+import random
 
 
 class Agent(metaclass=ABCMeta):
@@ -172,20 +173,21 @@ class CFAgent(Agent):
         # if self.counter % 100 == 0:
         #    print(values)
         learning_scores = self.convert_values(values.detach(), tele_values)
-        actions = torch.argmax(learning_scores.detach(), dim=1)
+        actions = torch.argsort(learning_scores, dim=1, descending=True)[:,random.randint(0,4)]
         return actions
 
     def convert_values(self, values, tele_values):
         if self.convert_function == 0:
-            values[values > 1] = 1
-            values[values < 0] = 0
-            learning_scores = ((1 - abs(2 * values - 1)) * softmax(tele_values/0.1, dim=1))
-            learning_scores[learning_scores < 0] = 0
-            # print(f"({str(float(torch.min(learning_scores[0])))[:4]}, {str(float(torch.max(learning_scores[0])))[:4]})", end=", ")
+            learning_scores = ((1 - abs(2 * values - 1)) * softmax(tele_values * 3, dim=1))
         elif self.convert_function == 1:
-            learning_scores = values  
+            learning_scores = values 
         elif self.convert_function == 2:
-            learning_scores = tele_values  
+            learning_scores = tele_values
+        elif self.convert_function == 3:
+            learning_scores = (1 - abs(2 * values - 1))
+        elif self.convert_function == 4:
+            learning_scores = ((1 - abs(2 * values - 1)))
+            learning_scores[softmax(tele_values * 10, dim=1) < 0.01] = 0
         return learning_scores
 
     def _learn(self, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor, *args):
