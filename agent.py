@@ -173,21 +173,24 @@ class CFAgent(Agent):
         # if self.counter % 100 == 0:
         #    print(values)
         learning_scores = self.convert_values(values.detach(), tele_values)
-        actions = torch.argsort(learning_scores, dim=1, descending=True)[:,random.randint(0,4)]
+        actions = torch.argsort(learning_scores, dim=1, descending=True)[:,random.randint(0,3)]
         return actions
 
     def convert_values(self, values, tele_values):
+        values[values > 1] = 1
+        values[values < 0] = 0
         if self.convert_function == 0:
-            learning_scores = ((1 - abs(2 * values - 1)) * softmax(tele_values * 3, dim=1))
+            learning_scores = values * softmax(tele_values * 3, dim=1)
         elif self.convert_function == 1:
-            learning_scores = values 
+            learning_scores = values
         elif self.convert_function == 2:
-            learning_scores = tele_values
+            learning_scores = (1 - abs(values - 0.8)) * softmax(tele_values * 3, dim=1)
         elif self.convert_function == 3:
-            learning_scores = (1 - abs(2 * values - 1))
+            learning_scores = (1 - abs(values - 0.8))
         elif self.convert_function == 4:
-            learning_scores = ((1 - abs(2 * values - 1)))
-            learning_scores[softmax(tele_values * 10, dim=1) < 0.01] = 0
+            learning_scores = (1 - abs(values - 0.6)) * softmax(tele_values * 3, dim=1)
+        elif self.convert_function == 5:
+            learning_scores = (1 - abs(values - 0.6))
         return learning_scores
 
     def _learn(self, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor, *args):

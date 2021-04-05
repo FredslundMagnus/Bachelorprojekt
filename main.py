@@ -179,7 +179,7 @@ class Defaults:
     intervention_cost: float = -0.05
     replay_size: int = 100000
     sample_size: int = 50
-    CF_convert: int = 0
+    CF_convert: int = 2
 
 
 run(Defaults)

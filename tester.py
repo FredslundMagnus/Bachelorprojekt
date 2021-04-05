@@ -11,9 +11,9 @@ def test_simple():
 
 
 def test_teleport():
-    with Load("NOBUGcausal4_teleport", num=0) as load:
+    with Load("causal4_CF_convert2", num=0) as load:
         collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
-        teleporter.exploration.explore = teleporter.exploration.greedy
+        #teleporter.exploration.explore = teleporter.exploration.greedy
         intervention_idx, modified_board = teleporter.pre_process(env)
         all_rewards = 0
         all_dones = 0
@@ -42,7 +42,7 @@ def test_metateleport():
             modified_board1, modified_board2, _, _, _, _, _, intervention_idx1, intervention_idx2 = teleporter2.metamodify(observations, rewards, dones, info, teleporter1.interventions)
 
 def test_CFagent():
-    with Load("NOBUGcausal3_CFagent_convert1", num=0) as load:
+    with Load("causal4_CF_convert3", num=0) as load:
         collector, env, mover, teleporter, CFagent = load.items(Collector, Game, Mover, Teleporter, CFAgent)
         teleporter.exploration.explore = teleporter.exploration.greedy
         intervention_idx, modified_board = teleporter.pre_process(env)
@@ -54,4 +54,4 @@ def test_CFagent():
             observations, rewards, dones, info = env.step(actions)
             modified_board, _, _, _, intervention_idx = teleporter.modify(observations, rewards, dones, info)
 
-test_CFagent()
+test_teleport()
