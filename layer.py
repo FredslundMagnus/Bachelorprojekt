@@ -98,7 +98,7 @@ class Layer(metaclass=ABCMeta):
             elif LayerType.Coconut not in layers.dict and (_to[0], _to[1] - 1) not in layers.dict[LayerType.Rock].positions[batch]:
                 self.remove(batch, _from)
                 self.add(batch, _to)
-            elif (_to[0], _to[1] - 1) not in layers.dict[LayerType.Coconut].positions[batch] and (_to[0], _to[1] - 1) not in layers.dict[LayerType.Rock].positions[batch]:
+            elif LayerType.Coconut in layers.dict and (_to[0], _to[1] - 1) not in layers.dict[LayerType.Coconut].positions[batch] and (_to[0], _to[1] - 1) not in layers.dict[LayerType.Rock].positions[batch]:
                 self.remove(batch, _from)
                 self.add(batch, _to)
         if LayerType.Rock in layers.dict and action[1] == 0 :
