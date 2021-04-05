@@ -19,6 +19,7 @@ class Game:
             Levels.Rocks: {LayerType.Blocks, LayerType.Goal, LayerType.Rock, LayerType.Dirt},
             Levels.Maze: {LayerType.Blocks, LayerType.Goal, LayerType.Gold, LayerType.Door, LayerType.Keys, LayerType.Holder, LayerType.Putter},
             Levels.Causal5: {LayerType.Blocks, LayerType.Goal, LayerType.Brown1, LayerType.Brown2, LayerType.Brown3, LayerType.Pink1, LayerType.Pink2, LayerType.Pink3},
+            Levels.Coconuts: {LayerType.Blocks, LayerType.Goal, LayerType.Rock, LayerType.Dirt},
         }
         convert = {(use, [layer for layer in LayerType if layer.name == name.split('_')[1]][0]) for name, use in kwargs.items() if name.split('_')[0] == "layer"}
         self.layers: Layers = Layers(batch, width, height, level, reset_chance, *[layer for use, layer in convert if use and (layer in self.uses[level])])

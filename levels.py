@@ -1,7 +1,7 @@
 from level import Level
 from layers import LayerType
 from typing import List, Tuple, Set
-from random import choice, sample, random
+from random import choice, randint, sample, random
 from enum import Enum
 
 
@@ -257,6 +257,38 @@ class Causal5(Level):
 
         return True
 
+class Coconuts(Level):
+    def generate(self):
+        if LayerType.Player in self.uses:
+            self.level[LayerType.Player].append((1, 1))
+        if LayerType.Goal in self.uses:
+            self.level[LayerType.Goal].append((self.shape[0], 1))
+        if LayerType.Blocks in self.uses:
+            for i in range(self.shape[0]):
+                self.level[LayerType.Blocks].append((i + 1, 4))
+            if random() > 0.5:
+                for _ in range(3):
+                    self.level[LayerType.Blocks].remove((randint(1, self.shape[0]), 4))
+            else:
+                for _ in range(2):
+                    self.level[LayerType.Blocks].remove((randint(2, self.shape[0] - 1), 4))          
+        if LayerType.Rock in self.uses:
+            for _ in range(3):
+                pos = (randint(2, self.shape[0] - 2), randint(1, 3))
+                if pos in self.notUsed:
+                    self.level[LayerType.Rock].append(pos)
+                    if LayerType.Rock in self.uses:
+                        pos_nut = (randint(1, self.shape[0] - 1), randint(5, 7))
+                        self.level[LayerType.Rock].append(pos_nut)
+        if LayerType.Rock in self.uses:
+            pos_nut = (randint(1, self.shape[0] - 1), randint(5, 7))
+            self.level[LayerType.Rock].append(pos_nut)
+        if LayerType.Dirt in self.uses:
+            for pos in self.notUsed:
+                self.level[LayerType.Dirt].append(pos)
+        return True
+
+
 
 class Levels(Enum):
     Maze = Maze
@@ -266,3 +298,4 @@ class Levels(Enum):
     Causal3 = Causal3
     Causal4 = Causal4
     Causal5 = Causal5
+    Coconuts = Coconuts

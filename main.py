@@ -50,11 +50,11 @@ def teleport(defaults):
         intervention_idx, modified_board = teleporter.pre_process(env)
         for frame in loop(env, collector, save, teleporter):
             modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
-            actions = mover(modified_board)
+            actions = person(modified_board)
             observations, rewards, dones, info = env.step(actions)
             modified_board, modified_rewards, modified_dones, teleport_rewards, intervention_idx = teleporter.modify(observations, rewards, dones, info)
             buffer.teleporter_save_data(teleporter.boards, observations, teleporter.interventions, teleport_rewards, dones, intervention_idx, rewards)
-            mover.learn(modified_board, actions, modified_rewards, modified_dones)
+            #mover.learn(modified_board, actions, modified_rewards, modified_dones)
             board_before, board_after, intervention, tele_rewards, tele_dones, normal_rewards = buffer.sample_data()
             teleporter.learn(board_after, intervention, tele_rewards, tele_dones, board_before)
             collector.collect([rewards, modified_rewards, teleport_rewards], [dones, modified_dones])
@@ -123,8 +123,8 @@ def CFagent(defaults):
 
 class Defaults:
     name: str = "Agent"
-    main: function = CFagent
-    level: Levels = Levels.Causal4
+    main: function = teleport
+    level: Levels = Levels.Coconuts
     hours: float = 12
     batch: int = 100
     width: int = 9
