@@ -170,6 +170,12 @@ class Defaults:
     layer_Brown2: bool = True
     layer_Brown3: bool = True
 
+    layer_Greendown: bool = True
+    layer_Greenup: bool = True
+    layer_Greenstar: bool = True
+    layer_Yellowstar: bool = True
+    layer_Bluestar: bool = True
+
     epsilon_cap: float = 0.2
     softmax_cap: float = 0.02
     update: int = 10000

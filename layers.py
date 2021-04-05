@@ -374,6 +374,65 @@ class Brown3(Layer):
         return not self.positions[batch]
 
 
+class Greendown(Layer):
+    color = Colors.green
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch]:
+            self.remove(batch, pos)
+
+
+class Greenup(Layer):
+    color = Colors.green
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch]:
+            self.remove(batch, pos)
+
+
+class Greenstar(Layer):
+    color = Colors.blue
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        blocked1 = LayerType.Greendown in layersDict and bool(layersDict[LayerType.Greendown].positions[batch])
+        blocked2 = LayerType.Greenup in layersDict and bool(layersDict[LayerType.Greenup].positions[batch])
+        if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch] and not blocked1 and not blocked2:
+            self.remove(batch, pos)
+
+
+class Bluestar(Layer):
+    color = Colors.blue
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        blocked = LayerType.Greenstar in layersDict and bool(layersDict[LayerType.Greenstar].positions[batch])
+        if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch] and not blocked:
+            self.remove(batch, pos)
+
+
+class Yellowstar(Layer):
+    color = Colors.blue
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        blocked = LayerType.Greenstar in layersDict and bool(layersDict[LayerType.Greenstar].positions[batch])
+        if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch] and not blocked:
+            self.remove(batch, pos)
+
+
 class Layers:
     def __init__(self, batch: int, width: int, height: int, level, reset_chance: float, *layers: Tuple[LayerType]) -> None:
         self.frames_since_chance = [0] * batch
