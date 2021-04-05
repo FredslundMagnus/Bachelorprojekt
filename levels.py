@@ -290,6 +290,19 @@ class Coconuts(Level):
 
 
 
+class Causal6(Level):
+    def generate(self):
+        for layer in [LayerType.Player, LayerType.Goal]:
+            if layer in self.uses:
+                self.level[layer].append(choice(self.notUsed))
+
+        for layer in [LayerType.Greendown, LayerType.Greenup, LayerType.Greenstar, LayerType.Yellowstar, LayerType.Bluestar]:
+            if layer in self.uses and random() > 0.3:
+                self.level[layer].append(choice(self.notUsed))
+
+        return True
+
+
 class Levels(Enum):
     Maze = Maze
     Rocks = Rocks
@@ -299,3 +312,4 @@ class Levels(Enum):
     Causal4 = Causal4
     Causal5 = Causal5
     Coconuts = Coconuts
+    Causal6 = Causal6
