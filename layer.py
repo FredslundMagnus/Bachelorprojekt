@@ -29,6 +29,11 @@ class LayerType(Enum):
     Brown1 = 21
     Brown2 = 22
     Brown3 = 23
+    Greendown = 24
+    Greenup = 25
+    Greenstar = 26
+    Yellowstar = 27
+    Bluestar = 28
 
 
 class Shape(Enum):

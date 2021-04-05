@@ -123,8 +123,8 @@ def CFagent(defaults):
 
 class Defaults:
     name: str = "Agent"
-    main: function = CFagent
-    level: Levels = Levels.Causal4
+    main: function = teleport
+    level: Levels = Levels.Causal6
     hours: float = 12
     batch: int = 100
     width: int = 9
@@ -169,6 +169,12 @@ class Defaults:
     layer_Brown1: bool = True
     layer_Brown2: bool = True
     layer_Brown3: bool = True
+
+    layer_Greendown: bool = True
+    layer_Greenup: bool = True
+    layer_Greenstar: bool = True
+    layer_Yellowstar: bool = True
+    layer_Bluestar: bool = True
 
     epsilon_cap: float = 0.2
     softmax_cap: float = 0.02
