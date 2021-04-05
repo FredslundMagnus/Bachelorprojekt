@@ -1,11 +1,9 @@
 from game import Game, Levels
 from agent import Teleporter, Mover, Networks, Learners, Explorations, MetaTeleporter, CFAgent
 from collector import Collector
-from auxillaries import run, loop, person, random, Save
-# from save import Save
+from auxillaries import run, loop, person, random_agent, Save
 from helper import function
 from replaybuffer import ReplayBuffer, CFReplayBuffer
-# from levels import Levels
 from simulator import Simulator
 from load import Load
 
@@ -76,7 +74,13 @@ def simple(defaults):
 def player(defaults):
     env = Game(**defaults)
     for _ in loop(env, None):
-        env.step(person(env.board))
+        env.step(person(env.batch))
+
+
+def random(defaults):
+    env = Game(**defaults)
+    for _ in loop(env, None):
+        env.step(random_agent(env.batch))
 
 
 def simulation(defaults):
@@ -129,7 +133,7 @@ def CFagent(defaults):
 
 class Defaults:
     name: str = "Agent"
-    main: function = player
+    main: function = random
     level: Levels = Levels.Causal6
     hours: float = 12
     batch: int = 100
