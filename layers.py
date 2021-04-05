@@ -432,6 +432,38 @@ class Yellowstar(Layer):
         if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch] and not blocked:
             self.remove(batch, pos)
 
+class Coconut(Layer):
+    color = Colors.deepOrange
+    size = 0.6
+    blocking = True
+    shape = Shape.Circle
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        adders = set()
+        pos = layersDict[LayerType.Player].positions[batch][0]
+        if pos in self.positions[batch]:
+            self.remove(batch, pos)
+            adders.add((pos[0] + action[0], pos[1]))
+        rocks = set(self.positions[batch])
+        s = board.all_items[batch]
+        for rock in rocks:
+            x, y = rock[0], rock[1]
+            item_under = (x, y + 1)
+            if item_under in s:
+                if s[item_under] == 0 and item_under not in adders:
+                    self.remove(batch, rock)
+                    adders.add(item_under)
+                elif item_under in rocks:
+                    left_side, left_down_side, right_side, right_down_side = (x + 1, y), (x + 1, y + 1), (x - 1, y), (x - 1, y + 1)
+                    if s[right_side] == 0 and s[right_down_side] == 0 and right_side not in adders and (pos[0], pos[1]) != right_side:
+                        self.remove(batch, rock)
+                        adders.add(right_side)
+                    elif s[left_side] == 0 and s[left_down_side] == 0 and left_side not in adders and (pos[0], pos[1]) != left_side:
+                        self.remove(batch, rock)
+                        adders.add(left_side)
+
+        [self.add(batch, x) for x in adders]
+
 
 class Layers:
     def __init__(self, batch: int, width: int, height: int, level, reset_chance: float, *layers: Tuple[LayerType]) -> None:

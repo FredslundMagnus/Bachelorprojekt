@@ -277,12 +277,12 @@ class Coconuts(Level):
                 pos = (randint(2, self.shape[0] - 2), randint(1, 3))
                 if pos in self.notUsed:
                     self.level[LayerType.Rock].append(pos)
-                    if LayerType.Rock in self.uses:
+                    if LayerType.Coconut in self.uses:
                         pos_nut = (randint(1, self.shape[0] - 1), randint(5, 7))
-                        self.level[LayerType.Rock].append(pos_nut)
-        if LayerType.Rock in self.uses:
+                        self.level[LayerType.Coconut].append(pos_nut)
+        if LayerType.Coconut in self.uses:
             pos_nut = (randint(1, self.shape[0] - 1), randint(5, 7))
-            self.level[LayerType.Rock].append(pos_nut)
+            self.level[LayerType.Coconut].append(pos_nut)
         if LayerType.Dirt in self.uses:
             for pos in self.notUsed:
                 self.level[LayerType.Dirt].append(pos)
