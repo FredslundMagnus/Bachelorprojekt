@@ -175,6 +175,7 @@ class Defaults:
     layer_Greenstar: bool = True
     layer_Yellowstar: bool = True
     layer_Bluestar: bool = True
+    layer_Coconut: bool = True
 
     epsilon_cap: float = 0.2
     softmax_cap: float = 0.02

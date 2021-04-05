@@ -64,13 +64,19 @@ class Rock(Layer):
     blocking = True
     shape = Shape.Circle
 
+    def __init__(self, batch: int, width: int, height: int) -> None:
+        self.falling = [set() for _ in range(batch)]
+        super().__init__(batch, width, height)
+
     def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        self.falling[batch] = set()
         adders = set()
         pos = layersDict[LayerType.Player].positions[batch][0]
         if pos in self.positions[batch]:
             self.remove(batch, pos)
             adders.add((pos[0] + action[0], pos[1]))
         rocks = set(self.positions[batch])
+        rocks_n_coconuts = rocks.union(set(layersDict[LayerType.Coconut].positions[batch])) if LayerType.Coconut in layersDict else rocks
         s = board.all_items[batch]
         for rock in rocks:
             x, y = rock[0], rock[1]
@@ -79,7 +85,8 @@ class Rock(Layer):
                 if s[item_under] == 0 and item_under not in adders:
                     self.remove(batch, rock)
                     adders.add(item_under)
-                elif item_under in rocks:
+                    self.falling[batch].add(item_under)
+                elif item_under in rocks_n_coconuts:
                     left_side, left_down_side, right_side, right_down_side = (x + 1, y), (x + 1, y + 1), (x - 1, y), (x - 1, y + 1)
                     if s[right_side] == 0 and s[right_down_side] == 0 and right_side not in adders and (pos[0], pos[1]) != right_side:
                         self.remove(batch, rock)
@@ -444,23 +451,27 @@ class Coconut(Layer):
         if pos in self.positions[batch]:
             self.remove(batch, pos)
             adders.add((pos[0] + action[0], pos[1]))
-        rocks = set(self.positions[batch])
+        nuts = set(self.positions[batch])
         s = board.all_items[batch]
-        for rock in rocks:
-            x, y = rock[0], rock[1]
+        for nut in nuts:
+            x, y = nut[0], nut[1]
             item_under = (x, y + 1)
+            item_over = (x, y - 1)
             if item_under in s:
                 if s[item_under] == 0 and item_under not in adders:
-                    self.remove(batch, rock)
+                    self.remove(batch, nut)
                     adders.add(item_under)
-                elif item_under in rocks:
+                elif item_under in nuts:
                     left_side, left_down_side, right_side, right_down_side = (x + 1, y), (x + 1, y + 1), (x - 1, y), (x - 1, y + 1)
                     if s[right_side] == 0 and s[right_down_side] == 0 and right_side not in adders and (pos[0], pos[1]) != right_side:
-                        self.remove(batch, rock)
+                        self.remove(batch, nut)
                         adders.add(right_side)
                     elif s[left_side] == 0 and s[left_down_side] == 0 and left_side not in adders and (pos[0], pos[1]) != left_side:
-                        self.remove(batch, rock)
+                        self.remove(batch, nut)
                         adders.add(left_side)
+            if item_over in layersDict[LayerType.Rock].falling[batch]:
+                self.remove(batch, nut)
+                layersDict[LayerType.Gold].add(batch, nut)
 
         [self.add(batch, x) for x in adders]
 
