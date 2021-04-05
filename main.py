@@ -133,8 +133,8 @@ def CFagent(defaults):
 
 class Defaults:
     name: str = "Agent"
-    main: function = random
-    level: Levels = Levels.Causal6
+    main: function = player
+    level: Levels = Levels.Coconuts
     hours: float = 12
     batch: int = 100
     width: int = 9

@@ -265,14 +265,10 @@ class Coconuts(Level):
         if LayerType.Goal in self.uses:
             self.level[LayerType.Goal].append((self.shape[0], 1))
         if LayerType.Blocks in self.uses:
-            for i in range(self.shape[0]):
-                self.level[LayerType.Blocks].append((i + 1, 4))
-            if random() > 0.5:
-                for _ in range(4):
-                    self.level[LayerType.Blocks].remove((randint(1, self.shape[0]), 4))
-            else:
-                for _ in range(3):
-                    self.level[LayerType.Blocks].remove((randint(2, self.shape[0] - 1), 4))
+            for _ in range(3):
+                pos = (randint(1, self.shape[0]), 4)
+                if pos in self.notUsed:
+                    self.level[LayerType.Blocks].append(pos)
         if LayerType.Rock in self.uses:
             for i in range(3):
                 pos = (randint(2, self.shape[0] - 1), i + 1)
@@ -280,11 +276,13 @@ class Coconuts(Level):
                     self.level[LayerType.Rock].append(pos)
                     if LayerType.Coconut in self.uses:
                         pos_nut = (randint(2, self.shape[0] - 1), i + 5)
-                        self.level[LayerType.Coconut].append(pos_nut)
+                        if pos_nut in self.notUsed:
+                            self.level[LayerType.Coconut].append(pos_nut)
         if LayerType.Coconut in self.uses:
             for _ in range(2):
                 pos_nut = (randint(2, self.shape[0] - 2), randint(5, 7))
-                self.level[LayerType.Coconut].append(pos_nut)
+                if pos_nut in self.notUsed:
+                    self.level[LayerType.Coconut].append(pos_nut)
         if LayerType.Dirt in self.uses:
             for pos in self.notUsed:
                 self.level[LayerType.Dirt].append(pos)
