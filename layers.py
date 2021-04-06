@@ -528,8 +528,8 @@ class Monster(Layer):
             left = (x-1, y)
             up = (x, y+1)
             down = (x, y-1)
-            if batch == 0:
-                print(self.moving[batch])
+            #if batch == 0:
+            #    print(self.moving[batch])
             if self.moving[batch][monster] == 0:
                 self.moving[batch][monster] = randint(0,4)
             elif self.moving[batch][monster] == 1 and (board.all_items[batch][right] == 0 or right in layersDict[LayerType.Player].positions[batch][0]):
