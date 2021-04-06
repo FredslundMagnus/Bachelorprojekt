@@ -416,15 +416,20 @@ class SuperLevel2(Level):
 class MonsterLevel(Level):
     def generate(self):
         if LayerType.Player in self.uses:
-            self.level[LayerType.Player].append((4,4))
+            for pos in sample(self.notUsed, 1):
+                self.level[LayerType.Player].append(pos)
         if LayerType.Goal in self.uses:
-            self.level[LayerType.Goal].append((4,1)) 
+            for pos in sample(self.notUsed, 1):
+                self.level[LayerType.Goal].append(pos)
         if LayerType.Monster in self.uses:
             for pos in sample(self.notUsed, 5):
                 self.level[LayerType.Monster].append(pos) 
         if LayerType.Blocks in self.uses:
             for pos in sample(self.notUsed, 5):
                 self.level[LayerType.Blocks].append(pos) 
+        if LayerType.Gold in self.uses:
+            for pos in sample(self.notUsed, 5):
+                self.level[LayerType.Gold].append(pos) 
 
         return True
 
