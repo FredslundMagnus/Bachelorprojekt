@@ -5,7 +5,7 @@ from layer import Layer, Shape, LayerType
 from colors import Colors
 from typing import Dict, Tuple, List
 import numpy as np
-from random import random, choice
+from random import randint, random, choice
 
 
 class Player(Layer):
@@ -506,6 +506,49 @@ class Coconut(Layer):
         #         return True
         return False
 
+class Monster(Layer):
+    color = Colors.blue
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+
+    def __init__(self, batch: int, width: int, height: int) -> None:
+        self.moving = [{} for _ in range(batch)]
+        for dict in self.moving:
+            for j in width:
+                for i in height:
+                    dict[(i, j)] = 0
+
+        super().__init__(batch, width, height)
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        for monster in self.positions[batch]:
+            x, y = monster
+            right = (x+1, y)
+            left = (x-1, y)
+            up = (x, y+1)
+            down = (x, y-1)
+            if self.moving[batch][monster] == 0:
+                self.moving[batch][monster] = randint(0,3)
+            if self.moving[batch][monster] == 1 and (board.all_items[batch][right] == 0 or right in layersDict[LayerType.Player].positions[batch][0]):
+                self.remove(batch, monster)
+                self.add(batch, right)    
+            elif self.moving[batch][monster] == 2 and (board.all_items[batch][left] == 0 or left in layersDict[LayerType.Player].positions[batch][0]):
+                self.remove(batch, monster)
+                self.add(batch, left)   
+            elif self.moving[batch][monster] == 3 and (board.all_items[batch][up] == 0 or up in layersDict[LayerType.Player].positions[batch][0]):
+                self.remove(batch, monster)
+                self.add(batch, up)   
+            elif self.moving[batch][monster] == 4 and (board.all_items[batch][down] == 0 or down in layersDict[LayerType.Player].positions[batch][0]):
+                self.remove(batch, monster)
+                self.add(batch, down)    
+            else: 
+                self.moving[batch][monster] = 0
+
+    def isDead(self, batch: int, layersDict, board) -> bool:
+        if layersDict[LayerType.Player].positions[batch][0] in self.positions[batch]:
+            return True
+        return False
 
 class Layers:
     def __init__(self, batch: int, width: int, height: int, level, reset_chance: float, *layers: Tuple[LayerType]) -> None:
