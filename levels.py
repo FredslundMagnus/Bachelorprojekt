@@ -425,8 +425,15 @@ class MonsterLevel(Level):
             for pos in sample(self.notUsed, 7):
                 self.level[LayerType.Monster].append(pos) 
         if LayerType.Blocks in self.uses:
-            for pos in sample(self.notUsed, 7):
-                self.level[LayerType.Blocks].append(pos) 
+            for pos in sample(self.notUsed, 10):
+                if pos[0] < self.shape[0] and pos[0] > 1 and pos[1] < self.shape[1] and pos[1] > 1:
+                    blocks = 0
+                    for j in range(3):
+                        for i in range(3):
+                            if (pos[0] + j - 1, pos[1] + i - 1) in self.level[LayerType.Blocks]:
+                                blocks += 1
+                    if blocks < 3:
+                        self.level[LayerType.Blocks].append(pos) 
         if LayerType.Gold in self.uses:
             for pos in sample(self.notUsed, 7):
                 self.level[LayerType.Gold].append(pos) 

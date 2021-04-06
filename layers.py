@@ -532,22 +532,22 @@ class Monster(Layer):
             down = (x, y-1)
             if self.moving[batch][monster] == 0:
                 self.moving[batch][monster] = randint(0,4)
-            elif self.moving[batch][monster] == 1 and (board.all_items[batch][right] == 0 or right in layersDict[LayerType.Player].positions[batch][0]):
+            elif self.moving[batch][monster] == 1 and (board.all_items[batch][right] == 0 or right in layersDict[LayerType.Player].positions[batch]) and right not in adders:
                 self.moving[batch][monster] = 0
                 self.moving[batch][right] = 1
                 removers.add(monster)
                 adders.add(right)    
-            elif self.moving[batch][monster] == 2 and (board.all_items[batch][left] == 0 or left in layersDict[LayerType.Player].positions[batch][0]):
+            elif self.moving[batch][monster] == 2 and (board.all_items[batch][left] == 0 or left in layersDict[LayerType.Player].positions[batch]) and left not in adders:
                 self.moving[batch][monster] = 0
                 self.moving[batch][left] = 2              
                 removers.add(monster)
                 adders.add(left)  
-            elif self.moving[batch][monster] == 3 and (board.all_items[batch][up] == 0 or up in layersDict[LayerType.Player].positions[batch][0]):
+            elif self.moving[batch][monster] == 3 and (board.all_items[batch][up] == 0 or up in layersDict[LayerType.Player].positions[batch]) and up not in adders:
                 self.moving[batch][monster] = 0
                 self.moving[batch][up] = 3                  
                 removers.add(monster)
                 adders.add(up)  
-            elif self.moving[batch][monster] == 4 and (board.all_items[batch][down] == 0 or down in layersDict[LayerType.Player].positions[batch][0]):
+            elif self.moving[batch][monster] == 4 and (board.all_items[batch][down] == 0 or down in layersDict[LayerType.Player].positions[batch]) and down not in adders:
                 self.moving[batch][monster] = 0
                 self.moving[batch][down] = 4                 
                 removers.add(monster)
