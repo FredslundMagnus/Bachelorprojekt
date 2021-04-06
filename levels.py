@@ -422,13 +422,13 @@ class MonsterLevel(Level):
             for pos in sample(self.notUsed, 1):
                 self.level[LayerType.Goal].append(pos)
         if LayerType.Monster in self.uses:
-            for pos in sample(self.notUsed, 5):
+            for pos in sample(self.notUsed, 7):
                 self.level[LayerType.Monster].append(pos) 
         if LayerType.Blocks in self.uses:
-            for pos in sample(self.notUsed, 5):
+            for pos in sample(self.notUsed, 7):
                 self.level[LayerType.Blocks].append(pos) 
         if LayerType.Gold in self.uses:
-            for pos in sample(self.notUsed, 5):
+            for pos in sample(self.notUsed, 7):
                 self.level[LayerType.Gold].append(pos) 
 
         return True
