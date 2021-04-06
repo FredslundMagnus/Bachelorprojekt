@@ -491,7 +491,7 @@ class Coconut(Layer):
                 if rock[1] < highest:
                     highest = rock[1]
         for nut in set(self.positions[batch]):
-            if nut[1] < highest:
+            if nut[1] <= highest:
                 return True
         return False
 
