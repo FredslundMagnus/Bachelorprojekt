@@ -1,7 +1,7 @@
 from game import Game, Levels
 from agent import Teleporter, Mover, Networks, Learners, Explorations, MetaTeleporter, CFAgent
 from collector import Collector
-from auxillaries import run, loop, person, random_agent, Save
+from auxillaries import run, loop, player, random, Save
 from helper import function
 from replaybuffer import ReplayBuffer, CFReplayBuffer
 from simulator import Simulator
@@ -69,18 +69,6 @@ def simple(defaults):
             observations, rewards, dones, info = env.step(actions)
             mover.learn(observations, actions, rewards, dones)
             collector.collect([rewards], [dones])
-
-
-def player(defaults):
-    env = Game(**defaults)
-    for _ in loop(env, None):
-        env.step(person(env.batch))
-
-
-def random(defaults):
-    env = Game(**defaults)
-    for _ in loop(env, None):
-        env.step(random_agent(env.batch))
 
 
 def simulation(defaults):

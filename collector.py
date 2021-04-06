@@ -1,13 +1,12 @@
-from typing import List, Tuple
 import matplotlib.pyplot as plt
-import numpy as np
-from time import sleep
 from helper import move_figure
 import torch
+from helper import function
 
 
 class Collector:
-    def __init__(self, batch: int = None, **kwargs) -> None:
+    def __init__(self, batch: int = None, main: function = None, **kwargs) -> None:
+        self.type = main if main.__class__ == str else main.__name__
         self.batch = batch
         self.counter = 0
         self.filter_size = 1000
@@ -16,9 +15,9 @@ class Collector:
         self.data = {}
         self.lossBoard = [0]
         self.lossRD = [0]
-        
+
     def show(self, game) -> None:
-        plot_positions = [(0,0), (600,0), (1200, 0), (0, 520), (600, 520), (1200, 520)]
+        plot_positions = [(0, 0), (600, 0), (1200, 0), (0, 520), (600, 520), (1200, 520)]
 
         i = 0
         for key in self.data:
@@ -43,7 +42,7 @@ class Collector:
             plt.ylabel("loss")
             plt.plot(self.lossRD[:-1], label="reward and done")
             plt.legend(loc="upper left")
-            i += 1    
+            i += 1
 
         plt.pause(10)
         plt.close('all')
@@ -62,17 +61,16 @@ class Collector:
             self.rewards[i] += torch.sum(rewards[i])/len(rewards[i])
         for i in range(len(dones)):
             self.dones[i] += torch.sum(dones[i])/len(dones[i])
-            
 
         if self.counter % self.filter_size == 0:
             for i in range(len(rewards)):
                 for k in range(len(dones)):
-                    if (i,k) not in self.data:
-                        self.data[(i,k)] = []
-                    self.data[(i,k)].append(self.rewards[i].item()/self.dones[k].item())
+                    if (i, k) not in self.data:
+                        self.data[(i, k)] = []
+                    self.data[(i, k)].append(self.rewards[i].item()/self.dones[k].item())
             self.rewards = []
             self.dones = []
-    
+
     def collect_loss(self, lossboard: int, lossRD: int):
         self.counter += 1
         self.lossBoard[-1] += lossboard

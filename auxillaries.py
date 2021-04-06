@@ -130,3 +130,15 @@ def random_agent(batch: int) -> Tensor:
 def run(Defaults):
     if sys.argv[0].split("\\")[-1].split("/")[-1] == "main.py":
         (serverRun if isServer else Defaults.main).__call__(getvals(Defaults))
+
+
+def player(defaults):
+    env = Game(**defaults)
+    for _ in loop(env, None):
+        env.step(person(env.batch))
+
+
+def random(defaults):
+    env = Game(**defaults)
+    for _ in loop(env, None):
+        env.step(random_agent(env.batch))
