@@ -301,6 +301,58 @@ class Causal6(Level):
 
         return True
 
+class SuperLevel(Level):
+    def generate(self):
+        if random() > 0.5: # Mirrored
+            a = range(0,9)
+        else:
+            a = range(9,0)
+        if LayerType.Player in self.uses:
+            self.level[LayerType.Player].append((a[4],a[4]))
+        if LayerType.Goal in self.uses:
+            self.level[LayerType.Goal].append((a[4],6))
+        if LayerType.Bluekeys in self.uses and LayerType.Bluedoor in self.uses and LayerType.Redkeys in self.uses and LayerType.Reddoor in self.uses:
+            if random() > 0.5:
+                self.level[LayerType.Bluekeys].append((a[4],5))
+                self.level[LayerType.Bluedoor].append((a[2],5))
+                self.level[LayerType.Redkeys].append((a[4],7))
+                self.level[LayerType.Reddoor].append((a[6],6))
+            else:
+                self.level[LayerType.Redkeys].append((a[4],5))
+                self.level[LayerType.Reddoor].append((a[2],5))
+                self.level[LayerType.Bluekeys].append((a[4],7))
+                self.level[LayerType.Bluedoor].append((a[6],6))
+        if LayerType.Door in self.uses:
+            self.level[LayerType.Door].append((a[2],a[7]))
+        if LayerType.Keys in self.uses:
+            self.level[LayerType.Keys].append((a[2],a[2]))
+        if LayerType.Blocks in self.uses:
+            self.level[LayerType.Blocks].append((a[2],a[3]))
+            self.level[LayerType.Blocks].append((a[2],a[4]))
+            self.level[LayerType.Blocks].append((a[2],a[6]))
+            self.level[LayerType.Blocks].append((a[6],a[2]))
+            self.level[LayerType.Blocks].append((a[6],a[3]))
+            self.level[LayerType.Blocks].append((a[6],a[4]))
+        if LayerType.Rock in self.uses:
+            self.level[LayerType.Rock].append((a[2],a[1]))
+            if random() > 0.5:
+                self.level[LayerType.Rock].append((a[5],a[4]))
+            else:
+                self.level[LayerType.Rock].append((a[3],a[4]))
+        if LayerType.Dirt in self.uses:
+            self.level[LayerType.Dirt].append((a[3],a[5]))
+            self.level[LayerType.Dirt].append((a[5],a[5]))
+            self.level[LayerType.Dirt].append((a[3],a[7]))
+            self.level[LayerType.Dirt].append((a[5],a[7]))
+        if LayerType.Coconut in self.uses:
+            self.level[LayerType.Coconut].append((a[6],a[1]))
+            self.level[LayerType.Coconut].append((a[6],a[5]))
+            self.level[LayerType.Coconut].append((a[5],a[6]))
+            self.level[LayerType.Coconut].append((a[3],a[6]))
+
+
+        return True
+
 
 class Levels(Enum):
     Maze = Maze
@@ -312,3 +364,4 @@ class Levels(Enum):
     Causal5 = Causal5
     Coconuts = Coconuts
     Causal6 = Causal6
+    SuperLevel = SuperLevel
