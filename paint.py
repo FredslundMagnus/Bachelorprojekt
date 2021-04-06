@@ -32,17 +32,21 @@ class Paint:
     @staticmethod
     def __init__(game: Game, frame: int, teleporter, teleporter2) -> None:
         with screen(Colors.gray.c300):
-            for shape, color, size, x, y, name in game.layers.getColorable(Paint.dim):
+            for i, things in enumerate(game.layers.getColorable(Paint.dim)):
+                shape, color, size, x, y, name = things
                 try:
                     Paint.drawImage(x, y, name)
                 except Exception as e:
                     try:
-                        if shape == Shape.Circle:
-                            Paint.drawCircle(color, size, x, y)
-                        elif shape == Shape.Square:
-                            Paint.drawRect(color, size, x, y)
+                        Paint.drawImage(x, y, name + str((frame + i) % 4))
                     except Exception as e:
-                        pass
+                        try:
+                            if shape == Shape.Circle:
+                                Paint.drawCircle(color, size, x, y)
+                            elif shape == Shape.Square:
+                                Paint.drawRect(color, size, x, y)
+                        except Exception as e:
+                            pass
             try:
                 Paint.write(f"Frames: {frame}", game.layers.width/2, 0)
                 Paint.write(f"Game: {Paint.dim}", game.layers.width/2, game.layers.height-1)
@@ -93,6 +97,11 @@ class Paint:
                 Paint.images[name] = Paint.pygame.transform.scale(Paint.pygame.image.load(f"Drawings/{(name := layer.name)}.png"), (Paint.size, Paint.size))
             except Exception as e:
                 pass
+            for i in range(4):
+                try:
+                    Paint.images[name] = Paint.pygame.transform.scale(Paint.pygame.image.load(f"Drawings/{(name := layer.name+str(i))}.png"), (Paint.size, Paint.size))
+                except Exception as e:
+                    pass
         try:
             Paint.images["Cheese"] = Paint.pygame.transform.scale(Paint.pygame.image.load(f"Drawings/Cheese.png"), (Paint.size, Paint.size))
         except Exception as e:
