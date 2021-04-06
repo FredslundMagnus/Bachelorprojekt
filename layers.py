@@ -244,7 +244,10 @@ class Redkeys(Layer):
         if pos in layersDict[LayerType.Bluekeys].positions[batch] or pos in layersDict[LayerType.Bluekeys]._removed[batch]:
             while True:
                 new_pos = (choice(range(3, board.width - 3)), choice(range(2, board.height - 3)))
-                if new_pos not in layersDict[LayerType.Bluekeys].positions[batch] and new_pos not in layersDict[LayerType.Redkeys].positions[batch] and new_pos != pos:
+                if LayerType.Rock in layersDict:
+                    if board.all_items[batch][new_pos] == 0:
+                        break
+                elif new_pos not in layersDict[LayerType.Bluekeys].positions[batch] and new_pos not in layersDict[LayerType.Redkeys].positions[batch] and new_pos != pos:
                     break
             self.add(batch, new_pos)
 
@@ -281,7 +284,10 @@ class Bluekeys(Layer):
         if pos in layersDict[LayerType.Redkeys].positions[batch] or pos in layersDict[LayerType.Redkeys]._removed[batch]:
             while True:
                 new_pos = (choice(range(3, board.width - 3)), choice(range(2, board.height - 3)))
-                if new_pos not in layersDict[LayerType.Bluekeys].positions[batch] and new_pos not in layersDict[LayerType.Redkeys].positions[batch] and new_pos != pos:
+                if LayerType.Rock in layersDict:
+                    if board.all_items[batch][new_pos] == 0:
+                        break
+                elif new_pos not in layersDict[LayerType.Bluekeys].positions[batch] and new_pos not in layersDict[LayerType.Redkeys].positions[batch] and new_pos != pos:
                     break
             self.add(batch, new_pos)
 
