@@ -265,7 +265,7 @@ class Coconuts(Level):
         if LayerType.Goal in self.uses:
             self.level[LayerType.Goal].append((self.shape[0], 1))
         if LayerType.Blocks in self.uses:
-            for _ in range(3):
+            for _ in range(2):
                 pos = (randint(1, self.shape[0]), 4)
                 if pos in self.notUsed:
                     self.level[LayerType.Blocks].append(pos)

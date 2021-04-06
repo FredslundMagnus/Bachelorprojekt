@@ -484,6 +484,17 @@ class Coconut(Layer):
     def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
         return not self.positions[batch]
 
+    def isDead(self, batch: int, layersDict, board) -> bool:
+        highest = 100
+        for rock in layersDict[LayerType.Rock].positions[batch]:
+            if rock[0] > 1 and rock[0] < board.shape[3] - 2:
+                if rock[1] < highest:
+                    highest = rock[1]
+        for nut in set(self.positions[batch]):
+            if nut[1] < highest:
+                return True
+        return False
+
 
 class Layers:
     def __init__(self, batch: int, width: int, height: int, level, reset_chance: float, *layers: Tuple[LayerType]) -> None:
@@ -538,7 +549,7 @@ class Layers:
                 rewards[batch] = 1
                 dones[batch] = 1
                 self.counter[batch] = 0
-            elif random() < self.reset_chance or self.frames_since_chance[batch] > 10:
+            elif random() < self.reset_chance or self.frames_since_chance[batch] > 10 or any(layer.isDead(batch, self.dict, self.board) for layer in self.layers):
                 self.restart(batch)
                 rewards[batch] = 0
                 dones[batch] = 1

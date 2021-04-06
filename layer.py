@@ -75,6 +75,8 @@ class Layer(metaclass=ABCMeta):
 
     def isDone(self, batch: int, layersDict) -> bool:
         return True
+    def isDead(self, batch: int, layersDict, board) -> bool:
+        return False
 
     @property
     def layer(self) -> int:
