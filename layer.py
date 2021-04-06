@@ -29,6 +29,12 @@ class LayerType(Enum):
     Brown1 = 21
     Brown2 = 22
     Brown3 = 23
+    Greendown = 24
+    Greenup = 25
+    Greenstar = 26
+    Yellowstar = 27
+    Bluestar = 28
+    Coconut = 29
 
 
 class Shape(Enum):
@@ -69,6 +75,8 @@ class Layer(metaclass=ABCMeta):
 
     def isDone(self, batch: int, layersDict) -> bool:
         return True
+    def isDead(self, batch: int, layersDict, board) -> bool:
+        return False
 
     @property
     def layer(self) -> int:
@@ -89,11 +97,21 @@ class Layer(metaclass=ABCMeta):
             elif layers.all_items[batch][_to] == 1:
                 self.remove(batch, _from)
                 self.add(batch, _to)
-            elif (_to[0], _to[1] - 1) not in layers.dict[LayerType.Rock].positions[batch]:
+            elif LayerType.Coconut not in layers.dict and (_to[0], _to[1] - 1) not in layers.dict[LayerType.Rock].positions[batch]:
                 self.remove(batch, _from)
                 self.add(batch, _to)
-        elif LayerType.Rock in layers.dict and action[1] == 0:
+            elif LayerType.Coconut in layers.dict and (_to[0], _to[1] - 1) not in layers.dict[LayerType.Coconut].positions[batch] and (_to[0], _to[1] - 1) not in layers.dict[LayerType.Rock].positions[batch]:
+                self.remove(batch, _from)
+                self.add(batch, _to)
+        if LayerType.Rock in layers.dict and action[1] == 0 :
             if _to in layers.dict[LayerType.Rock].positions[batch] and _to[0] < layers.width - 1 and _to[0] > 0:
+                push_to = (_to[0] + action[0], _to[1])
+                fall_to = (_to[0], _to[1] + 1)
+                if layers.all_items[batch][push_to] == 0 and layers.all_items[batch][fall_to] != 0:
+                    self.remove(batch, _from)
+                    self.add(batch, _to)
+        if LayerType.Coconut in layers.dict and action[1] == 0:
+            if _to in layers.dict[LayerType.Coconut].positions[batch] and _to[0] < layers.width - 1 and _to[0] > 0:
                 push_to = (_to[0] + action[0], _to[1])
                 fall_to = (_to[0], _to[1] + 1)
                 if layers.all_items[batch][push_to] == 0 and layers.all_items[batch][fall_to] != 0:

@@ -64,13 +64,19 @@ class Rock(Layer):
     blocking = True
     shape = Shape.Circle
 
+    def __init__(self, batch: int, width: int, height: int) -> None:
+        self.falling = [set() for _ in range(batch)]
+        super().__init__(batch, width, height)
+
     def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        self.falling[batch] = set()
         adders = set()
         pos = layersDict[LayerType.Player].positions[batch][0]
         if pos in self.positions[batch]:
             self.remove(batch, pos)
             adders.add((pos[0] + action[0], pos[1]))
         rocks = set(self.positions[batch])
+        rocks_n_coconuts = rocks.union(set(layersDict[LayerType.Coconut].positions[batch])) if LayerType.Coconut in layersDict else rocks
         s = board.all_items[batch]
         for rock in rocks:
             x, y = rock[0], rock[1]
@@ -79,7 +85,8 @@ class Rock(Layer):
                 if s[item_under] == 0 and item_under not in adders:
                     self.remove(batch, rock)
                     adders.add(item_under)
-                elif item_under in rocks:
+                    self.falling[batch].add(item_under)
+                elif item_under in rocks_n_coconuts:
                     left_side, left_down_side, right_side, right_down_side = (x + 1, y), (x + 1, y + 1), (x - 1, y), (x - 1, y + 1)
                     if s[right_side] == 0 and s[right_down_side] == 0 and right_side not in adders and (pos[0], pos[1]) != right_side:
                         self.remove(batch, rock)
@@ -236,8 +243,14 @@ class Redkeys(Layer):
             self.remove(batch, pos)
         if pos in layersDict[LayerType.Bluekeys].positions[batch] or pos in layersDict[LayerType.Bluekeys]._removed[batch]:
             while True:
-                new_pos = (choice(range(3, board.width - 3)), choice(range(2, board.height - 3)))
-                if new_pos not in layersDict[LayerType.Bluekeys].positions[batch] and new_pos not in layersDict[LayerType.Redkeys].positions[batch] and new_pos != pos:
+                new_pos = (choice(range(3, board.width - 3)), choice(range(2, board.height - 2)))
+                if LayerType.Rock in layersDict:
+                    if board.all_items[batch][new_pos] == 0 and new_pos not in layersDict[LayerType.Rock].falling[batch]:
+                        break
+                elif LayerType.Coconut in layersDict:
+                    if board.all_items[batch][new_pos] == 0 and new_pos not in layersDict[LayerType.Coconut].falling[batch]:
+                        break
+                elif new_pos not in layersDict[LayerType.Bluekeys].positions[batch] and new_pos not in layersDict[LayerType.Redkeys].positions[batch] and new_pos != pos:
                     break
             self.add(batch, new_pos)
 
@@ -273,8 +286,15 @@ class Bluekeys(Layer):
             self.remove(batch, pos)
         if pos in layersDict[LayerType.Redkeys].positions[batch] or pos in layersDict[LayerType.Redkeys]._removed[batch]:
             while True:
-                new_pos = (choice(range(3, board.width - 3)), choice(range(2, board.height - 3)))
-                if new_pos not in layersDict[LayerType.Bluekeys].positions[batch] and new_pos not in layersDict[LayerType.Redkeys].positions[batch] and new_pos != pos:
+                new_pos = (choice(range(3, board.width - 3)), choice(range(2, board.height - 2)))
+                if LayerType.Rock in layersDict:
+                    if board.all_items[batch][new_pos] == 0 and new_pos not in layersDict[LayerType.Rock].falling[batch]:
+                        break
+                elif LayerType.Coconut in layersDict:
+                    if board.all_items[batch][new_pos] == 0 and new_pos not in layersDict[LayerType.Coconut].falling[batch]:
+                        break
+
+                elif new_pos not in layersDict[LayerType.Bluekeys].positions[batch] and new_pos not in layersDict[LayerType.Redkeys].positions[batch] and new_pos != pos:
                     break
             self.add(batch, new_pos)
 
@@ -374,6 +394,126 @@ class Brown3(Layer):
         return not self.positions[batch]
 
 
+class Greendown(Layer):
+    color = Colors.green
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch]:
+            self.remove(batch, pos)
+
+
+class Greenup(Layer):
+    color = Colors.green
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch]:
+            self.remove(batch, pos)
+
+
+class Greenstar(Layer):
+    color = Colors.blue
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        blocked1 = LayerType.Greendown in layersDict and bool(layersDict[LayerType.Greendown].positions[batch])
+        blocked2 = LayerType.Greenup in layersDict and bool(layersDict[LayerType.Greenup].positions[batch])
+        if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch] and not blocked1 and not blocked2:
+            self.remove(batch, pos)
+
+
+class Bluestar(Layer):
+    color = Colors.blue
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        blocked = LayerType.Greenstar in layersDict and bool(layersDict[LayerType.Greenstar].positions[batch])
+        if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch] and not blocked:
+            self.remove(batch, pos)
+
+    def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
+        return not self.positions[batch] or not (LayerType.Yellowstar in layersDict and bool(layersDict[LayerType.Yellowstar].positions[batch]))
+
+
+class Yellowstar(Layer):
+    color = Colors.blue
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        blocked = LayerType.Greenstar in layersDict and bool(layersDict[LayerType.Greenstar].positions[batch])
+        if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch] and not blocked:
+            self.remove(batch, pos)
+
+    def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
+        return not self.positions[batch] or not (LayerType.Bluestar in layersDict and bool(layersDict[LayerType.Bluestar].positions[batch]))
+
+
+class Coconut(Layer):
+    color = Colors.deepOrange
+    size = 0.6
+    blocking = True
+    shape = Shape.Circle
+    def __init__(self, batch: int, width: int, height: int) -> None:
+        self.falling = [set() for _ in range(batch)]
+        super().__init__(batch, width, height)
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        self.falling[batch] = set()
+        adders = set()
+        pos = layersDict[LayerType.Player].positions[batch][0]
+        if pos in self.positions[batch]:
+            self.remove(batch, pos)
+            adders.add((pos[0] + action[0], pos[1]))
+        nuts = set(self.positions[batch])
+        s = board.all_items[batch]
+        for nut in nuts:
+            x, y = nut[0], nut[1]
+            item_under = (x, y + 1)
+            item_over = (x, y - 1)
+            if item_under in s:
+                if item_over in layersDict[LayerType.Rock].falling[batch]:
+                    self.remove(batch, nut)
+                    layersDict[LayerType.Gold].add(batch, nut)
+                elif s[item_under] == 0 and item_under not in adders:
+                    self.remove(batch, nut)
+                    adders.add(item_under)
+                    self.falling[batch].add(item_under)
+                elif item_under in nuts:
+                    left_side, left_down_side, right_side, right_down_side = (x + 1, y), (x + 1, y + 1), (x - 1, y), (x - 1, y + 1)
+                    if s[right_side] == 0 and s[right_down_side] == 0 and right_side not in adders and (pos[0], pos[1]) != right_side:
+                        self.remove(batch, nut)
+                        adders.add(right_side)
+                    elif s[left_side] == 0 and s[left_down_side] == 0 and left_side not in adders and (pos[0], pos[1]) != left_side:
+                        self.remove(batch, nut)
+                        adders.add(left_side)
+        [self.add(batch, x) for x in adders]
+
+    def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
+        return not self.positions[batch]
+
+    def isDead(self, batch: int, layersDict, board) -> bool:
+        # highest = 100
+        # for rock in layersDict[LayerType.Rock].positions[batch]:
+        #     if rock[0] > 1 and rock[0] < board.shape[3] - 2:
+        #         if rock[1] < highest:
+        #             highest = rock[1]
+        # for nut in set(self.positions[batch]):
+        #     if nut[1] <= highest:
+        #         return True
+        return False
+
+
 class Layers:
     def __init__(self, batch: int, width: int, height: int, level, reset_chance: float, *layers: Tuple[LayerType]) -> None:
         self.frames_since_chance = [0] * batch
@@ -427,7 +567,7 @@ class Layers:
                 rewards[batch] = 1
                 dones[batch] = 1
                 self.counter[batch] = 0
-            elif random() < self.reset_chance or self.frames_since_chance[batch] > 10:
+            elif random() < self.reset_chance or self.frames_since_chance[batch] > 10 or any(layer.isDead(batch, self.dict, self.board) for layer in self.layers):
                 self.restart(batch)
                 rewards[batch] = 0
                 dones[batch] = 1

@@ -108,7 +108,7 @@ def loop(game: Game, collector: Collector, save: Save = None, teleporter=None, t
             yield f
 
 
-def person(board: Tensor) -> Tensor:
+def person(batch: int) -> Tensor:
     from pynput import keyboard
     d = {keyboard.Key.right: 0, keyboard.Key.down: 1, keyboard.Key.left: 2, keyboard.Key.up: 3}
     action = None
@@ -119,12 +119,12 @@ def person(board: Tensor) -> Tensor:
                 if event.key in d:
                     action = d[event.key]
     if action == None:
-        return tensor([0 for _ in range(board.shape[0])])
-    return tensor([action for _ in range(board.shape[0])])
+        return tensor([0 for _ in range(batch)])
+    return tensor([action for _ in range(batch)])
 
 
-def random(board: Tensor) -> Tensor:
-    return tensor([choice([0, 1, 2, 3]) for _ in range(board.shape[0])])
+def random_agent(batch: int) -> Tensor:
+    return tensor([choice([0, 1, 2, 3]) for _ in range(batch)])
 
 
 def run(Defaults):
