@@ -515,8 +515,8 @@ class Monster(Layer):
     def __init__(self, batch: int, width: int, height: int) -> None:
         self.moving = [{} for _ in range(batch)]
         for dict in self.moving:
-            for j in width:
-                for i in height:
+            for j in range(width):
+                for i in range(height):
                     dict[(i, j)] = 0
 
         super().__init__(batch, width, height)

@@ -1,5 +1,5 @@
 from level import Level
-from layers import LayerType
+from layers import LayerType, Monster
 from typing import List, Tuple, Set
 from random import choice, randint, sample, random
 from enum import Enum
@@ -413,6 +413,18 @@ class SuperLevel2(Level):
 
         return True
 
+class MonsterLevel(Level):
+    def generate(self):
+        if LayerType.Player in self.uses:
+            self.level[LayerType.Player].append((4,4))
+        if LayerType.Goal in self.uses:
+            self.level[LayerType.Goal].append((4,1)) 
+        if LayerType.Monster in self.uses:
+            self.level[LayerType.Monster].append((4,2)) 
+
+        return True
+
+
 class Levels(Enum):
     Maze = Maze
     Rocks = Rocks
@@ -425,3 +437,4 @@ class Levels(Enum):
     Causal6 = Causal6
     SuperLevel = SuperLevel
     SuperLevel2 = SuperLevel2
+    MonsterLevel = MonsterLevel

@@ -2,7 +2,7 @@ from torch import tensor, Tensor
 from helper import device
 from layers import Layers, LayerType
 from typing import List, Tuple
-from levels import Levels
+from levels import Levels, MonsterLevel
 
 
 class Game:
@@ -23,6 +23,7 @@ class Game:
             Levels.Causal6: {LayerType.Blocks, LayerType.Goal, LayerType.Greendown, LayerType.Greenup, LayerType.Greenstar, LayerType.Yellowstar, LayerType.Bluestar},
             Levels.SuperLevel: {LayerType.Blocks, LayerType.Goal, LayerType.Gold, LayerType.Bluedoor, LayerType.Bluekeys, LayerType.Reddoor, LayerType.Redkeys, LayerType.Rock, LayerType.Dirt, LayerType.Coconut, LayerType.Door, LayerType.Keys},
             Levels.SuperLevel2: {LayerType.Blocks, LayerType.Goal, LayerType.Gold, LayerType.Bluedoor, LayerType.Bluekeys, LayerType.Reddoor, LayerType.Redkeys, LayerType.Rock, LayerType.Dirt, LayerType.Coconut},
+            Levels.MonsterLevel: {LayerType.Blocks, LayerType.Goal, LayerType.Gold, LayerType.Monster}
         }
         convert = {(use, [layer for layer in LayerType if layer.name == name.split('_')[1]][0]) for name, use in kwargs.items() if name.split('_')[0] == "layer"}
         self.layers: Layers = Layers(batch, width, height, level, reset_chance, *[layer for use, layer in convert if use and (layer in self.uses[level])])
