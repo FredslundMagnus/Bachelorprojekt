@@ -485,14 +485,14 @@ class Coconut(Layer):
         return not self.positions[batch]
 
     def isDead(self, batch: int, layersDict, board) -> bool:
-        highest = 100
-        for rock in layersDict[LayerType.Rock].positions[batch]:
-            if rock[0] > 1 and rock[0] < board.shape[3] - 2:
-                if rock[1] < highest:
-                    highest = rock[1]
-        for nut in set(self.positions[batch]):
-            if nut[1] <= highest:
-                return True
+        # highest = 100
+        # for rock in layersDict[LayerType.Rock].positions[batch]:
+        #     if rock[0] > 1 and rock[0] < board.shape[3] - 2:
+        #         if rock[1] < highest:
+        #             highest = rock[1]
+        # for nut in set(self.positions[batch]):
+        #     if nut[1] <= highest:
+        #         return True
         return False
 
 
