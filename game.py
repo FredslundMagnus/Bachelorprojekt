@@ -21,7 +21,8 @@ class Game:
             Levels.Causal5: {LayerType.Blocks, LayerType.Goal, LayerType.Brown1, LayerType.Brown2, LayerType.Brown3, LayerType.Pink1, LayerType.Pink2, LayerType.Pink3},
             Levels.Coconuts: {LayerType.Blocks, LayerType.Goal, LayerType.Rock, LayerType.Dirt, LayerType.Gold, LayerType.Coconut},
             Levels.Causal6: {LayerType.Blocks, LayerType.Goal, LayerType.Greendown, LayerType.Greenup, LayerType.Greenstar, LayerType.Yellowstar, LayerType.Bluestar},
-            Levels.SuperLevel: {LayerType.Blocks, LayerType.Goal, LayerType.Gold, LayerType.Bluedoor, LayerType.Bluekeys, LayerType.Reddoor, LayerType.Redkeys, LayerType.Rock, LayerType.Dirt, LayerType.Coconut, LayerType.Door, LayerType.Keys}
+            Levels.SuperLevel: {LayerType.Blocks, LayerType.Goal, LayerType.Gold, LayerType.Bluedoor, LayerType.Bluekeys, LayerType.Reddoor, LayerType.Redkeys, LayerType.Rock, LayerType.Dirt, LayerType.Coconut, LayerType.Door, LayerType.Keys},
+            Levels.SuperLevel2: {LayerType.Blocks, LayerType.Goal, LayerType.Gold, LayerType.Bluedoor, LayerType.Bluekeys, LayerType.Reddoor, LayerType.Redkeys, LayerType.Rock, LayerType.Dirt, LayerType.Coconut},
         }
         convert = {(use, [layer for layer in LayerType if layer.name == name.split('_')[1]][0]) for name, use in kwargs.items() if name.split('_')[0] == "layer"}
         self.layers: Layers = Layers(batch, width, height, level, reset_chance, *[layer for use, layer in convert if use and (layer in self.uses[level])])

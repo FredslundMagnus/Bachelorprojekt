@@ -353,6 +353,65 @@ class SuperLevel(Level):
 
         return True
 
+class SuperLevel2(Level):
+    def generate(self):
+        b = False
+        if random() > 0.5: # Mirrored
+            a = range(0,8)
+        else:
+            a = range(8,0,-1)
+        if random() > 0.5: #color
+            b = True
+        if LayerType.Player in self.uses:
+            self.level[LayerType.Player].append((a[4],4))
+        if LayerType.Goal in self.uses:
+            self.level[LayerType.Goal].append((a[4],1))
+        if LayerType.Bluekeys in self.uses and LayerType.Bluedoor in self.uses and LayerType.Redkeys in self.uses and LayerType.Reddoor in self.uses:
+            spots = [(a[4],5), (a[5],5), (a[5],4), (a[5],3), (a[4],3), (a[3],3), (a[3],4), (a[3],5)]
+            for _ in range(6):
+                spot = choice(spots)
+                if random() > 0.5:
+                    self.level[LayerType.Redkeys].append(spot)
+                else:
+                    self.level[LayerType.Bluekeys].append(spot)
+                spots.remove(spot)
+            if b:
+                self.level[LayerType.Reddoor].append((a[1],5))
+                self.level[LayerType.Reddoor].append((a[7],5))
+                self.level[LayerType.Reddoor].append((a[3],1))
+                self.level[LayerType.Bluedoor].append((a[4],6))
+                self.level[LayerType.Bluekeys].append((a[4],7))
+                self.level[LayerType.Bluekeys].append((a[5],2))
+                self.level[LayerType.Bluedoor].append((a[5],1))
+            else:
+                self.level[LayerType.Bluedoor].append((a[1],5))
+                self.level[LayerType.Bluedoor].append((a[7],5))
+                self.level[LayerType.Bluedoor].append((a[3],1))
+                self.level[LayerType.Reddoor].append((a[4],6))
+                self.level[LayerType.Redkeys].append((a[5],2))
+                self.level[LayerType.Redkeys].append((a[4],7))
+                self.level[LayerType.Reddoor].append((a[5],1))
+        if LayerType.Blocks in self.uses:
+            self.level[LayerType.Blocks].append((a[2],5))
+            self.level[LayerType.Blocks].append((a[2],6))
+            self.level[LayerType.Blocks].append((a[6],3))
+            self.level[LayerType.Blocks].append((a[6],4))
+            self.level[LayerType.Blocks].append((a[6],5))
+            self.level[LayerType.Blocks].append((a[6],6))
+            self.level[LayerType.Blocks].append((a[2],3))
+            self.level[LayerType.Blocks].append((a[2],4))
+        if LayerType.Rock in self.uses:
+            self.level[LayerType.Rock].append((a[2],2))
+        if LayerType.Dirt in self.uses:
+            self.level[LayerType.Dirt].append((a[3],7))
+            self.level[LayerType.Dirt].append((a[5],7))
+        if LayerType.Coconut in self.uses:
+            self.level[LayerType.Coconut].append((a[3],6))
+            self.level[LayerType.Coconut].append((a[5],6))
+            self.level[LayerType.Coconut].append((a[6],2))
+
+
+        return True
 
 class Levels(Enum):
     Maze = Maze
@@ -365,3 +424,4 @@ class Levels(Enum):
     Coconuts = Coconuts
     Causal6 = Causal6
     SuperLevel = SuperLevel
+    SuperLevel2 = SuperLevel2

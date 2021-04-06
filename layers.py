@@ -243,9 +243,12 @@ class Redkeys(Layer):
             self.remove(batch, pos)
         if pos in layersDict[LayerType.Bluekeys].positions[batch] or pos in layersDict[LayerType.Bluekeys]._removed[batch]:
             while True:
-                new_pos = (choice(range(3, board.width - 3)), choice(range(2, board.height - 3)))
+                new_pos = (choice(range(3, board.width - 3)), choice(range(2, board.height - 2)))
                 if LayerType.Rock in layersDict:
-                    if board.all_items[batch][new_pos] == 0:
+                    if board.all_items[batch][new_pos] == 0 and new_pos not in layersDict[LayerType.Rock].falling[batch]:
+                        break
+                elif LayerType.Coconut in layersDict:
+                    if board.all_items[batch][new_pos] == 0 and new_pos not in layersDict[LayerType.Coconut].falling[batch]:
                         break
                 elif new_pos not in layersDict[LayerType.Bluekeys].positions[batch] and new_pos not in layersDict[LayerType.Redkeys].positions[batch] and new_pos != pos:
                     break
@@ -283,10 +286,14 @@ class Bluekeys(Layer):
             self.remove(batch, pos)
         if pos in layersDict[LayerType.Redkeys].positions[batch] or pos in layersDict[LayerType.Redkeys]._removed[batch]:
             while True:
-                new_pos = (choice(range(3, board.width - 3)), choice(range(2, board.height - 3)))
+                new_pos = (choice(range(3, board.width - 3)), choice(range(2, board.height - 2)))
                 if LayerType.Rock in layersDict:
-                    if board.all_items[batch][new_pos] == 0:
+                    if board.all_items[batch][new_pos] == 0 and new_pos not in layersDict[LayerType.Rock].falling[batch]:
                         break
+                elif LayerType.Coconut in layersDict:
+                    if board.all_items[batch][new_pos] == 0 and new_pos not in layersDict[LayerType.Coconut].falling[batch]:
+                        break
+
                 elif new_pos not in layersDict[LayerType.Bluekeys].positions[batch] and new_pos not in layersDict[LayerType.Redkeys].positions[batch] and new_pos != pos:
                     break
             self.add(batch, new_pos)
@@ -457,8 +464,12 @@ class Coconut(Layer):
     size = 0.6
     blocking = True
     shape = Shape.Circle
+    def __init__(self, batch: int, width: int, height: int) -> None:
+        self.falling = [set() for _ in range(batch)]
+        super().__init__(batch, width, height)
 
     def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        self.falling[batch] = set()
         adders = set()
         pos = layersDict[LayerType.Player].positions[batch][0]
         if pos in self.positions[batch]:
@@ -477,6 +488,7 @@ class Coconut(Layer):
                 elif s[item_under] == 0 and item_under not in adders:
                     self.remove(batch, nut)
                     adders.add(item_under)
+                    self.falling[batch].add(item_under)
                 elif item_under in nuts:
                     left_side, left_down_side, right_side, right_down_side = (x + 1, y), (x + 1, y + 1), (x - 1, y), (x - 1, y + 1)
                     if s[right_side] == 0 and s[right_down_side] == 0 and right_side not in adders and (pos[0], pos[1]) != right_side:
