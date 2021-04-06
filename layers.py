@@ -615,9 +615,14 @@ class Layers:
                 rewards[batch] = 1
                 dones[batch] = 1
                 self.counter[batch] = 0
-            elif random() < self.reset_chance or self.frames_since_chance[batch] > 10 or any(layer.isDead(batch, self.dict, self.board) for layer in self.layers):
+            elif random() < self.reset_chance or self.frames_since_chance[batch] > 10:
                 self.restart(batch)
                 rewards[batch] = 0
+                dones[batch] = 1
+                self.counter[batch] = 0
+            elif any(layer.isDead(batch, self.dict, self.board) for layer in self.layers):
+                self.restart(batch)
+                rewards[batch] = -1
                 dones[batch] = 1
                 self.counter[batch] = 0
 
