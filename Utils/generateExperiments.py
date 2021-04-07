@@ -158,6 +158,6 @@ def genExperiments(name, n=1, **params):
 # genExperiments(f"cococonuts_teleport", n=1, hours=24, level=Levels.Coconuts, main=teleport)
 
 
-genExperiments(f"causal7_demo", n=2, hours=16, level=Levels.Causal7, main=teleport)
+genExperiments(f"causal3_demo", n=2, hours=16, level=Levels.Causal3, main=teleport)
 
 file.close()
