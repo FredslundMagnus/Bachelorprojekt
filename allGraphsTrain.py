@@ -3,6 +3,7 @@ from allGraphs import *
 
 def graphTrain(defaults, data=None):
     layers: List[LayerType] = environments[defaults['level']][2]
+    explorationN = defaults['K1']
     if data == None:
         data = {}
     for layer in layers:
@@ -27,7 +28,8 @@ def graphTrain(defaults, data=None):
             transformNot(env.board, new_states, player, goal, convert, data, layers)
             stateChanged = [old != new for old, new in zip(old_states, new_states)]
             shouldInterviene = [cond1 or cond2 for cond1, cond2 in zip(stateChanged, eatCheese)]
-            interventions = [(getInterventions(env, state, data, layers) if should else old) for state, should, old in zip(new_states, shouldInterviene, interventions)]
+            exploration = max((explorationN-frame)/explorationN, defaults['softmax_cap'])
+            interventions = [(getInterventions(env, state, data, layers, exploration) if should else old) for state, should, old in zip(new_states, shouldInterviene, interventions)]
             modification = env.board[tensor(interventions)].unsqueeze(1)
             teleporter.interventions = [m.flatten().argmax().item() for m in list(modification)]
             modified_board = cat((env.board, modification), dim=1)

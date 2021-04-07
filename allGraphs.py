@@ -13,6 +13,7 @@ from agent import Teleporter, Mover, Networks, Learners, Explorations, MetaTelep
 from collector import Collector
 from auxillaries import loop, Save
 from helper import function
+from random import random
 
 environments = {
     Levels.Causal6: ["causal6_demo", 0, [LayerType.Greendown, LayerType.Greenup, LayerType.Greenstar, LayerType.Yellowstar, LayerType.Bluestar]],
@@ -179,6 +180,28 @@ def bestIntervention(state: FrozenSet[LayerType], data: Dict[LayerType, Dict[Fro
     return maxL
 
 
+def rightIntervention(state: FrozenSet[LayerType], data: Dict[LayerType, Dict[FrozenSet[LayerType], float]], layers: List[LayerType]) -> LayerType:
+    # Den her skal laves
+    maxV, maxL = 0, None
+    for layer in [layer for layer in (layers + [LayerType.Goal]) if layer not in state]:
+
+        chanceForFlip = 1
+        for partial in compress(state):
+            chanceForFlip *= (1 - data[layer][partial])
+        chanceForFlip = min(1 - chanceForFlip, 0.99)
+
+        temp = 0
+        for overkill in expand(state, layer, layers):
+            temp += data[layer][overkill] * (1-alpha) * chanceForFlip
+
+        for partial in compress(state):
+            temp += data[layer][partial] * (1-alpha) * (1-chanceForFlip)
+
+        if temp >= maxV:
+            maxV, maxL = temp, layer
+    return maxL
+
+
 def transform(old_states: List[FrozenSet[LayerType]], new_states: List[FrozenSet[LayerType]], dones: Tensor, rewards: Tensor, data: Dict[LayerType, Dict[FrozenSet[LayerType], float]], layers: List[LayerType]) -> None:
     for old_state, new_state, done, reward in zip(old_states, new_states, dones.tolist(), rewards.tolist()):
         if reward:
@@ -198,8 +221,11 @@ def transformNot(boards: Tensor, states: List[FrozenSet[LayerType]], player: int
                     data[layer][undershoot] *= alpha
 
 
-def getInterventions(env: Game, state: FrozenSet[LayerType], data: Dict[LayerType, Dict[FrozenSet[LayerType], float]], layers: List[LayerType]) -> List[bool]:
-    best = env.layers.types.index(bestIntervention(state, data, layers))
+def getInterventions(env: Game, state: FrozenSet[LayerType], data: Dict[LayerType, Dict[FrozenSet[LayerType], float]], layers: List[LayerType], exploration: float = 1) -> List[bool]:
+    if random() <= exploration:
+        best = env.layers.types.index(bestIntervention(state, data, layers))
+    else:
+        best = env.layers.types.index(rightIntervention(state, data, layers))
     return [best == i for i in range(env.board.shape[1])]
 
 
