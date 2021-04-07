@@ -36,6 +36,10 @@ class LayerType(Enum):
     Bluestar = 28
     Coconut = 29
     Monster = 30
+    Greencross = 31
+    Bluecross = 32
+    Redcross = 33
+    Purplecross = 34
 
 
 class Shape(Enum):
@@ -76,6 +80,7 @@ class Layer(metaclass=ABCMeta):
 
     def isDone(self, batch: int, layersDict) -> bool:
         return True
+
     def isDead(self, batch: int, layersDict, board) -> bool:
         return False
 
@@ -104,7 +109,7 @@ class Layer(metaclass=ABCMeta):
             elif LayerType.Coconut in layers.dict and (_to[0], _to[1] - 1) not in layers.dict[LayerType.Coconut].positions[batch] and (_to[0], _to[1] - 1) not in layers.dict[LayerType.Rock].positions[batch]:
                 self.remove(batch, _from)
                 self.add(batch, _to)
-        if LayerType.Rock in layers.dict and action[1] == 0 :
+        if LayerType.Rock in layers.dict and action[1] == 0:
             if _to in layers.dict[LayerType.Rock].positions[batch] and _to[0] < layers.width - 1 and _to[0] > 0:
                 push_to = (_to[0] + action[0], _to[1])
                 fall_to = (_to[0], _to[1] + 1)
