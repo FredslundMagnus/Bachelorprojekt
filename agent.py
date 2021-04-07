@@ -155,7 +155,7 @@ class MetaTeleporter(Teleporter):
         return modified_board1, modified_board2, modified_rewards1, modified_rewards2, modified_dones1, modified_dones2, tele_rewards, intervention_idx1, intervention_idx2
 
 class CFAgent(Agent):
-    def __init__(self, game: Game, Counterfacts: int = None, CF_convert: int = None, network1: Networks = None, learner1: Learners = None, exploration2: Explorations = None, gamma1: float = None, K1 : float = None, **kwargs) -> None:
+    def __init__(self, game: Game, TopN: int = None, Counterfacts: int = None, CF_convert: int = None, network1: Networks = None, learner1: Learners = None, exploration2: Explorations = None, gamma1: float = None, K1 : float = None, **kwargs) -> None:
         super().__init__(game, network1, learner1, exploration2, gamma1, K1, **kwargs)
         self.boards = [None] * self.batch
         self.counterfactuals = torch.zeros(self.batch, device=device)
@@ -163,6 +163,7 @@ class CFAgent(Agent):
         self.K1 = K1
         self.convert_function = CF_convert
         self.counterfacts = Counterfacts
+        self.TopN = TopN - 1
 
     def __call__(self, board: Tensor) -> Tensor:
         self.values: Tensor = self.net.network(board)
@@ -176,7 +177,7 @@ class CFAgent(Agent):
         # if self.counter % 100 == 0:
         #    print(values)
         learning_scores = self.convert_values(values.detach(), tele_values)
-        actions = torch.argsort(learning_scores, dim=1, descending=True)[:,random.randint(0,6)]
+        actions = torch.argsort(learning_scores, dim=1, descending=True)[:,random.randint(0,self.TopN)]
         return actions
 
     def convert_values(self, values, tele_values):
