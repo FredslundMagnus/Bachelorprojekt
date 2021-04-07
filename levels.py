@@ -415,27 +415,27 @@ class SuperLevel2(Level):
 
 class MonsterLevel(Level):
     def generate(self):
+        if LayerType.Monster in self.uses:
+            for pos in sample(self.notUsed, 4):
+                self.level[LayerType.Monster].append(pos) 
+        if LayerType.Blocks in self.uses:
+            for pos in sample(self.notUsed, 12):
+                if pos[0] < self.shape[0] and pos[0] > 1 and pos[1] < self.shape[1] and pos[1] > 1:
+                    blocks = 0
+                    for j in range(4):
+                        for i in range(4):
+                            if (pos[0] + j - 1, pos[1] + i - 1) in self.level[LayerType.Blocks]:
+                                blocks += 1
+                    if blocks < 4:
+                        self.level[LayerType.Blocks].append(pos) 
         if LayerType.Player in self.uses:
             for pos in sample(self.notUsed, 1):
                 self.level[LayerType.Player].append(pos)
         if LayerType.Goal in self.uses:
             for pos in sample(self.notUsed, 1):
                 self.level[LayerType.Goal].append(pos)
-        if LayerType.Monster in self.uses:
-            for pos in sample(self.notUsed, 7):
-                self.level[LayerType.Monster].append(pos) 
-        if LayerType.Blocks in self.uses:
-            for pos in sample(self.notUsed, 10):
-                if pos[0] < self.shape[0] and pos[0] > 1 and pos[1] < self.shape[1] and pos[1] > 1:
-                    blocks = 0
-                    for j in range(3):
-                        for i in range(3):
-                            if (pos[0] + j - 1, pos[1] + i - 1) in self.level[LayerType.Blocks]:
-                                blocks += 1
-                    if blocks < 3:
-                        self.level[LayerType.Blocks].append(pos) 
         if LayerType.Gold in self.uses:
-            for pos in sample(self.notUsed, 7):
+            for pos in sample(self.notUsed, 4):
                 self.level[LayerType.Gold].append(pos) 
 
         return True
