@@ -3,11 +3,16 @@ from paint import Paint
 from torch import Tensor, tensor, cat
 from layer import LayerType
 from itertools import combinations as combi
-from main import *
+# from main import *
 from load import Load
 from graphs import Edge, Graph, Node
 from threading import currentThread
 from typing import FrozenSet, Dict, Iterable, List
+from game import Game, Levels
+from agent import Teleporter, Mover, Networks, Learners, Explorations, MetaTeleporter, CFAgent
+from collector import Collector
+from auxillaries import loop, Save
+from helper import function
 
 environments = {
     Levels.Causal6: ["causal6_demo", 0, [LayerType.Greendown, LayerType.Greenup, LayerType.Greenstar, LayerType.Yellowstar, LayerType.Bluestar]],
@@ -17,10 +22,10 @@ environments = {
     Levels.Causal1: ["causal1_demo", 0, [LayerType.Gold, LayerType.Keys, LayerType.Door]],
 }
 
-environment = environments[Levels.Causal6]
+level = Levels.Causal6
 alpha = 0.95
 useBestIntervention = True
-GAME_UI = False
+GAME_UI = True
 
 
 class AllGraph(Graph):
@@ -118,9 +123,9 @@ class AllGraph(Graph):
             edge.value = 1 - edge.value
 
 
-def combinations(layer: LayerType) -> Iterable[FrozenSet[LayerType]]:
-    for i in range(len(environment[2]) + 1):
-        for c in combi([v for v in environment[2] if v != layer], i):
+def combinations(layer: LayerType, layers: List[LayerType]) -> Iterable[FrozenSet[LayerType]]:
+    for i in range(len(layers) + 1):
+        for c in combi([v for v in layers if v != layer], i):
             yield frozenset(c)
 
 
@@ -131,17 +136,17 @@ def satatisfied(key: FrozenSet[LayerType], state: FrozenSet[LayerType]) -> bool:
     return True
 
 
-def states(board: Tensor, convert: List[int]) -> Iterable[FrozenSet[LayerType]]:
+def states(board: Tensor, convert: List[int], layers: List[LayerType]) -> Iterable[FrozenSet[LayerType]]:
     for batch in range(board.shape[0]):
         state = []
-        for layer, i in zip(environment[2], convert):
+        for layer, i in zip(layers, convert):
             if not board[batch, i].sum().item():
                 state.append(layer)
         yield frozenset(state)
 
 
-def expand(state: FrozenSet[LayerType], hide: LayerType) -> Iterable[FrozenSet[LayerType]]:
-    extras = [layer for layer in environment[2] if layer not in state and layer != hide]
+def expand(state: FrozenSet[LayerType], hide: LayerType, layers: List[LayerType]) -> Iterable[FrozenSet[LayerType]]:
+    extras = [layer for layer in layers if layer not in state and layer != hide]
     for i in range(1, len(extras) + 1):
         for c in combi(extras, i):
             yield frozenset(list(state) + list(c))
@@ -153,9 +158,9 @@ def compress(state: FrozenSet[LayerType]) -> Iterable[FrozenSet[LayerType]]:
             yield frozenset(c)
 
 
-def bestIntervention(state: FrozenSet[LayerType], data: Dict[LayerType, Dict[FrozenSet[LayerType], float]]) -> LayerType:
+def bestIntervention(state: FrozenSet[LayerType], data: Dict[LayerType, Dict[FrozenSet[LayerType], float]], layers: List[LayerType]) -> LayerType:
     maxV, maxL = 0, None
-    for layer in [layer for layer in (environment[2] + [LayerType.Goal]) if layer not in state]:
+    for layer in [layer for layer in (layers + [LayerType.Goal]) if layer not in state]:
 
         chanceForFlip = 1
         for partial in compress(state):
@@ -163,7 +168,7 @@ def bestIntervention(state: FrozenSet[LayerType], data: Dict[LayerType, Dict[Fro
         chanceForFlip = min(1 - chanceForFlip, 0.99)
 
         temp = 0
-        for overkill in expand(state, layer):
+        for overkill in expand(state, layer, layers):
             temp += data[layer][overkill] * (1-alpha) * chanceForFlip
 
         for partial in compress(state):
@@ -174,55 +179,56 @@ def bestIntervention(state: FrozenSet[LayerType], data: Dict[LayerType, Dict[Fro
     return maxL
 
 
-def transform(old_states: List[FrozenSet[LayerType]], new_states: List[FrozenSet[LayerType]], dones: Tensor, rewards: Tensor, data: Dict[LayerType, Dict[FrozenSet[LayerType], float]]) -> None:
+def transform(old_states: List[FrozenSet[LayerType]], new_states: List[FrozenSet[LayerType]], dones: Tensor, rewards: Tensor, data: Dict[LayerType, Dict[FrozenSet[LayerType], float]], layers: List[LayerType]) -> None:
     for old_state, new_state, done, reward in zip(old_states, new_states, dones.tolist(), rewards.tolist()):
         if reward:
-            for overkill in expand(old_state, None):
+            for overkill in expand(old_state, None, layers):
                 data[LayerType.Goal][overkill] *= alpha
         elif not done and old_state != new_state:
             for layer in new_state.difference(old_state):
-                for overkill in expand(old_state, layer):
+                for overkill in expand(old_state, layer, layers):
                     data[layer][overkill] *= alpha
 
 
-def transformNot(boards: Tensor, states: List[FrozenSet[LayerType]], player: int, goal: int, convert: List[int], data: Dict[LayerType, Dict[FrozenSet[LayerType], float]]) -> None:
+def transformNot(boards: Tensor, states: List[FrozenSet[LayerType]], player: int, goal: int, convert: List[int], data: Dict[LayerType, Dict[FrozenSet[LayerType], float]], layers: List[LayerType]) -> None:
     for board, state in zip(boards, states):
-        for layer, i in zip(environment[2] + [LayerType.Goal], convert + [goal]):
+        for layer, i in zip(layers + [LayerType.Goal], convert + [goal]):
             if (board[player] * board[i]).sum().item():
                 for undershoot in compress(state):
                     data[layer][undershoot] *= alpha
 
 
-def getInterventions(env: Game, state: FrozenSet[LayerType], data: Dict[LayerType, Dict[FrozenSet[LayerType], float]]) -> List[bool]:
-    best = env.layers.types.index(bestIntervention(state, data))
+def getInterventions(env: Game, state: FrozenSet[LayerType], data: Dict[LayerType, Dict[FrozenSet[LayerType], float]], layers: List[LayerType]) -> List[bool]:
+    best = env.layers.types.index(bestIntervention(state, data, layers))
     return [best == i for i in range(env.board.shape[1])]
 
 
 def runnerBestIntervention(data=None):
+    layers: List[LayerType] = environments[level][2]
     if data == None:
         data = {}
-    for layer in environment[2]:
-        data[layer] = {c: 1 for c in combinations(layer)}
-    data[LayerType.Goal] = {c: 1 for c in combinations(None)}
-    with Load(environment[0], num=environment[1]) as load:
+    for layer in layers:
+        data[layer] = {c: 1 for c in combinations(layer, layers)}
+    data[LayerType.Goal] = {c: 1 for c in combinations(None, layers)}
+    with Load(environments[level][0], num=environments[level][1]) as load:
         collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
         if GAME_UI:
             Paint.switch(env.layers.width, env.layers.height)
-        convert = [env.layers.types.index(layer) for layer in environment[2]]
+        convert = [env.layers.types.index(layer) for layer in layers]
         player = env.layers.types.index(LayerType.Player)
         goal = env.layers.types.index(LayerType.Goal)
-        old_states = [state for state in states(env.board, convert)]
+        old_states = [state for state in states(env.board, convert, layers)]
         dones = tensor([0 for _ in range(env.batch)])
         rewards = tensor([0 for _ in range(env.batch)])
         eatCheese, interventions = ([True] * env.batch, [None] * env.batch)  # New
         for frame in loop(env, collector, teleporter=teleporter):
-            new_states = [state for state in states(env.board, convert)]
-            transform(old_states, new_states, dones, rewards, data)
-            transformNot(env.board, new_states, player, goal, convert, data)
+            new_states = [state for state in states(env.board, convert, layers)]
+            transform(old_states, new_states, dones, rewards, data, layers)
+            transformNot(env.board, new_states, player, goal, convert, data, layers)
             stateChanged = [old != new for old, new in zip(old_states, new_states)]  # New
             shouldInterviene = [cond1 or cond2 for cond1, cond2 in zip(stateChanged, eatCheese)]  # New
             # interventions = tensor([getInterventions(env, state, data) for state in new_states]) # Old
-            interventions = [(getInterventions(env, state, data) if should else old) for state, should, old in zip(new_states, shouldInterviene, interventions)]  # New
+            interventions = [(getInterventions(env, state, data, layers) if should else old) for state, should, old in zip(new_states, shouldInterviene, interventions)]  # New
             modification = env.board[tensor(interventions)].unsqueeze(1)
             teleporter.interventions = [m.flatten().argmax().item() for m in list(modification)]
             modified_board = cat((env.board, modification), dim=1)
@@ -237,28 +243,29 @@ def runnerBestIntervention(data=None):
 
 
 def runnerNormalTeleport(data=None):
+    layers: List[LayerType] = environments[level][2]
     if data == None:
         data = {}
-    for layer in environment[2]:
-        data[layer] = {c: 1 for c in combinations(layer)}
-    data[LayerType.Goal] = {c: 1 for c in combinations(None)}
-    with Load(environment[0], num=environment[1]) as load:
+    for layer in layers:
+        data[layer] = {c: 1 for c in combinations(layer, layers)}
+    data[LayerType.Goal] = {c: 1 for c in combinations(None, layers)}
+    with Load(environments[level][0], num=environments[level][1]) as load:
         collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
         if GAME_UI:
             Paint.switch(env.layers.width, env.layers.height)
         teleporter.extradim = 0  # fix
         teleporter.exploration.explore = teleporter.exploration.greedy
-        convert = [env.layers.types.index(layer) for layer in environment[2]]
+        convert = [env.layers.types.index(layer) for layer in layers]
         player = env.layers.types.index(LayerType.Player)
         goal = env.layers.types.index(LayerType.Goal)
         intervention_idx, modified_board = teleporter.pre_process(env)
-        old_states = [state for state in states(env.board, convert)]
+        old_states = [state for state in states(env.board, convert, layers)]
         dones = tensor([0 for _ in range(env.batch)])
         rewards = tensor([0 for _ in range(env.batch)])
         for frame in loop(env, collector, teleporter=teleporter):
-            new_states = [state for state in states(env.board, convert)]
-            transform(old_states, new_states, dones, rewards, data)
-            transformNot(env.board, new_states, player, goal, convert, data)
+            new_states = [state for state in states(env.board, convert, layers)]
+            transform(old_states, new_states, dones, rewards, data, layers)
+            transformNot(env.board, new_states, player, goal, convert, data, layers)
             modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
             actions = mover(modified_board)
             observations, rewards, dones, info = env.step(actions)
@@ -269,7 +276,8 @@ def runnerNormalTeleport(data=None):
                 break
 
 
-if GAME_UI:
-    runnerBestIntervention() if useBestIntervention else runnerNormalTeleport()
-else:
-    AllGraph(runnerBestIntervention if useBestIntervention else runnerNormalTeleport, environment[2], usePlayer=False)
+if __name__ == "__main__":
+    if GAME_UI:
+        runnerBestIntervention() if useBestIntervention else runnerNormalTeleport()
+    else:
+        AllGraph(runnerBestIntervention if useBestIntervention else runnerNormalTeleport, environments[level][2], usePlayer=False)
