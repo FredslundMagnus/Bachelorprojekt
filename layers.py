@@ -577,6 +577,9 @@ class Greencross(Layer):
         if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch]:
             self.remove(batch, pos)
 
+    def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
+        return not self.positions[batch]
+
 
 class Bluecross(Layer):
     color = Colors.blue
@@ -585,9 +588,12 @@ class Bluecross(Layer):
     shape = Shape.Square
 
     def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
-        blocked = LayerType.Diamond1 in layersDict and bool(layersDict[LayerType.Diamond1].positions[batch])
+        blocked = LayerType.Greencross in layersDict and bool(layersDict[LayerType.Greencross].positions[batch])
         if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch] and not blocked:
             self.remove(batch, pos)
+
+    def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
+        return not self.positions[batch]
 
 
 class Redcross(Layer):
@@ -597,9 +603,12 @@ class Redcross(Layer):
     shape = Shape.Square
 
     def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
-        blocked = LayerType.Diamond2 in layersDict and bool(layersDict[LayerType.Diamond2].positions[batch])
+        blocked = LayerType.Bluecross in layersDict and bool(layersDict[LayerType.Bluecross].positions[batch])
         if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch] and not blocked:
             self.remove(batch, pos)
+
+    def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
+        return not self.positions[batch]
 
 
 class Purplecross(Layer):
@@ -609,7 +618,7 @@ class Purplecross(Layer):
     shape = Shape.Square
 
     def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
-        blocked = LayerType.Diamond3 in layersDict and bool(layersDict[LayerType.Diamond3].positions[batch])
+        blocked = LayerType.Redcross in layersDict and bool(layersDict[LayerType.Redcross].positions[batch])
         if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch] and not blocked:
             self.remove(batch, pos)
 
