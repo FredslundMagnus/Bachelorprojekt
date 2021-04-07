@@ -17,7 +17,7 @@ environments = {
     Levels.Causal1: ["causal1_demo", 0, [LayerType.Gold, LayerType.Keys, LayerType.Door]],
 }
 
-environment = environments[Levels.Causal2]
+environment = environments[Levels.Causal6]
 alpha = 0.95
 useBestIntervention = True
 GAME_UI = False
