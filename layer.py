@@ -36,6 +36,10 @@ class LayerType(Enum):
     Bluestar = 28
     Coconut = 29
     Monster = 30
+    Greencross = 31
+    Bluecross = 32
+    Redcross = 33
+    Purplecross = 34
 
 
 class Shape(Enum):
@@ -76,6 +80,7 @@ class Layer(metaclass=ABCMeta):
 
     def isDone(self, batch: int, layersDict) -> bool:
         return True
+
     def isDead(self, batch: int, layersDict, board) -> bool:
         return False
 

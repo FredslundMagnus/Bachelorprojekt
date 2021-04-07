@@ -178,6 +178,11 @@ class Defaults:
 
     layer_Monster: bool = True
 
+    layer_Greencross: bool = True
+    layer_Bluecross: bool = True
+    layer_Redcross: bool = True
+    layer_Purplecross: bool = True
+
     epsilon_cap: float = 0.2
     softmax_cap: float = 0.02
     update: int = 10000
