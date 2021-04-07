@@ -192,7 +192,17 @@ class CFAgent(Agent):
         elif self.convert_function == 4:
             learning_scores = (1 - abs(values - 0.6)) * softmax(tele_values * 3, dim=1)
         elif self.convert_function == 5:
-            learning_scores = (1 - abs(values - 0.6))
+            learning_scores = values * softmax(tele_values, dim=1)
+        elif self.convert_function == 6:
+            learning_scores = values * softmax(tele_values * 3, dim=1)
+        elif self.convert_function == 7:
+            learning_scores = values * softmax(tele_values * 10, dim=1)
+        elif self.convert_function == 8:
+            learning_scores = (1 - abs(values - 0.5)) * softmax(tele_values, dim=1)
+        elif self.convert_function == 9:
+            learning_scores = (1 - abs(values - 0.5)) * softmax(tele_values * 3, dim=1)
+        elif self.convert_function == 10:
+            learning_scores = (1 - abs(values - 0.5)) * softmax(tele_values * 10, dim=1)
         return learning_scores
 
     def _learn(self, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor, *args):

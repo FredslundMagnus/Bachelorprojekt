@@ -146,11 +146,15 @@ def genExperiments(name, n=1, **params):
 # genExperiments(f"causal3_CF_convert3_2", n=1, hours=24, level=Levels.Causal3, main=CFagent, CF_convert=3)
 # genExperiments(f"causal3_CF_convert4_2", n=1, hours=24, level=Levels.Causal3, main=CFagent, CF_convert=4)
 # genExperiments(f"causal3_CF_convert5_2", n=1, hours=24, level=Levels.Causal3, main=CFagent, CF_convert=5)
-
-
-genExperiments(f"causal2_demo", n=2, hours=16, level=Levels.Causal2, main=teleport)
-genExperiments(f"causal5_demo", n=2, hours=16, level=Levels.Causal5, main=teleport)
-genExperiments(f"causal6_demo", n=2, hours=16, level=Levels.Causal6, main=teleport)
-genExperiments(f"causal1_demo", n=2, hours=16, level=Levels.Causal1, main=teleport)
+# genExperiments(f"causal2_demo", n=2, hours=16, level=Levels.Causal2, main=teleport)
+# genExperiments(f"causal5_demo", n=2, hours=16, level=Levels.Causal5, main=teleport)
+# genExperiments(f"causal6_demo", n=2, hours=16, level=Levels.Causal6, main=teleport)
+# genExperiments(f"causal1_demo", n=2, hours=16, level=Levels.Causal1, main=teleport)
+genExperiments(f"coconuts_CF_conver5", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=5)
+genExperiments(f"coconuts_CF_conver6", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=6)
+genExperiments(f"coconuts_CF_conver7", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=7)
+genExperiments(f"coconuts_CF_conver8", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=8)
+genExperiments(f"coconuts_CF_conver9", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=9)
+genExperiments(f"coconuts_teleport", n=1, hours=24, level=Levels.Coconuts, main=teleport)
 
 file.close()

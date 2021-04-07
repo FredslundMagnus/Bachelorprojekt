@@ -121,8 +121,8 @@ def CFagent(defaults):
 
 class Defaults:
     name: str = "Agent"
-    main: function = player
-    level: Levels = Levels.MonsterLevel
+    main: function = CFagent
+    level: Levels = Levels.SuperLevel2
     hours: float = 12
     batch: int = 100
     width: int = 9
