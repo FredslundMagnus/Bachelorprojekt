@@ -451,7 +451,6 @@ class Yellowstar(Layer):
     def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
         return not self.positions[batch] or not (LayerType.Bluestar in layersDict and bool(layersDict[LayerType.Bluestar].positions[batch]))
 
-
 class Coconut(Layer):
     color = Colors.deepOrange
     size = 0.6
@@ -469,6 +468,7 @@ class Coconut(Layer):
             self.remove(batch, pos)
             adders.add((pos[0] + action[0], pos[1]))
         nuts = set(self.positions[batch])
+        rocks_n_coconuts = nuts.union(set(layersDict[LayerType.Rock].positions[batch])) if LayerType.Rock in layersDict else nuts
         s = board.all_items[batch]
         for nut in nuts:
             x, y = nut[0], nut[1]
@@ -482,7 +482,7 @@ class Coconut(Layer):
                     self.remove(batch, nut)
                     adders.add(item_under)
                     self.falling[batch].add(item_under)
-                elif item_under in nuts:
+                elif item_under in rocks_n_coconuts:
                     left_side, left_down_side, right_side, right_down_side = (x + 1, y), (x + 1, y + 1), (x - 1, y), (x - 1, y + 1)
                     if s[right_side] == 0 and s[right_down_side] == 0 and right_side not in adders and (pos[0], pos[1]) != right_side:
                         self.remove(batch, nut)
@@ -490,6 +490,11 @@ class Coconut(Layer):
                     elif s[left_side] == 0 and s[left_down_side] == 0 and left_side not in adders and (pos[0], pos[1]) != left_side:
                         self.remove(batch, nut)
                         adders.add(left_side)
+            else:
+                if item_over in layersDict[LayerType.Rock].falling[batch]:
+                    self.remove(batch, nut)
+                    layersDict[LayerType.Gold].add(batch, nut)
+
         [self.add(batch, x) for x in adders]
 
     def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:

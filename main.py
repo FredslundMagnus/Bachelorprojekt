@@ -121,7 +121,7 @@ def CFagent(defaults):
 
 class Defaults:
     name: str = "Agent"
-    main: function = player
+    main: function = CFagent
     level: Levels = Levels.Coconuts
     hours: float = 12
     batch: int = 100
