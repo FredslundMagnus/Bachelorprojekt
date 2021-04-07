@@ -1,7 +1,7 @@
 from game import Game, Levels
 from agent import Teleporter, Mover, Networks, Learners, Explorations, MetaTeleporter, CFAgent
 from collector import Collector
-from auxillaries import run, loop, person, random_agent, Save
+from auxillaries import run, loop, player, random, Save
 from helper import function
 from replaybuffer import ReplayBuffer, CFReplayBuffer
 from simulator import Simulator
@@ -71,18 +71,6 @@ def simple(defaults):
             collector.collect([rewards], [dones])
 
 
-def player(defaults):
-    env = Game(**defaults)
-    for _ in loop(env, None):
-        env.step(person(env.batch))
-
-
-def random(defaults):
-    env = Game(**defaults)
-    for _ in loop(env, None):
-        env.step(random_agent(env.batch))
-
-
 def simulation(defaults):
     with Load("causal3_9x9_20hours", num=2) as load:
         env, mover, teleporter = load.items(Game, Mover, Teleporter)
@@ -134,7 +122,7 @@ def CFagent(defaults):
 class Defaults:
     name: str = "Agent"
     main: function = player
-    level: Levels = Levels.SuperLevel2
+    level: Levels = Levels.MonsterLevel
     hours: float = 12
     batch: int = 100
     width: int = 9
@@ -185,7 +173,10 @@ class Defaults:
     layer_Greenstar: bool = True
     layer_Yellowstar: bool = True
     layer_Bluestar: bool = True
+
     layer_Coconut: bool = True
+
+    layer_Monster: bool = True
 
     epsilon_cap: float = 0.2
     softmax_cap: float = 0.02

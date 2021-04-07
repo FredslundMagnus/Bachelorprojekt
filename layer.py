@@ -35,6 +35,7 @@ class LayerType(Enum):
     Yellowstar = 27
     Bluestar = 28
     Coconut = 29
+    Monster = 30
 
 
 class Shape(Enum):

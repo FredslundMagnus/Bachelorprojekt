@@ -68,7 +68,8 @@ class Teleporter(Agent):
         self.counter += 1
         intervention = self.interventions.to(dtype=int)
         modified_board = self.modify_board(intervention, board)
-        modified_rewards = torch.sum(modified_board[:, 0] * modified_board[:, -1], (1, 2)) * (1 - rewards)
+        modified_rewards = torch.sum(modified_board[:, 0] * modified_board[:, -1], (1, 2))
+        modified_rewards[rewards == 1] = 0
         for i in range(len(info)):
             if 'player_end' in info[i]:
                 modified_rewards[i] += modified_board[i, -1][(info[i]['player_end'][1], info[i]['player_end'][0])]
@@ -80,6 +81,7 @@ class Teleporter(Agent):
         tele_rewards = self.miss_intervention_cost * torch.clone(modified_dones)
         tele_rewards[modified_rewards == 1] = self.intervention_cost
         tele_rewards[rewards == 1] = 1
+        tele_rewards[rewards == -1] = -1
         intervention_idx = torch.flatten(torch.nonzero(modified_dones.long()))
         return modified_board, modified_rewards, modified_dones, tele_rewards, intervention_idx
 
