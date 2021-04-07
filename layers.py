@@ -5,7 +5,7 @@ from layer import Layer, Shape, LayerType
 from colors import Colors
 from typing import Dict, Tuple, List
 import numpy as np
-from random import random, choice
+from random import randint, random, choice
 
 
 class Player(Layer):
@@ -451,12 +451,12 @@ class Yellowstar(Layer):
     def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
         return not self.positions[batch] or not (LayerType.Bluestar in layersDict and bool(layersDict[LayerType.Bluestar].positions[batch]))
 
-
 class Coconut(Layer):
     color = Colors.deepOrange
     size = 0.6
     blocking = True
     shape = Shape.Circle
+
     def __init__(self, batch: int, width: int, height: int) -> None:
         self.falling = [set() for _ in range(batch)]
         super().__init__(batch, width, height)
@@ -469,6 +469,7 @@ class Coconut(Layer):
             self.remove(batch, pos)
             adders.add((pos[0] + action[0], pos[1]))
         nuts = set(self.positions[batch])
+        rocks_n_coconuts = nuts.union(set(layersDict[LayerType.Rock].positions[batch])) if LayerType.Rock in layersDict else nuts
         s = board.all_items[batch]
         for nut in nuts:
             x, y = nut[0], nut[1]
@@ -482,7 +483,7 @@ class Coconut(Layer):
                     self.remove(batch, nut)
                     adders.add(item_under)
                     self.falling[batch].add(item_under)
-                elif item_under in nuts:
+                elif item_under in rocks_n_coconuts:
                     left_side, left_down_side, right_side, right_down_side = (x + 1, y), (x + 1, y + 1), (x - 1, y), (x - 1, y + 1)
                     if s[right_side] == 0 and s[right_down_side] == 0 and right_side not in adders and (pos[0], pos[1]) != right_side:
                         self.remove(batch, nut)
@@ -490,6 +491,11 @@ class Coconut(Layer):
                     elif s[left_side] == 0 and s[left_down_side] == 0 and left_side not in adders and (pos[0], pos[1]) != left_side:
                         self.remove(batch, nut)
                         adders.add(left_side)
+            else:
+                if item_over in layersDict[LayerType.Rock].falling[batch]:
+                    self.remove(batch, nut)
+                    layersDict[LayerType.Gold].add(batch, nut)
+
         [self.add(batch, x) for x in adders]
 
     def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
@@ -505,6 +511,124 @@ class Coconut(Layer):
         #     if nut[1] <= highest:
         #         return True
         return False
+
+
+class Monster(Layer):
+    color = Colors.blue
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+
+    def __init__(self, batch: int, width: int, height: int) -> None:
+        self.moving = [{} for _ in range(batch)]
+        for dict in self.moving:
+            for j in range(width):
+                for i in range(height):
+                    dict[(i, j)] = 0
+
+        super().__init__(batch, width, height)
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        removers = set()
+        adders = set()
+        for monster in self.positions[batch]:
+            x, y = monster
+            right = (x+1, y)
+            left = (x-1, y)
+            up = (x, y+1)
+            down = (x, y-1)
+            if x > 0 and x < board.width - 1 and y > 0 and y < board.height - 1:
+                if self.moving[batch][monster] == 0:
+                    self.moving[batch][monster] = randint(0, 4)
+                elif self.moving[batch][monster] == 1 and (board.all_items[batch][right] == 0 or right in layersDict[LayerType.Player].positions[batch]) and right not in adders:
+                    self.moving[batch][monster] = 0
+                    self.moving[batch][right] = 1
+                    removers.add(monster)
+                    adders.add(right)
+                elif self.moving[batch][monster] == 2 and (board.all_items[batch][left] == 0 or left in layersDict[LayerType.Player].positions[batch]) and left not in adders:
+                    self.moving[batch][monster] = 0
+                    self.moving[batch][left] = 2
+                    removers.add(monster)
+                    adders.add(left)
+                elif self.moving[batch][monster] == 3 and (board.all_items[batch][up] == 0 or up in layersDict[LayerType.Player].positions[batch]) and up not in adders:
+                    self.moving[batch][monster] = 0
+                    self.moving[batch][up] = 3
+                    removers.add(monster)
+                    adders.add(up)
+                elif self.moving[batch][monster] == 4 and (board.all_items[batch][down] == 0 or down in layersDict[LayerType.Player].positions[batch]) and down not in adders:
+                    self.moving[batch][monster] = 0
+                    self.moving[batch][down] = 4
+                    removers.add(monster)
+                    adders.add(down)
+                else:
+                    self.moving[batch][monster] = 0
+        [self.remove(batch, x) for x in removers]
+        [self.add(batch, x) for x in adders]
+
+    def isDead(self, batch: int, layersDict, board) -> bool:
+        for pos in self.positions[batch]:
+            if pos in layersDict[LayerType.Player].positions[batch]:
+                return True
+        return False
+
+
+class Greencross(Layer):
+    color = Colors.green
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch]:
+            self.remove(batch, pos)
+
+    def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
+        return not self.positions[batch]
+
+
+class Bluecross(Layer):
+    color = Colors.blue
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        blocked = LayerType.Greencross in layersDict and bool(layersDict[LayerType.Greencross].positions[batch])
+        if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch] and not blocked:
+            self.remove(batch, pos)
+
+    def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
+        return not self.positions[batch]
+
+
+class Redcross(Layer):
+    color = Colors.red
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        blocked = LayerType.Bluecross in layersDict and bool(layersDict[LayerType.Bluecross].positions[batch])
+        if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch] and not blocked:
+            self.remove(batch, pos)
+
+    def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
+        return not self.positions[batch]
+
+
+class Purplecross(Layer):
+    color = Colors.purple
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        blocked = LayerType.Redcross in layersDict and bool(layersDict[LayerType.Redcross].positions[batch])
+        if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch] and not blocked:
+            self.remove(batch, pos)
+
+    def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
+        return not self.positions[batch]
 
 
 class Layers:
@@ -560,9 +684,14 @@ class Layers:
                 rewards[batch] = 1
                 dones[batch] = 1
                 self.counter[batch] = 0
-            elif random() < self.reset_chance or self.frames_since_chance[batch] > 10 or any(layer.isDead(batch, self.dict, self.board) for layer in self.layers):
+            elif random() < self.reset_chance or self.frames_since_chance[batch] > 10:
                 self.restart(batch)
                 rewards[batch] = 0
+                dones[batch] = 1
+                self.counter[batch] = 0
+            elif any(layer.isDead(batch, self.dict, self.board) for layer in self.layers):
+                self.restart(batch)
+                rewards[batch] = -1
                 dones[batch] = 1
                 self.counter[batch] = 0
 

@@ -1,17 +1,19 @@
 #!/bin/sh
-mkdir ../outputs/causal2_demo/
-mkdir ../outputs/causal2_demo/Markdown
-bsub -o "../outputs/causal2_demo/Markdown/causal2_demo_0.md" -J "causal2_demo_0" -P "-name causal2_demo-0 -hours 16.0 -level Levels.Causal2 -main teleport" < submit.sh
-bsub -o "../outputs/causal2_demo/Markdown/causal2_demo_1.md" -J "causal2_demo_1" -P "-name causal2_demo-1 -hours 16.0 -level Levels.Causal2 -main teleport" < submit.sh
-mkdir ../outputs/causal5_demo/
-mkdir ../outputs/causal5_demo/Markdown
-bsub -o "../outputs/causal5_demo/Markdown/causal5_demo_0.md" -J "causal5_demo_0" -P "-name causal5_demo-0 -hours 16.0 -level Levels.Causal5 -main teleport" < submit.sh
-bsub -o "../outputs/causal5_demo/Markdown/causal5_demo_1.md" -J "causal5_demo_1" -P "-name causal5_demo-1 -hours 16.0 -level Levels.Causal5 -main teleport" < submit.sh
-mkdir ../outputs/causal6_demo/
-mkdir ../outputs/causal6_demo/Markdown
-bsub -o "../outputs/causal6_demo/Markdown/causal6_demo_0.md" -J "causal6_demo_0" -P "-name causal6_demo-0 -hours 16.0 -level Levels.Causal6 -main teleport" < submit.sh
-bsub -o "../outputs/causal6_demo/Markdown/causal6_demo_1.md" -J "causal6_demo_1" -P "-name causal6_demo-1 -hours 16.0 -level Levels.Causal6 -main teleport" < submit.sh
-mkdir ../outputs/causal1_demo/
-mkdir ../outputs/causal1_demo/Markdown
-bsub -o "../outputs/causal1_demo/Markdown/causal1_demo_0.md" -J "causal1_demo_0" -P "-name causal1_demo-0 -hours 16.0 -level Levels.Causal1 -main teleport" < submit.sh
-bsub -o "../outputs/causal1_demo/Markdown/causal1_demo_1.md" -J "causal1_demo_1" -P "-name causal1_demo-1 -hours 16.0 -level Levels.Causal1 -main teleport" < submit.sh
+mkdir ../outputs/cococonuts_CF_conver2/
+mkdir ../outputs/cococonuts_CF_conver2/Markdown
+bsub -o "../outputs/cococonuts_CF_conver2/Markdown/cococonuts_CF_conver2_0.md" -J "cococonuts_CF_conver2_0" -P "-name cococonuts_CF_conver2-0 -hours 24.0 -level Levels.Coconuts -main CFagent -CF_convert 2" < submit.sh
+mkdir ../outputs/cococonuts_CF_conver3/
+mkdir ../outputs/cococonuts_CF_conver3/Markdown
+bsub -o "../outputs/cococonuts_CF_conver3/Markdown/cococonuts_CF_conver3_0.md" -J "cococonuts_CF_conver3_0" -P "-name cococonuts_CF_conver3-0 -hours 24.0 -level Levels.Coconuts -main CFagent -CF_convert 3" < submit.sh
+mkdir ../outputs/cococonuts_CF_conver4/
+mkdir ../outputs/cococonuts_CF_conver4/Markdown
+bsub -o "../outputs/cococonuts_CF_conver4/Markdown/cococonuts_CF_conver4_0.md" -J "cococonuts_CF_conver4_0" -P "-name cococonuts_CF_conver4-0 -hours 24.0 -level Levels.Coconuts -main CFagent -CF_convert 4" < submit.sh
+mkdir ../outputs/cococonuts_CF_conver6/
+mkdir ../outputs/cococonuts_CF_conver6/Markdown
+bsub -o "../outputs/cococonuts_CF_conver6/Markdown/cococonuts_CF_conver6_0.md" -J "cococonuts_CF_conver6_0" -P "-name cococonuts_CF_conver6-0 -hours 24.0 -level Levels.Coconuts -main CFagent -CF_convert 6" < submit.sh
+mkdir ../outputs/cococonuts_CF_conver9/
+mkdir ../outputs/cococonuts_CF_conver9/Markdown
+bsub -o "../outputs/cococonuts_CF_conver9/Markdown/cococonuts_CF_conver9_0.md" -J "cococonuts_CF_conver9_0" -P "-name cococonuts_CF_conver9-0 -hours 24.0 -level Levels.Coconuts -main CFagent -CF_convert 9" < submit.sh
+mkdir ../outputs/cococonuts_teleport/
+mkdir ../outputs/cococonuts_teleport/Markdown
+bsub -o "../outputs/cococonuts_teleport/Markdown/cococonuts_teleport_0.md" -J "cococonuts_teleport_0" -P "-name cococonuts_teleport-0 -hours 24.0 -level Levels.Coconuts -main teleport" < submit.sh

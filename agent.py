@@ -68,7 +68,8 @@ class Teleporter(Agent):
         self.counter += 1
         intervention = self.interventions.to(dtype=int)
         modified_board = self.modify_board(intervention, board)
-        modified_rewards = torch.sum(modified_board[:, 0] * modified_board[:, -1], (1, 2)) * (1 - rewards)
+        modified_rewards = torch.sum(modified_board[:, 0] * modified_board[:, -1], (1, 2))
+        modified_rewards[rewards == 1] = 0
         for i in range(len(info)):
             if 'player_end' in info[i]:
                 modified_rewards[i] += modified_board[i, -1][(info[i]['player_end'][1], info[i]['player_end'][0])]
@@ -80,6 +81,7 @@ class Teleporter(Agent):
         tele_rewards = self.miss_intervention_cost * torch.clone(modified_dones)
         tele_rewards[modified_rewards == 1] = self.intervention_cost
         tele_rewards[rewards == 1] = 1
+        tele_rewards[rewards == -1] = -1
         intervention_idx = torch.flatten(torch.nonzero(modified_dones.long()))
         return modified_board, modified_rewards, modified_dones, tele_rewards, intervention_idx
 
@@ -153,13 +155,14 @@ class MetaTeleporter(Teleporter):
         return modified_board1, modified_board2, modified_rewards1, modified_rewards2, modified_dones1, modified_dones2, tele_rewards, intervention_idx1, intervention_idx2
 
 class CFAgent(Agent):
-    def __init__(self, game: Game, CF_convert: int = None, network1: Networks = None, learner1: Learners = None, exploration2: Explorations = None, gamma1: float = None, K1 : float = None, **kwargs) -> None:
+    def __init__(self, game: Game, Counterfacts: int = None, CF_convert: int = None, network1: Networks = None, learner1: Learners = None, exploration2: Explorations = None, gamma1: float = None, K1 : float = None, **kwargs) -> None:
         super().__init__(game, network1, learner1, exploration2, gamma1, K1, **kwargs)
         self.boards = [None] * self.batch
         self.counterfactuals = torch.zeros(self.batch, device=device)
         self.counter = 0
         self.K1 = K1
         self.convert_function = CF_convert
+        self.counterfacts = Counterfacts
 
     def __call__(self, board: Tensor) -> Tensor:
         self.values: Tensor = self.net.network(board)
@@ -173,24 +176,33 @@ class CFAgent(Agent):
         # if self.counter % 100 == 0:
         #    print(values)
         learning_scores = self.convert_values(values.detach(), tele_values)
-        actions = torch.argsort(learning_scores, dim=1, descending=True)[:,random.randint(0,3)]
+        actions = torch.argsort(learning_scores, dim=1, descending=True)[:,random.randint(0,6)]
         return actions
 
     def convert_values(self, values, tele_values):
+        values = (values + 1)/2
         values[values > 1] = 1
         values[values < 0] = 0
-        if self.convert_function == 0:
-            learning_scores = values * softmax(tele_values * 3, dim=1)
-        elif self.convert_function == 1:
+        if self.convert_function == 1:
             learning_scores = values
         elif self.convert_function == 2:
-            learning_scores = (1 - abs(values - 0.8)) * softmax(tele_values * 3, dim=1)
+            learning_scores = values * softmax(tele_values, dim=1)
         elif self.convert_function == 3:
-            learning_scores = (1 - abs(values - 0.8))
+            learning_scores = values * softmax(tele_values * 3, dim=1)
         elif self.convert_function == 4:
-            learning_scores = (1 - abs(values - 0.6)) * softmax(tele_values * 3, dim=1)
+            learning_scores = values * softmax(tele_values * 10, dim=1)
         elif self.convert_function == 5:
-            learning_scores = (1 - abs(values - 0.6))
+            learning_scores = (1 - abs(values - 0.75)) * softmax(tele_values, dim=1)
+        elif self.convert_function == 6:
+            learning_scores = (1 - abs(values - 0.75)) * softmax(tele_values * 3, dim=1)
+        elif self.convert_function == 7:
+            learning_scores = (1 - abs(values - 0.75)) * softmax(tele_values * 10, dim=1)
+        elif self.convert_function == 8:
+            learning_scores = softmax(tele_values, dim=1)
+        elif self.convert_function == 9:
+            learning_scores = softmax(tele_values * 3, dim=1)
+        elif self.convert_function == 10:
+            learning_scores = softmax(tele_values * 10, dim=1)
         return learning_scores
 
     def _learn(self, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor, *args):
@@ -203,26 +215,27 @@ class CFAgent(Agent):
 
     def counterfact(self, env, dones, teleporter):
         CF_dones = torch.flatten(torch.nonzero(dones))
-        counterfactuals = []
-        if len(CF_dones) > 0:
-            needs_intervention_board = env.board[CF_dones]
-            actions = self.choose_action(needs_intervention_board, teleporter)
-            for action in actions:
-                counterfactuals.append((action.item() % self.width, action.item()// self.height))
-            for i in range(len(CF_dones)):
-                batch_idx = CF_dones[i]
-                self.boards[batch_idx] = env.board[batch_idx]
-                self.counterfactuals[batch_idx] = actions[i]
+        for _ in range(self.counterfacts):
+            counterfactuals = []
+            if len(CF_dones) > 0:
+                needs_intervention_board = env.board[CF_dones]
+                actions = self.choose_action(needs_intervention_board, teleporter)
+                for action in actions:
+                    counterfactuals.append((action.item() % self.width, action.item()// self.height))
+                for i in range(len(CF_dones)):
+                    batch_idx = CF_dones[i]
+                    self.boards[batch_idx] = env.board[batch_idx]
+                    self.counterfactuals[batch_idx] = actions[i]
+                    for layer in env.layers.layers:
+                        if counterfactuals[i] in layer._positions[batch_idx]:
+                            layer.remove(batch_idx, counterfactuals[i])
+                            env.layers.board[batch_idx, :, counterfactuals[i][1], counterfactuals[i][0]] = 0
+            if any([x.name == "Rock" for x in env.layers.types]):
                 for layer in env.layers.layers:
-                    if counterfactuals[i] in layer._positions[batch_idx]:
-                        layer.remove(batch_idx, counterfactuals[i])
-                        env.layers.board[batch_idx, :, counterfactuals[i][1], counterfactuals[i][0]] = 0
-        if any([x.name == "Rock" for x in env.layers.types]):
-            for layer in env.layers.layers:
-                layer.update(env.board, [1 for _ in range(self.batch)], env.layers.all_items)
-        else:
-            for layer in env.layers.layers:
-                layer.NoRock_update(env.board, [1 for _ in range(self.batch)])
+                    layer.update(env.board, [1 for _ in range(self.batch)], env.layers.all_items)
+            else:
+                for layer in env.layers.layers:
+                    layer.NoRock_update(env.board, [1 for _ in range(self.batch)])
 
 
 

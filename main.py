@@ -121,8 +121,8 @@ def CFagent(defaults):
 
 class Defaults:
     name: str = "Agent"
-    main: function = player
-    level: Levels = Levels.SuperLevel2
+    main: function = CFagent
+    level: Levels = Levels.Coconuts
     hours: float = 12
     batch: int = 100
     width: int = 9
@@ -173,7 +173,15 @@ class Defaults:
     layer_Greenstar: bool = True
     layer_Yellowstar: bool = True
     layer_Bluestar: bool = True
+
     layer_Coconut: bool = True
+
+    layer_Monster: bool = True
+
+    layer_Greencross: bool = True
+    layer_Bluecross: bool = True
+    layer_Redcross: bool = True
+    layer_Purplecross: bool = True
 
     epsilon_cap: float = 0.2
     softmax_cap: float = 0.02
@@ -185,6 +193,7 @@ class Defaults:
     replay_size: int = 100000
     sample_size: int = 50
     CF_convert: int = 2
+    Counterfacts: int = 1
 
 
 run(Defaults)
