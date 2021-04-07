@@ -193,6 +193,7 @@ class Defaults:
     replay_size: int = 100000
     sample_size: int = 50
     CF_convert: int = 2
+    Counterfacts: int = 5
 
 
 run(Defaults)
