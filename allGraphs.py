@@ -5,8 +5,6 @@ from layer import LayerType
 from itertools import combinations as combi
 # from main import *
 from load import Load
-from helper import Node, Edge
-
 from threading import currentThread
 from typing import FrozenSet, Dict, Iterable, List
 from game import Game, Levels
