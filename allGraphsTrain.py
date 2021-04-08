@@ -1,4 +1,5 @@
 from allGraphs import *
+from helper import device
 
 
 def graphTrain(defaults, data=None):
@@ -14,7 +15,7 @@ def graphTrain(defaults, data=None):
     teleporter = Teleporter(env, **defaults)
     collector = Collector(**defaults)
 
-    with Save(env, collector, mover, **defaults) as save:
+    with Save(env, collector, mover, data, **defaults) as save:
         convert = [env.layers.types.index(layer) for layer in layers]
         player = env.layers.types.index(LayerType.Player)
         goal = env.layers.types.index(LayerType.Goal)
@@ -31,10 +32,13 @@ def graphTrain(defaults, data=None):
             exploration = max((explorationN-frame)/explorationN, defaults['softmax_cap'])
             interventions = [(getInterventions(env, state, data, layers, exploration) if should else old) for state, should, old in zip(new_states, shouldInterviene, interventions)]
             modification = env.board[tensor(interventions)].unsqueeze(1)
-            teleporter.interventions = [m.flatten().argmax().item() for m in list(modification)]
+            teleporter.interventions = tensor([m.flatten().argmax().item() for m in list(modification)], device=device)
             modified_board = cat((env.board, modification), dim=1)
             actions = mover(modified_board)
-            _, rewards, dones, _ = env.step(actions)
+            observations, rewards, dones, info = env.step(actions)
+            modified_board, modified_rewards, modified_dones, _, _ = teleporter.modify(observations, rewards, dones, info)
+            mover.learn(modified_board, actions, modified_rewards, modified_dones)
             playerPositions = [(t := env.layers.dict[LayerType.Player].positions[i][0])[1] * env.layers.width + t[0] for i in range(env.batch)]
             eatCheese = [intervention == player_pos for intervention, player_pos in zip(teleporter.interventions, playerPositions)]
             old_states = new_states
+            collector.collect([rewards, modified_rewards], [dones, modified_dones])

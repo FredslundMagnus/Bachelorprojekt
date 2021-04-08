@@ -16,6 +16,7 @@ from helper import function
 from random import random
 
 environments = {
+    Levels.Causal7: ["causal6_demo", 0, [LayerType.Greencross, LayerType.Bluecross, LayerType.Redcross, LayerType.Purplecross]],
     Levels.Causal6: ["causal6_demo", 0, [LayerType.Greendown, LayerType.Greenup, LayerType.Greenstar, LayerType.Yellowstar, LayerType.Bluestar]],
     Levels.Causal5: ["causal5_demo", 0, [LayerType.Pink1, LayerType.Brown1, LayerType.Pink2, LayerType.Brown2, LayerType.Pink3, LayerType.Brown3]],
     # Levels.Causal3: ["causal3_9x9_20hours", 2, [LayerType.Gold, LayerType.Bluedoor, LayerType.Bluekeys, LayerType.Reddoor, LayerType.Redkeys]],
@@ -159,14 +160,18 @@ def compress(state: FrozenSet[LayerType]) -> Iterable[FrozenSet[LayerType]]:
             yield frozenset(c)
 
 
+def flip_chance(state: FrozenSet[LayerType], layer: LayerType, data: Dict[LayerType,  Dict[FrozenSet[LayerType], float]]):
+    chanceForFlip = 1
+    for partial in compress(state):
+        chanceForFlip *= (1 - data[layer][partial])
+    return 1 - chanceForFlip
+
+
 def bestIntervention(state: FrozenSet[LayerType], data: Dict[LayerType, Dict[FrozenSet[LayerType], float]], layers: List[LayerType]) -> LayerType:
     maxV, maxL = 0, None
     for layer in [layer for layer in (layers + [LayerType.Goal]) if layer not in state]:
 
-        chanceForFlip = 1
-        for partial in compress(state):
-            chanceForFlip *= (1 - data[layer][partial])
-        chanceForFlip = min(1 - chanceForFlip, 0.99)
+        chanceForFlip = min(flip_chance(state, layer, data), 0.99)
 
         temp = 0
         for overkill in expand(state, layer, layers):
@@ -181,25 +186,24 @@ def bestIntervention(state: FrozenSet[LayerType], data: Dict[LayerType, Dict[Fro
 
 
 def rightIntervention(state: FrozenSet[LayerType], data: Dict[LayerType, Dict[FrozenSet[LayerType], float]], layers: List[LayerType]) -> LayerType:
-    # Den her skal laves
-    maxV, maxL = 0, None
-    for layer in [layer for layer in (layers + [LayerType.Goal]) if layer not in state]:
-
-        chanceForFlip = 1
-        for partial in compress(state):
-            chanceForFlip *= (1 - data[layer][partial])
-        chanceForFlip = min(1 - chanceForFlip, 0.99)
-
-        temp = 0
-        for overkill in expand(state, layer, layers):
-            temp += data[layer][overkill] * (1-alpha) * chanceForFlip
-
-        for partial in compress(state):
-            temp += data[layer][partial] * (1-alpha) * (1-chanceForFlip)
-
-        if temp >= maxV:
-            maxV, maxL = temp, layer
-    return maxL
+    layer = LayerType.Goal
+    used = {LayerType.Goal}
+    while flip_chance(state, layer, data) <= 0.9:
+        stats = {explainer: flip_chance(explainer, layer, data) for explainer in data[layer] if not any(use in explainer for use in used)}
+        if stats == {}:
+            chances = {layer: flip_chance(state, layer, data) for layer in layers if layer not in state}
+            if chances == {}:
+                return LayerType.Goal
+            return max(chances, key=chances.get)
+        chances = {layer: flip_chance(state, layer, data) for layer in max(stats, key=stats.get) if layer not in stats and layer not in used}
+        if chances == {}:
+            chances = {layer: flip_chance(state, layer, data) for layer in layers if layer not in state}
+            if chances == {}:
+                return LayerType.Goal
+            return max(chances, key=chances.get)
+        layer = max(chances, key=chances.get)
+        used.add(layer)
+    return layer
 
 
 def transform(old_states: List[FrozenSet[LayerType]], new_states: List[FrozenSet[LayerType]], dones: Tensor, rewards: Tensor, data: Dict[LayerType, Dict[FrozenSet[LayerType], float]], layers: List[LayerType]) -> None:
