@@ -1,11 +1,12 @@
 from abc import abstractmethod
-from paint import Paint
+# from paint import Paint
 from torch import Tensor, tensor, cat
 from layer import LayerType
 from itertools import combinations as combi
 # from main import *
 from load import Load
-from graphs import Edge, Graph, Node
+from helper import Node, Edge
+
 from threading import currentThread
 from typing import FrozenSet, Dict, Iterable, List
 from game import Game, Levels
@@ -28,101 +29,102 @@ level = Levels.Causal7
 alpha = 0.95
 useBestIntervention = True
 GAME_UI = False
+if __name__ == "__main__":
+    from graphs import Edge, Graph, Node
 
+    class AllGraph(Graph):
+        @property
+        def updateNotes(self) -> List[function]:
+            return [self.updateNotes1]
 
-class AllGraph(Graph):
-    @property
-    def updateNotes(self) -> List[function]:
-        return [self.updateNotes1]
+        @property
+        def updateEdges(self) -> List[function]:
+            return [self.updateEdges0, self.updateEdges1, self.updateEdges2, self.updateEdges3, self.updateEdges4, self.updateEdges5]
 
-    @property
-    def updateEdges(self) -> List[function]:
-        return [self.updateEdges0, self.updateEdges1, self.updateEdges2, self.updateEdges3, self.updateEdges4, self.updateEdges5]
+        @abstractmethod
+        def mostProbable(dict: Dict[FrozenSet[LayerType], float]):
+            return max(dict, key=dict.get)
 
-    @abstractmethod
-    def mostProbable(dict: Dict[FrozenSet[LayerType], float]):
-        return max(dict, key=dict.get)
+        def updateNotes1(self, nodes: List[Node]) -> None:
+            """
+            Hvert lag får værdien udfra hvor mange gange den står som nummer 1.
+            """
 
-    def updateNotes1(self, nodes: List[Node]) -> None:
-        """
-        Hvert lag får værdien udfra hvor mange gange den står som nummer 1.
-        """
+            mostProbables = {}
+            ls = {}
+            for layer in self.layers:
+                mostProbables[layer] = AllGraph.mostProbable(self.data[layer])
+                ls[layer] = len(mostProbables[layer])
+            curentSets = set(frozenset())
+            removed = set()
+            layers = {layer for layer in self.layers}
+            i = 0
+            while any(layers) and i < 10:
+                for layer in layers:
+                    if mostProbables[layer] in curentSets:
+                        [node for node in nodes if node.layer == layer][0].value = i
+                        removed.add(layer)
+                layers = {layer for layer in self.layers if layer not in removed}
+                curentSets = set(compress(removed))
+                i += 1
 
-        mostProbables = {}
-        ls = {}
-        for layer in self.layers:
-            mostProbables[layer] = AllGraph.mostProbable(self.data[layer])
-            ls[layer] = len(mostProbables[layer])
-        curentSets = set(frozenset())
-        removed = set()
-        layers = {layer for layer in self.layers}
-        i = 0
-        while any(layers) and i < 10:
-            for layer in layers:
-                if mostProbables[layer] in curentSets:
-                    [node for node in nodes if node.layer == layer][0].value = i
-                    removed.add(layer)
-            layers = {layer for layer in self.layers if layer not in removed}
-            curentSets = set(compress(removed))
-            i += 1
-
-    def updateEdges0(self, edges: List[Edge]) -> None:
-        """
-        Ikke normaliseret
-        """
-        for edge in edges:
-            edge.value = 0
-            for s, v in self.data[edge.til.layer].items():
-                if edge.fra.layer in s:
-                    edge.value += v
-
-    def updateEdges1(self, edges: List[Edge]) -> None:
-        """
-        Normaliseret med fra nodes
-        """
-        self.updateEdges0(edges)
-        for edge in edges:
-            edge.value /= sum(self.data[edge.fra.layer].values())
-
-    def updateEdges2(self, edges: List[Edge]) -> None:
-        """
-        Normaliseret med til nodes
-        """
-        self.updateEdges0(edges)
-        for edge in edges:
-            edge.value /= sum(self.data[edge.til.layer].values())
-
-    def updateEdges3(self, edges: List[Edge]) -> None:
-        """
-        Normaliseret med antal gange fra og til var mulige
-        """
-        self.updateEdges0(edges)
-        for edge in edges:
-            try:
-                edge.value /= sum([1 for key in self.data[edge.fra.layer] if edge.til.layer in key])
-            except Exception as e:
+        def updateEdges0(self, edges: List[Edge]) -> None:
+            """
+            Ikke normaliseret
+            """
+            for edge in edges:
                 edge.value = 0
+                for s, v in self.data[edge.til.layer].items():
+                    if edge.fra.layer in s:
+                        edge.value += v
 
-    def updateEdges4(self, edges: List[Edge]) -> None:
-        """
-        Max-værdien fra Fra-nodes til Til-nodes
-        """
-        for edge in edges:
-            edge.value = 0
-            for s, v in self.data[edge.til.layer].items():
-                if edge.fra.layer in s:
-                    edge.value = max(edge.value, v)
+        def updateEdges1(self, edges: List[Edge]) -> None:
+            """
+            Normaliseret med fra nodes
+            """
+            self.updateEdges0(edges)
+            for edge in edges:
+                edge.value /= sum(self.data[edge.fra.layer].values())
 
-    def updateEdges5(self, edges: List[Edge]) -> None:
-        """
-        Chance for Fra-nodes til Til-nodes
-        """
-        for edge in edges:
-            edge.value = 1
-            for s, v in self.data[edge.til.layer].items():
-                if edge.fra.layer in s:
-                    edge.value *= 1 - v
-            edge.value = 1 - edge.value
+        def updateEdges2(self, edges: List[Edge]) -> None:
+            """
+            Normaliseret med til nodes
+            """
+            self.updateEdges0(edges)
+            for edge in edges:
+                edge.value /= sum(self.data[edge.til.layer].values())
+
+        def updateEdges3(self, edges: List[Edge]) -> None:
+            """
+            Normaliseret med antal gange fra og til var mulige
+            """
+            self.updateEdges0(edges)
+            for edge in edges:
+                try:
+                    edge.value /= sum([1 for key in self.data[edge.fra.layer] if edge.til.layer in key])
+                except Exception as e:
+                    edge.value = 0
+
+        def updateEdges4(self, edges: List[Edge]) -> None:
+            """
+            Max-værdien fra Fra-nodes til Til-nodes
+            """
+            for edge in edges:
+                edge.value = 0
+                for s, v in self.data[edge.til.layer].items():
+                    if edge.fra.layer in s:
+                        edge.value = max(edge.value, v)
+
+        def updateEdges5(self, edges: List[Edge]) -> None:
+            """
+            Chance for Fra-nodes til Til-nodes
+            """
+            for edge in edges:
+                edge.value = 1
+                for s, v in self.data[edge.til.layer].items():
+                    if edge.fra.layer in s:
+                        edge.value *= 1 - v
+                edge.value = 1 - edge.value
 
 
 def combinations(layer: LayerType, layers: List[LayerType]) -> Iterable[FrozenSet[LayerType]]:
@@ -242,8 +244,6 @@ def runnerBestIntervention(data=None):
     data[LayerType.Goal] = {c: 1 for c in combinations(None, layers)}
     with Load(environments[level][0], num=environments[level][1]) as load:
         collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
-        if GAME_UI:
-            Paint.switch(env.layers.width, env.layers.height)
         convert = [env.layers.types.index(layer) for layer in layers]
         player = env.layers.types.index(LayerType.Player)
         goal = env.layers.types.index(LayerType.Goal)
@@ -281,8 +281,6 @@ def runnerNormalTeleport(data=None):
     data[LayerType.Goal] = {c: 1 for c in combinations(None, layers)}
     with Load(environments[level][0], num=environments[level][1]) as load:
         collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
-        if GAME_UI:
-            Paint.switch(env.layers.width, env.layers.height)
         teleporter.extradim = 0  # fix
         teleporter.exploration.explore = teleporter.exploration.greedy
         convert = [env.layers.types.index(layer) for layer in layers]
