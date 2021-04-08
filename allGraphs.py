@@ -24,10 +24,10 @@ environments = {
     Levels.Causal1: ["causal1_demo", 0, [LayerType.Gold, LayerType.Keys, LayerType.Door]],
 }
 
-level = Levels.Causal6
+level = Levels.Causal7
 alpha = 0.95
 useBestIntervention = True
-GAME_UI = True
+GAME_UI = False
 
 
 class AllGraph(Graph):
