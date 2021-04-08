@@ -6,6 +6,7 @@ from helper import function
 from replaybuffer import ReplayBuffer, CFReplayBuffer
 from simulator import Simulator
 from load import Load
+from allGraphsTrain import graphTrain
 
 
 def metateleport(defaults):
@@ -121,8 +122,8 @@ def CFagent(defaults):
 
 class Defaults:
     name: str = "Agent"
-    main: function = CFagent
-    level: Levels = Levels.Coconuts
+    main: function = graphTrain
+    level: Levels = Levels.Causal2
     hours: float = 12
     batch: int = 100
     width: int = 9
@@ -193,7 +194,8 @@ class Defaults:
     replay_size: int = 100000
     sample_size: int = 50
     CF_convert: int = 2
-    Counterfacts: int = 1
+    Counterfacts: int = 10
+    TopN: int = 7
 
 
 run(Defaults)

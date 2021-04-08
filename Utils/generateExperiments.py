@@ -1,10 +1,9 @@
 
-from main import Defaults, teleport, simple, CFagent
+from main import Defaults, teleport, simple, CFagent, graphTrain
 from network import Networks
 from learner import Learners
 from levels import Levels, Rocks
 from agent import CFAgent, Teleporter, Mover, Networks, Learners, Explorations
-
 
 file = open('Utils/experiments.sh', 'w')
 file.write('#!/bin/sh\n')
@@ -146,15 +145,24 @@ def genExperiments(name, n=1, **params):
 # genExperiments(f"causal3_CF_convert3_2", n=1, hours=24, level=Levels.Causal3, main=CFagent, CF_convert=3)
 # genExperiments(f"causal3_CF_convert4_2", n=1, hours=24, level=Levels.Causal3, main=CFagent, CF_convert=4)
 # genExperiments(f"causal3_CF_convert5_2", n=1, hours=24, level=Levels.Causal3, main=CFagent, CF_convert=5)
+# genExperiments(f"causal1_demo", n=2, hours=16, level=Levels.Causal1, main=teleport)
 # genExperiments(f"causal2_demo", n=2, hours=16, level=Levels.Causal2, main=teleport)
+# genExperiments(f"causal3_demo", n=2, hours=16, level=Levels.Causal3, main=teleport)
 # genExperiments(f"causal5_demo", n=2, hours=16, level=Levels.Causal5, main=teleport)
 # genExperiments(f"causal6_demo", n=2, hours=16, level=Levels.Causal6, main=teleport)
-# genExperiments(f"causal1_demo", n=2, hours=16, level=Levels.Causal1, main=teleport)
-genExperiments(f"cococonuts_CF_conver2", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=2)
-genExperiments(f"cococonuts_CF_conver3", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=3)
-genExperiments(f"cococonuts_CF_conver4", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=4)
-genExperiments(f"cococonuts_CF_conver6", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=6)
-genExperiments(f"cococonuts_CF_conver9", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=9)
-genExperiments(f"cococonuts_teleport", n=1, hours=24, level=Levels.Coconuts, main=teleport)
+# genExperiments(f"causal7_demo", n=2, hours=16, level=Levels.Causal7, main=teleport)
+# genExperiments(f"cococonuts_CF_conver2", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=2)
+# genExperiments(f"cococonuts_CF_conver3", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=3)
+# genExperiments(f"cococonuts_CF_conver4", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=4)
+# genExperiments(f"cococonuts_CF_conver6", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=6)
+# genExperiments(f"cococonuts_CF_conver9", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=9)
+# genExperiments(f"cococonuts_teleport", n=1, hours=24, level=Levels.Coconuts, main=teleport)
+
+
+genExperiments(f"causal2_online", n=1, hours=12, level=Levels.Causal2, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0)
+genExperiments(f"causal5_online", n=1, hours=12, level=Levels.Causal5, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0)
+genExperiments(f"causal6_online", n=1, hours=12, level=Levels.Causal6, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0)
+genExperiments(f"causal7_online", n=1, hours=12, level=Levels.Causal7, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0)
+
 
 file.close()
