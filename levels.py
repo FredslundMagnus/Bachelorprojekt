@@ -279,7 +279,7 @@ class Coconuts(Level):
                         if pos_nut in self.notUsed:
                             self.level[LayerType.Coconut].append(pos_nut)
         if LayerType.Coconut in self.uses:
-            for _ in range(randint(1, 2)):
+            for _ in range(randint(0, 1)):
                 pos_nut = (randint(2, self.shape[0] - 2), randint(5, 7))
                 if pos_nut in self.notUsed:
                     self.level[LayerType.Coconut].append(pos_nut)
