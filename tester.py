@@ -66,7 +66,7 @@ def test_graphTrain():
     with Load("causal2_online", num=0) as load:
         collector, env, mover, data = load.items(Collector, Game, Mover, dict)
         layers: List[LayerType] = environments[env.level][2]
-        teleporter = Teleporter(env, network1=Networks.Teleporter, K1=5000000, learner1=Learners.Qlearn, exploration1=Explorations.softmaxer, gamma1=0.98, batch=100, width=9, height=9)
+        teleporter = Teleporter(env, network1=Networks.Teleporter, K1=5000000, learner1=Learners.Qlearn, exploration1=Explorations.softmaxer, gamma1=0.98, batch=env.layers.batch, width=env.layers.width, height=env.layers.height)
         convert = [env.layers.types.index(layer) for layer in layers]
         player = env.layers.types.index(LayerType.Player)
         goal = env.layers.types.index(LayerType.Goal)
