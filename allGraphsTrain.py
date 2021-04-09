@@ -1,6 +1,5 @@
 from allGraphs import *
 from helper import device
-from Utils.debug import enablePrint, disablePrint
 
 
 def graphTrain(defaults, data=None):
@@ -15,11 +14,6 @@ def graphTrain(defaults, data=None):
     mover = Mover(env, _extra_dim=1, **defaults)
     teleporter = Teleporter(env, **defaults)
     collector = Collector(**defaults)
-    enablePrint()
-    print(layers)
-    print(env.level)
-    print(data)
-    disablePrint()
 
     with Save(env, collector, mover, data, **defaults) as save:
         convert = [env.layers.types.index(layer) for layer in layers]
