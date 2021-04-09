@@ -258,3 +258,266 @@ Resource usage summary:
 
 The output (if any) is above this job summary.
 
+[<LayerType.Greencross: 31>, <LayerType.Bluecross: 32>, <LayerType.Redcross: 33>, <LayerType.Purplecross: 34>]
+Levels.Causal7
+{<LayerType.Greencross: 31>: {frozenset(): 1, frozenset({<LayerType.Bluecross: 32>}): 1, frozenset({<LayerType.Redcross: 33>}): 1, frozenset({<LayerType.Purplecross: 34>}): 1, frozenset({<LayerType.Bluecross: 32>, <LayerType.Redcross: 33>}): 1, frozenset({<LayerType.Purplecross: 34>, <LayerType.Bluecross: 32>}): 1, frozenset({<LayerType.Purplecross: 34>, <LayerType.Redcross: 33>}): 1, frozenset({<LayerType.Purplecross: 34>, <LayerType.Bluecross: 32>, <LayerType.Redcross: 33>}): 1}, <LayerType.Bluecross: 32>: {frozenset(): 1, frozenset({<LayerType.Greencross: 31>}): 1, frozenset({<LayerType.Redcross: 33>}): 1, frozenset({<LayerType.Purplecross: 34>}): 1, frozenset({<LayerType.Greencross: 31>, <LayerType.Redcross: 33>}): 1, frozenset({<LayerType.Purplecross: 34>, <LayerType.Greencross: 31>}): 1, frozenset({<LayerType.Purplecross: 34>, <LayerType.Redcross: 33>}): 1, frozenset({<LayerType.Purplecross: 34>, <LayerType.Greencross: 31>, <LayerType.Redcross: 33>}): 1}, <LayerType.Redcross: 33>: {frozenset(): 1, frozenset({<LayerType.Greencross: 31>}): 1, frozenset({<LayerType.Bluecross: 32>}): 1, frozenset({<LayerType.Purplecross: 34>}): 1, frozenset({<LayerType.Greencross: 31>, <LayerType.Bluecross: 32>}): 1, frozenset({<LayerType.Purplecross: 34>, <LayerType.Greencross: 31>}): 1, frozenset({<LayerType.Purplecross: 34>, <LayerType.Bluecross: 32>}): 1, frozenset({<LayerType.Purplecross: 34>, <LayerType.Greencross: 31>, <LayerType.Bluecross: 32>}): 1}, <LayerType.Purplecross: 34>: {frozenset(): 1, frozenset({<LayerType.Greencross: 31>}): 1, frozenset({<LayerType.Bluecross: 32>}): 1, frozenset({<LayerType.Redcross: 33>}): 1, frozenset({<LayerType.Greencross: 31>, <LayerType.Bluecross: 32>}): 1, frozenset({<LayerType.Greencross: 31>, <LayerType.Redcross: 33>}): 1, frozenset({<LayerType.Bluecross: 32>, <LayerType.Redcross: 33>}): 1, frozenset({<LayerType.Greencross: 31>, <LayerType.Bluecross: 32>, <LayerType.Redcross: 33>}): 1}, <LayerType.Goal: 3>: {frozenset(): 1, frozenset({<LayerType.Greencross: 31>}): 1, frozenset({<LayerType.Bluecross: 32>}): 1, frozenset({<LayerType.Redcross: 33>}): 1, frozenset({<LayerType.Purplecross: 34>}): 1, frozenset({<LayerType.Greencross: 31>, <LayerType.Bluecross: 32>}): 1, frozenset({<LayerType.Greencross: 31>, <LayerType.Redcross: 33>}): 1, frozenset({<LayerType.Purplecross: 34>, <LayerType.Greencross: 31>}): 1, frozenset({<LayerType.Bluecross: 32>, <LayerType.Redcross: 33>}): 1, frozenset({<LayerType.Purplecross: 34>, <LayerType.Bluecross: 32>}): 1, frozenset({<LayerType.Purplecross: 34>, <LayerType.Redcross: 33>}): 1, frozenset({<LayerType.Greencross: 31>, <LayerType.Bluecross: 32>, <LayerType.Redcross: 33>}): 1, frozenset({<LayerType.Purplecross: 34>, <LayerType.Greencross: 31>, <LayerType.Bluecross: 32>}): 1, frozenset({<LayerType.Purplecross: 34>, <LayerType.Greencross: 31>, <LayerType.Redcross: 33>}): 1, frozenset({<LayerType.Purplecross: 34>, <LayerType.Bluecross: 32>, <LayerType.Redcross: 33>}): 1, frozenset({<LayerType.Purplecross: 34>, <LayerType.Greencross: 31>, <LayerType.Bluecross: 32>, <LayerType.Redcross: 33>}): 1}}
+Traceback (most recent call last):
+  File "/zhome/ee/d/137643/Desktop/Bachelor/Bachelorprojekt/Utils/debug.py", line 71, in __init__
+    cProfile.run(
+  File "/appl/python/3.8.4/lib/python3.8/cProfile.py", line 16, in run
+    return _pyprofile._Utils(Profile).run(statement, filename, sort)
+  File "/appl/python/3.8.4/lib/python3.8/profile.py", line 53, in run
+    prof.run(statement)
+  File "/appl/python/3.8.4/lib/python3.8/cProfile.py", line 95, in run
+    return self.runctx(cmd, dict, dict)
+  File "/appl/python/3.8.4/lib/python3.8/cProfile.py", line 100, in runctx
+    exec(cmd, globals, locals)
+  File "<string>", line 2, in <module>
+  File "/zhome/ee/d/137643/Desktop/Bachelor/Bachelorprojekt/allGraphsTrain.py", line 39, in graphTrain
+    interventions = [(getInterventions(env, state, data, layers, exploration) if should else old) for state, should, old in zip(new_states, shouldInterviene, interventions)]
+  File "/zhome/ee/d/137643/Desktop/Bachelor/Bachelorprojekt/allGraphsTrain.py", line 39, in <listcomp>
+    interventions = [(getInterventions(env, state, data, layers, exploration) if should else old) for state, should, old in zip(new_states, shouldInterviene, interventions)]
+  File "/zhome/ee/d/137643/Desktop/Bachelor/Bachelorprojekt/allGraphs.py", line 232, in getInterventions
+    best = env.layers.types.index(rightIntervention(state, data, layers))
+  File "/zhome/ee/d/137643/Desktop/Bachelor/Bachelorprojekt/allGraphs.py", line 198, in rightIntervention
+    chances = {layer: flip_chance(state, layer, data) for layer in max(stats, key=stats.get) if layer not in stats and layer not in used}
+  File "/zhome/ee/d/137643/Desktop/Bachelor/Bachelorprojekt/allGraphs.py", line 198, in <dictcomp>
+    chances = {layer: flip_chance(state, layer, data) for layer in max(stats, key=stats.get) if layer not in stats and layer not in used}
+  File "/zhome/ee/d/137643/Desktop/Bachelor/Bachelorprojekt/allGraphs.py", line 166, in flip_chance
+    chanceForFlip *= (1 - data[layer][partial])
+KeyError: frozenset({<LayerType.Redcross: 33>})
+
+
+# Parameters
+
+    Name :                      causal7_online-0
+    Main :                      graphTrain
+    Level :                     Levels.Causal7
+    Hours :                     12.0
+    Batch :                     100
+    Width :                     9
+    Height :                    9
+    Network1 :                  Networks.Teleporter
+    K1 :                        200000.0
+    Learner1 :                  Learners.Qlearn
+    Exploration1 :              Explorations.softmaxer
+    Gamma1 :                    0.98
+    Network2 :                  Networks.Mini
+    K2 :                        100000.0
+    Learner2 :                  Learners.Qlearn
+    Exploration2 :              Explorations.epsilonGreedy
+    Gamma2 :                    0.95
+    Layer blocks :              True
+    Layer goal :                True
+    Layer gold :                True
+    Layer keys :                True
+    Layer door :                True
+    Layer holder :              True
+    Layer putter :              True
+    Layer rock :                True
+    Layer dirt :                True
+    Layer diamond1 :            True
+    Layer diamond2 :            True
+    Layer diamond3 :            True
+    Layer diamond4 :            True
+    Layer reddoor :             True
+    Layer redkeys :             True
+    Layer bluedoor :            True
+    Layer bluekeys :            True
+    Layer pink1 :               True
+    Layer pink2 :               True
+    Layer pink3 :               True
+    Layer brown1 :              True
+    Layer brown2 :              True
+    Layer brown3 :              True
+    Layer greendown :           True
+    Layer greenup :             True
+    Layer greenstar :           True
+    Layer yellowstar :          True
+    Layer bluestar :            True
+    Layer coconut :             True
+    Layer monster :             True
+    Layer greencross :          True
+    Layer bluecross :           True
+    Layer redcross :            True
+    Layer purplecross :         True
+    Epsilon cap :               0.2
+    Softmax cap :               0.0
+    Update :                    10000
+    Reset chance :              0.001
+    Modified done chance :      0.05
+    Miss intervention cost :    -0.15
+    Intervention cost :         -0.05
+    Replay size :               100000
+    Sample size :               50
+    Cf convert :                2
+    Counterfacts :              1
+    Topn :                      7
+    Minutes used :              0 minutes.
+    Hours used :                0 hours.
+
+# Profiling
+
+
+      5795739 function calls (5788596 primitive calls) in 19.11 seconds
+
+##    Ordered by: cumulative time
+   List reduced from 425 to 100 due to restriction <100>
+
+                  ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+                      1    0.000    0.000   19.107   19.107 {built-in method builtins.exec}
+                      1    0.000    0.000   19.107   19.107 <string>:1(<module>)
+                      1    0.129    0.129   19.107   19.107 allGraphsTrain.py:6(graphTrain)
+                    339    2.589    0.008    6.510    0.019 allGraphs.py:220(transformNot)
+                 339300    4.576    0.000    4.576    0.000 {method 'item' of 'torch._C._TensorBase' objects}
+                  34340    0.903    0.000    4.086    0.000 allGraphs.py:141(states)
+                    339    0.009    0.000    4.083    0.012 allGraphsTrain.py:33(<listcomp>)
+                      2    0.000    0.000    2.906    1.453 agent.py:16(__init__)
+                      2    0.000    0.000    2.905    1.453 network.py:33(__init__)
+                      1    0.000    0.000    2.897    2.897 agent.py:109(__init__)
+                      6    0.000    0.000    2.895    0.483 module.py:529(to)
+                   72/6    0.000    0.000    2.895    0.482 module.py:357(_apply)
+                    392    2.893    0.007    2.894    0.007 {method 'to' of 'torch._C._TensorBase' objects}
+                     54    0.000    0.000    2.893    0.054 module.py:607(convert)
+                 305500    2.892    0.000    2.892    0.000 {method 'sum' of 'torch._C._TensorBase' objects}
+                    338    0.002    0.000    1.262    0.004 game.py:41(step)
+                    338    0.003    0.000    1.187    0.004 layers.py:710(step)
+                    338    0.064    0.000    1.012    0.003 allGraphsTrain.py:41(<listcomp>)
+                    338    0.002    0.000    0.863    0.003 agent.py:29(learn)
+                    338    0.010    0.000    0.860    0.003 agent.py:117(_learn)
+                    338    0.028    0.000    0.850    0.003 learner.py:42(Qlearn)
+                    338    0.030    0.000    0.753    0.002 layers.py:17(step)
+                  33800    0.059    0.000    0.720    0.000 layer.py:98(move)
+                  35828    0.088    0.000    0.607    0.000 tensor.py:21(wrapped)
+                    339    0.398    0.001    0.572    0.002 allGraphsTrain.py:39(<listcomp>)
+                    338    0.027    0.000    0.568    0.002 allGraphsTrain.py:48(<listcomp>)
+                    339    0.052    0.000    0.471    0.001 layers.py:676(update)
+                  33800    0.072    0.000    0.413    0.000 layers.py:727(check)
+                  35490    0.412    0.000    0.412    0.000 {method 'eq' of 'torch._C._TensorBase' objects}
+              7774/1014    0.042    0.000    0.392    0.000 module.py:715(_call_impl)
+                  33800    0.373    0.000    0.373    0.000 {method 'argmax' of 'torch._C._TensorBase' objects}
+                    338    0.174    0.001    0.363    0.001 agent.py:67(modify)
+                   4166    0.355    0.000    0.355    0.000 {built-in method tensor}
+                    676    0.003    0.000    0.354    0.001 network.py:24(forward)
+                    676    0.009    0.000    0.345    0.001 container.py:115(forward)
+                    338    0.003    0.000    0.308    0.001 grad_mode.py:23(decorate_context)
+                    338    0.012    0.000    0.299    0.001 adam.py:55(step)
+                   2474    0.003    0.000    0.286    0.000 game.py:37(board)
+                    338    0.009    0.000    0.258    0.001 agent.py:112(__call__)
+                    338    0.054    0.000    0.243    0.001 functional.py:53(adam)
+                    338    0.003    0.000    0.214    0.001 tensor.py:181(backward)
+                    338    0.002    0.000    0.212    0.001 __init__.py:68(backward)
+                    338    0.199    0.001    0.199    0.001 {method 'run_backward' of 'torch._C._EngineBase' objects}
+                  33800    0.052    0.000    0.195    0.000 layers.py:721(isFree)
+                  94716    0.052    0.000    0.179    0.000 {built-in method builtins.any}
+                    782    0.007    0.000    0.175    0.000 allGraphs.py:228(getInterventions)
+                 626629    0.113    0.000    0.162    0.000 enum.py:646(__hash__)
+                   1015    0.007    0.000    0.158    0.000 tensor.py:576(__iter__)
+                   2373    0.083    0.000    0.148    0.000 layer.py:167(NoRock_update)
+                   1015    0.146    0.000    0.146    0.000 {method 'unbind' of 'torch._C._TensorBase' objects}
+                   1352    0.003    0.000    0.144    0.000 conv.py:422(forward)
+                 226988    0.113    0.000    0.142    0.000 layer.py:95(isFree)
+                   1352    0.005    0.000    0.139    0.000 conv.py:414(_conv_forward)
+                   1352    0.134    0.000    0.134    0.000 {built-in method conv2d}
+                  35152    0.121    0.000    0.121    0.000 {method 'flatten' of 'torch._C._TensorBase' objects}
+                  58946    0.032    0.000    0.102    0.000 overrides.py:1070(has_torch_function)
+                   1352    0.004    0.000    0.102    0.000 linear.py:92(forward)
+                  33800    0.064    0.000    0.100    0.000 layers.py:625(check)
+                  33800    0.060    0.000    0.096    0.000 layers.py:595(check)
+                   1352    0.008    0.000    0.096    0.000 functional.py:1669(linear)
+                  69728    0.021    0.000    0.093    0.000 {built-in method builtins.all}
+                  33800    0.058    0.000    0.093    0.000 layers.py:610(check)
+                 269800    0.070    0.000    0.087    0.000 layers.py:692(<genexpr>)
+                  18982    0.046    0.000    0.076    0.000 tensor.py:933(grad)
+                    175    0.002    0.000    0.075    0.000 layers.py:731(restart)
+                    781    0.017    0.000    0.074    0.000 allGraphs.py:170(bestIntervention)
+                    338    0.004    0.000    0.070    0.000 agent.py:59(modify_board)
+                   1352    0.069    0.000    0.069    0.000 {built-in method addmm}
+                    338    0.006    0.000    0.065    0.000 optimizer.py:167(zero_grad)
+                  83834    0.021    0.000    0.063    0.000 layers.py:682(<genexpr>)
+                 581682    0.061    0.000    0.061    0.000 layer.py:91(positions)
+                    175    0.001    0.000    0.059    0.000 level.py:8(__init__)
+                    338    0.032    0.000    0.056    0.000 collector.py:53(collect)
+                    338    0.003    0.000    0.055    0.000 exploration.py:47(epsilonGreedy)
+                      1    0.002    0.002    0.054    0.054 game.py:9(__init__)
+                      1    0.000    0.000    0.053    0.053 save.py:15(__exit__)
+                      1    0.000    0.000    0.053    0.053 save.py:18(save)
+                      4    0.024    0.006    0.052    0.013 save.py:24(saveObject)
+                    175    0.002    0.000    0.049    0.000 levels.py:446(generate)
+                   5408    0.049    0.000    0.049    0.000 {method 'mul_' of 'torch._C._TensorBase' objects}
+                 626722    0.049    0.000    0.049    0.000 {built-in method builtins.hash}
+                    338    0.046    0.000    0.046    0.000 {built-in method torch._C._nn.one_hot}
+                    842    0.009    0.000    0.044    0.000 level.py:41(notUsed)
+                    338    0.031    0.000    0.044    0.000 allGraphsTrain.py:47(<listcomp>)
+                   2028    0.003    0.000    0.044    0.000 activation.py:713(forward)
+                  33800    0.028    0.000    0.043    0.000 layers.py:581(check)
+                   2028    0.006    0.000    0.040    0.000 functional.py:1292(leaky_relu)
+                 155072    0.034    0.000    0.040    0.000 overrides.py:1083(<genexpr>)
+                   5408    0.039    0.000    0.039    0.000 {method 'add_' of 'torch._C._TensorBase' objects}
+                  75189    0.037    0.000    0.037    0.000 layer.py:146(elements)
+                    339    0.009    0.000    0.035    0.000 allGraphs.py:209(transform)
+                   2028    0.034    0.000    0.034    0.000 {built-in method torch._C._nn.leaky_relu}
+                    338    0.016    0.000    0.033    0.000 {method 'choice' of 'numpy.random.mtrand.RandomState' objects}
+                   1016    0.032    0.000    0.032    0.000 {method 'tolist' of 'torch._C._TensorBase' objects}
+                    676    0.031    0.000    0.031    0.000 {built-in method cat}
+                  28554    0.023    0.000    0.030    0.000 allGraphs.py:157(compress)
+                  15050    0.018    0.000    0.028    0.000 layers.py:107(isDone)
+                   2704    0.027    0.000    0.027    0.000 {method 'add' of 'torch._C._TensorBase' objects}
+                   2704    0.027    0.000    0.027    0.000 {method 'sqrt' of 'torch._C._TensorBase' objects}
+                    338    0.001    0.000    0.025    0.000 loss.py:445(forward)
+
+
+# Other prints
+
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@n-62-20-12>
+Subject: Job 9507136: <causal7_online_0> in cluster <dcc> Done
+
+Job <causal7_online_0> was submitted from host <n-62-27-21> by user <s183905> in cluster <dcc> at Fri Apr  9 17:22:05 2021
+Job was executed on host(s) <n-62-20-12>, in queue <gpuv100>, as user <s183905> in cluster <dcc> at Fri Apr  9 17:35:54 2021
+</zhome/ee/d/137643> was used as the home directory.
+</zhome/ee/d/137643/Desktop/Bachelor/Bachelorprojekt/Utils> was used as the working directory.
+Started at Fri Apr  9 17:35:54 2021
+Terminated at Fri Apr  9 17:36:15 2021
+Results reported at Fri Apr  9 17:36:15 2021
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/sh
+#BSUB -q hpc
+#BSUB -q gpuv100
+#BSUB -gpu "num=1:mode=exclusive_process"
+#BSUB -n 1
+#BSUB -R "rusage[mem=16G]"
+#BSUB -R "span[hosts=1]"
+#BSUB -W 1440
+# end of BSUB options
+cd ..
+module -s load python3
+source ../project-env/bin/activate
+
+python main.py $LSB_PROJECT_NAME
+
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   20.48 sec.
+    Max Memory :                                 2081 MB
+    Average Memory :                             2081.00 MB
+    Total Requested Memory :                     16384.00 MB
+    Delta Memory :                               14303.00 MB
+    Max Swap :                                   -
+    Max Processes :                              4
+    Max Threads :                                8
+    Run time :                                   22 sec.
+    Turnaround time :                            850 sec.
+
+The output (if any) is above this job summary.
+
