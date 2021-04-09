@@ -226,7 +226,6 @@ def transformNot(boards: Tensor, states: List[FrozenSet[LayerType]], player: int
 
 
 def getInterventions(env: Game, state: FrozenSet[LayerType], data: Dict[LayerType, Dict[FrozenSet[LayerType], float]], layers: List[LayerType], exploration: float = 1) -> List[bool]:
-    exploration = 0
     if random() <= exploration:
         best = env.layers.types.index(bestIntervention(state, data, layers))
     else:
