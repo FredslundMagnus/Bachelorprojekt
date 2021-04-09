@@ -122,8 +122,8 @@ def CFagent(defaults):
 
 class Defaults:
     name: str = "Agent"
-    main: function = graphTrain
-    level: Levels = Levels.Causal2
+    main: function = player
+    level: Levels = Levels.Coconuts
     hours: float = 12
     batch: int = 100
     width: int = 9
@@ -194,7 +194,7 @@ class Defaults:
     replay_size: int = 100000
     sample_size: int = 50
     CF_convert: int = 2
-    Counterfacts: int = 10
+    Counterfacts: int = 1
     TopN: int = 7
 
 
