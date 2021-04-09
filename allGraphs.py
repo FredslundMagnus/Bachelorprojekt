@@ -195,7 +195,7 @@ def rightIntervention(state: FrozenSet[LayerType], data: Dict[LayerType, Dict[Fr
             if chances == {}:
                 return LayerType.Goal
             return max(chances, key=chances.get)
-        chances = {layer: flip_chance(state, layer, data) for layer in max(stats, key=stats.get) if layer not in stats and layer not in used}
+        chances = {layer: flip_chance(state, layer, data) for layer in max(stats, key=stats.get) if layer not in state and layer not in used}
         if chances == {}:
             chances = {layer: flip_chance(state, layer, data) for layer in layers if layer not in state}
             if chances == {}:
@@ -226,6 +226,7 @@ def transformNot(boards: Tensor, states: List[FrozenSet[LayerType]], player: int
 
 
 def getInterventions(env: Game, state: FrozenSet[LayerType], data: Dict[LayerType, Dict[FrozenSet[LayerType], float]], layers: List[LayerType], exploration: float = 1) -> List[bool]:
+    exploration = 0
     if random() <= exploration:
         best = env.layers.types.index(bestIntervention(state, data, layers))
     else:
