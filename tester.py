@@ -16,7 +16,7 @@ def test_simple():
 
 
 def test_teleport():
-    with Load("cococonuts_teleport", num=0) as load:
+    with Load("TEST_CF_CAUSAL4_6c3", num=0) as load:
         collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
         #teleporter.exploration.explore = teleporter.exploration.greedy
         intervention_idx, modified_board = teleporter.pre_process(env)
@@ -92,4 +92,4 @@ def test_graphTrain():
             old_states = new_states
 
 
-test_graphTrain()
+test_teleport()
