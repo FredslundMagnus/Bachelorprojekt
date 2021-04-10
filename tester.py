@@ -1,5 +1,10 @@
+from torch import tensor
+from allGraphs import getInterventions, states, transform, transformNot, environments, cat
+from layer import LayerType
+from typing import List
 from main import *
 from load import Load
+from helper import device
 
 
 def test_simple():
@@ -27,6 +32,7 @@ def test_teleport():
             if frame % 1000 == 0:
                 print("performance is " + str((all_rewards/all_dones).item()))
 
+
 def test_metateleport():
     with Load("causal3_9x9", num=0) as load:
         collector, env, mover, teleporter1, teleporter2 = load.items(Collector, Game, Mover, Teleporter, MetaTeleporter)
@@ -41,6 +47,7 @@ def test_metateleport():
             observations, rewards, dones, info = env.step(actions)
             modified_board1, modified_board2, _, _, _, _, _, intervention_idx1, intervention_idx2 = teleporter2.metamodify(observations, rewards, dones, info, teleporter1.interventions)
 
+
 def test_CFagent():
     with Load("cococonuts_CF_conver2", num=0) as load:
         collector, env, mover, teleporter, CFagent = load.items(Collector, Game, Mover, Teleporter, CFAgent)
@@ -54,4 +61,35 @@ def test_CFagent():
             observations, rewards, dones, info = env.step(actions)
             modified_board, _, _, _, intervention_idx = teleporter.modify(observations, rewards, dones, info)
 
-test_CFagent()
+
+def test_graphTrain():
+    with Load("causal2_online", num=0) as load:
+        collector, env, mover, data = load.items(Collector, Game, Mover, dict)
+        layers: List[LayerType] = environments[env.level][2]
+        teleporter = Teleporter(env, network1=Networks.Teleporter, K1=5000000, learner1=Learners.Qlearn, exploration1=Explorations.softmaxer, gamma1=0.98, batch=env.layers.batch, width=env.layers.width, height=env.layers.height)
+        convert = [env.layers.types.index(layer) for layer in layers]
+        player = env.layers.types.index(LayerType.Player)
+        goal = env.layers.types.index(LayerType.Goal)
+        old_states = [state for state in states(env.board, convert, layers)]
+        dones = tensor([0 for _ in range(env.batch)])
+        rewards = tensor([0 for _ in range(env.batch)])
+        eatCheese, interventions = ([True] * env.batch, [None] * env.batch)
+        for frame in loop(env, collector, teleporter=teleporter):
+            new_states = [state for state in states(env.board, convert, layers)]
+            transform(old_states, new_states, dones, rewards, data, layers)
+            transformNot(env.board, new_states, player, goal, convert, data, layers)
+            stateChanged = [old != new for old, new in zip(old_states, new_states)]
+            shouldInterviene = [cond1 or cond2 for cond1, cond2 in zip(stateChanged, eatCheese)]
+            exploration = 0
+            interventions = [(getInterventions(env, state, data, layers, exploration) if should else old) for state, should, old in zip(new_states, shouldInterviene, interventions)]
+            modification = env.board[tensor(interventions)].unsqueeze(1)
+            teleporter.interventions = tensor([m.flatten().argmax().item() for m in list(modification)], device=device)
+            modified_board = cat((env.board, modification), dim=1)
+            actions = mover(modified_board)
+            _, rewards, dones, _ = env.step(actions)
+            playerPositions = [(t := env.layers.dict[LayerType.Player].positions[i][0])[1] * env.layers.width + t[0] for i in range(env.batch)]
+            eatCheese = [intervention == player_pos for intervention, player_pos in zip(teleporter.interventions, playerPositions)]
+            old_states = new_states
+
+
+test_graphTrain()
