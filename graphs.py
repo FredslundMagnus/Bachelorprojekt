@@ -110,7 +110,8 @@ class Graph():
             except Exception as e:
                 pass
             with screen(Colors.gray.c300):
-                Graph.write(f"Iteration {getattr(self.x, 'frame', 0)}", 825, 20, size=50)
+                if (frame := getattr(self.x, 'frame', 0)) != 0:
+                    Graph.write(f"Iteration {frame}", 825, 20, size=50)
                 for widget in self.widgets.values():
                     widget.draw(Graph.screen)
                 try:
