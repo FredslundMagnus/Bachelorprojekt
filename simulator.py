@@ -13,17 +13,12 @@ class Network(nn.Module):
         self.width = width
         self.height = height
         self.boardmodel = nn.Sequential(nn.Conv2d(self.dim, 64, 3, padding=1), nn.LeakyReLU(), nn.Conv2d(64, 128, 3, padding=1), nn.LeakyReLU(), nn.Conv2d(128, self.dim - 1, 3, padding=1), nn.Flatten())
-        #self.rewarddonemodel = nn.Sequential(nn.Conv2d(self.dim, 32, 5, padding=2), nn.LeakyReLU(), nn.Flatten(), nn.Linear(self.height * self.width * 32, 10), nn.LeakyReLU(), nn.Linear(10, 2), nn.LeakyReLU(), nn.Flatten())
         self.criterion = MSELoss()
         self.optimizer_boardmodel = Adam(self.boardmodel.parameters(), lr=1e-5, weight_decay=1e-5)
-        #self.optimizer_rewarddonemodel = Adam(self.rewarddonemodel.parameters(), lr=1e-5, weight_decay=1e-5)
         self.counter = 0
 
     def boardforward(self, x: Tensor):
         return self.boardmodel(x)
-
-    #def RDforward(self, x: Tensor):
-    #    return self.rewarddonemodel(x)
 
     def learn(self, board_before: Tensor, board_after: Tensor, action: Tensor, reward: Tensor, done: Tensor):
         if action != None:
