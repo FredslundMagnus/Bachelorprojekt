@@ -242,15 +242,19 @@ class CFAgent(Agent):
                     layer.NoRock_update(env.board, [1 for _ in range(self.batch)])
         return CF_dones
 
-    def counterfact2(self, env, dones, teleporter):
+    def counterfact2(self, env, dones, teleporter, simulator):
         CF_dones, cfs = self.counterfact_check(dones, env, check=1)
         for _ in range(cfs):
             counterfactuals = []
             if len(CF_dones) > 0:
                 needs_intervention_board = env.board[CF_dones]
                 actions = self.choose_action(needs_intervention_board, teleporter)
-                for action in actions:
-                    counterfactuals.append((action.item() % self.width, action.item()// self.height))
+                cf_boards = simulator.simulate(needs_intervention_board, actions)
+                limit = 0.5
+                #cf_boards[cf_boards < limit] = 0
+                cf_boards = torch.nonzero(cf_boards)
+                print(torch.nonzero(cf_boards[0]))
+
                 for i in range(len(CF_dones)):
                     batch_idx = CF_dones[i]
                     self.boards[batch_idx] = env.board[batch_idx]
@@ -259,6 +263,7 @@ class CFAgent(Agent):
                         if counterfactuals[i] in layer._positions[batch_idx]:
                             layer.remove(batch_idx, counterfactuals[i])
                             env.layers.board[batch_idx, :, counterfactuals[i][1], counterfactuals[i][0]] = 0
+
             if any([x.name == "Rock" for x in env.layers.types]):
                 for layer in env.layers.layers:
                     layer.update(env.board, [1 for _ in range(self.batch)], env.layers.all_items)
