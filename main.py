@@ -145,8 +145,8 @@ def CFagentv2(defaults):
             teleporter.learn(board_after, intervention, tele_rewards, tele_dones, board_before)
             simbuffer.simulator_save_data(teleporter.boards, observations, teleporter.interventions, teleport_rewards, dones, intervention_idx, rewards)
             board_before, board_after, intervention, tele_rewards, tele_dones, normal_rewards = simbuffer.sample_data()
-            lossboard, lossRD = simulator.learn(board_before, board_after, intervention, normal_rewards, tele_dones)
-            collector.collect_loss(lossboard, lossRD)
+            lossboard = simulator.learn(board_before, board_after, intervention, normal_rewards, tele_dones)
+            collector.collect_loss(lossboard)
             collector.collect([rewards, modified_rewards, teleport_rewards], [dones, modified_dones])
             CFbuffer.CF_save_data(CFagent.boards, observations, CFagent.counterfactuals, rewards, CFdones)
             CFboard, CFobs, CF, CFrewards, CFdones1 = CFbuffer.sample_data()
@@ -155,8 +155,8 @@ def CFagentv2(defaults):
 
 class Defaults:
     name: str = "Agent"
-    main: function = CFagentv2
-    level: Levels = Levels.Causal4
+    main: function = CFagent
+    level: Levels = Levels.Causal2
     hours: float = 12
     batch: int = 100
     width: int = 9

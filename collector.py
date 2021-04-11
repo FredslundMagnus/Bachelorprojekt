@@ -15,7 +15,6 @@ class Collector:
         self.dones = []
         self.data = {}
         self.lossBoard = [0]
-        self.lossRD = [0]
 
     def show(self, game) -> None:
         plot_positions = [(0, 0), (600, 0), (1200, 0), (0, 520), (600, 520), (1200, 520)]
@@ -35,13 +34,6 @@ class Collector:
             plt.xlabel("Seen frames in " + str(self.batch * self.filter_size))
             plt.ylabel("loss")
             plt.plot(self.lossBoard[:-1], label="board")
-            plt.legend(loc="upper left")
-            i += 1
-            fig = plt.figure()
-            move_figure(fig, plot_positions[i % len(plot_positions)])
-            plt.xlabel("Seen frames in " + str(self.batch * self.filter_size))
-            plt.ylabel("loss")
-            plt.plot(self.lossRD[:-1], label="reward and done")
             plt.legend(loc="upper left")
             i += 1
 
@@ -72,13 +64,10 @@ class Collector:
             self.rewards = []
             self.dones = []
 
-    def collect_loss(self, lossboard: int, lossRD: int):
+    def collect_loss(self, lossboard: int):
         self.counter2 += 1
         self.lossBoard[-1] += lossboard
-        self.lossRD[-1] += lossRD
 
         if self.counter2 % self.filter_size == 0:
             self.lossBoard[-1] /= self.filter_size
-            self.lossRD[-1] /= self.filter_size
             self.lossBoard.append(0)
-            self.lossRD.append(0)
