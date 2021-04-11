@@ -114,7 +114,7 @@ def CFagent(defaults):
             board_before, board_after, intervention, tele_rewards, tele_dones = buffer.sample_data()
             teleporter.learn(board_after, intervention, tele_rewards, tele_dones, board_before)
             collector.collect([rewards, modified_rewards, teleport_rewards], [dones, modified_dones])
-            CFbuffer.CF_save_data(CFagent.boards, observations, CFagent.counterfactuals, rewards, CFdones)
+            CFbuffer.CF_save_data(CFagent.boards, observations, CFagent.counterfactuals, rewards, dones)
             CFboard, CFobs, cf, CFrewards, CFdones1 = CFbuffer.sample_data()
             CFagent.learn(CFobs, cf, CFrewards, CFdones1, CFboard)
 
@@ -133,7 +133,7 @@ def CFagentv2(defaults):
         intervention_idx, modified_board = teleporter.pre_process(env)
         dones = CFagent.pre_process(env)
         for frame in loop(env, collector, save, teleporter):
-            CFdones = CFagent.counterfact(env, dones, teleporter)
+            CFdones = CFagent.counterfact2(env, dones, teleporter, simulator)
             modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
             actions = mover(modified_board)
             observations, rewards, dones, info = env.step(actions)
@@ -147,16 +147,15 @@ def CFagentv2(defaults):
             lossboard = simulator.learn(board_before, board_after, intervention, normal_rewards, tele_dones)
             collector.collect_loss(lossboard)
             collector.collect([rewards, modified_rewards, teleport_rewards], [dones, modified_dones])
-            CFbuffer.CF_save_data(CFagent.boards, observations, CFagent.counterfactuals, rewards, CFdones)
+            CFbuffer.CF_save_data(CFagent.boards, observations, CFagent.counterfactuals, rewards, dones)
             CFboard, CFobs, cf, CFrewards, CFdones1 = CFbuffer.sample_data()
-            print(CFdones1)
             CFagent.learn(CFobs, cf, CFrewards, CFdones1, CFboard)
 
 
 class Defaults:
     name: str = "Agent"
     main: function = CFagentv2
-    level: Levels = Levels.Causal4
+    level: Levels = Levels.Causal2
     hours: float = 12
     batch: int = 100
     width: int = 9
@@ -227,7 +226,7 @@ class Defaults:
     replay_size: int = 100000
     sample_size: int = 50
     CF_convert: int = 2
-    Counterfacts: int = 10
+    Counterfacts: int = 1
     TopN: int = 7
 
 
