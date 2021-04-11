@@ -2,14 +2,10 @@ from allGraphs import *
 from helper import device
 
 
-def graphTrain(defaults, data=None):
+def graphTrain(defaults):
     layers: List[LayerType] = environments[defaults['level']][2]
     explorationN = defaults['K1']
-    if data == None:
-        data = {}
-    for layer in layers:
-        data[layer] = {c: 1 for c in combinations(layer, layers)}
-    data[LayerType.Goal] = {c: 1 for c in combinations(None, layers)}
+    data = Data(layers)
     env = Game(**defaults)
     mover = Mover(env, _extra_dim=1, **defaults)
     teleporter = Teleporter(env, **defaults)
@@ -24,13 +20,14 @@ def graphTrain(defaults, data=None):
         rewards = tensor([0 for _ in range(env.batch)])
         eatCheese, interventions = ([True] * env.batch, [None] * env.batch)
         for frame in loop(env, collector, save, teleporter=teleporter):
+            data.t = frame
             new_states = [state for state in states(env.board, convert, layers)]
             transform(old_states, new_states, dones, rewards, data, layers)
             transformNot(env.board, new_states, player, goal, convert, data, layers)
             stateChanged = [old != new for old, new in zip(old_states, new_states)]
             shouldInterviene = [cond1 or cond2 for cond1, cond2 in zip(stateChanged, eatCheese)]
             exploration = max((explorationN-frame)/explorationN, defaults['softmax_cap'])
-            interventions = [(getInterventions(env, state, data, layers, exploration) if should else old) for state, should, old in zip(new_states, shouldInterviene, interventions)]
+            interventions = [(getInterventions(env, state, data, exploration) if should else old) for state, should, old in zip(new_states, shouldInterviene, interventions)]
             modification = env.board[tensor(interventions)].unsqueeze(1)
             teleporter.interventions = tensor([m.flatten().argmax().item() for m in list(modification)], device=device)
             modified_board = cat((env.board, modification), dim=1)

@@ -118,6 +118,7 @@ def CFagent(defaults):
             CFboard, CFobs, cf, CFrewards, CFdones1 = CFbuffer.sample_data()
             CFagent.learn(CFobs, cf, CFrewards, CFdones1, CFboard)
 
+
 def CFagentv2(defaults):
     env = Game(**defaults)
     mover = Mover(env, _extra_dim=1, **defaults)

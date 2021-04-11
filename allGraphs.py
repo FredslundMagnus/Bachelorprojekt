@@ -8,12 +8,68 @@ from load import Load
 from threading import currentThread
 from typing import FrozenSet, Dict, Iterable, List
 from game import Game, Levels
-from agent import Teleporter, Mover, Networks, Learners, Explorations, MetaTeleporter, CFAgent
+from agent import Teleporter, Mover
 from collector import Collector
 from auxillaries import loop, Save
 from helper import function
 from random import random
 import sys
+from dataclasses import dataclass
+
+
+@dataclass
+class Info:
+    satisfiable: int = 0
+    unsatisfiable: int = 0
+    n: int = 0
+
+
+class Data:
+    def __init__(self, layers: List[LayerType] = None) -> None:
+        self.layers = layers
+        self.data = {}
+        self.t = 0
+        for layer in layers:
+            self.data[layer] = {c: Info() for c in combinations(layer, layers)}
+        self.data[LayerType.Goal] = {c: Info() for c in combinations(None, layers)}
+
+    def satisfiable(self, layer: LayerType, state: FrozenSet[LayerType]):
+        info = self.data[layer][state]
+        info.satisfiable += 1
+        info.n += 1
+
+    def unsatisfiable(self, layer: LayerType, state: FrozenSet[LayerType]):
+        info = self.data[layer][state]
+        info.unsatisfiable += 1
+        info.n += 1
+
+    def p(self, layer: LayerType, state: FrozenSet[LayerType]):
+        info: Info = self.data[layer][state]
+        if (s := info.satisfiable):
+            return s / info.n
+        return 0
+
+    def var(self, layer: LayerType, state: FrozenSet[LayerType]):
+        info: Info = self.data[layer][state]
+        a = 1
+        n = info.n
+        if n == 0:
+            return float("inf")
+        p = (info.satisfiable + a) / (n + 2*a)
+        return (p * (1-p))/n
+
+    def expected_moves(self, state: FrozenSet[LayerType], layer: LayerType) -> float:
+        if layer == LayerType.Goal:
+            return 1/max(self.p(LayerType.Goal, state), 1e-10)
+        next_state = frozenset(list(state) + [layer])
+        return 1/max(self.p(layer, state), 1e-10) + min(self.expected_moves(next_state, layer) for layer in self.layers_not_in(next_state))
+
+    def n(self, layer: LayerType, state: FrozenSet[LayerType]):
+        return self.data[layer][state].n
+
+    def layers_not_in(self, state: FrozenSet[LayerType], goal_layer: bool = True):
+        return [layer for layer in (self.layers + ([LayerType.Goal] if goal_layer else [])) if layer not in state]
+
 
 environments = {
     Levels.Causal7: ["causal7_demo", 0, [LayerType.Greencross, LayerType.Bluecross, LayerType.Redcross, LayerType.Purplecross]],
@@ -150,6 +206,7 @@ def states(board: Tensor, convert: List[int], layers: List[LayerType]) -> Iterab
 
 def expand(state: FrozenSet[LayerType], hide: LayerType, layers: List[LayerType]) -> Iterable[FrozenSet[LayerType]]:
     extras = [layer for layer in layers if layer not in state and layer != hide]
+    yield state
     for i in range(1, len(extras) + 1):
         for c in combi(extras, i):
             yield frozenset(list(state) + list(c))
@@ -161,76 +218,35 @@ def compress(state: FrozenSet[LayerType]) -> Iterable[FrozenSet[LayerType]]:
             yield frozenset(c)
 
 
-def flip_chance(state: FrozenSet[LayerType], layer: LayerType, data: Dict[LayerType,  Dict[FrozenSet[LayerType], float]]):
-    chanceForFlip = 1
-    for partial in compress(state):
-        chanceForFlip *= (1 - data[layer][partial])
-    return 1 - chanceForFlip
+def bestIntervention(state: FrozenSet[LayerType], data: Data) -> LayerType:
+    return max(data.layers_not_in(state), key=lambda layer: data.var(layer, state))
 
 
-def bestIntervention(state: FrozenSet[LayerType], data: Dict[LayerType, Dict[FrozenSet[LayerType], float]], layers: List[LayerType]) -> LayerType:
-    maxV, maxL = 0, None
-    for layer in [layer for layer in (layers + [LayerType.Goal]) if layer not in state]:
-
-        chanceForFlip = min(flip_chance(state, layer, data), 0.99)
-
-        temp = 0
-        for overkill in expand(state, layer, layers):
-            temp += data[layer][overkill] * (1-alpha) * chanceForFlip
-
-        for partial in compress(state):
-            temp += data[layer][partial] * (1-alpha) * (1-chanceForFlip)
-
-        if temp >= maxV:
-            maxV, maxL = temp, layer
-    return maxL
+def rightIntervention(state: FrozenSet[LayerType], data: Data) -> LayerType:
+    return min(data.layers_not_in(state), key=lambda layer: data.expected_moves(state, layer))
 
 
-def rightIntervention(state: FrozenSet[LayerType], data: Dict[LayerType, Dict[FrozenSet[LayerType], float]], layers: List[LayerType]) -> LayerType:
-    layer = LayerType.Goal
-    used = {LayerType.Goal}
-    while flip_chance(state, layer, data) <= 0.9:
-        stats = {explainer: flip_chance(explainer, layer, data) for explainer in data[layer] if not any(use in explainer for use in used)}
-        if stats == {}:
-            chances = {layer: flip_chance(state, layer, data) for layer in layers if layer not in state}
-            if chances == {}:
-                return LayerType.Goal
-            return max(chances, key=chances.get)
-        chances = {layer: flip_chance(state, layer, data) for layer in max(stats, key=stats.get) if layer not in state and layer not in used}
-        if chances == {}:
-            chances = {layer: flip_chance(state, layer, data) for layer in layers if layer not in state}
-            if chances == {}:
-                return LayerType.Goal
-            return max(chances, key=chances.get)
-        layer = max(chances, key=chances.get)
-        used.add(layer)
-    return layer
-
-
-def transform(old_states: List[FrozenSet[LayerType]], new_states: List[FrozenSet[LayerType]], dones: Tensor, rewards: Tensor, data: Dict[LayerType, Dict[FrozenSet[LayerType], float]], layers: List[LayerType]) -> None:
+def transform(old_states: List[FrozenSet[LayerType]], new_states: List[FrozenSet[LayerType]], dones: Tensor, rewards: Tensor, data: Data, layers: List[LayerType]) -> None:
     for old_state, new_state, done, reward in zip(old_states, new_states, dones.tolist(), rewards.tolist()):
         if reward:
-            for overkill in expand(old_state, None, layers):
-                data[LayerType.Goal][overkill] *= alpha
+            data.satisfiable(LayerType.Goal, old_state)
         elif not done and old_state != new_state:
             for layer in new_state.difference(old_state):
-                for overkill in expand(old_state, layer, layers):
-                    data[layer][overkill] *= alpha
+                data.satisfiable(layer, old_state)
 
 
-def transformNot(boards: Tensor, states: List[FrozenSet[LayerType]], player: int, goal: int, convert: List[int], data: Dict[LayerType, Dict[FrozenSet[LayerType], float]], layers: List[LayerType]) -> None:
+def transformNot(boards: Tensor, states: List[FrozenSet[LayerType]], player: int, goal: int, convert: List[int], data: Data, layers: List[LayerType]) -> None:
     for board, state in zip(boards, states):
         for layer, i in zip(layers + [LayerType.Goal], convert + [goal]):
             if (board[player] * board[i]).sum().item():
-                for undershoot in compress(state):
-                    data[layer][undershoot] *= alpha
+                data.unsatisfiable(layer, state)
 
 
-def getInterventions(env: Game, state: FrozenSet[LayerType], data: Dict[LayerType, Dict[FrozenSet[LayerType], float]], layers: List[LayerType], exploration: float = 1) -> List[bool]:
+def getInterventions(env: Game, state: FrozenSet[LayerType], data: Data, exploration: float = 1) -> List[bool]:
     if random() <= exploration:
-        best = env.layers.types.index(bestIntervention(state, data, layers))
+        best = env.layers.types.index(bestIntervention(state, data))
     else:
-        best = env.layers.types.index(rightIntervention(state, data, layers))
+        best = env.layers.types.index(rightIntervention(state, data))
     return [best == i for i in range(env.board.shape[1])]
 
 
@@ -257,7 +273,7 @@ def runnerBestIntervention(data=None):
             stateChanged = [old != new for old, new in zip(old_states, new_states)]  # New
             shouldInterviene = [cond1 or cond2 for cond1, cond2 in zip(stateChanged, eatCheese)]  # New
             # interventions = tensor([getInterventions(env, state, data) for state in new_states]) # Old
-            interventions = [(getInterventions(env, state, data, layers) if should else old) for state, should, old in zip(new_states, shouldInterviene, interventions)]  # New
+            interventions = [(getInterventions(env, state, data) if should else old) for state, should, old in zip(new_states, shouldInterviene, interventions)]  # New
             modification = env.board[tensor(interventions)].unsqueeze(1)
             teleporter.interventions = [m.flatten().argmax().item() for m in list(modification)]
             modified_board = cat((env.board, modification), dim=1)
