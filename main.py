@@ -115,8 +115,8 @@ def CFagent(defaults):
             teleporter.learn(board_after, intervention, tele_rewards, tele_dones, board_before)
             collector.collect([rewards, modified_rewards, teleport_rewards], [dones, modified_dones])
             CFbuffer.CF_save_data(CFagent.boards, observations, CFagent.counterfactuals, rewards, CFdones)
-            CFboard, CFobs, CF, CFrewards, CFdones1 = CFbuffer.sample_data()
-            CFagent.learn(CFobs, CF, CFrewards, CFdones1, CFboard)
+            CFboard, CFobs, cf, CFrewards, CFdones1 = CFbuffer.sample_data()
+            CFagent.learn(CFobs, cf, CFrewards, CFdones1, CFboard)
 
 def CFagentv2(defaults):
     env = Game(**defaults)
@@ -138,7 +138,7 @@ def CFagentv2(defaults):
             actions = mover(modified_board)
             observations, rewards, dones, info = env.step(actions)
             modified_board, modified_rewards, modified_dones, teleport_rewards, intervention_idx = teleporter.modify(observations, rewards, dones, info)
-            buffer.teleporter_save_data(teleporter.boards, observations, teleporter.interventions, teleport_rewards, dones, intervention_idx, rewards)
+            buffer.teleporter_save_data(teleporter.boards, observations, teleporter.interventions, teleport_rewards, dones, intervention_idx)
             mover.learn(modified_board, actions, modified_rewards, modified_dones)
             board_before, board_after, intervention, tele_rewards, tele_dones = buffer.sample_data()
             teleporter.learn(board_after, intervention, tele_rewards, tele_dones, board_before)
@@ -148,13 +148,14 @@ def CFagentv2(defaults):
             collector.collect_loss(lossboard)
             collector.collect([rewards, modified_rewards, teleport_rewards], [dones, modified_dones])
             CFbuffer.CF_save_data(CFagent.boards, observations, CFagent.counterfactuals, rewards, CFdones)
-            CFboard, CFobs, CF, CFrewards, CFdones1 = CFbuffer.sample_data()
-            CFagent.learn(CFobs, CF, CFrewards, CFdones1, CFboard)
+            CFboard, CFobs, cf, CFrewards, CFdones1 = CFbuffer.sample_data()
+            print(CFdones1)
+            CFagent.learn(CFobs, cf, CFrewards, CFdones1, CFboard)
 
 
 class Defaults:
     name: str = "Agent"
-    main: function = CFagent
+    main: function = CFagentv2
     level: Levels = Levels.Causal4
     hours: float = 12
     batch: int = 100
