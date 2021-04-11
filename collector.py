@@ -9,6 +9,7 @@ class Collector:
         self.type = main if main.__class__ == str else main.__name__
         self.batch = batch
         self.counter = 0
+        self.counter2 = 0
         self.filter_size = 1000
         self.rewards = []
         self.dones = []
@@ -72,11 +73,11 @@ class Collector:
             self.dones = []
 
     def collect_loss(self, lossboard: int, lossRD: int):
-        self.counter += 1
+        self.counter2 += 1
         self.lossBoard[-1] += lossboard
         self.lossRD[-1] += lossRD
 
-        if self.counter % self.filter_size == 0:
+        if self.counter2 % self.filter_size == 0:
             self.lossBoard[-1] /= self.filter_size
             self.lossRD[-1] /= self.filter_size
             self.lossBoard.append(0)

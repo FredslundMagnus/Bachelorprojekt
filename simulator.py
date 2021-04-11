@@ -26,23 +26,26 @@ class Network(nn.Module):
         return self.rewarddonemodel(x)
 
     def learn(self, board_before: Tensor, board_after: Tensor, action: Tensor, reward: Tensor, done: Tensor):
-        self.counter += 1
-        intervention_layer = torch.nn.functional.one_hot(action, self.height * self.width).reshape(action.shape[0], self.height, self.width).unsqueeze(1)
-        modified_board = torch.cat((board_before, intervention_layer), 1)
-        modified_board_before_no_dones = modified_board[done == 0]
-        guess_board = self.boardforward(modified_board_before_no_dones)
-        label_board = ((board_after - board_before)**2)[done == 0].flatten(start_dim=1)
-        guess_RD = self.RDforward(modified_board)
-        label_RD = torch.cat((reward.unsqueeze(1), done.unsqueeze(1)), dim=1)
-        loss_board = self.criterion(guess_board, label_board)
-        loss_board.backward()
-        self.optimizer_boardmodel.step()
-        self.optimizer_boardmodel.zero_grad()
-        loss_RD = self.criterion(guess_RD, label_RD)
-        loss_RD.backward()
-        self.optimizer_rewarddonemodel.step()
-        self.optimizer_rewarddonemodel.zero_grad()
-        return torch.sum(loss_RD).item(), torch.sum(loss_board).item()
+        if action != None:
+            self.counter += 1
+            intervention_layer = torch.nn.functional.one_hot(action, self.height * self.width).reshape(action.shape[0], self.height, self.width).unsqueeze(1)
+            modified_board = torch.cat((board_before, intervention_layer), 1)
+            modified_board_before_no_dones = modified_board[done == 0]
+            guess_board = self.boardforward(modified_board_before_no_dones)
+            label_board = ((board_after - board_before)**2)[done == 0].flatten(start_dim=1)
+            guess_RD = self.RDforward(modified_board)
+            label_RD = torch.cat((reward.unsqueeze(1), done.unsqueeze(1)), dim=1)
+            loss_board = self.criterion(guess_board, label_board)
+            loss_board.backward()
+            self.optimizer_boardmodel.step()
+            self.optimizer_boardmodel.zero_grad()
+            loss_RD = self.criterion(guess_RD, label_RD)
+            loss_RD.backward()
+            self.optimizer_rewarddonemodel.step()
+            self.optimizer_rewarddonemodel.zero_grad()
+            return torch.sum(loss_RD).item(), torch.sum(loss_board).item()
+        else:
+            return 0, 0
     
     def simulate(self, board_before: Tensor, action: Tensor):
         intervention_layer = torch.nn.functional.one_hot(action, self.height * self.width).reshape(action.shape[0], self.height, self.width).unsqueeze(1)
