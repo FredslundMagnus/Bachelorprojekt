@@ -3,7 +3,7 @@ from agent import Teleporter, Mover, Networks, Learners, Explorations, MetaTelep
 from collector import Collector
 from auxillaries import run, loop, player, random, Save
 from helper import function
-from replaybuffer import ReplayBuffer, CFReplayBuffer
+from replaybuffer import ReplayBuffer, CFReplayBuffer, SimBuffer
 from simulator import Simulator
 from load import Load
 from allGraphsTrain import graphTrain
@@ -27,13 +27,12 @@ def metateleport(defaults):
             actions = mover(modified_board1)
             observations, rewards, dones, info = env.step(actions)
             modified_board1, modified_board2, modified_rewards1, modified_rewards2, modified_dones1, modified_dones2, tele_rewards, intervention_idx1, intervention_idx2 = teleporter2.metamodify(observations, rewards, dones, info, teleporter1.interventions)
-            # print(modified_rewards1[0], modified_rewards2[0], modified_dones1[0], modified_dones2[0], tele_rewards[0])
-            buffer1.teleporter_save_data(teleporter1.boards, modified_board2, teleporter1.interventions, modified_rewards2, modified_dones2, intervention_idx1, rewards)
-            buffer2.teleporter_save_data(teleporter2.boards, observations, teleporter2.interventions, tele_rewards, dones, intervention_idx2, rewards)
+            buffer1.teleporter_save_data(teleporter1.boards, modified_board2, teleporter1.interventions, modified_rewards2, modified_dones2, intervention_idx1)
+            buffer2.teleporter_save_data(teleporter2.boards, observations, teleporter2.interventions, tele_rewards, dones, intervention_idx2)
             mover.learn(modified_board1, actions, modified_rewards1, modified_dones1)
-            board_before, board_after, intervention, tel_rewards, tele_dones, normal_rewards = buffer1.sample_data()
+            board_before, board_after, intervention, tel_rewards, tele_dones = buffer1.sample_data()
             teleporter1.learn(board_after, intervention, tel_rewards, tele_dones, board_before)
-            board_before, board_after, intervention, tel_rewards, tele_dones, normal_rewards = buffer2.sample_data()
+            board_before, board_after, intervention, tel_rewards, tele_dones = buffer2.sample_data()
             teleporter2.learn(board_after, intervention, tel_rewards, tele_dones, board_before)
             collector.collect([rewards, modified_rewards1, modified_rewards2, tele_rewards], [dones, modified_dones1, modified_dones2])
 
@@ -52,9 +51,9 @@ def teleport(defaults):
             actions = mover(modified_board)
             observations, rewards, dones, info = env.step(actions)
             modified_board, modified_rewards, modified_dones, teleport_rewards, intervention_idx = teleporter.modify(observations, rewards, dones, info)
-            buffer.teleporter_save_data(teleporter.boards, observations, teleporter.interventions, teleport_rewards, dones, intervention_idx, rewards)
+            buffer.teleporter_save_data(teleporter.boards, observations, teleporter.interventions, teleport_rewards, dones, intervention_idx)
             mover.learn(modified_board, actions, modified_rewards, modified_dones)
-            board_before, board_after, intervention, tele_rewards, tele_dones, normal_rewards = buffer.sample_data()
+            board_before, board_after, intervention, tele_rewards, tele_dones = buffer.sample_data()
             teleporter.learn(board_after, intervention, tele_rewards, tele_dones, board_before)
             collector.collect([rewards, modified_rewards, teleport_rewards], [dones, modified_dones])
 
@@ -78,7 +77,7 @@ def simulation(defaults):
         teleporter.modified_done_chance = 0
         simulator = Simulator(env, env.layers.width, env.layers.height)
         intervention_idx, modified_board = teleporter.pre_process(env)
-        buffer = ReplayBuffer(**defaults)
+        buffer = SimBuffer(**defaults)
         collector = Collector(**defaults)
         with Save(env, collector, simulator, **defaults) as save:
             for frame in loop(env, collector, save, teleporter=teleporter):
@@ -105,25 +104,59 @@ def CFagent(defaults):
         intervention_idx, modified_board = teleporter.pre_process(env)
         dones = CFagent.pre_process(env)
         for frame in loop(env, collector, save, teleporter):
-            CFagent.counterfact(env, dones, teleporter)
+            CFdones = CFagent.counterfact(env, dones, teleporter)
+            modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
+            actions = mover(modified_board)
+            observations, rewards, dones, info = env.step(actions)
+            modified_board, modified_rewards, modified_dones, teleport_rewards, intervention_idx = teleporter.modify(observations, rewards, dones, info)
+            buffer.teleporter_save_data(teleporter.boards, observations, teleporter.interventions, teleport_rewards, dones, intervention_idx)
+            mover.learn(modified_board, actions, modified_rewards, modified_dones)
+            board_before, board_after, intervention, tele_rewards, tele_dones = buffer.sample_data()
+            teleporter.learn(board_after, intervention, tele_rewards, tele_dones, board_before)
+            collector.collect([rewards, modified_rewards, teleport_rewards], [dones, modified_dones])
+            CFbuffer.CF_save_data(CFagent.boards, observations, CFagent.counterfactuals, rewards, CFdones)
+            CFboard, CFobs, CF, CFrewards, CFdones1 = CFbuffer.sample_data()
+            CFagent.learn(CFobs, CF, CFrewards, CFdones1, CFboard)
+
+
+def CFagentv2(defaults):
+    env = Game(**defaults)
+    mover = Mover(env, _extra_dim=1, **defaults)
+    teleporter = Teleporter(env, **defaults)
+    buffer = ReplayBuffer(**defaults)
+    CFagent = CFAgent(env, **defaults)
+    CFbuffer = CFReplayBuffer(**defaults)
+    simulator = Simulator(env, **defaults)
+    simbuffer = SimBuffer(**defaults)
+    collector = Collector(**defaults)
+
+    with Save(env, collector, mover, teleporter, CFagent, **defaults) as save:
+        intervention_idx, modified_board = teleporter.pre_process(env)
+        dones = CFagent.pre_process(env)
+        for frame in loop(env, collector, save, teleporter):
+            CFdones = CFagent.counterfact(env, dones, teleporter)
             modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
             actions = mover(modified_board)
             observations, rewards, dones, info = env.step(actions)
             modified_board, modified_rewards, modified_dones, teleport_rewards, intervention_idx = teleporter.modify(observations, rewards, dones, info)
             buffer.teleporter_save_data(teleporter.boards, observations, teleporter.interventions, teleport_rewards, dones, intervention_idx, rewards)
             mover.learn(modified_board, actions, modified_rewards, modified_dones)
-            board_before, board_after, intervention, tele_rewards, tele_dones, normal_rewards = buffer.sample_data()
+            board_before, board_after, intervention, tele_rewards, tele_dones = buffer.sample_data()
             teleporter.learn(board_after, intervention, tele_rewards, tele_dones, board_before)
+            simbuffer.simulator_save_data(teleporter.boards, observations, teleporter.interventions, teleport_rewards, dones, intervention_idx, rewards)
+            board_before, board_after, intervention, tele_rewards, tele_dones, normal_rewards = simbuffer.sample_data()
+            lossboard = simulator.learn(board_before, board_after, intervention, normal_rewards, tele_dones)
+            collector.collect_loss(lossboard)
             collector.collect([rewards, modified_rewards, teleport_rewards], [dones, modified_dones])
-            CFbuffer.CF_save_data(CFagent.boards, observations, CFagent.counterfactuals, rewards, dones)
-            CFboard, CFobs, CF, CFrewards, CFdones = CFbuffer.sample_data()
-            CFagent.learn(CFobs, CF, CFrewards, CFdones, CFboard)
+            CFbuffer.CF_save_data(CFagent.boards, observations, CFagent.counterfactuals, rewards, CFdones)
+            CFboard, CFobs, CF, CFrewards, CFdones1 = CFbuffer.sample_data()
+            CFagent.learn(CFobs, CF, CFrewards, CFdones1, CFboard)
 
 
 class Defaults:
     name: str = "Agent"
-    main: function = graphTrain
-    level: Levels = Levels.Causal2
+    main: function = CFagent
+    level: Levels = Levels.Causal4
     hours: float = 12
     batch: int = 100
     width: int = 9
@@ -194,7 +227,7 @@ class Defaults:
     replay_size: int = 100000
     sample_size: int = 50
     CF_convert: int = 2
-    Counterfacts: int = 1
+    Counterfacts: int = 10
     TopN: int = 7
 
 
