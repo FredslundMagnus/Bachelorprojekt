@@ -13,6 +13,7 @@ from collector import Collector
 from auxillaries import loop, Save
 from helper import function
 from random import random
+import sys
 
 environments = {
     Levels.Causal7: ["causal7_demo", 0, [LayerType.Greencross, LayerType.Bluecross, LayerType.Redcross, LayerType.Purplecross]],
@@ -27,7 +28,7 @@ level = Levels.Causal7
 alpha = 0.95
 useBestIntervention = True
 GAME_UI = False
-if __name__ == "__main__":
+if (__name__ == "__main__") or (sys.argv[0].split("\\")[-1].split("/")[-1] == "showGraph.py"):
     from graphs import Edge, Graph, Node
 
     class AllGraph(Graph):
