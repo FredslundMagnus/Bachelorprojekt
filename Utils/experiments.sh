@@ -1,13 +1,9 @@
 #!/bin/sh
-mkdir ../outputs/causal2_online_var/
-mkdir ../outputs/causal2_online_var/Markdown
-bsub -o "../outputs/causal2_online_var/Markdown/causal2_online_var_0.md" -J "causal2_online_var_0" -P "-name causal2_online_var-0 -hours 12.0 -level Levels.Causal2 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0" < submit.sh
-mkdir ../outputs/causal5_online_var/
-mkdir ../outputs/causal5_online_var/Markdown
-bsub -o "../outputs/causal5_online_var/Markdown/causal5_online_var_0.md" -J "causal5_online_var_0" -P "-name causal5_online_var-0 -hours 12.0 -level Levels.Causal5 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0" < submit.sh
-mkdir ../outputs/causal6_online_var/
-mkdir ../outputs/causal6_online_var/Markdown
-bsub -o "../outputs/causal6_online_var/Markdown/causal6_online_var_0.md" -J "causal6_online_var_0" -P "-name causal6_online_var-0 -hours 12.0 -level Levels.Causal6 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0" < submit.sh
-mkdir ../outputs/causal7_online_var/
-mkdir ../outputs/causal7_online_var/Markdown
-bsub -o "../outputs/causal7_online_var/Markdown/causal7_online_var_0.md" -J "causal7_online_var_0" -P "-name causal7_online_var-0 -hours 12.0 -level Levels.Causal7 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0" < submit.sh
+mkdir ../outputs/CFv2cau1/
+mkdir ../outputs/CFv2cau1/Markdown
+bsub -o "../outputs/CFv2cau1/Markdown/CFv2cau1_0.md" -J "CFv2cau1_0" -P "-name CFv2cau1-0 -hours 10.0 -level Levels.Causal1 -main CFagentv2 -CF_convert 6 -Counterfacts 1" < submit.sh
+bsub -o "../outputs/CFv2cau1/Markdown/CFv2cau1_1.md" -J "CFv2cau1_1" -P "-name CFv2cau1-1 -hours 10.0 -level Levels.Causal1 -main CFagentv2 -CF_convert 6 -Counterfacts 1" < submit.sh
+mkdir ../outputs/CFv2cau2/
+mkdir ../outputs/CFv2cau2/Markdown
+bsub -o "../outputs/CFv2cau2/Markdown/CFv2cau2_0.md" -J "CFv2cau2_0" -P "-name CFv2cau2-0 -hours 10.0 -level Levels.Causal2 -main CFagentv2 -CF_convert 6 -Counterfacts 1" < submit.sh
+bsub -o "../outputs/CFv2cau2/Markdown/CFv2cau2_1.md" -J "CFv2cau2_1" -P "-name CFv2cau2-1 -hours 10.0 -level Levels.Causal2 -main CFagentv2 -CF_convert 6 -Counterfacts 1" < submit.sh

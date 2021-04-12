@@ -249,9 +249,9 @@ class CFAgent(Agent):
             if len(CF_dones) > 0:
                 needs_intervention_board = env.board[CF_dones]
                 actions = self.choose_action(needs_intervention_board, teleporter)
-                cf_boards = simulator.simulate(needs_intervention_board, actions)
+                cf_boards = simulator.simulate(needs_intervention_board, actions).detach()
                 limit = 0.5
-                cf_boards[cf_boards < limit] = 0
+                cf_boards[abs(cf_boards) < limit] = 0
                 for j in range(len(CF_dones)):
                     batch_idx = CF_dones[j]
                     changes = torch.nonzero(cf_boards[j])
@@ -259,19 +259,18 @@ class CFAgent(Agent):
                         layer = change.item() // (env.board.shape[1] * self.width)
                         width = (change.item() - (env.board.shape[1] * self.width) * layer) // self.width
                         height = change.item() - layer * (env.board.shape[1] * self.width) - width * self.width
-                        counterfactuals[j].add(((width, height), layer))
+                        counterfactuals[j].add(((width, height), layer, cf_boards[j,change]))
                     self.boards[batch_idx] = env.board[batch_idx]
                     self.counterfactuals[batch_idx] = actions[j]
-                    print(counterfactuals[j], batch_idx)
                     for counterfact in counterfactuals[j]:
                         for layer in env.layers.layers:
                             layer_pos = layer._layer
                             if counterfact[1] != layer_pos or not (counterfact[0][0] > 0 and counterfact[0][1] > 0 and counterfact[0][0] < self.width - 1 and counterfact[0][1] < self.height - 1):
                                 continue
-                            elif counterfact[0] in layer._positions[batch_idx]:
+                            elif counterfact[0] in layer._positions[batch_idx] and counterfact[2] < 0:
                                 layer.remove(batch_idx, counterfact[0])
                                 env.layers.board[batch_idx, layer_pos, counterfact[0][1], counterfact[0][0]] = 0
-                            else:
+                            elif counterfact[0] not in layer._positions[batch_idx] and counterfact[2] > 0:
                                 layer.add(batch_idx, counterfact[0])
                                 env.layers.board[batch_idx, layer_pos, counterfact[0][1], counterfact[0][0]] = 1                            
 
