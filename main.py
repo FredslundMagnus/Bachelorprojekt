@@ -94,7 +94,7 @@ def CFagent(defaults):
             board_before, board_after, intervention, tele_rewards, tele_dones = buffer.sample_data()
             teleporter.learn(board_after, intervention, tele_rewards, tele_dones, board_before)
             collector.collect([rewards, modified_rewards, teleport_rewards], [dones, modified_dones])
-            CF_dones, cfs = CFagent.counterfact_check(dones, env, check=1)
+            CF_dones, cfs = CFagent.counterfact_check(dones, env, check=0)
             CFbuffer.CF_save_data(CFagent.boards, observations, CFagent.counterfactuals, rewards, dones, CF_dones)
             CFboard, CFobs, cf, CFrewards, CFdones1 = CFbuffer.sample_data()
             CFagent.learn(CFobs, cf, CFrewards, CFdones1, CFboard)
