@@ -230,7 +230,7 @@ class CFAgent(Agent):
             else:
                 for layer in env.layers.layers:
                     layer.NoRock_update(env.board, [1 for _ in range(self.batch)])
-        return dones
+        return CF_dones
 
     def counterfact2(self, env, dones, teleporter, simulator, frame):
         CF_dones, cfs = self.counterfact_check(dones, env, check=1)
@@ -270,7 +270,7 @@ class CFAgent(Agent):
             else:
                 for layer in env.layers.layers:
                     layer.NoRock_update(env.board, [1 for _ in range(self.batch)])
-        return dones
+        return CF_dones
 
     def counterfact_check(self, dones, env, check=1):
         self.CF_count += 1

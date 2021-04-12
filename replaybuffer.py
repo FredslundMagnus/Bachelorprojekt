@@ -59,7 +59,7 @@ class CFReplayBuffer:
         self.dones[dones == 1] = 1
         self.rewards[rewards == 1] = 1
         
-        for idx in torch.flatten(torch.nonzero(CF_dones)):
+        for idx in CF_dones:
             data = (torch.clone(board[idx]).unsqueeze(0), torch.clone(observations[idx]).unsqueeze(0), torch.clone(counterfactuals[idx]).unsqueeze(0), torch.clone(self.rewards[idx]).unsqueeze(0), torch.clone(self.dones[idx]).unsqueeze(0))
             self.buffer[self.counter % self.replay_size] = data
             self.counter += 1
