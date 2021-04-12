@@ -242,7 +242,7 @@ class CFAgent(Agent):
                     layer.NoRock_update(env.board, [1 for _ in range(self.batch)])
         return dones
 
-    def counterfact2(self, env, dones, teleporter, simulator, frame):
+    def counterfact2(self, env, dones, teleporter, simulator):
         CF_dones, cfs = self.counterfact_check(dones, env, check=0)
         for _ in range(cfs):
             counterfactuals = [set() for _ in range(len(CF_dones))]
@@ -250,10 +250,7 @@ class CFAgent(Agent):
                 needs_intervention_board = env.board[CF_dones]
                 actions = self.choose_action(needs_intervention_board, teleporter)
                 cf_boards = simulator.simulate(needs_intervention_board, actions)
-                if frame < 10000:
-                    limit = 1
-                else:
-                    limit = 0.5
+                limit = 0.5
                 cf_boards[cf_boards < limit] = 0
                 for j in range(len(CF_dones)):
                     batch_idx = CF_dones[j]

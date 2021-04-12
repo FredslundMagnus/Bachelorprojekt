@@ -134,7 +134,7 @@ def CFagentv2(defaults):
         intervention_idx, modified_board = teleporter.pre_process(env)
         dones = CFagent.pre_process(env)
         for frame in loop(env, collector, save, teleporter):
-            CFdones = CFagent.counterfact2(env, dones, teleporter, simulator, frame)
+            CFdones = CFagent.counterfact2(env, dones, teleporter, simulator)
             modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
             actions = mover(modified_board)
             observations, rewards, dones, info = env.step(actions)
