@@ -63,7 +63,7 @@ def test_CFagent():
 
 
 def test_graphTrain():
-    with Load("causal2_online", num=0) as load:
+    with Load("causal2_online_var", num=0) as load:
         collector, env, mover, data = load.items(Collector, Game, Mover, Data)
         layers: List[LayerType] = environments[env.level][2]
         teleporter = Teleporter(env, network1=Networks.Teleporter, K1=5000000, learner1=Learners.Qlearn, exploration1=Explorations.softmaxer, gamma1=0.98, batch=env.layers.batch, width=env.layers.width, height=env.layers.height)
@@ -81,7 +81,7 @@ def test_graphTrain():
             stateChanged = [old != new for old, new in zip(old_states, new_states)]
             shouldInterviene = [cond1 or cond2 for cond1, cond2 in zip(stateChanged, eatCheese)]
             exploration = 0
-            interventions = [(getInterventions(env, state, data, layers, exploration) if should else old) for state, should, old in zip(new_states, shouldInterviene, interventions)]
+            interventions = [(getInterventions(env, state, data, exploration) if should else old) for state, should, old in zip(new_states, shouldInterviene, interventions)]
             modification = env.board[tensor(interventions)].unsqueeze(1)
             teleporter.interventions = tensor([m.flatten().argmax().item() for m in list(modification)], device=device)
             modified_board = cat((env.board, modification), dim=1)
@@ -92,4 +92,4 @@ def test_graphTrain():
             old_states = new_states
 
 
-test_teleport()
+test_graphTrain()
