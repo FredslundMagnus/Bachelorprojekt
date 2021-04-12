@@ -55,6 +55,8 @@ class AllGraph(Graph):
                 if edge.fra.layer in s:
                     edge.value *= 1 - v
             edge.value = 1 - edge.value
+            if self.isMinimised:
+                edge.value = 0 if edge.value == 0 else 1
 
 
 def test_graphTrain(data=None, getLayers=False):

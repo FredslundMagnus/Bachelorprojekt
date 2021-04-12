@@ -98,7 +98,9 @@ class Graph():
 
     def draw(self):
         run = True
+
         while run:
+            self.isMinimised = self.widgets["Toggle"].active
             for event in pygame.event.get():
                 for widget in self.widgets.values():
                     widget.handle(event)
