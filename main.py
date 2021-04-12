@@ -156,7 +156,7 @@ def CFagentv2(defaults):
 class Defaults:
     name: str = "Agent"
     main: function = CFagentv2
-    level: Levels = Levels.Causal2
+    level: Levels = Levels.Coconuts
     failed_actions_chance: float = 0.0
     hours: float = 12
     batch: int = 100
@@ -164,13 +164,13 @@ class Defaults:
     height: int = 9
 
     network1: Networks = Networks.Teleporter
-    K1: float = 500000
+    K1: float = 5000000
     learner1: Learners = Learners.Qlearn
     exploration1: Explorations = Explorations.softmaxer
     gamma1: float = 0.98
 
     network2: Networks = Networks.Mini
-    K2: float = 100000
+    K2: float = 1000000
     learner2: Learners = Learners.Qlearn
     exploration2: Explorations = Explorations.epsilonGreedy
     gamma2: float = 0.95
