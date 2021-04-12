@@ -6,7 +6,7 @@ from levels import Levels, MonsterLevel
 
 
 class Game:
-    def __init__(self, batch: int = None, hours: float = None, width: int = None, height: int = None, level: Levels = None, reset_chance: float = None, **kwargs) -> None:
+    def __init__(self, batch: int = None, hours: float = None, width: int = None, height: int = None, level: Levels = None, reset_chance: float = None, failed_actions_chance: float = None, **kwargs) -> None:
         super().__init__()
         self.batch: int = batch
         self.hours: float = hours
@@ -27,7 +27,7 @@ class Game:
             Levels.Causal7: {LayerType.Blocks, LayerType.Goal, LayerType.Greencross, LayerType.Bluecross, LayerType.Redcross, LayerType.Purplecross}
         }
         convert = {(use, [layer for layer in LayerType if layer.name == name.split('_')[1]][0]) for name, use in kwargs.items() if name.split('_')[0] == "layer"}
-        self.layers: Layers = Layers(batch, width, height, level, reset_chance, *[layer for use, layer in convert if use and (layer in self.uses[level])])
+        self.layers: Layers = Layers(batch, width, height, level, reset_chance, failed_actions_chance, *[layer for use, layer in convert if use and (layer in self.uses[level])])
         for i in range(width):
             for j in range(height):
                 for k in range(batch):
