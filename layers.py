@@ -451,6 +451,7 @@ class Yellowstar(Layer):
     def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
         return not self.positions[batch] or not (LayerType.Bluestar in layersDict and bool(layersDict[LayerType.Bluestar].positions[batch]))
 
+
 class Coconut(Layer):
     color = Colors.deepOrange
     size = 0.6
@@ -632,13 +633,14 @@ class Purplecross(Layer):
 
 
 class Layers:
-    def __init__(self, batch: int, width: int, height: int, level, reset_chance: float, *layers: Tuple[LayerType]) -> None:
+    def __init__(self, batch: int, width: int, height: int, level, reset_chance: float, failed_actions_chance: float, *layers: Tuple[LayerType]) -> None:
         self.frames_since_chance = [0] * batch
         self.layers: List[Layer] = []
         self.player: Player = Player(batch, width, height)
         self.width: int = width
         self.height: int = height
         self.batch: int = batch
+        self.failed_actions_chance: float = failed_actions_chance
         self.reset_chance = reset_chance
         self.types: List[LayerType] = []
         self.dict: Dict[LayerType, Layer] = {LayerType.Player: self.player}
@@ -726,7 +728,8 @@ class Layers:
 
     def check(self, batch: int, action, board):
         for layer in self.layers:
-            layer.check(batch, self.dict, action, board)
+            if random() >= self.failed_actions_chance:
+                layer.check(batch, self.dict, action, board)
 
     def restart(self, batch: int):
         if (x := self.dict[LayerType.Player].positions[batch]):
