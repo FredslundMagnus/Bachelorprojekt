@@ -164,6 +164,9 @@ class CFAgent(Agent):
         self.convert_function = CF_convert
         self.counterfacts = Counterfacts
         self.TopN = TopN - 1
+        self.running_dones = [0 for _ in range(10000)]
+        self.done_number = 0
+        self.CF_count = 0
 
     def __call__(self, board: Tensor) -> Tensor:
         self.values: Tensor = self.net.network(board)
@@ -215,8 +218,8 @@ class CFAgent(Agent):
         return torch.ones(env.layers.board.shape[0], device=device).long()
 
     def counterfact(self, env, dones, teleporter):
-        CF_dones = torch.flatten(torch.nonzero(dones))
-        for _ in range(self.counterfacts):
+        CF_dones, cfs = self.counterfact_check(dones, env, check=0)
+        for _ in range(cfs):
             counterfactuals = []
             if len(CF_dones) > 0:
                 needs_intervention_board = env.board[CF_dones]
@@ -228,7 +231,7 @@ class CFAgent(Agent):
                     self.boards[batch_idx] = env.board[batch_idx]
                     self.counterfactuals[batch_idx] = actions[i]
                     for layer in env.layers.layers:
-                        if counterfactuals[i] in layer._positions[batch_idx]:
+                        if counterfactuals[i] in layer._positions[batch_idx] and counterfactuals[i][0] > 0 and counterfactuals[i][1] > 0 and counterfactuals[i][0] < self.width - 1 and counterfactuals[i][1] < self.height - 1:
                             layer.remove(batch_idx, counterfactuals[i])
                             env.layers.board[batch_idx, :, counterfactuals[i][1], counterfactuals[i][0]] = 0
             if any([x.name == "Rock" for x in env.layers.types]):
@@ -237,6 +240,61 @@ class CFAgent(Agent):
             else:
                 for layer in env.layers.layers:
                     layer.NoRock_update(env.board, [1 for _ in range(self.batch)])
+        return dones
+
+    def counterfact2(self, env, dones, teleporter, simulator):
+        CF_dones, cfs = self.counterfact_check(dones, env, check=0)
+        for _ in range(cfs):
+            counterfactuals = [set() for _ in range(len(CF_dones))]
+            if len(CF_dones) > 0:
+                needs_intervention_board = env.board[CF_dones]
+                actions = self.choose_action(needs_intervention_board, teleporter)
+                cf_boards = simulator.simulate(needs_intervention_board, actions)
+                limit = 0.5
+                cf_boards[cf_boards < limit] = 0
+                for j in range(len(CF_dones)):
+                    batch_idx = CF_dones[j]
+                    changes = torch.nonzero(cf_boards[j])
+                    for change in changes:
+                        layer = change.item() // (env.board.shape[1] * self.width)
+                        width = (change.item() - (env.board.shape[1] * self.width) * layer) // self.width
+                        height = change.item() - layer * (env.board.shape[1] * self.width) - width * self.width
+                        counterfactuals[j].add(((width, height), layer))
+                    self.boards[batch_idx] = env.board[batch_idx]
+                    self.counterfactuals[batch_idx] = actions[j]
+                    print(counterfactuals[j], batch_idx)
+                    for counterfact in counterfactuals[j]:
+                        for layer in env.layers.layers:
+                            layer_pos = layer._layer
+                            if counterfact[1] != layer_pos or not (counterfact[0][0] > 0 and counterfact[0][1] > 0 and counterfact[0][0] < self.width - 1 and counterfact[0][1] < self.height - 1):
+                                continue
+                            elif counterfact[0] in layer._positions[batch_idx]:
+                                layer.remove(batch_idx, counterfact[0])
+                                env.layers.board[batch_idx, layer_pos, counterfact[0][1], counterfact[0][0]] = 0
+                            else:
+                                layer.add(batch_idx, counterfact[0])
+                                env.layers.board[batch_idx, layer_pos, counterfact[0][1], counterfact[0][0]] = 1                            
+
+            if any([x.name == "Rock" for x in env.layers.types]):
+                for layer in env.layers.layers:
+                    layer.update(env.board, [1 for _ in range(self.batch)], env.layers.all_items)
+            else:
+                for layer in env.layers.layers:
+                    layer.NoRock_update(env.board, [1 for _ in range(self.batch)])
+        return dones
+
+    def counterfact_check(self, dones, env, check=1):
+        self.CF_count += 1
+        if check == 0:
+            return torch.flatten(torch.nonzero(dones)), self.counterfacts
+        elif check == 1:
+            average_dones = (torch.sum(dones)/len(dones)).item()
+            self.done_number += (average_dones - self.running_dones[self.CF_count % 10000])/10000
+            self.running_dones[self.CF_count % 10000] = average_dones
+            if random.random() < self.done_number * self.counterfacts or self.CF_count == 1:
+                return torch.flatten(torch.nonzero(torch.ones(env.layers.board.shape[0], device=device).long())), 1
+            return torch.flatten(torch.nonzero(torch.zeros(env.layers.board.shape[0], device=device).long())), 1
+
 
 
 
