@@ -232,3 +232,55 @@ Resource usage summary:
 
 The output (if any) is above this job summary.
 
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@n-62-20-11>
+Subject: Job 9509320: <causal5_online_var_0> in cluster <dcc> Exited
+
+Job <causal5_online_var_0> was submitted from host <gbarlogin1> by user <s183914> in cluster <dcc> at Mon Apr 12 04:00:46 2021
+Job was executed on host(s) <n-62-20-11>, in queue <gpuv100>, as user <s183914> in cluster <dcc> at Mon Apr 12 04:00:47 2021
+</zhome/ea/9/137501> was used as the home directory.
+</zhome/ea/9/137501/Desktop/Bachelor/Bachelorprojekt/Utils> was used as the working directory.
+Started at Mon Apr 12 04:00:47 2021
+Terminated at Mon Apr 12 15:55:54 2021
+Results reported at Mon Apr 12 15:55:54 2021
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/sh
+#BSUB -q hpc
+#BSUB -q gpuv100
+#BSUB -gpu "num=1:mode=exclusive_process"
+#BSUB -n 1
+#BSUB -R "rusage[mem=16G]"
+#BSUB -R "span[hosts=1]"
+#BSUB -W 1440
+# end of BSUB options
+cd ..
+module -s load python3
+source ../project-env/bin/activate
+
+python main.py $LSB_PROJECT_NAME
+
+
+------------------------------------------------------------
+
+Exited with exit code 120.
+
+Resource usage summary:
+
+    CPU time :                                   42803.16 sec.
+    Max Memory :                                 2719 MB
+    Average Memory :                             2537.19 MB
+    Total Requested Memory :                     16384.00 MB
+    Delta Memory :                               13665.00 MB
+    Max Swap :                                   -
+    Max Processes :                              4
+    Max Threads :                                8
+    Run time :                                   42984 sec.
+    Turnaround time :                            42908 sec.
+
+The output (if any) is above this job summary.
+
