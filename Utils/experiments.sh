@@ -1,19 +1,13 @@
 #!/bin/sh
-mkdir ../outputs/CFv2TESTCAU1cf1/
-mkdir ../outputs/CFv2TESTCAU1cf1/Markdown
-bsub -o "../outputs/CFv2TESTCAU1cf1/Markdown/CFv2TESTCAU1cf1_0.md" -J "CFv2TESTCAU1cf1_0" -P "-name CFv2TESTCAU1cf1-0 -hours 16.0 -level Levels.Causal1 -main CFagentv2 -CF_convert 3 -Counterfacts 1" < submit.sh
-mkdir ../outputs/CFv2TESTCAU1cf2/
-mkdir ../outputs/CFv2TESTCAU1cf2/Markdown
-bsub -o "../outputs/CFv2TESTCAU1cf2/Markdown/CFv2TESTCAU1cf2_0.md" -J "CFv2TESTCAU1cf2_0" -P "-name CFv2TESTCAU1cf2-0 -hours 16.0 -level Levels.Causal1 -main CFagentv2 -CF_convert 3 -Counterfacts 2" < submit.sh
-mkdir ../outputs/CFv2TESTCAU2cf1/
-mkdir ../outputs/CFv2TESTCAU2cf1/Markdown
-bsub -o "../outputs/CFv2TESTCAU2cf1/Markdown/CFv2TESTCAU2cf1_0.md" -J "CFv2TESTCAU2cf1_0" -P "-name CFv2TESTCAU2cf1-0 -hours 16.0 -level Levels.Causal2 -main CFagentv2 -CF_convert 3 -Counterfacts 1" < submit.sh
-mkdir ../outputs/CFv2TESTCAU2cf2/
-mkdir ../outputs/CFv2TESTCAU2cf2/Markdown
-bsub -o "../outputs/CFv2TESTCAU2cf2/Markdown/CFv2TESTCAU2cf2_0.md" -J "CFv2TESTCAU2cf2_0" -P "-name CFv2TESTCAU2cf2-0 -hours 16.0 -level Levels.Causal2 -main CFagentv2 -CF_convert 3 -Counterfacts 2" < submit.sh
-mkdir ../outputs/CFv2TESTCAU4cf1/
-mkdir ../outputs/CFv2TESTCAU4cf1/Markdown
-bsub -o "../outputs/CFv2TESTCAU4cf1/Markdown/CFv2TESTCAU4cf1_0.md" -J "CFv2TESTCAU4cf1_0" -P "-name CFv2TESTCAU4cf1-0 -hours 16.0 -level Levels.Causal4 -main CFagentv2 -CF_convert 3 -Counterfacts 1" < submit.sh
-mkdir ../outputs/CFv2TESTCAU4cf2/
-mkdir ../outputs/CFv2TESTCAU4cf2/Markdown
-bsub -o "../outputs/CFv2TESTCAU4cf2/Markdown/CFv2TESTCAU4cf2_0.md" -J "CFv2TESTCAU4cf2_0" -P "-name CFv2TESTCAU4cf2-0 -hours 16.0 -level Levels.Causal4 -main CFagentv2 -CF_convert 3 -Counterfacts 2" < submit.sh
+mkdir ../outputs/causal2_online_var_0.5_full/
+mkdir ../outputs/causal2_online_var_0.5_full/Markdown
+bsub -o "../outputs/causal2_online_var_0.5_full/Markdown/causal2_online_var_0.5_full_0.md" -J "causal2_online_var_0.5_full_0" -P "-name causal2_online_var_0.5_full-0 -hours 12.0 -level Levels.Causal2 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0 -failed_actions_chance 0.5" < submit.sh
+mkdir ../outputs/causal5_online_var_0.5_full/
+mkdir ../outputs/causal5_online_var_0.5_full/Markdown
+bsub -o "../outputs/causal5_online_var_0.5_full/Markdown/causal5_online_var_0.5_full_0.md" -J "causal5_online_var_0.5_full_0" -P "-name causal5_online_var_0.5_full-0 -hours 12.0 -level Levels.Causal5 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0 -failed_actions_chance 0.5" < submit.sh
+mkdir ../outputs/causal6_online_var_0.5_full/
+mkdir ../outputs/causal6_online_var_0.5_full/Markdown
+bsub -o "../outputs/causal6_online_var_0.5_full/Markdown/causal6_online_var_0.5_full_0.md" -J "causal6_online_var_0.5_full_0" -P "-name causal6_online_var_0.5_full-0 -hours 12.0 -level Levels.Causal6 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0 -failed_actions_chance 0.5" < submit.sh
+mkdir ../outputs/causal7_online_var_0.5_full/
+mkdir ../outputs/causal7_online_var_0.5_full/Markdown
+bsub -o "../outputs/causal7_online_var_0.5_full/Markdown/causal7_online_var_0.5_full_0.md" -J "causal7_online_var_0.5_full_0" -P "-name causal7_online_var_0.5_full-0 -hours 12.0 -level Levels.Causal7 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0 -failed_actions_chance 0.5" < submit.sh

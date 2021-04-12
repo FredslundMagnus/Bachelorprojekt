@@ -32,7 +32,7 @@ class Game:
             for j in range(height):
                 for k in range(batch):
                     self.layers.all_items[k][(i, j)] = 0
-        self.layers.update()
+        self.layers.update(isFirstTime=True)
 
     @property
     def board(self) -> Tensor:

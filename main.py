@@ -70,6 +70,7 @@ def simple(defaults):
             mover.learn(observations, actions, rewards, dones)
             collector.collect([rewards], [dones])
 
+
 def CFagent(defaults):
     env = Game(**defaults)
     mover = Mover(env, _extra_dim=1, **defaults)

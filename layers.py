@@ -24,8 +24,7 @@ class Player(Layer):
         if len(self.positions[batch]) > 1:
             self.remove(batch, self.positions[batch][-1])
         if len(self.positions[batch]) < 1:
-            self.add(batch, (randint(1,board.height - 1), randint(1,board.width - 1)))
-
+            self.add(batch, (randint(1, board.height - 1), randint(1, board.width - 1)))
 
 
 class Blocks(Layer):
@@ -682,13 +681,13 @@ class Layers:
     def __len__(self) -> int:
         return len(self.layers)
 
-    def update(self):
+    def update(self, isFirstTime=False):
         self.counter += 1
         self.frames_since_chance = [x+1 for x in self.frames_since_chance]
         rewards = [0.0 for _ in range(self.batch)]
         dones = [0 for _ in range(self.batch)]
         for batch in range(self.batch):
-            if all(layer.isDone(batch, self.dict) for layer in self.layers):
+            if all(layer.isDone(batch, self.dict) for layer in self.layers) and (isFirstTime or random() >= self.failed_actions_chance):
                 self.restart(batch)
                 rewards[batch] = 1
                 dones[batch] = 1
