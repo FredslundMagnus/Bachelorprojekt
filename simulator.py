@@ -20,14 +20,13 @@ class Network(nn.Module):
     def boardforward(self, x: Tensor):
         return self.boardmodel(x)
 
-    def learn(self, board_before: Tensor, board_after: Tensor, action: Tensor, reward: Tensor, done: Tensor):
+    def learn(self, board_before: Tensor, board_after: Tensor, action: Tensor):
         if action != None:
             self.counter += 1
             intervention_layer = torch.nn.functional.one_hot(action, self.height * self.width).reshape(action.shape[0], self.height, self.width).unsqueeze(1)
             modified_board = torch.cat((board_before, intervention_layer), 1)
-            modified_board_before_no_dones = modified_board[done == 0]
-            guess_board = self.boardforward(modified_board_before_no_dones)
-            label_board = ((board_after - board_before)**2)[done == 0].flatten(start_dim=1)
+            guess_board = self.boardforward(modified_board)
+            label_board = ((board_after - board_before)**2).flatten(start_dim=1)
             loss_board = self.criterion(guess_board, label_board)
             loss_board.backward()
             self.optimizer_boardmodel.step()
@@ -48,8 +47,8 @@ class Simulator:
     def __init__(self, dim: int, width: int, height: int, **kwargs):
         self.network = Network(dim, width, height).to(device)
 
-    def learn(self, board_before: Tensor, board_after: Tensor, action: Tensor, reward: Tensor, done: Tensor):
-        return self.network.learn(board_before, board_after, action, reward, done)
+    def learn(self, board_before: Tensor, board_after: Tensor, action: Tensor):
+        return self.network.learn(board_before, board_after, action)
 
     def simulate(self, board_before: Tensor, action: Tensor):
         return self.network.simulate(board_before, action)

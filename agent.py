@@ -250,6 +250,7 @@ class CFAgent(Agent):
                 needs_intervention_board = env.board[CF_dones]
                 actions = self.choose_action(needs_intervention_board, teleporter)
                 cf_boards = simulator.simulate(needs_intervention_board, actions)
+                print(cf_boards)
                 limit = 0.5
                 cf_boards[cf_boards < limit] = 0
                 for i in range(len(CF_dones)):
@@ -262,7 +263,6 @@ class CFAgent(Agent):
                         counterfactuals[i].add(((width, height), layer))
                     self.boards[batch_idx] = env.board[batch_idx]
                     self.counterfactuals[batch_idx] = actions[i]
-                    print(counterfactuals[i], batch_idx)
                     for counterfact in counterfactuals[i]:
                         for i in range(len(env.layers.layers)):
                             layer = env.layers.layers[i]
