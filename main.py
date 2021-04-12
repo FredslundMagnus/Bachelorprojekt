@@ -138,7 +138,7 @@ def CFagentv2(defaults):
 
 class Defaults:
     name: str = "Agent"
-    main: function = CFagentv2
+    main: function = CFagent
     level: Levels = Levels.MonsterLevel
     failed_actions_chance: float = 0.0
     hours: float = 12

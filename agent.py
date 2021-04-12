@@ -202,7 +202,6 @@ class CFAgent(Agent):
     def _learn(self, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor, *args):
         if action != None:
             self(args[0])
-            print(reward, done)
             self.learner.learn(self.values, state_after, action, reward, done)
 
     def pre_process(self, env):
