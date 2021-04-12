@@ -242,7 +242,7 @@ class CFAgent(Agent):
                     layer.NoRock_update(env.board, [1 for _ in range(self.batch)])
         return dones
 
-    def counterfact2(self, env, dones, teleporter, simulator):
+    def counterfact2(self, env, dones, teleporter, simulator, frame):
         CF_dones, cfs = self.counterfact_check(dones, env, check=0)
         for _ in range(cfs):
             counterfactuals = [set() for _ in range(len(CF_dones))]
@@ -256,9 +256,9 @@ class CFAgent(Agent):
                     batch_idx = CF_dones[j]
                     changes = torch.nonzero(cf_boards[j])
                     for change in changes:
-                        layer = change.item() // (env.board.shape[1] * self.width)
-                        width = (change.item() - (env.board.shape[1] * self.width) * layer) // self.width
-                        height = change.item() - layer * (env.board.shape[1] * self.width) - width * self.width
+                        layer = change.item() // (self.height * self.width)
+                        width = (change.item() - (self.height * self.width) * layer) // self.width
+                        height = change.item() - layer * (self.height * self.width) - width * self.width
                         counterfactuals[j].add(((width, height), layer, cf_boards[j,change]))
                     self.boards[batch_idx] = env.board[batch_idx]
                     self.counterfactuals[batch_idx] = actions[j]
