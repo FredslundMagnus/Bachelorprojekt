@@ -148,7 +148,7 @@ def CFagentv2(defaults):
             lossboard = simulator.learn(board_before, board_after, intervention)
             collector.collect_loss(lossboard)
             collector.collect([rewards, modified_rewards, teleport_rewards], [dones, modified_dones])
-            CFbuffer.CF_save_data(CFagent.boards, observations, CFagent.counterfactuals, rewards, dones)
+            CFbuffer.CF_save_data(CFagent.boards, observations, CFagent.counterfactuals, rewards, dones, CFdones)
             CFboard, CFobs, cf, CFrewards, CFdones1 = CFbuffer.sample_data()
             CFagent.learn(CFobs, cf, CFrewards, CFdones1, CFboard)
 
@@ -228,7 +228,7 @@ class Defaults:
     replay_size: int = 100000
     sample_size: int = 50
     CF_convert: int = 3
-    Counterfacts: int = 1
+    Counterfacts: int = 3
     TopN: int = 5
 
 

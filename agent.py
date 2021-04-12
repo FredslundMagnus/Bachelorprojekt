@@ -233,7 +233,7 @@ class CFAgent(Agent):
         return dones
 
     def counterfact2(self, env, dones, teleporter, simulator, frame):
-        CF_dones, cfs = self.counterfact_check(dones, env, check=0)
+        CF_dones, cfs = self.counterfact_check(dones, env, check=1)
         for _ in range(cfs):
             if len(CF_dones) > 0:
                 needs_intervention_board = env.board[CF_dones]
@@ -252,7 +252,6 @@ class CFAgent(Agent):
                         counterfactuals.add(((width, height), layer, cf_boards[j,change]))
                     self.boards[batch_idx] = env.board[batch_idx]
                     self.counterfactuals[batch_idx] = actions[j]
-                    print(counterfactuals, batch_idx, actions[j])
                     for counterfact in counterfactuals:
                         for layer in env.layers.layers:
                             layer_pos = layer._layer
