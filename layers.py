@@ -681,7 +681,7 @@ class Layers:
         rewards = [0.0 for _ in range(self.batch)]
         dones = [0 for _ in range(self.batch)]
         for batch in range(self.batch):
-            if all(layer.isDone(batch, self.dict) for layer in self.layers):
+            if all(layer.isDone(batch, self.dict) for layer in self.layers) and random() >= self.failed_actions_chance:
                 self.restart(batch)
                 rewards[batch] = 1
                 dones[batch] = 1
