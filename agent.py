@@ -202,13 +202,15 @@ class CFAgent(Agent):
     def _learn(self, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor, *args):
         if action != None:
             self(args[0])
+            print(reward, done)
             self.learner.learn(self.values, state_after, action, reward, done)
 
     def pre_process(self, env):
         return torch.ones(env.layers.board.shape[0], device=device).long()
 
-    def counterfact(self, env, dones, teleporter):
-        CF_dones, cfs = self.counterfact_check(dones, env, check=0)
+    def counterfact(self, env, dones, teleporter, CF_dones, cfs):
+        if self.CF_count == 0:
+            CF_dones, cfs = torch.flatten(torch.nonzero(torch.ones(env.layers.board.shape[0], device=device).long())), 1
         for _ in range(cfs):
             counterfactuals = []
             if len(CF_dones) > 0:
@@ -232,8 +234,9 @@ class CFAgent(Agent):
                     layer.NoRock_update(env.board, [1 for _ in range(self.batch)])
         return CF_dones
 
-    def counterfact2(self, env, dones, teleporter, simulator, frame):
-        CF_dones, cfs = self.counterfact_check(dones, env, check=1)
+    def counterfact2(self, env, dones, teleporter, simulator, CF_dones, cfs):
+        if self.CF_count == 0:
+            CF_dones, cfs = torch.flatten(torch.nonzero(torch.ones(env.layers.board.shape[0], device=device).long())), 1
         for _ in range(cfs):
             if len(CF_dones) > 0:
                 needs_intervention_board = env.board[CF_dones]
@@ -280,7 +283,7 @@ class CFAgent(Agent):
             average_dones = (torch.sum(dones)/len(dones)).item()
             self.done_number += (average_dones - self.running_dones[self.CF_count % 10000])/10000
             self.running_dones[self.CF_count % 10000] = average_dones
-            if random.random() < self.done_number * self.counterfacts or self.CF_count == 1:
+            if random.random() < self.done_number * self.counterfacts:
                 return torch.flatten(torch.nonzero(torch.ones(env.layers.board.shape[0], device=device).long())), 1
             return torch.flatten(torch.nonzero(torch.zeros(env.layers.board.shape[0], device=device).long())), 1
 
