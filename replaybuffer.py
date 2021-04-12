@@ -22,7 +22,7 @@ class ReplayBuffer:
     def sample_data(self):
         samples = (random.sample(self.buffer[:min(self.counter, self.replay_size)], min(self.sample_size, self.counter)))
         if samples == []:
-            return None, None, None, None, None, None
+            return None, None, None, None, None
         return self.stacker(samples)
 
     def teleporter_save_data(self, board, obs, interventions, tele_rewards, tele_done, intervention_idx):
@@ -72,17 +72,17 @@ class SimBuffer:
 
     def stacker(self, sample):
         arays = list(zip(*sample))
-        return concatenation(arays[0], 0), concatenation(arays[1], 0), concatenation(arays[2], 0).long(), concatenation(arays[3], 0), concatenation(arays[4], 0), concatenation(arays[5], 0)
+        return concatenation(arays[0], 0), concatenation(arays[1], 0), concatenation(arays[2], 0).long()
 
     def sample_data(self):
         samples = (random.sample(self.buffer[:min(self.counter, self.replay_size)], min(self.sample_size, self.counter)))
         if samples == []:
-            return None, None, None, None, None, None
+            return None, None, None
         return self.stacker(samples)
 
-    def simulator_save_data(self, board, obs, interventions, tele_rewards, tele_done, intervention_idx, rewards):
+    def simulator_save_data(self, board, obs, interventions, tele_rewards, tele_done, intervention_idx):
         for idx in intervention_idx:
-            if tele_rewards[idx] != self.miss_internvention_cost:
-                data = (torch.clone(board[idx]).unsqueeze(0), torch.clone(obs[idx]).unsqueeze(0), torch.clone(interventions[idx]).unsqueeze(0), torch.clone(tele_rewards[idx]).unsqueeze(0), torch.clone(tele_done[idx]).unsqueeze(0), torch.clone(rewards[idx]).unsqueeze(0))
+            if tele_rewards[idx] != self.miss_internvention_cost and tele_done[idx] != 1:
+                data = (torch.clone(board[idx]).unsqueeze(0), torch.clone(obs[idx]).unsqueeze(0), torch.clone(interventions[idx]).unsqueeze(0))
                 self.buffer[self.counter % self.replay_size] = data
                 self.counter += 1
