@@ -1,5 +1,5 @@
 from torch import tensor
-from allGraphs import getInterventions, states, transform, transformNot, environments, cat
+from allGraphs import getInterventions, states, transform, transformNot, environments, cat, Data
 from layer import LayerType
 from typing import List
 from main import *
@@ -64,7 +64,7 @@ def test_CFagent():
 
 def test_graphTrain():
     with Load("causal2_online", num=0) as load:
-        collector, env, mover, data = load.items(Collector, Game, Mover, dict)
+        collector, env, mover, data = load.items(Collector, Game, Mover, Data)
         layers: List[LayerType] = environments[env.level][2]
         teleporter = Teleporter(env, network1=Networks.Teleporter, K1=5000000, learner1=Learners.Qlearn, exploration1=Explorations.softmaxer, gamma1=0.98, batch=env.layers.batch, width=env.layers.width, height=env.layers.height)
         convert = [env.layers.types.index(layer) for layer in layers]
