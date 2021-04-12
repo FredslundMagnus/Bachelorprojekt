@@ -190,23 +190,13 @@ class CFAgent(Agent):
         if self.convert_function == 1:
             learning_scores = values
         elif self.convert_function == 2:
-            learning_scores = values * softmax(tele_values, dim=1)
+            learning_scores = (1 - abs(values - 0.75))
         elif self.convert_function == 3:
-            learning_scores = values * softmax(tele_values * 3, dim=1)
+            learning_scores = values * softmax(tele_values * 5, dim=1)
         elif self.convert_function == 4:
-            learning_scores = values * softmax(tele_values * 10, dim=1)
+            learning_scores = (1 - abs(values - 0.75)) * softmax(tele_values * 5, dim=1)
         elif self.convert_function == 5:
-            learning_scores = (1 - abs(values - 0.75)) * softmax(tele_values, dim=1)
-        elif self.convert_function == 6:
-            learning_scores = (1 - abs(values - 0.75)) * softmax(tele_values * 3, dim=1)
-        elif self.convert_function == 7:
-            learning_scores = (1 - abs(values - 0.75)) * softmax(tele_values * 10, dim=1)
-        elif self.convert_function == 8:
-            learning_scores = softmax(tele_values, dim=1)
-        elif self.convert_function == 9:
-            learning_scores = softmax(tele_values * 3, dim=1)
-        elif self.convert_function == 10:
-            learning_scores = softmax(tele_values * 10, dim=1)
+            learning_scores = softmax(tele_values * 5, dim=1)
         return learning_scores
 
     def _learn(self, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor, *args):
@@ -245,7 +235,6 @@ class CFAgent(Agent):
     def counterfact2(self, env, dones, teleporter, simulator, frame):
         CF_dones, cfs = self.counterfact_check(dones, env, check=0)
         for _ in range(cfs):
-            counterfactuals = [set() for _ in range(len(CF_dones))]
             if len(CF_dones) > 0:
                 needs_intervention_board = env.board[CF_dones]
                 actions = self.choose_action(needs_intervention_board, teleporter)
@@ -253,16 +242,18 @@ class CFAgent(Agent):
                 limit = 0.5
                 cf_boards[abs(cf_boards) < limit] = 0
                 for j in range(len(CF_dones)):
+                    counterfactuals = set()
                     batch_idx = CF_dones[j]
                     changes = torch.nonzero(cf_boards[j])
                     for change in changes:
                         layer = change.item() // (self.height * self.width)
                         width = (change.item() - (self.height * self.width) * layer) // self.width
                         height = change.item() - layer * (self.height * self.width) - width * self.width
-                        counterfactuals[j].add(((width, height), layer, cf_boards[j,change]))
+                        counterfactuals.add(((width, height), layer, cf_boards[j,change]))
                     self.boards[batch_idx] = env.board[batch_idx]
                     self.counterfactuals[batch_idx] = actions[j]
-                    for counterfact in counterfactuals[j]:
+                    print(counterfactuals, batch_idx, actions[j])
+                    for counterfact in counterfactuals:
                         for layer in env.layers.layers:
                             layer_pos = layer._layer
                             if counterfact[1] != layer_pos or not (counterfact[0][0] > 0 and counterfact[0][1] > 0 and counterfact[0][0] < self.width - 1 and counterfact[0][1] < self.height - 1):
