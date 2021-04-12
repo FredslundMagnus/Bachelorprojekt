@@ -70,27 +70,6 @@ def simple(defaults):
             mover.learn(observations, actions, rewards, dones)
             collector.collect([rewards], [dones])
 
-
-def simulation(defaults):
-    with Load("causal3_9x9_20hours", num=2) as load:
-        env, mover, teleporter = load.items(Game, Mover, Teleporter)
-        teleporter.modified_done_chance = 0
-        simulator = Simulator(env, env.layers.width, env.layers.height)
-        intervention_idx, modified_board = teleporter.pre_process(env)
-        buffer = SimBuffer(**defaults)
-        collector = Collector(**defaults)
-        with Save(env, collector, simulator, **defaults) as save:
-            for frame in loop(env, collector, save, teleporter=teleporter):
-                modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
-                actions = mover(modified_board)
-                observations, rewards, dones, info = env.step(actions)
-                modified_board, _, _, teleport_rewards, intervention_idx = teleporter.modify(observations, rewards, dones, info)
-                buffer.teleporter_save_data(teleporter.boards, observations, teleporter.interventions, teleport_rewards, dones, intervention_idx, rewards)
-                board_before, board_after, intervention, _, tele_dones, normal_rewards = buffer.sample_data()
-                lossboard, lossRD = simulator.learn(board_before, board_after, intervention, normal_rewards, tele_dones)
-                collector.collect_loss(lossboard, lossRD)
-
-
 def CFagent(defaults):
     env = Game(**defaults)
     mover = Mover(env, _extra_dim=1, **defaults)
@@ -103,8 +82,9 @@ def CFagent(defaults):
     with Save(env, collector, mover, teleporter, CFagent, **defaults) as save:
         intervention_idx, modified_board = teleporter.pre_process(env)
         dones = CFagent.pre_process(env)
+        CF_dones, cfs = None, None
         for frame in loop(env, collector, save, teleporter):
-            CFdones = CFagent.counterfact(env, dones, teleporter)
+            CFagent.counterfact(env, dones, teleporter, CF_dones, cfs)
             modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
             actions = mover(modified_board)
             observations, rewards, dones, info = env.step(actions)
@@ -114,7 +94,8 @@ def CFagent(defaults):
             board_before, board_after, intervention, tele_rewards, tele_dones = buffer.sample_data()
             teleporter.learn(board_after, intervention, tele_rewards, tele_dones, board_before)
             collector.collect([rewards, modified_rewards, teleport_rewards], [dones, modified_dones])
-            CFbuffer.CF_save_data(CFagent.boards, observations, CFagent.counterfactuals, rewards, dones)
+            CF_dones, cfs = CFagent.counterfact_check(dones, env, check=0)
+            CFbuffer.CF_save_data(CFagent.boards, observations, CFagent.counterfactuals, rewards, dones, CF_dones)
             CFboard, CFobs, cf, CFrewards, CFdones1 = CFbuffer.sample_data()
             CFagent.learn(CFobs, cf, CFrewards, CFdones1, CFboard)
 
@@ -133,8 +114,9 @@ def CFagentv2(defaults):
     with Save(env, collector, mover, teleporter, CFagent, **defaults) as save:
         intervention_idx, modified_board = teleporter.pre_process(env)
         dones = CFagent.pre_process(env)
+        CF_dones, cfs = None, None
         for frame in loop(env, collector, save, teleporter):
-            CFdones = CFagent.counterfact2(env, dones, teleporter, simulator)
+            CFagent.counterfact2(env, dones, teleporter, simulator, CF_dones, cfs)
             modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
             actions = mover(modified_board)
             observations, rewards, dones, info = env.step(actions)
@@ -148,15 +130,16 @@ def CFagentv2(defaults):
             lossboard = simulator.learn(board_before, board_after, intervention)
             collector.collect_loss(lossboard)
             collector.collect([rewards, modified_rewards, teleport_rewards], [dones, modified_dones])
-            CFbuffer.CF_save_data(CFagent.boards, observations, CFagent.counterfactuals, rewards, dones)
+            CF_dones, cfs = CFagent.counterfact_check(dones, env, check=1)
+            CFbuffer.CF_save_data(CFagent.boards, observations, CFagent.counterfactuals, rewards, dones, CF_dones)
             CFboard, CFobs, cf, CFrewards, CFdones1 = CFbuffer.sample_data()
             CFagent.learn(CFobs, cf, CFrewards, CFdones1, CFboard)
 
 
 class Defaults:
     name: str = "Agent"
-    main: function = CFagentv2
-    level: Levels = Levels.Causal2
+    main: function = CFagent
+    level: Levels = Levels.MonsterLevel
     failed_actions_chance: float = 0.0
     hours: float = 12
     batch: int = 100
@@ -164,13 +147,13 @@ class Defaults:
     height: int = 9
 
     network1: Networks = Networks.Teleporter
-    K1: float = 5000000
+    K1: float = 500000
     learner1: Learners = Learners.Qlearn
     exploration1: Explorations = Explorations.softmaxer
     gamma1: float = 0.98
 
     network2: Networks = Networks.Mini
-    K2: float = 1000000
+    K2: float = 100000
     learner2: Learners = Learners.Qlearn
     exploration2: Explorations = Explorations.epsilonGreedy
     gamma2: float = 0.95
@@ -227,9 +210,9 @@ class Defaults:
     intervention_cost: float = -0.05
     replay_size: int = 100000
     sample_size: int = 50
-    CF_convert: int = 2
-    Counterfacts: int = 1
-    TopN: int = 7
+    CF_convert: int = 3
+    Counterfacts: int = 2
+    TopN: int = 5
 
 
 run(Defaults)

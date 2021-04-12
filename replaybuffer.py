@@ -32,11 +32,14 @@ class ReplayBuffer:
             self.counter += 1
 
 class CFReplayBuffer:
-    def __init__(self, replay_size: int = None, sample_size: int = None, **kwargs):
+    def __init__(self, replay_size: int = None, sample_size: int = None, batch: int= None, **kwargs):
         self.counter = 0
         self.replay_size = replay_size
         self.buffer = [None for _ in range(self.replay_size)]
         self.sample_size = sample_size
+        self.batch = batch
+        self.dones = torch.zeros(batch, device=device)
+        self.rewards = torch.zeros(batch, device=device)
 
     def save_data(self, data):
         self.buffer[self.counter % self.replay_size] = data
@@ -52,11 +55,16 @@ class CFReplayBuffer:
             return None, None, None, None, None
         return self.stacker(samples)
 
-    def CF_save_data(self, board, observations, counterfactuals, rewards, CF_dones):
-        for idx in torch.flatten(torch.nonzero(CF_dones)):
-            data = (torch.clone(board[idx]).unsqueeze(0), torch.clone(observations[idx]).unsqueeze(0), torch.clone(counterfactuals[idx]).unsqueeze(0), torch.clone(rewards[idx]).unsqueeze(0), torch.clone(CF_dones[idx]).unsqueeze(0))
+    def CF_save_data(self, board, observations, counterfactuals, rewards, dones, CF_dones):
+        self.dones[dones == 1] = 1
+        self.rewards[rewards == 1] = 1
+        
+        for idx in CF_dones:
+            data = (torch.clone(board[idx]).unsqueeze(0), torch.clone(observations[idx]).unsqueeze(0), torch.clone(counterfactuals[idx]).unsqueeze(0), torch.clone(self.rewards[idx]).unsqueeze(0), torch.clone(self.dones[idx]).unsqueeze(0))
             self.buffer[self.counter % self.replay_size] = data
             self.counter += 1
+            self.dones[idx] = 0
+            self.rewards[idx] = 0
 
 class SimBuffer:
     def __init__(self, replay_size: int = None, sample_size: int = None, miss_intervention_cost: float = None, **kwargs):

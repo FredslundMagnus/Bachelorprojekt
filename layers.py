@@ -20,6 +20,13 @@ class Player(Layer):
             for x, y in self.positions[batch]:
                 self.move(batch, (x, y), (x + deltas[action][0], y + deltas[action][1]), layers, deltas[action])
 
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        if len(self.positions[batch]) > 1:
+            self.remove(batch, self.positions[batch][-1])
+        if len(self.positions[batch]) < 1:
+            self.add(batch, (randint(1,board.height - 1), randint(1,board.width - 1)))
+
+
 
 class Blocks(Layer):
     color = Colors.gray
