@@ -157,6 +157,7 @@ class Defaults:
     name: str = "Agent"
     main: function = CFagentv2
     level: Levels = Levels.Causal2
+    failed_actions_chance: float = 0.0
     hours: float = 12
     batch: int = 100
     width: int = 9
