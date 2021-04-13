@@ -1,13 +1,19 @@
 #!/bin/sh
-mkdir ../outputs/causal2_online_var_0.5_full_UCB1/
-mkdir ../outputs/causal2_online_var_0.5_full_UCB1/Markdown
-bsub -o "../outputs/causal2_online_var_0.5_full_UCB1/Markdown/causal2_online_var_0.5_full_UCB1_0.md" -J "causal2_online_var_0.5_full_UCB1_0" -P "-name causal2_online_var_0.5_full_UCB1-0 -hours 12.0 -level Levels.Causal2 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0 -failed_actions_chance 0.5 -graphMode GraphMode.UCB1" < submit.sh
-mkdir ../outputs/causal5_online_var_0.5_full_UCB1/
-mkdir ../outputs/causal5_online_var_0.5_full_UCB1/Markdown
-bsub -o "../outputs/causal5_online_var_0.5_full_UCB1/Markdown/causal5_online_var_0.5_full_UCB1_0.md" -J "causal5_online_var_0.5_full_UCB1_0" -P "-name causal5_online_var_0.5_full_UCB1-0 -hours 12.0 -level Levels.Causal5 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0 -failed_actions_chance 0.5 -graphMode GraphMode.UCB1" < submit.sh
-mkdir ../outputs/causal6_online_var_0.5_full_UCB1/
-mkdir ../outputs/causal6_online_var_0.5_full_UCB1/Markdown
-bsub -o "../outputs/causal6_online_var_0.5_full_UCB1/Markdown/causal6_online_var_0.5_full_UCB1_0.md" -J "causal6_online_var_0.5_full_UCB1_0" -P "-name causal6_online_var_0.5_full_UCB1-0 -hours 12.0 -level Levels.Causal6 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0 -failed_actions_chance 0.5 -graphMode GraphMode.UCB1" < submit.sh
-mkdir ../outputs/causal7_online_var_0.5_full_UCB1/
-mkdir ../outputs/causal7_online_var_0.5_full_UCB1/Markdown
-bsub -o "../outputs/causal7_online_var_0.5_full_UCB1/Markdown/causal7_online_var_0.5_full_UCB1_0.md" -J "causal7_online_var_0.5_full_UCB1_0" -P "-name causal7_online_var_0.5_full_UCB1-0 -hours 12.0 -level Levels.Causal7 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0 -failed_actions_chance 0.5 -graphMode GraphMode.UCB1" < submit.sh
+mkdir ../outputs/ReTest1/
+mkdir ../outputs/ReTest1/Markdown
+bsub -o "../outputs/ReTest1/Markdown/ReTest1_0.md" -J "ReTest1_0" -P "-name ReTest1-0 -hours 12.0 -K1 2000000.0 -K2 500000.0 -level Levels.Causal3 -main CFagent -CF_convert 3 -Counterfacts 1 -Random_counterfacts False" < submit.sh
+mkdir ../outputs/ReTest2/
+mkdir ../outputs/ReTest2/Markdown
+bsub -o "../outputs/ReTest2/Markdown/ReTest2_0.md" -J "ReTest2_0" -P "-name ReTest2-0 -hours 12.0 -K1 2000000.0 -K2 500000.0 -level Levels.Causal3 -main CFagent -CF_convert 4 -Counterfacts 1 -Random_counterfacts False" < submit.sh
+mkdir ../outputs/ReTest3/
+mkdir ../outputs/ReTest3/Markdown
+bsub -o "../outputs/ReTest3/Markdown/ReTest3_0.md" -J "ReTest3_0" -P "-name ReTest3-0 -hours 12.0 -K1 2000000.0 -K2 500000.0 -level Levels.Causal3 -main CFagent -CF_convert 3 -Counterfacts 1 -Random_counterfacts True" < submit.sh
+mkdir ../outputs/ReTest4/
+mkdir ../outputs/ReTest4/Markdown
+bsub -o "../outputs/ReTest4/Markdown/ReTest4_0.md" -J "ReTest4_0" -P "-name ReTest4-0 -hours 12.0 -K1 2000000.0 -K2 500000.0 -level Levels.Causal3 -main CFagent -CF_convert 4 -Counterfacts 1 -Random_counterfacts True" < submit.sh
+mkdir ../outputs/ReTest5/
+mkdir ../outputs/ReTest5/Markdown
+bsub -o "../outputs/ReTest5/Markdown/ReTest5_0.md" -J "ReTest5_0" -P "-name ReTest5-0 -hours 12.0 -K1 2000000.0 -K2 500000.0 -level Levels.Causal3 -main CFagentv2 -CF_convert 3 -Counterfacts 1 -Random_counterfacts False" < submit.sh
+mkdir ../outputs/ReTest6/
+mkdir ../outputs/ReTest6/Markdown
+bsub -o "../outputs/ReTest6/Markdown/ReTest6_0.md" -J "ReTest6_0" -P "-name ReTest6-0 -hours 12.0 -K1 2000000.0 -K2 500000.0 -level Levels.Causal3 -main CFagentv2 -CF_convert 4 -Counterfacts 1 -Random_counterfacts False" < submit.sh

@@ -16,7 +16,7 @@ def test_simple():
 
 
 def test_teleport():
-    with Load("TEST_CF_CAUSAL4_6c3", num=0) as load:
+    with Load("CFv2TESTCAU4cf1", num=0) as load:
         collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
         #teleporter.exploration.explore = teleporter.exploration.greedy
         intervention_idx, modified_board = teleporter.pre_process(env)
@@ -65,6 +65,7 @@ def test_CFagent():
 def test_graphTrain():
     with Load("causal2_online_var_0.5_full", num=0) as load:
         collector, env, mover, data = load.items(Collector, Game, Mover, Data)
+        # data.graphMode = GraphMode.var  # Fix
         layers: List[LayerType] = environments[env.level][2]
         teleporter = Teleporter(env, network1=Networks.Teleporter, K1=5000000, learner1=Learners.Qlearn, exploration1=Explorations.softmaxer, gamma1=0.98, batch=env.layers.batch, width=env.layers.width, height=env.layers.height)
         convert = [env.layers.types.index(layer) for layer in layers]
@@ -91,5 +92,19 @@ def test_graphTrain():
             eatCheese = [intervention == player_pos for intervention, player_pos in zip(teleporter.interventions, playerPositions)]
             old_states = new_states
 
+def test_CFagent2():
+    with Load("cococonuts_CF_conver2", num=0) as load:
+        collector, env, mover, teleporter, CFagent, simulator = load.items(Collector, Game, Mover, Teleporter, CFAgent, Simulator)
+        teleporter.exploration.explore = teleporter.exploration.greedy
+        intervention_idx, modified_board = teleporter.pre_process(env)
+        dones = CFagent.pre_process(env)
+        CF_dones, cfs = None, None
+        for frame in loop(env, collector, teleporter=teleporter):
+            CFagent.counterfact2(env, dones, teleporter, simulator, CF_dones, cfs)
+            modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
+            actions = mover(modified_board)
+            observations, rewards, dones, info = env.step(actions)
+            modified_board, _, _, _, intervention_idx = teleporter.modify(observations, rewards, dones, info)
+            CF_dones, cfs = CFagent.counterfact_check(dones, env, check=1)
 
-test_graphTrain()
+test_teleport()
