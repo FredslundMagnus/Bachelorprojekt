@@ -8,6 +8,7 @@ from exploration import Explorations
 from levels import Levels
 from helper import function
 from os import getenv
+from allGraphs import GraphMode
 isServer = checkServer()
 
 
@@ -26,7 +27,7 @@ def getvals(defaults):
                 params[s] = annotations[s].__call__(args[i + 1])
             elif annotations[s] == function:
                 params[s] = str(args[i + 1])
-            elif annotations[s] in {Networks, Learners, Explorations, Levels}:
+            elif annotations[s] in {Networks, Learners, Explorations, Levels, GraphMode}:
                 params[s] = [e for e in annotations[s] if str(e) == str(args[i + 1])][0]
     return params
 

@@ -10,7 +10,7 @@ from auxillaries import loop
 def graphTrain(defaults):
     layers: List[LayerType] = environments[defaults['level']][2]
     explorationN = defaults['K1']
-    data = Data(layers)
+    data = Data(layers, defaults['graphMode'])
     env = Game(**defaults)
     mover = Mover(env, _extra_dim=1, **defaults)
     teleporter = Teleporter(env, **defaults)

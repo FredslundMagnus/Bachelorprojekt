@@ -1,3 +1,4 @@
+from allGraphs import GraphMode
 from game import Game, Levels
 from agent import Teleporter, Mover, Networks, Learners, Explorations, MetaTeleporter, CFAgent
 from collector import Collector
@@ -139,13 +140,15 @@ def CFagentv2(defaults):
 
 class Defaults:
     name: str = "Agent"
-    main: function = CFagent
-    level: Levels = Levels.MonsterLevel
+    main: function = graphTrain
+    level: Levels = Levels.Causal2
     failed_actions_chance: float = 0.0
     hours: float = 12
     batch: int = 100
     width: int = 9
     height: int = 9
+
+    graphMode: GraphMode = GraphMode.UCB1
 
     network1: Networks = Networks.Teleporter
     K1: float = 500000
