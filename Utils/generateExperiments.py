@@ -160,10 +160,10 @@ def genExperiments(name, n=1, **params):
 
 
 # genExperiments(f"causal2_online_var_0.5_test", n=1, hours=5, level=Levels.Causal2, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.5)
-genExperiments(f"causal2_online_var_0.5_full_UCB1", n=1, hours=12, level=Levels.Causal2, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.5, graphMode=GraphMode.UCB1)
-genExperiments(f"causal5_online_var_0.5_full_UCB1", n=1, hours=12, level=Levels.Causal5, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.5, graphMode=GraphMode.UCB1)
-genExperiments(f"causal6_online_var_0.5_full_UCB1", n=1, hours=12, level=Levels.Causal6, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.5, graphMode=GraphMode.UCB1)
-genExperiments(f"causal7_online_var_0.5_full_UCB1", n=1, hours=12, level=Levels.Causal7, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.5, graphMode=GraphMode.UCB1)
+# genExperiments(f"causal2_online_var_0.5_full_UCB1", n=1, hours=12, level=Levels.Causal2, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.5, graphMode=GraphMode.UCB1)
+# genExperiments(f"causal5_online_var_0.5_full_UCB1", n=1, hours=12, level=Levels.Causal5, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.5, graphMode=GraphMode.UCB1)
+# genExperiments(f"causal6_online_var_0.5_full_UCB1", n=1, hours=12, level=Levels.Causal6, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.5, graphMode=GraphMode.UCB1)
+# genExperiments(f"causal7_online_var_0.5_full_UCB1", n=1, hours=12, level=Levels.Causal7, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.5, graphMode=GraphMode.UCB1)
 
 
 # genExperiments(f"MONTEST_CF_5c1", n=2, hours=22, level=Levels.MonsterLevel, main=CFagent, CF_convert=5, Counterfacts=1)
@@ -179,6 +179,13 @@ genExperiments(f"causal7_online_var_0.5_full_UCB1", n=1, hours=12, level=Levels.
 # genExperiments(f"CFv2TESTCAU2cf2", n=1, hours=16, level=Levels.Causal2, main=CFagentv2, CF_convert=3, Counterfacts=2)
 # genExperiments(f"CFv2TESTCAU4cf1", n=1, hours=16, level=Levels.Causal4, main=CFagentv2, CF_convert=3, Counterfacts=1)
 # genExperiments(f"CFv2TESTCAU4cf2", n=1, hours=16, level=Levels.Causal4, main=CFagentv2, CF_convert=3, Counterfacts=2)
+
+genExperiments(f"ReTest1", n=1, hours=12, K1 = 2000000, K2 = 500000, level=Levels.Causal3, main=CFagent, CF_convert=3, Counterfacts=1, Random_counterfacts = False)
+genExperiments(f"ReTest2", n=1, hours=12, K1 = 2000000, K2 = 500000, level=Levels.Causal3, main=CFagent, CF_convert=4, Counterfacts=1, Random_counterfacts = False)
+genExperiments(f"ReTest3", n=1, hours=12, K1 = 2000000, K2 = 500000, level=Levels.Causal3, main=CFagent, CF_convert=3, Counterfacts=1, Random_counterfacts = True)
+genExperiments(f"ReTest4", n=1, hours=12, K1 = 2000000, K2 = 500000, level=Levels.Causal3, main=CFagent, CF_convert=4, Counterfacts=1, Random_counterfacts = True)
+genExperiments(f"ReTest5", n=1, hours=12, K1 = 2000000, K2 = 500000, level=Levels.Causal3, main=CFagentv2, CF_convert=3, Counterfacts=1, Random_counterfacts = False)
+genExperiments(f"ReTest6", n=1, hours=12, K1 = 2000000, K2 = 500000, level=Levels.Causal3, main=CFagentv2, CF_convert=4, Counterfacts=1, Random_counterfacts = False)
 
 
 file.close()
