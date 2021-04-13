@@ -97,13 +97,13 @@ def test_CFagent2():
         teleporter.exploration.explore = teleporter.exploration.greedy
         intervention_idx, modified_board = teleporter.pre_process(env)
         dones = CFagent.pre_process(env)
+        CF_dones, cfs = None, None
         for frame in loop(env, collector, teleporter=teleporter):
             CFagent.counterfact2(env, dones, teleporter, simulator, CF_dones, cfs)
             modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
             actions = mover(modified_board)
             observations, rewards, dones, info = env.step(actions)
-            modified_board, modified_rewards, modified_dones, teleport_rewards, intervention_idx = teleporter.modify(observations, rewards, dones, info)
+            modified_board, _, _, _, intervention_idx = teleporter.modify(observations, rewards, dones, info)
             CF_dones, cfs = CFagent.counterfact_check(dones, env, check=1)
-
 
 test_teleport()
