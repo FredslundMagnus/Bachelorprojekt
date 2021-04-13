@@ -274,11 +274,11 @@ class CFAgent(Agent):
                     layer.NoRock_update(env.board, [1 for _ in range(self.batch)])
         return CF_dones
 
-    def counterfact_check(self, dones, env, check=1):
+    def counterfact_check(self, dones, env, Random_counterfacts: bool = True, **kwargs):
         self.CF_count += 1
-        if check == 0:
+        if not Random_counterfacts:
             return torch.flatten(torch.nonzero(dones)), self.counterfacts
-        elif check == 1:
+        else:
             average_dones = (torch.sum(dones)/len(dones)).item()
             self.done_number += (average_dones - self.running_dones[self.CF_count % 10000])/10000
             self.running_dones[self.CF_count % 10000] = average_dones
