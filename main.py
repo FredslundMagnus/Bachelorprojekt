@@ -113,7 +113,7 @@ def CFagentv2(defaults):
     simbuffer = SimBuffer(**defaults)
     collector = Collector(**defaults)
 
-    with Save(env, collector, mover, teleporter, CFagent, **defaults) as save:
+    with Save(env, collector, mover, teleporter, CFagent, simulator, **defaults) as save:
         intervention_idx, modified_board = teleporter.pre_process(env)
         dones = CFagent.pre_process(env)
         CF_dones, cfs = None, None
