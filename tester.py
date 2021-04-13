@@ -63,7 +63,7 @@ def test_CFagent():
 
 
 def test_graphTrain():
-    with Load("causal7_online_var", num=0) as load:
+    with Load("causal2_online_var_0.5_full", num=0) as load:
         collector, env, mover, data = load.items(Collector, Game, Mover, Data)
         layers: List[LayerType] = environments[env.level][2]
         teleporter = Teleporter(env, network1=Networks.Teleporter, K1=5000000, learner1=Learners.Qlearn, exploration1=Explorations.softmaxer, gamma1=0.98, batch=env.layers.batch, width=env.layers.width, height=env.layers.height)

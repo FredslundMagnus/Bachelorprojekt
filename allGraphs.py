@@ -6,6 +6,8 @@ from typing import FrozenSet, Iterable, List
 from game import Game, Levels
 from random import random
 from dataclasses import dataclass
+from enum import Enum
+from math import sqrt, log
 
 
 @dataclass
@@ -15,10 +17,16 @@ class Info:
     n: int = 0
 
 
+class GraphMode(Enum):
+    var = 0
+    UCB1 = 1
+
+
 class Data:
-    def __init__(self, layers: List[LayerType] = None) -> None:
+    def __init__(self, layers: List[LayerType] = None, graphMode: GraphMode = None) -> None:
         self.layers = layers
         self.data = {}
+        self.graphMode = graphMode
         self.t = 0
         for layer in layers:
             self.data[layer] = {c: Info() for c in combinations(layer, layers)}
@@ -48,6 +56,20 @@ class Data:
             return float("inf")
         p = (info.satisfiable + a) / (n + 2*a)
         return (p * (1-p))/n
+
+    def UCB1(self, layer: LayerType, state: FrozenSet[LayerType]):
+        info: Info = self.data[layer][state]
+        c = 2
+        if (n := info.n):
+            Q = info.satisfiable / n
+            return Q + c * sqrt(log(self.t)/n)
+        return float('inf')
+
+    def expected_moves_UCB1(self, state: FrozenSet[LayerType], layer: LayerType) -> float:
+        if layer == LayerType.Goal:
+            return 1/max(self.UCB1(LayerType.Goal, state), 1e-10)
+        next_state = frozenset(list(state) + [layer])
+        return 1/max(self.UCB1(layer, state), 1e-10) + min(self.expected_moves_UCB1(next_state, layer) for layer in self.layers_not_in(next_state))
 
     def expected_moves(self, state: FrozenSet[LayerType], layer: LayerType) -> float:
         if layer == LayerType.Goal:
@@ -108,6 +130,10 @@ def rightIntervention(state: FrozenSet[LayerType], data: Data) -> LayerType:
     return min(data.layers_not_in(state), key=lambda layer: data.expected_moves(state, layer))
 
 
+def UCB1(state: FrozenSet[LayerType], data: Data) -> LayerType:
+    return min(data.layers_not_in(state), key=lambda layer: data.expected_moves_UCB1(state, layer))
+
+
 def transform(old_states: List[FrozenSet[LayerType]], new_states: List[FrozenSet[LayerType]], dones: Tensor, rewards: Tensor, data: Data, layers: List[LayerType]) -> None:
     for old_state, new_state, done, reward in zip(old_states, new_states, dones.tolist(), rewards.tolist()):
         if reward:
@@ -124,9 +150,14 @@ def transformNot(boards: Tensor, states: List[FrozenSet[LayerType]], player: int
                 data.unsatisfiable(layer, state)
 
 
-def getInterventions(env: Game, state: FrozenSet[LayerType], data: Data, exploration: float = 1) -> List[bool]:
-    if random() <= exploration:
-        best = env.layers.types.index(bestIntervention(state, data))
-    else:
-        best = env.layers.types.index(rightIntervention(state, data))
+def format(env: Game, layer: LayerType) -> List[bool]:
+    best = env.layers.types.index(layer)
     return [best == i for i in range(env.board.shape[1])]
+
+
+def getInterventions(env: Game, state: FrozenSet[LayerType], data: Data, exploration: float = 1) -> List[bool]:
+    if data.graphMode == GraphMode.UCB1:
+        return format(env, UCB1(state, data))
+    if random() <= exploration:
+        return format(env, bestIntervention(state, data))
+    return format(env, rightIntervention(state, data))
