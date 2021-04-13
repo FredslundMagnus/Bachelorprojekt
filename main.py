@@ -96,7 +96,7 @@ def CFagent(defaults):
             board_before, board_after, intervention, tele_rewards, tele_dones = buffer.sample_data()
             teleporter.learn(board_after, intervention, tele_rewards, tele_dones, board_before)
             collector.collect([rewards, modified_rewards, teleport_rewards], [dones, modified_dones])
-            CF_dones, cfs = CFagent.counterfact_check(dones, env, check=0)
+            CF_dones, cfs = CFagent.counterfact_check(dones, env, **defaults)
             CFbuffer.CF_save_data(CFagent.boards, observations, CFagent.counterfactuals, rewards, dones, CF_dones)
             CFboard, CFobs, cf, CFrewards, CFdones1 = CFbuffer.sample_data()
             CFagent.learn(CFobs, cf, CFrewards, CFdones1, CFboard)
@@ -132,7 +132,7 @@ def CFagentv2(defaults):
             lossboard = simulator.learn(board_before, board_after, intervention)
             collector.collect_loss(lossboard)
             collector.collect([rewards, modified_rewards, teleport_rewards], [dones, modified_dones])
-            CF_dones, cfs = CFagent.counterfact_check(dones, env, check=1)
+            CF_dones, cfs = CFagent.counterfact_check(dones, env, **defaults)
             CFbuffer.CF_save_data(CFagent.boards, observations, CFagent.counterfactuals, rewards, dones, CF_dones)
             CFboard, CFobs, cf, CFrewards, CFdones1 = CFbuffer.sample_data()
             CFagent.learn(CFobs, cf, CFrewards, CFdones1, CFboard)
@@ -140,7 +140,7 @@ def CFagentv2(defaults):
 
 class Defaults:
     name: str = "Agent"
-    main: function = graphTrain
+    main: function = CFagent
     level: Levels = Levels.Causal2
     failed_actions_chance: float = 0.0
     hours: float = 12
@@ -217,6 +217,7 @@ class Defaults:
     CF_convert: int = 3
     Counterfacts: int = 2
     TopN: int = 5
+    Random_counterfacts: bool = False
 
 
 run(Defaults)
