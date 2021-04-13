@@ -159,7 +159,7 @@ class Graph():
         ma, mi = max(li), min(li)
         for edge in edges:
             if ma > mi:
-                edge.opacity = (edge.value - mi) / (ma - mi)
+                edge.opacity = edge.value
             if edge.opacity > cutoff:
                 Graph.drawEdge(edge, limit, diff)
 
