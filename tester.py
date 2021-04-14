@@ -5,6 +5,7 @@ from typing import List
 from main import *
 from load import Load
 from helper import device
+import torch
 
 
 def test_simple():
@@ -16,7 +17,7 @@ def test_simple():
 
 
 def test_teleport():
-    with Load("CFv2TESTCAU4cf1", num=0) as load:
+    with Load("ReTest6", num=0) as load:
         collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
         #teleporter.exploration.explore = teleporter.exploration.greedy
         intervention_idx, modified_board = teleporter.pre_process(env)
@@ -94,12 +95,12 @@ def test_graphTrain():
 
 
 def test_CFagent2():
-    with Load("cococonuts_CF_conver2", num=0) as load:
+    with Load("ReTest6", num=0) as load:
         collector, env, mover, teleporter, CFagent, simulator = load.items(Collector, Game, Mover, Teleporter, CFAgent, Simulator)
         teleporter.exploration.explore = teleporter.exploration.greedy
         intervention_idx, modified_board = teleporter.pre_process(env)
         dones = CFagent.pre_process(env)
-        CF_dones, cfs = None, None
+        CF_dones, cfs = torch.flatten(torch.nonzero(torch.ones(env.layers.board.shape[0], device=device).long())), 1
         for frame in loop(env, collector, teleporter=teleporter):
             CFagent.counterfact2(env, dones, teleporter, simulator, CF_dones, cfs)
             modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
@@ -109,4 +110,4 @@ def test_CFagent2():
             CF_dones, cfs = CFagent.counterfact_check(dones, env, check=1)
 
 
-test_graphTrain()
+test_CFagent2()
