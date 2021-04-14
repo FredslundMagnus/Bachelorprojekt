@@ -60,7 +60,7 @@ class AllGraph(Graph):
 
 
 def test_graphTrain(data=None, getLayers=False):
-    with Load("causal2_online_var_0.5_full", num=0) as load:
+    with Load("causal2_online_var_0.5_full_UCB1", num=0) as load:
         env, dataN = load.items(Game, Data)
         if getLayers:
             return environments[env.level][2]

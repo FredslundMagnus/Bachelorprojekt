@@ -63,7 +63,7 @@ def test_CFagent():
 
 
 def test_graphTrain():
-    with Load("causal2_online_var_0.5_full", num=0) as load:
+    with Load("causal2_online_var_0.5_full_UCB1", num=0) as load:
         collector, env, mover, data = load.items(Collector, Game, Mover, Data)
         # data.graphMode = GraphMode.var  # Fix
         layers: List[LayerType] = environments[env.level][2]
@@ -92,6 +92,7 @@ def test_graphTrain():
             eatCheese = [intervention == player_pos for intervention, player_pos in zip(teleporter.interventions, playerPositions)]
             old_states = new_states
 
+
 def test_CFagent2():
     with Load("cococonuts_CF_conver2", num=0) as load:
         collector, env, mover, teleporter, CFagent, simulator = load.items(Collector, Game, Mover, Teleporter, CFAgent, Simulator)
@@ -107,4 +108,5 @@ def test_CFagent2():
             modified_board, _, _, _, intervention_idx = teleporter.modify(observations, rewards, dones, info)
             CF_dones, cfs = CFagent.counterfact_check(dones, env, check=1)
 
-test_teleport()
+
+test_graphTrain()
