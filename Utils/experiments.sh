@@ -1,19 +1,19 @@
 #!/bin/sh
-mkdir ../outputs/ReTest7/
-mkdir ../outputs/ReTest7/Markdown
-bsub -o "../outputs/ReTest7/Markdown/ReTest7_0.md" -J "ReTest7_0" -P "-name ReTest7-0 -hours 24.0 -level Levels.Causal4 -main CFagent -CF_convert 3 -Counterfacts 1 -Random_counterfacts True" < submit.sh
-mkdir ../outputs/ReTest8/
-mkdir ../outputs/ReTest8/Markdown
-bsub -o "../outputs/ReTest8/Markdown/ReTest8_0.md" -J "ReTest8_0" -P "-name ReTest8-0 -hours 24.0 -level Levels.Causal4 -main CFagent -CF_convert 3 -Counterfacts 2 -Random_counterfacts True" < submit.sh
-mkdir ../outputs/ReTest9/
-mkdir ../outputs/ReTest9/Markdown
-bsub -o "../outputs/ReTest9/Markdown/ReTest9_0.md" -J "ReTest9_0" -P "-name ReTest9-0 -hours 24.0 -level Levels.Causal4 -main CFagent -CF_convert 3 -Counterfacts 3 -Random_counterfacts True" < submit.sh
-mkdir ../outputs/ReTest10/
-mkdir ../outputs/ReTest10/Markdown
-bsub -o "../outputs/ReTest10/Markdown/ReTest10_0.md" -J "ReTest10_0" -P "-name ReTest10-0 -hours 24.0 -level Levels.Causal4 -main CFagent -CF_convert 4 -Counterfacts 1 -Random_counterfacts True" < submit.sh
-mkdir ../outputs/ReTest11/
-mkdir ../outputs/ReTest11/Markdown
-bsub -o "../outputs/ReTest11/Markdown/ReTest11_0.md" -J "ReTest11_0" -P "-name ReTest11-0 -hours 24.0 -level Levels.Causal4 -main CFagent -CF_convert 4 -Counterfacts 2 -Random_counterfacts True" < submit.sh
-mkdir ../outputs/ReTest12/
-mkdir ../outputs/ReTest12/Markdown
-bsub -o "../outputs/ReTest12/Markdown/ReTest12_0.md" -J "ReTest12_0" -P "-name ReTest12-0 -hours 24.0 -level Levels.Causal4 -main CFagent -CF_convert 4 -Counterfacts 3 -Random_counterfacts True" < submit.sh
+mkdir ../outputs/ReTest13/
+mkdir ../outputs/ReTest13/Markdown
+bsub -o "../outputs/ReTest13/Markdown/ReTest13_0.md" -J "ReTest13_0" -P "-name ReTest13-0 -hours 24.0 -level Levels.Coconuts -main CFagent -CF_convert 3 -Counterfacts 1 -Random_counterfacts True" < submit.sh
+mkdir ../outputs/ReTest14/
+mkdir ../outputs/ReTest14/Markdown
+bsub -o "../outputs/ReTest14/Markdown/ReTest14_0.md" -J "ReTest14_0" -P "-name ReTest14-0 -hours 24.0 -level Levels.Coconuts -main CFagent -CF_convert 3 -Counterfacts 2 -Random_counterfacts True" < submit.sh
+mkdir ../outputs/ReTest15/
+mkdir ../outputs/ReTest15/Markdown
+bsub -o "../outputs/ReTest15/Markdown/ReTest15_0.md" -J "ReTest15_0" -P "-name ReTest15-0 -hours 24.0 -level Levels.Coconuts -main CFagent -CF_convert 3 -Counterfacts 3 -Random_counterfacts True" < submit.sh
+mkdir ../outputs/ReTest16/
+mkdir ../outputs/ReTest16/Markdown
+bsub -o "../outputs/ReTest16/Markdown/ReTest16_0.md" -J "ReTest16_0" -P "-name ReTest16-0 -hours 24.0 -level Levels.Coconuts -main CFagent -CF_convert 4 -Counterfacts 1 -Random_counterfacts True" < submit.sh
+mkdir ../outputs/ReTest17/
+mkdir ../outputs/ReTest17/Markdown
+bsub -o "../outputs/ReTest17/Markdown/ReTest17_0.md" -J "ReTest17_0" -P "-name ReTest17-0 -hours 24.0 -level Levels.Coconuts -main CFagent -CF_convert 4 -Counterfacts 2 -Random_counterfacts True" < submit.sh
+mkdir ../outputs/ReTest18/
+mkdir ../outputs/ReTest18/Markdown
+bsub -o "../outputs/ReTest18/Markdown/ReTest18_0.md" -J "ReTest18_0" -P "-name ReTest18-0 -hours 24.0 -level Levels.Coconuts -main CFagent -CF_convert 4 -Counterfacts 3 -Random_counterfacts True" < submit.sh
