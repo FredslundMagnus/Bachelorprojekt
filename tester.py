@@ -17,7 +17,7 @@ def test_simple():
 
 
 def test_teleport():
-    with Load("ReTest6", num=0) as load:
+    with Load("ReTest3", num=0) as load:
         collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
         #teleporter.exploration.explore = teleporter.exploration.greedy
         intervention_idx, modified_board = teleporter.pre_process(env)
@@ -50,17 +50,20 @@ def test_metateleport():
 
 
 def test_CFagent():
-    with Load("cococonuts_CF_conver2", num=0) as load:
+    with Load("ReTest3", num=0) as load:
         collector, env, mover, teleporter, CFagent = load.items(Collector, Game, Mover, Teleporter, CFAgent)
         teleporter.exploration.explore = teleporter.exploration.greedy
         intervention_idx, modified_board = teleporter.pre_process(env)
         dones = CFagent.pre_process(env)
+        CF_dones, cfs = torch.flatten(torch.nonzero(torch.ones(env.layers.board.shape[0], device=device).long())), 1
         for frame in loop(env, collector, teleporter=teleporter):
-            CFagent.counterfact(env, dones, teleporter)
+            CFagent.counterfact(env, dones, teleporter, CF_dones, cfs)
             modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
             actions = mover(modified_board)
             observations, rewards, dones, info = env.step(actions)
             modified_board, _, _, _, intervention_idx = teleporter.modify(observations, rewards, dones, info)
+            CF_dones, cfs = CFagent.counterfact_check(dones, env, check=0)
+
 
 
 def test_graphTrain():
@@ -96,7 +99,7 @@ def test_graphTrain():
 
 def test_CFagent2():
     with Load("ReTest6", num=0) as load:
-        collector, env, mover, teleporter, CFagent, simulator = load.items(Collector, Game, Mover, Teleporter, CFAgent, Simulator)
+        mover, teleporter, collector, env, CFagent, simulator = load.items(Mover, Teleporter, Collector, Game, CFAgent, Simulator)
         teleporter.exploration.explore = teleporter.exploration.greedy
         intervention_idx, modified_board = teleporter.pre_process(env)
         dones = CFagent.pre_process(env)
@@ -107,7 +110,7 @@ def test_CFagent2():
             actions = mover(modified_board)
             observations, rewards, dones, info = env.step(actions)
             modified_board, _, _, _, intervention_idx = teleporter.modify(observations, rewards, dones, info)
-            CF_dones, cfs = CFagent.counterfact_check(dones, env, check=1)
+            CF_dones, cfs = CFagent.counterfact_check(dones, env, check=0)
 
 
-test_CFagent2()
+test_CFagent()
