@@ -9,6 +9,7 @@ class Networks(Enum):
     Small = 0
     Teleporter = 1
     Mini = 2
+    MiniBig = 3
 
 
 class Network(nn.Module):
@@ -20,6 +21,8 @@ class Network(nn.Module):
             self.model = nn.Sequential(nn.Conv2d(dim, 128, 5), nn.LeakyReLU(), nn.Conv2d(128, 64, 3), nn.LeakyReLU(), nn.Flatten(), nn.Linear(64 * (width - 6) * (height - 6), 128), nn.LeakyReLU(), nn.Linear(128, 128), nn.LeakyReLU(), nn.Linear(128, height * width), nn.Flatten())
         elif network == Networks.Mini:
             self.model = nn.Sequential(nn.Conv2d(dim, 64, 3), nn.LeakyReLU(), nn.Conv2d(64, 32, 3), nn.LeakyReLU(), nn.Flatten(), nn.Linear(32 * (width - 4) * (height - 4), 64), nn.LeakyReLU(), nn.Linear(64, 4), nn.Flatten())
+        elif network == Networks.MiniBig:
+            self.model = nn.Sequential(nn.Conv2d(dim, 128, 5), nn.LeakyReLU(), nn.Conv2d(128, 64, 3), nn.LeakyReLU(), nn.Flatten(), nn.Linear(64 * (width - 6) * (height - 6), 128), nn.LeakyReLU(), nn.Linear(128, 128), nn.LeakyReLU(), nn.Linear(128, 4), nn.Flatten())
 
     def forward(self, x: Tensor):
         return self.model(x)
