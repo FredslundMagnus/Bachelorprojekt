@@ -32,7 +32,7 @@ def load(*colectors: List[Tuple[str, str, MaterialColor]], same_x: bool = False)
 
 
 class Plotter():
-    def __init__(self, title: str = 'Placeholder', xlabel: str = 'Games', ylabel: str = "Winrate", loc: Loc = Loc.upperLeft, ylim: Tuple[float, float] = (0, 1), keys: Tuple[float, float] = (0, 0)):
+    def __init__(self, title: str = 'Placeholder', xlabel: str = 'Games', ylabel: str = "Winrate", loc: Loc = Loc.upperLeft, ylim: Tuple[float, float] = (0, 1), keys: Tuple[float, float] = (0, 0), normalize: int = 1):
         self.plt = plt
         self.loc: str = loc.value
         self.keys: Tuple[float, float] = keys
@@ -41,6 +41,7 @@ class Plotter():
         self.title: str = title
         self.plt.xlabel(xlabel)
         self.plt.ylabel(ylabel)
+        self.N: int = normalize
 
         def varPlot(name: str, collectors: List[Collector], color: MaterialColor, meanVar: bool = False):
             if not collectors:
@@ -53,6 +54,7 @@ class Plotter():
                 data = np.array(data)
                 y = np.mean(data, axis=0)
                 sd = np.std(data, axis=0)
+                y, sd = self.normalize(y, sd)
                 x = np.arange(1, len(y) + 1)
                 self.plt.plot(x, y, lw=2, label=name, color='#%02x%02x%02x' % color.color, zorder=2)
                 if meanVar:
@@ -79,9 +81,13 @@ class Plotter():
             self.plt.savefig(f"plots/{self.title.replace(' ', '_')}.png", bbox_inches='tight')
         self.plt.clf()
 
+    def normalize(self, *arrays):
+        for array in arrays:
+            yield np.convolve(array, np.ones(self.N)/self.N, mode='valid')
+
 
 class PlotConfig:
-    def __init__(self, data: List[Tuple[str, str, MaterialColor]], same_x: bool = False, title: str = 'Placeholder', xlabel: str = 'Games', ylabel: str = "Winrate", loc: Loc = Loc.upperLeft, ylim: Tuple[float, float] = (0, 1), keys: Tuple[float, float] = (0, 0)) -> None:
+    def __init__(self, data: List[Tuple[str, str, MaterialColor]], same_x: bool = False, title: str = 'Placeholder', xlabel: str = 'Games', ylabel: str = "Winrate", loc: Loc = Loc.upperLeft, ylim: Tuple[float, float] = (0, 1), keys: Tuple[float, float] = (0, 0), normalize: int = 1) -> None:
         self.data: List[Tuple[str, str, MaterialColor]] = data
         self.same_x: bool = same_x
         self.title: str = title
@@ -90,9 +96,10 @@ class PlotConfig:
         self.loc: Loc = loc
         self.ylim: Tuple[float, float] = ylim
         self.keys: Tuple[float, float] = keys
+        self.normalize: int = normalize
         self.createPlot()
 
     def createPlot(self):
-        with Plotter(title=self.title, xlabel=self.xlabel, ylabel=self.ylabel, loc=self.loc, ylim=self.ylim, keys=self.keys) as plt:
+        with Plotter(title=self.title, xlabel=self.xlabel, ylabel=self.ylabel, loc=self.loc, ylim=self.ylim, keys=self.keys, normalize=self.normalize) as plt:
             for name, collectors, color in load(*self.data):
                 plt.varPlot(name, collectors, color)
