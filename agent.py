@@ -274,7 +274,7 @@ class CFAgent(Agent):
                     layer.NoRock_update(env.board, [1 for _ in range(self.batch)])
         return CF_dones
 
-    def counterfact_check(self, dones, env, Random_counterfacts: bool = True, **kwargs):
+    def counterfact_check(self, dones, env, Random_counterfacts: bool = None, **kwargs):
         self.CF_count += 1
         if not Random_counterfacts:
             return torch.flatten(torch.nonzero(dones)), self.counterfacts
