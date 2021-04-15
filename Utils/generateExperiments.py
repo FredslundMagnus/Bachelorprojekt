@@ -1,5 +1,5 @@
 
-from main import Defaults, teleport, simple, CFagent, graphTrain, CFagentv2, GraphMode
+from main import Defaults, teleport, simple, CFagent, graphTrain, CFagentv2, GraphMode, option_critic_run
 from network import Networks
 from learner import Learners
 from levels import Levels, Rocks
@@ -192,12 +192,13 @@ def genExperiments(name, n=1, **params):
 # genExperiments(f"ReTest10", n=1, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=4, Counterfacts=1, Random_counterfacts = True)
 # genExperiments(f"ReTest11", n=1, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=4, Counterfacts=2, Random_counterfacts = True)
 # genExperiments(f"ReTest12", n=1, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=4, Counterfacts=3, Random_counterfacts = True)
-genExperiments(f"ReTest13", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=3, Counterfacts=1, Random_counterfacts = True)
-genExperiments(f"ReTest14", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=3, Counterfacts=2, Random_counterfacts = True)
-genExperiments(f"ReTest15", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=3, Counterfacts=3, Random_counterfacts = True)
-genExperiments(f"ReTest16", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=4, Counterfacts=1, Random_counterfacts = True)
-genExperiments(f"ReTest17", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=4, Counterfacts=2, Random_counterfacts = True)
-genExperiments(f"ReTest18", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=4, Counterfacts=3, Random_counterfacts = True)
+# genExperiments(f"ReTest13", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=3, Counterfacts=1, Random_counterfacts=True)
+# genExperiments(f"ReTest14", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=3, Counterfacts=2, Random_counterfacts=True)
+# genExperiments(f"ReTest15", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=3, Counterfacts=3, Random_counterfacts=True)
+# genExperiments(f"ReTest16", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=4, Counterfacts=1, Random_counterfacts=True)
+# genExperiments(f"ReTest17", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=4, Counterfacts=2, Random_counterfacts=True)
+# genExperiments(f"ReTest18", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=4, Counterfacts=3, Random_counterfacts=True)
+genExperiments(f"Option_Critic", n=1, hours=24, level=Levels.Causal2, main=option_critic_run)
 
 
 file.close()
