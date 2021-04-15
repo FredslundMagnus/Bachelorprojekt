@@ -1,3 +1,6 @@
+# https://github.com/lweitkamp/option-critic-pytorch/blob/master/main.py
+# https://github.com/lweitkamp/option-critic-pytorch/blob/master/option_critic.py
+
 from allGraphs import GraphMode
 from game import Game, Levels
 from agent import Teleporter, Mover, Networks, Learners, Explorations, MetaTeleporter, CFAgent
@@ -8,6 +11,7 @@ from replaybuffer import ReplayBuffer, CFReplayBuffer, SimBuffer
 from simulator import Simulator
 from load import Load
 from allGraphsTrain import graphTrain
+from optionCritic import option_critic_run
 
 
 def metateleport(defaults):
@@ -140,7 +144,7 @@ def CFagentv2(defaults):
 
 class Defaults:
     name: str = "Agent"
-    main: function = CFagent
+    main: function = option_critic_run
     level: Levels = Levels.Causal2
     failed_actions_chance: float = 0.0
     hours: float = 12
