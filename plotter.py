@@ -32,7 +32,7 @@ def load(*colectors: List[Tuple[str, str, MaterialColor]], same_x: bool = False)
 
 
 class Plotter():
-    def __init__(self, title: str = 'Placeholder', xlabel: str = 'Games', ylabel: str = "Winrate", loc: Loc = Loc.upperLeft, ylim: Tuple[float, float] = (0, 1), keys: Tuple[float, float] = (0, 0), normalize: int = 1):
+    def __init__(self, title: str = 'Placeholder', xlabel: str = 'Games', ylabel: str = "Winrate", loc: Loc = Loc.upperLeft, ylim: Tuple[float, float] = (0, 1), keys: Tuple[int, int] = (0, 0), normalize: int = 100):
         self.plt = plt
         self.loc: str = loc.value
         self.keys: Tuple[float, float] = keys
@@ -86,8 +86,8 @@ class Plotter():
             yield np.convolve(array, np.ones(self.N)/self.N, mode='valid')
 
 
-class PlotConfig:
-    def __init__(self, data: List[Tuple[str, str, MaterialColor]], same_x: bool = False, title: str = 'Placeholder', xlabel: str = 'Games', ylabel: str = "Winrate", loc: Loc = Loc.upperLeft, ylim: Tuple[float, float] = (0, 1), keys: Tuple[float, float] = (0, 0), normalize: int = 1) -> None:
+class Plot:
+    def __init__(self, data: List[Tuple[str, str, MaterialColor]], same_x: bool = False, title: str = 'Placeholder', xlabel: str = 'Games', ylabel: str = "Winrate", loc: Loc = Loc.upperLeft, ylim: Tuple[float, float] = (0, 1), keys: Tuple[int, int] = (0, 0), normalize: int = 100) -> None:
         self.data: List[Tuple[str, str, MaterialColor]] = data
         self.same_x: bool = same_x
         self.title: str = title
@@ -103,3 +103,8 @@ class PlotConfig:
         with Plotter(title=self.title, xlabel=self.xlabel, ylabel=self.ylabel, loc=self.loc, ylim=self.ylim, keys=self.keys, normalize=self.normalize) as plt:
             for name, collectors, color in load(*self.data):
                 plt.varPlot(name, collectors, color)
+
+
+# with Plotter(title="Test Causal 2 and 5") as plt:
+#     for name, collectors, color in load(('causal2_demo', "Causal 2", Colors.blue), ('causal5_demo', "Causal 5", Colors.red)):
+#         plt.varPlot(name, collectors, color)

@@ -144,8 +144,8 @@ def CFagentv2(defaults):
 
 class Defaults:
     name: str = "Agent"
-    main: function = option_critic_run
-    level: Levels = Levels.Causal2
+    main: function = player
+    level: Levels = Levels.Coconuts
     failed_actions_chance: float = 0.0
     hours: float = 12
     batch: int = 100
@@ -212,7 +212,7 @@ class Defaults:
     epsilon_cap: float = 0.2
     softmax_cap: float = 0.02
     update: int = 10000
-    reset_chance: float = 0.001
+    reset_chance: float = 0.002
     modified_done_chance: float = 0.05
     miss_intervention_cost: float = -0.15
     intervention_cost: float = -0.05

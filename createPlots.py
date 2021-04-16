@@ -1,21 +1,16 @@
-from plotter import Plotter, load, Colors, Loc, PlotConfig
+from plotter import Colors, Loc, Plot
 
-with Plotter(title="Test Causal 2 and 5") as plt:
-    for name, collectors, color in load(('causal2_demo', "Causal 2", Colors.blue), ('causal5_demo', "Causal 5", Colors.red)):
-        plt.varPlot(name, collectors, color)
 
-PlotConfig(
+Plot(
     title="Test Causal 2 and 5 Config",
-    normalize=1000,
     data=[
         ('causal2_demo', "Causal 2", Colors.blue),
         ('causal5_demo', "Causal 5", Colors.red),
-    ]
+    ],
 )
 
-PlotConfig(
+Plot(
     title="Test Causal",
-    normalize=50,
     loc=Loc.lowerRight,
     data=[
         ('causal2_demo', "Causal 2", Colors.blue),
