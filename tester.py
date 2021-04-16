@@ -65,7 +65,6 @@ def test_CFagent():
             CF_dones, cfs = CFagent.counterfact_check(dones, env, check=0)
 
 
-
 def test_graphTrain():
     with Load("causal2_online_var_0.5_full_UCB1", num=0) as load:
         collector, env, mover, data = load.items(Collector, Game, Mover, Data)
@@ -113,4 +112,10 @@ def test_CFagent2():
             CF_dones, cfs = CFagent.counterfact_check(dones, env, check=0)
 
 
-test_teleport()
+def test_option_critic():
+    with Load("Option_Critic") as load:
+        env, collector = load.items(Game, Collector)
+        collector.show(env)
+
+
+test_option_critic()

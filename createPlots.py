@@ -4,7 +4,7 @@ from plotter import Colors, Loc, Plot
 Plot(
     title="Test Causal 2 and 5 Config",
     data=[
-        ('causal2_demo', "Causal 2", Colors.blue),
+        ('Option_Critic', "Causal 2", Colors.blue),
         ('causal5_demo', "Causal 5", Colors.red),
     ],
 )
