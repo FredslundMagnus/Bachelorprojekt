@@ -1,5 +1,5 @@
 
-from allGraphs import environments, Data, compress
+from allGraphs import GraphMode, environments, Data, compress
 from game import Game
 from load import Load
 from helper import function
@@ -75,3 +75,25 @@ def test_graphTrain(data=None, getLayers=False):
 
 
 AllGraph(test_graphTrain, test_graphTrain(getLayers=True), usePlayer=False)
+
+# example_layers = [LayerType.Pink2, LayerType.Brown2, LayerType.Pink3, LayerType.Brown3]
+
+
+# def example_data(data=None):
+#     dataN = Data(example_layers, GraphMode.UCB1)
+#     dataN.satisfiable(LayerType.Pink2, frozenset())
+#     dataN.satisfiable(LayerType.Brown2, frozenset())
+#     dataN.satisfiable(LayerType.Pink3, frozenset([LayerType.Pink2]))
+#     dataN.satisfiable(LayerType.Brown3, frozenset([LayerType.Brown2]))
+#     dataN.satisfiable(LayerType.Goal, frozenset([LayerType.Brown3, LayerType.Pink3]))
+#     for layer, states in dataN.data.items():
+#         data[layer] = {}
+#         for state in states:
+#             p = dataN.p(layer, state)
+#             if p != 0 and not any([dataN.p(layer, small) != 0 for small in compress(state, inclusiv_self=False)]):
+#                 data[layer][state] = p
+#             else:
+#                 data[layer][state] = 0
+
+
+# AllGraph(example_data, example_layers, usePlayer=False)

@@ -111,7 +111,7 @@ class Graph():
                 self.updateEdges[self.widgets["Menu"][1]].__call__(self.edges)
             except Exception as e:
                 pass
-            with screen(Colors.gray.c300):
+            with screen(Colors.white):
                 if (frame := getattr(self.x, 'frame', 0)) != 0:
                     Graph.write(f"Iteration {frame}", 825, 20, size=50)
                 for widget in self.widgets.values():
