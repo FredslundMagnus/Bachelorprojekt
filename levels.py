@@ -270,7 +270,7 @@ class Coconuts(Level):
                 if pos in self.notUsed:
                     self.level[LayerType.Blocks].append(pos)
         if LayerType.Rock in self.uses:
-            for i in range(3):
+            for i in range(randint(1, 3)):
                 pos = (randint(2, self.shape[0] - 1), i + 1)
                 if pos in self.notUsed:
                     self.level[LayerType.Rock].append(pos)
@@ -278,11 +278,6 @@ class Coconuts(Level):
                         pos_nut = (randint(2, self.shape[0] - 1), i + 5)
                         if pos_nut in self.notUsed:
                             self.level[LayerType.Coconut].append(pos_nut)
-        if LayerType.Coconut in self.uses:
-            for _ in range(randint(0, 1)):
-                pos_nut = (randint(2, self.shape[0] - 2), randint(5, 7))
-                if pos_nut in self.notUsed:
-                    self.level[LayerType.Coconut].append(pos_nut)
         if LayerType.Dirt in self.uses:
             for pos in self.notUsed:
                 self.level[LayerType.Dirt].append(pos)
