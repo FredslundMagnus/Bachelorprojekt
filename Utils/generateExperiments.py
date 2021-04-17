@@ -198,7 +198,27 @@ def genExperiments(name, n=1, **params):
 # genExperiments(f"ReTest16", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=4, Counterfacts=1, Random_counterfacts=True)
 # genExperiments(f"ReTest17", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=4, Counterfacts=2, Random_counterfacts=True)
 # genExperiments(f"ReTest18", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=4, Counterfacts=3, Random_counterfacts=True)
-genExperiments(f"Option_Critic", n=1, hours=24, level=Levels.Causal2, main=option_critic_run)
+# genExperiments(f"Option_Critic", n=1, hours=24, level=Levels.Causal2, main=option_critic_run)
 
+
+genExperiments(f"Diamonds1_0.5_UCB1", n=3, hours=10, level=Levels.Causal2, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.5, graphMode=GraphMode.UCB1)
+genExperiments(f"Diamonds2_0.5_UCB1", n=3, hours=10, level=Levels.Causal5, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.5, graphMode=GraphMode.UCB1)
+genExperiments(f"Diamonds3_0.5_UCB1", n=3, hours=10, level=Levels.Causal6, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.5, graphMode=GraphMode.UCB1)
+genExperiments(f"Diamonds4_0.5_UCB1", n=3, hours=10, level=Levels.Causal7, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.5, graphMode=GraphMode.UCB1)
+
+# genExperiments(f"Diamonds1_0.5_var", n=3, hours=10, level=Levels.Causal2, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.5, graphMode=GraphMode.var)
+# genExperiments(f"Diamonds2_0.5_var", n=3, hours=10, level=Levels.Causal5, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.5, graphMode=GraphMode.var)
+# genExperiments(f"Diamonds3_0.5_var", n=3, hours=10, level=Levels.Causal6, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.5, graphMode=GraphMode.var)
+# genExperiments(f"Diamonds4_0.5_var", n=3, hours=10, level=Levels.Causal7, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.5, graphMode=GraphMode.var)
+
+# genExperiments(f"Diamonds1_0.0_UCB1", n=3, hours=10, level=Levels.Causal2, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.0, graphMode=GraphMode.UCB1)
+# genExperiments(f"Diamonds2_0.0_UCB1", n=3, hours=10, level=Levels.Causal5, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.0, graphMode=GraphMode.UCB1)
+# genExperiments(f"Diamonds3_0.0_UCB1", n=3, hours=10, level=Levels.Causal6, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.0, graphMode=GraphMode.UCB1)
+# genExperiments(f"Diamonds4_0.0_UCB1", n=3, hours=10, level=Levels.Causal7, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.0, graphMode=GraphMode.UCB1)
+
+# genExperiments(f"Diamonds1_0.0_var", n=3, hours=10, level=Levels.Causal2, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.0, graphMode=GraphMode.var)
+# genExperiments(f"Diamonds2_0.0_var", n=3, hours=10, level=Levels.Causal5, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.0, graphMode=GraphMode.var)
+# genExperiments(f"Diamonds3_0.0_var", n=3, hours=10, level=Levels.Causal6, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.0, graphMode=GraphMode.var)
+# genExperiments(f"Diamonds4_0.0_var", n=3, hours=10, level=Levels.Causal7, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.0, graphMode=GraphMode.var)
 
 file.close()
