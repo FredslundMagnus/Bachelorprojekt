@@ -225,6 +225,14 @@ def genExperiments(name, n=1, **params):
 
 # Jakob Good Data
 
-genExperiments(f"Diamonds4_0.0_var", n=3, hours=24, level=Levels.Causal3, main=CFagent)
-CF_convert, Counterfacts , TopN, Random_counterfacts
+genExperiments(f"Causal4_Cf_convert1_TopN6", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert = 1, TopN = 6)
+genExperiments(f"Causal4_Cf_convert2_TopN6", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert = 2, TopN = 6)
+genExperiments(f"Causal4_Cf_convert3_TopN6", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert = 3, TopN = 6)
+genExperiments(f"Causal4_Cf_convert4_TopN6", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert = 4, TopN = 6)
+genExperiments(f"Causal4_Cf_convert5_TopN6", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert = 5, TopN = 6)
+# genExperiments(f"Diamonds4_0.0_var", n=3, hours=24, level=Levels.Causal4, main=CFagent)
+# genExperiments(f"Diamonds4_0.0_var", n=3, hours=24, level=Levels.MonsterLevel, main=CFagent)
+# genExperiments(f"Diamonds4_0.0_var", n=3, hours=24, level=Levels.Coconuts, main=CFagent)
+# genExperiments(f"Diamonds4_0.0_var", n=3, hours=24, level=Levels.Rocks, main=CFagent)
+# TopN = 3 skal prøves også
 file.close()
