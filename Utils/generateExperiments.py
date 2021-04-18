@@ -222,4 +222,9 @@ def genExperiments(name, n=1, **params):
 # genExperiments(f"Diamonds2_0.0_var", n=3, hours=10, level=Levels.Causal5, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.0, graphMode=GraphMode.var)
 # genExperiments(f"Diamonds3_0.0_var", n=3, hours=10, level=Levels.Causal6, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.0, graphMode=GraphMode.var)
 # genExperiments(f"Diamonds4_0.0_var", n=3, hours=10, level=Levels.Causal7, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.0, graphMode=GraphMode.var)
+
+# Jakob Good Data
+
+genExperiments(f"Diamonds4_0.0_var", n=3, hours=24, level=Levels.Causal3, main=CFagent)
+CF_convert, Counterfacts , TopN, Random_counterfacts
 file.close()
