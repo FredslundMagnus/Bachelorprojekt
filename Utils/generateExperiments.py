@@ -2,7 +2,7 @@
 from main import Defaults, teleport, simple, CFagent, graphTrain, CFagentv2, GraphMode, option_critic_run
 from network import Networks
 from learner import Learners
-from levels import Levels, Rocks
+from levels import Levels
 from agent import CFAgent, Teleporter, Mover, Networks, Learners, Explorations
 
 file = open('Utils/experiments.sh', 'w')
@@ -222,4 +222,31 @@ def genExperiments(name, n=1, **params):
 # genExperiments(f"Diamonds2_0.0_var", n=3, hours=10, level=Levels.Causal5, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.0, graphMode=GraphMode.var)
 # genExperiments(f"Diamonds3_0.0_var", n=3, hours=10, level=Levels.Causal6, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.0, graphMode=GraphMode.var)
 # genExperiments(f"Diamonds4_0.0_var", n=3, hours=10, level=Levels.Causal7, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.0, graphMode=GraphMode.var)
+
+
+genExperiments(f"Lights1_teleport", n=3, hours=24, level=Levels.Causal3, main=teleport)
+genExperiments(f"Lights2_teleport", n=3, hours=24, level=Levels.Causal4, main=teleport)
+genExperiments(f"Diamonds1_teleport", n=3, hours=24, level=Levels.Causal2, main=teleport)
+genExperiments(f"Diamonds2_teleport", n=3, hours=24, level=Levels.Causal5, main=teleport)
+genExperiments(f"Diamonds3_teleport", n=3, hours=24, level=Levels.Causal6, main=teleport)
+genExperiments(f"Diamonds4_teleport", n=3, hours=24, level=Levels.Causal7, main=teleport)
+genExperiments(f"SuperLevel1_teleport", n=3, hours=24, level=Levels.SuperLevel, main=teleport)
+genExperiments(f"SuperLevel2_teleport", n=3, hours=24, level=Levels.SuperLevel2, main=teleport)
+genExperiments(f"Maze_teleport", n=3, hours=24, level=Levels.Maze, main=teleport)
+genExperiments(f"Rocks_teleport", n=3, hours=24, level=Levels.Rocks, main=teleport)
+genExperiments(f"Coconuts_teleport", n=3, hours=24, level=Levels.Coconuts, main=teleport)
+genExperiments(f"Monsters_teleport", n=3, hours=24, level=Levels.MonsterLevel, main=teleport)
+genExperiments(f"DoorsAndKey_teleport", n=3, hours=24, level=Levels.Causal1, main=teleport)
+
+# Jakob Good Data
+# genExperiments(f"Causal4_Cf_convert1_TopN6", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=1, TopN=6)
+# genExperiments(f"Causal4_Cf_convert2_TopN6", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=2, TopN=6)
+# genExperiments(f"Causal4_Cf_convert3_TopN6", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=3, TopN=6)
+# genExperiments(f"Causal4_Cf_convert4_TopN6", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=4, TopN=6)
+# genExperiments(f"Causal4_Cf_convert5_TopN6", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=5, TopN=6)
+# genExperiments(f"Diamonds4_0.0_var", n=3, hours=24, level=Levels.Causal4, main=CFagent)
+# genExperiments(f"Diamonds4_0.0_var", n=3, hours=24, level=Levels.MonsterLevel, main=CFagent)
+# genExperiments(f"Diamonds4_0.0_var", n=3, hours=24, level=Levels.Coconuts, main=CFagent)
+# genExperiments(f"Diamonds4_0.0_var", n=3, hours=24, level=Levels.Rocks, main=CFagent)
+# TopN = 3 skal prøves også
 file.close()

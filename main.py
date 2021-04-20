@@ -219,8 +219,8 @@ class Defaults:
     replay_size: int = 100000
     sample_size: int = 50
     CF_convert: int = 3
-    Counterfacts: int = 2
-    TopN: int = 5
+    Counterfacts: int = 1
+    TopN: int = 6
     Random_counterfacts: bool = False
 
 

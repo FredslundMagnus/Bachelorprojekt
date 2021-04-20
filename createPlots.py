@@ -1,21 +1,26 @@
 from plotter import Colors, Loc, Plot
 
 
-Plot(
-    title="Test Causal 2 and 5 Config",
-    data=[
-        ('Option_Critic', "Causal 2", Colors.blue),
-        ('causal5_demo', "Causal 5", Colors.red),
-    ],
-)
+# Diamonds plots
+for i in range(1, 5):
+    Plot(
+        title=f"Diamonds Explorer {i}",
+        loc=Loc.lowerRight,
+        data=[
+            (f"Diamonds{i}_0.5_UCB1", "UCB1 (stochastic)", Colors.blue),
+            (f"Diamonds{i}_0.5_var", "Uncertainty sampling (stochastic)", Colors.red),
+            (f"Diamonds{i}_0.0_UCB1", "UCB1 (deterministic)", Colors.green),
+            (f"Diamonds{i}_0.0_var", "Uncertainty sampling (deterministic)", Colors.brown),
+        ],
+    )
 
-Plot(
-    title="Test Causal",
-    loc=Loc.lowerRight,
-    data=[
-        ('causal2_demo', "Causal 2", Colors.blue),
-        ('causal5_demo', "Causal 5", Colors.red),
-        ('causal6_demo', "Causal 6", Colors.green),
-        ('causal7_demo', "Causal 7", Colors.brown),
-    ],
-)
+# Plot(
+#     title="Template",
+#     loc=Loc.lowerRight,
+#     data=[
+#         ("name1", "Title1", Colors.blue),
+#         ("name2", "Title2", Colors.red),
+#         ("name3", "Title3", Colors.green),
+#         ("name4", "Title4", Colors.brown),
+#     ],
+# )
