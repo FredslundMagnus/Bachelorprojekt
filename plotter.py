@@ -78,7 +78,7 @@ class Plotter():
             self.plt.axhline(y=2200, color='#E0E0E0', linestyle='dashed', lw=1, zorder=1)
             self.plt.axhline(y=2400, color='#E0E0E0', linestyle='dashed', lw=1, zorder=1)
             self.plt.legend(loc=self.loc)
-            self.plt.savefig(f"plots/{self.title.replace(' ', '_')}.png", bbox_inches='tight')
+            self.plt.savefig(f"plots/{self.title.replace(' ', '_')}.pdf", bbox_inches='tight')
         self.plt.clf()
 
     def normalize(self, *arrays):
