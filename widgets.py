@@ -170,7 +170,7 @@ class Toggle(Widget):
         self.pygame = pygame
         self.color = color
         self.isHolding = False
-        self.active = True
+        self.active = False
 
     def draw(self, screen) -> None:
         self.write(screen, "Minimize", 1405, 15, size=20)
