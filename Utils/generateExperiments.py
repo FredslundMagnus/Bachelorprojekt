@@ -239,15 +239,7 @@ def genExperiments(name, n=1, **params):
 # genExperiments(f"DoorsAndKey_teleport", n=3, hours=24, level=Levels.Causal1, main=teleport)
 
 # Jakob Good Data
-# genExperiments(f"Causal4_Cf_convert1_TopN6", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=1, TopN=6)
-# genExperiments(f"Causal4_Cf_convert2_TopN6", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=2, TopN=6)
-# genExperiments(f"Causal4_Cf_convert3_TopN6", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=3, TopN=6)
-# genExperiments(f"Causal4_Cf_convert4_TopN6", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=4, TopN=6)
-# genExperiments(f"Causal4_Cf_convert5_TopN6", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=5, TopN=6)
-genExperiments(f"Causal4_Cf_convert1_TopN3", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=1, TopN=3)
-genExperiments(f"Causal4_Cf_convert2_TopN3", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=2, TopN=3)
-genExperiments(f"Causal4_Cf_convert3_TopN3", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=3, TopN=3)
-genExperiments(f"Causal4_Cf_convert4_TopN3", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=4, TopN=3)
-genExperiments(f"Causal4_Cf_convert5_TopN3", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=5, TopN=3)
-# TopN = 3 skal prøves også
+
+genExperiments(f"MagicalLights2_convert3", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=3, TopN=1)
+genExperiments(f"MagicalLights2_convert4", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=4, TopN=1)
 file.close()
