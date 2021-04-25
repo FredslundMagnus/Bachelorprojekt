@@ -240,6 +240,8 @@ def genExperiments(name, n=1, **params):
 
 # Jakob Good Data
 
-genExperiments(f"MagicalLights2_convert3", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=3, TopN=1)
-genExperiments(f"MagicalLights2_convert4", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=4, TopN=1)
+genExperiments(f"MagicalLights2_convert3_TEST", n=2, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=3, TopN=3)
+genExperiments(f"MagicalLights2_convert4_TEST", n=2, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=4, TopN=3)
+genExperiments(f"Coconuts_convert3_TEST", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=3, TopN=3)
+genExperiments(f"Coconuts_convert4_TEST", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=4, TopN=3)
 file.close()
