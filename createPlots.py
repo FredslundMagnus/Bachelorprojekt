@@ -25,3 +25,29 @@ Plot(
         ("Causal4_Cf_convert5_TopN6", "convert5_Top3", Colors.orange),
     ],
 )
+
+envs = [
+    ('Lights1', 'Magical Lights 1'),
+    ('Lights2', 'Magical Lights 2'),
+    ('Diamonds1', 'Diamonds Explorer 1'),
+    ('Diamonds2', 'Diamonds Explorer 2'),
+    ('Diamonds3', 'Diamonds Explorer 3'),
+    ('Diamonds4', 'Diamonds Explorer 4'),
+    ('SuperLevel1', 'Superlevel 1'),
+    ('SuperLevel2', 'Superlevel 2'),
+    ('Maze', 'Maze'),
+    ('Rocks', 'Rocks'),
+    ('Coconuts', 'Coconuts'),
+    ('Monsters', 'Monsters'),
+    ('DoorsAndKey', 'DoorsAndKey')
+]
+
+# for env, name in envs:
+#     Plot(
+#         title=name,
+#         loc=Loc.lowerRight,
+#         data=[
+#             (f"{env}_simple", "Q-learn", Colors.blue),
+#             (f"{env}_teleport", "Teleport", Colors.pink),
+#         ],
+#     )
