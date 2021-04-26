@@ -144,7 +144,7 @@ def CFagentv2(defaults):
 
 class Defaults:
     name: str = "Agent"
-    main: function = player
+    main: function = CFagent
     level: Levels = Levels.Coconuts
     failed_actions_chance: float = 0.0
     hours: float = 12

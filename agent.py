@@ -167,6 +167,7 @@ class CFAgent(Agent):
         self.running_dones = [0 for _ in range(10000)]
         self.done_number = 0
         self.CF_count = 0
+        self.level = str(game.level)
 
     def __call__(self, board: Tensor) -> Tensor:
         self.values: Tensor = self.net.network(board)
@@ -184,19 +185,20 @@ class CFAgent(Agent):
         return actions
 
     def convert_values(self, values, tele_values):
-        values = (values + 1)/2
+        if str(self.level) == "Levels.MonsterLevel":
+            values = (values + 1)/2
         values[values > 1] = 1
         values[values < 0] = 0
         if self.convert_function == 1:
             learning_scores = values
         elif self.convert_function == 2:
-            learning_scores = (1 - abs(values - 0.75))
+            learning_scores = (1 - abs(values - 0.5))
         elif self.convert_function == 3:
-            learning_scores = values * softmax(tele_values * 4, dim=1)
+            learning_scores = values * softmax(tele_values * 3, dim=1)
         elif self.convert_function == 4:
-            learning_scores = (1 - abs(values - 0.75)) * softmax(tele_values * 4, dim=1)
+            learning_scores = (1 - abs(values - 0.5)) * softmax(tele_values * 3, dim=1)
         elif self.convert_function == 5:
-            learning_scores = softmax(tele_values * 4, dim=1)
+            learning_scores = softmax(tele_values * 3, dim=1)
         return learning_scores
 
     def _learn(self, state_after: Tensor, action: Tensor, reward: Tensor, done: Tensor, *args):
