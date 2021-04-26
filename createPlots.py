@@ -39,7 +39,7 @@ envs = [
     ('Rocks', 'Rocks'),
     ('Coconuts', 'Coconuts'),
     ('Monsters', 'Monsters'),
-    ('DoorsAndKey', 'DoorsAndKey')
+    ('DoorsAndKey', 'DoorsAndKey'),
 ]
 
 # for env, name in envs:
