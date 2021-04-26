@@ -44,7 +44,7 @@ envs = [
 
 # for env, name in envs:
 #     Plot(
-#         title=name,
+#         title=name+' Comparison',
 #         loc=Loc.lowerRight,
 #         data=[
 #             (f"{env}_simple", "Q-learn", Colors.blue),
