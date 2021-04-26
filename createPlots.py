@@ -33,13 +33,13 @@ envs = [
     ('Diamonds2', 'Diamonds Explorer 2'),
     ('Diamonds3', 'Diamonds Explorer 3'),
     ('Diamonds4', 'Diamonds Explorer 4'),
-    ('SuperLevel1', 'Superlevel 1'),
-    ('SuperLevel2', 'Superlevel 2'),
+    ('SuperLevel1', 'Super Level 1'),
+    ('SuperLevel2', 'Super Level 2'),
     ('Maze', 'Maze'),
-    ('Rocks', 'Rocks'),
+    ('Rocks', 'Rocks & Dirt'),
     ('Coconuts', 'Coconuts'),
     ('Monsters', 'Monsters'),
-    ('DoorsAndKey', 'DoorsAndKey'),
+    ('DoorsAndKey', 'Doors and Key'),
 ]
 
 # for env, name in envs:
