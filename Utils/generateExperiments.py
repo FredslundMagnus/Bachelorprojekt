@@ -254,8 +254,14 @@ def genExperiments(name, n=1, **params):
 
 # Jakob Good Data
 
-genExperiments(f"MagicalLights2_convert3_TEST", n=2, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=3, TopN=3)
-genExperiments(f"MagicalLights2_convert4_TEST", n=2, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=4, TopN=3)
-genExperiments(f"Coconuts_convert3_TEST", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=3, TopN=3)
-genExperiments(f"Coconuts_convert4_TEST", n=1, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=4, TopN=3)
+genExperiments(f"Causal3_Conver1", n=3, hours=24, level=Levels.Causal3, main=CFagent, CF_convert=1, TopN=3)
+genExperiments(f"Causal3_Conver2", n=3, hours=24, level=Levels.Causal3, main=CFagent, CF_convert=2, TopN=3)
+genExperiments(f"Causal4_Conver1", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=1, TopN=3)
+genExperiments(f"Causal4_Conver2", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=2, TopN=3)
+genExperiments(f"Coconuts_Conver1", n=3, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=1, TopN=3)
+genExperiments(f"Coconuts_Conver2", n=3, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=2, TopN=3)
+genExperiments(f"Maze_Conver1", n=3, hours=24, level=Levels.Maze, main=CFagent, CF_convert=1, TopN=3)
+genExperiments(f"Maze_Conver2", n=3, hours=24, level=Levels.Maze, main=CFagent, CF_convert=2, TopN=3)
+genExperiments(f"MonsterLevel_Conver1", n=3, hours=24, level=Levels.MonsterLevel, main=CFagent, CF_convert=1, TopN=3)
+genExperiments(f"MonsterLevel_Conver2", n=3, hours=24, level=Levels.MonsterLevel, main=CFagent, CF_convert=2, TopN=3)
 file.close()
