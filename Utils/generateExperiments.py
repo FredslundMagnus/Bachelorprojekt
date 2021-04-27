@@ -238,6 +238,20 @@ def genExperiments(name, n=1, **params):
 # genExperiments(f"Monsters_teleport", n=3, hours=24, level=Levels.MonsterLevel, main=teleport)
 # genExperiments(f"DoorsAndKey_teleport", n=3, hours=24, level=Levels.Causal1, main=teleport)
 
+# genExperiments(f"Lights1_simple", n=3, hours=24, level=Levels.Causal3, main=simple, network2=Networks.MiniBig)
+# genExperiments(f"Lights2_simple", n=3, hours=24, level=Levels.Causal4, main=simple, network2=Networks.MiniBig)
+# genExperiments(f"Diamonds1_simple", n=3, hours=24, level=Levels.Causal2, main=simple, network2=Networks.MiniBig)
+# genExperiments(f"Diamonds2_simple", n=3, hours=24, level=Levels.Causal5, main=simple, network2=Networks.MiniBig)
+# genExperiments(f"Diamonds3_simple", n=3, hours=24, level=Levels.Causal6, main=simple, network2=Networks.MiniBig)
+# genExperiments(f"Diamonds4_simple", n=3, hours=24, level=Levels.Causal7, main=simple, network2=Networks.MiniBig)
+# genExperiments(f"SuperLevel1_simple", n=3, hours=24, level=Levels.SuperLevel, main=simple, network2=Networks.MiniBig)
+# genExperiments(f"SuperLevel2_simple", n=3, hours=24, level=Levels.SuperLevel2, main=simple, network2=Networks.MiniBig)
+# genExperiments(f"Maze_simple", n=3, hours=24, level=Levels.Maze, main=simple, network2=Networks.MiniBig)
+# genExperiments(f"Rocks_simple", n=3, hours=24, level=Levels.Rocks, main=simple, network2=Networks.MiniBig)
+# genExperiments(f"Coconuts_simple", n=3, hours=24, level=Levels.Coconuts, main=simple, network2=Networks.MiniBig)
+# genExperiments(f"Monsters_simple", n=3, hours=24, level=Levels.MonsterLevel, main=simple, network2=Networks.MiniBig)
+# genExperiments(f"DoorsAndKey_simple", n=3, hours=24, level=Levels.Causal1, main=simple, network2=Networks.MiniBig)
+
 # Jakob Good Data
 
 genExperiments(f"MagicalLights2_convert3_TEST", n=2, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=3, TopN=3)
