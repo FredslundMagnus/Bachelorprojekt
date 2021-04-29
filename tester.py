@@ -17,7 +17,7 @@ def test_simple():
 
 
 def test_teleport():
-    with Load("MagicalLights2_convert4", num=0) as load:
+    with Load("MagicalLights2_convert4_TEST", num=1) as load:
         collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
         #teleporter.exploration.explore = teleporter.exploration.greedy
         intervention_idx, modified_board = teleporter.pre_process(env)
