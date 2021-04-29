@@ -30,11 +30,11 @@ def createFolders(name):
         file.write(f"mkdir ../outputs/{name}/{folder}\n")
 
 
-def genExperiments(name, n=1, **params):
+def genExperiments(name, n=1, cpu=False, **params):
     createFolders(name)
     check(params)
     for i in range(n):
-        file.write(f'bsub -o "../outputs/{name}/Markdown/{name}_{i}.md" -J "{name}_{i}" -P "-name {name}-{i} {" ".join(f"-{name} {value}" for name, value in params.items())}" < submit.sh\n')
+        file.write(f'bsub -o "../outputs/{name}/Markdown/{name}_{i}.md" -J "{name}_{i}" -P "-name {name}-{i} {" ".join(f"-{name} {value}" for name, value in params.items())}" < submit_{"cpu" if cpu else "gpu"}.sh\n')
 
 #genExperiments(f"teleport_short", hours=3.0)
 #genExperiments(f"teleport_normal", hours=16)
