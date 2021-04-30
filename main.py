@@ -144,9 +144,9 @@ def CFagentv2(defaults):
 
 class Defaults:
     name: str = "Agent"
-    main: function = option_critic_run
-    level: Levels = Levels.MonsterLevel
-    failed_actions_chance: float = 0.0
+    main: function = graphTrain
+    level: Levels = Levels.Causal2
+    failed_actions_chance: float = 0.5
     hours: float = 12
     batch: int = 100
     width: int = 9

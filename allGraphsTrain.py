@@ -5,6 +5,7 @@ from collector import Collector
 from save import Save
 from torch import tensor, cat
 from auxillaries import loop
+from BayesianNN import BayesionNN
 
 
 def graphTrain(defaults):
@@ -15,6 +16,8 @@ def graphTrain(defaults):
     mover = Mover(env, _extra_dim=1, **defaults)
     teleporter = Teleporter(env, **defaults)
     collector = Collector(**defaults)
+    model = BayesionNN(layers)
+    use_model=False
 
     with Save(env, collector, mover, data, **defaults) as save:
         convert = [env.layers.types.index(layer) for layer in layers]
@@ -27,8 +30,8 @@ def graphTrain(defaults):
         for frame in loop(env, collector, save, teleporter=teleporter):
             data.t = frame
             new_states = [state for state in states(env.board, convert, layers)]
-            transform(old_states, new_states, dones, rewards, data, layers)
-            transformNot(env.board, new_states, player, goal, convert, data, layers)
+            loss = transform(old_states, new_states, dones, rewards, data, layers, model, use_model=use_model)
+            loss = transformNot(env.board, new_states, player, goal, convert, data, layers, model, use_model=use_model)
             stateChanged = [old != new for old, new in zip(old_states, new_states)]
             shouldInterviene = [cond1 or cond2 for cond1, cond2 in zip(stateChanged, eatCheese)]
             exploration = max((explorationN-frame)/explorationN, defaults['softmax_cap'])
@@ -44,3 +47,4 @@ def graphTrain(defaults):
             eatCheese = [intervention == player_pos for intervention, player_pos in zip(teleporter.interventions, playerPositions)]
             old_states = new_states
             collector.collect([rewards, modified_rewards], [dones, modified_dones])
+            collector.collect_loss(loss)

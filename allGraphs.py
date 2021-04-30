@@ -134,20 +134,30 @@ def UCB1(state: FrozenSet[LayerType], data: Data) -> LayerType:
     return min(data.layers_not_in(state), key=lambda layer: data.expected_moves_UCB1(state, layer))
 
 
-def transform(old_states: List[FrozenSet[LayerType]], new_states: List[FrozenSet[LayerType]], dones: Tensor, rewards: Tensor, data: Data, layers: List[LayerType]) -> None:
+def transform(old_states: List[FrozenSet[LayerType]], new_states: List[FrozenSet[LayerType]], dones: Tensor, rewards: Tensor, data: Data, layers: List[LayerType], model, use_model) -> None:
+    loss = 0
     for old_state, new_state, done, reward in zip(old_states, new_states, dones.tolist(), rewards.tolist()):
         if reward:
+            if use_model:
+                loss += model.learn(LayerType.Goal, old_state, True)
             data.satisfiable(LayerType.Goal, old_state)
         elif not done and old_state != new_state:
             for layer in new_state.difference(old_state):
+                if use_model:
+                    loss += model.learn(layer, old_state, True)
                 data.satisfiable(layer, old_state)
+    return loss
 
 
-def transformNot(boards: Tensor, states: List[FrozenSet[LayerType]], player: int, goal: int, convert: List[int], data: Data, layers: List[LayerType]) -> None:
+def transformNot(boards: Tensor, states: List[FrozenSet[LayerType]], player: int, goal: int, convert: List[int], data: Data, layers: List[LayerType], model, use_model) -> None:
+    loss = 0
     for board, state in zip(boards, states):
         for layer, i in zip(layers + [LayerType.Goal], convert + [goal]):
             if (board[player] * board[i]).sum().item():
+                if use_model:
+                    loss += model.learn(layer, state, False)
                 data.unsatisfiable(layer, state)
+    return loss
 
 
 def format(env: Game, layer: LayerType) -> List[bool]:
