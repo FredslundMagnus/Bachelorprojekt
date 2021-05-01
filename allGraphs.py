@@ -179,7 +179,6 @@ def getInterventionsmodel(state, all_layers, layers, model, env, not_in):
         br, ba = recursiveBEST(layers, state, model.depth, model, all_layers, 1, env, not_in)
     else:
         br, ba = recursiveExplore(layers, state, model.depth-2, model, all_layers, 1, env, not_in)
-    print(br, ba)
     return format(env, ba)
 
 def recursiveBEST(layers, state, depth, model, all_layers, reward_trace, env, not_in):
