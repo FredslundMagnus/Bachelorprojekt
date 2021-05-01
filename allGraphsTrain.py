@@ -35,7 +35,10 @@ def graphTrain(defaults):
             stateChanged = [old != new for old, new in zip(old_states, new_states)]
             shouldInterviene = [cond1 or cond2 for cond1, cond2 in zip(stateChanged, eatCheese)]
             exploration = max((explorationN-frame)/explorationN, defaults['softmax_cap'])
-            interventions = [(getInterventions(env, state, data, exploration) if should else old) for state, should, old in zip(new_states, shouldInterviene, interventions)]
+            if use_model:
+                interventions = [(getInterventionsmodel(state, env.layers.types, layers, model) if should else old) for state, should, old in zip(new_states, shouldInterviene, interventions)]
+            else:
+                interventions = [(getInterventions(env, state, data, exploration) if should else old) for state, should, old in zip(new_states, shouldInterviene, interventions)]
             modification = env.board[tensor(interventions)].unsqueeze(1)
             teleporter.interventions = tensor([m.flatten().argmax().item() for m in list(modification)], device=device)
             modified_board = cat((env.board, modification), dim=1)

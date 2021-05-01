@@ -55,5 +55,11 @@ class BayesionNN:
         input, label = self.convert_data(action, state, satisfied)
         return self.network.learn(input, label)
 
-    def predict(self, data):
-        return self.network.forward(data)
+    def predict(self, action, state, satisfied=True):
+        input, label = self.convert_data(action, state, satisfied)
+        return self.network.forward(input.unsqueeze(0)).detach()
+
+    def predict_no_convert(self, action, state):
+        state[0, self.names[action.name] + len(self.names)] = 1
+        return self.network.forward(state).detach()
+     
