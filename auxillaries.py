@@ -133,6 +133,7 @@ def run(Defaults):
     print("Start")
     print(isServer)
     print(sys.argv[0].split("\\")[-1].split("/")[-1] == "main.py")
+    print(sys.argv)
     disablePrint()
     if sys.argv[0].split("\\")[-1].split("/")[-1] == "main.py":
         (serverRun if isServer else Defaults.main).__call__(getvals(Defaults))
