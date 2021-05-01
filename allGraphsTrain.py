@@ -16,7 +16,7 @@ def graphTrain(defaults):
     mover = Mover(env, _extra_dim=1, **defaults)
     teleporter = Teleporter(env, **defaults)
     collector = Collector(**defaults)
-    model = BayesionNN(layers)
+    model = BayesionNN(layers, depth=4, exploration=0.5, samples=5)
     use_model=False
 
     with Save(env, collector, mover, data, **defaults) as save:

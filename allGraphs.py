@@ -174,11 +174,11 @@ def getInterventions(env: Game, state: FrozenSet[LayerType], data: Data, explora
         return format(env, bestIntervention(state, data))
     return format(env, rightIntervention(state, data))
 
-def getInterventionsmodel(state, all_layers, layers, model, depth=4, exploration=0):
-    if random() <= exploration:
-        br, ba = recursiveBEST(layers, state, depth, model, all_layers, reward_trace=1)
+def getInterventionsmodel(state, all_layers, layers, model):
+    if random() <= model.exploration:
+        br, ba = recursiveBEST(layers, state, model.depth, model, all_layers, reward_trace=1)
     else:
-        br, ba = recursiveExplore(layers, state, depth-2, model, all_layers, reward_trace=1)
+        br, ba = recursiveExplore(layers, state, model.depth-2, model, all_layers, reward_trace=1)
     print(br, ba)
     return ba
 
@@ -191,7 +191,7 @@ def recursiveBEST(layers, state, depth, model, all_layers, reward_trace):
     i = 0
     for layer in all_layers:
         if layer in layers or layer.name == "Goal":
-            if depth == 4:
+            if depth == model.depth:
                 prediction = model.predict(layer, state)
             else:
                 prediction = model.predict_no_convert(layer, state)
@@ -213,14 +213,14 @@ def recursiveExplore(layers, state, depth, model, all_layers, reward_trace):
     i = 0
     for layer in all_layers:
         if layer in layers or layer.name == "Goal":
-            for j in range(5):
+            for j in range(model.samples):
                 if j == 0:
-                    if depth == 2:
+                    if depth == model.depth-2:
                         prediction = model.predict(layer, state)
                     else:
                         prediction = model.predict_no_convert(layer, state)
                 else: 
-                    if depth == 2:
+                    if depth == model.depth-2:
                         prediction = torch.cat((prediction, model.predict(layer, state)), dim=0)
                     else:
                         prediction = torch.cat((prediction, model.predict_no_convert(layer, state)), dim=0) 

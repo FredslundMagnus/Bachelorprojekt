@@ -30,12 +30,15 @@ class Network(nn.Module):
 
 
 class BayesionNN:
-    def __init__(self, layers):
+    def __init__(self, layers, depth, exploration, samples):
         self.network = Network(layers).to(device)
         self.names = {}
         for key in layers:
             self.names[key.name] = len(self.names)
         self.names["Goal"] = len(self.names)
+        self.depth = depth
+        self.exploration = exploration
+        self.samples = samples
 
     def convert_data(self, action, state, satisfied):
         input = torch.zeros(len(self.names)*2, device=device)
