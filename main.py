@@ -144,7 +144,7 @@ def CFagentv2(defaults):
 
 class Defaults:
     name: str = "Agent"
-    main: function = graphTrain
+    main: function = teleport
     level: Levels = Levels.Causal2
     failed_actions_chance: float = 0.5
     hours: float = 0.2
