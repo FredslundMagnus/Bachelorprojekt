@@ -16,7 +16,7 @@ def graphTrain(defaults):
     mover = Mover(env, _extra_dim=1, **defaults)
     teleporter = Teleporter(env, **defaults)
     collector = Collector(**defaults)
-    model = BayesionNN(layers, depth=4, exploration=0.5, samples=5)
+    model = BayesionNN(layers, depth=3, exploration=0, samples=5)
     use_model=False
 
     with Save(env, collector, mover, data, **defaults) as save:
@@ -36,7 +36,7 @@ def graphTrain(defaults):
             shouldInterviene = [cond1 or cond2 for cond1, cond2 in zip(stateChanged, eatCheese)]
             exploration = max((explorationN-frame)/explorationN, defaults['softmax_cap'])
             if use_model:
-                interventions = [(getInterventionsmodel(state, env.layers.types, layers, model) if should else old) for state, should, old in zip(new_states, shouldInterviene, interventions)]
+                interventions = [(getInterventionsmodel(state, env.layers.types, layers, model, env, data.layers_not_in(state)) if should else old) for state, should, old in zip(new_states, shouldInterviene, interventions)]
             else:
                 interventions = [(getInterventions(env, state, data, exploration) if should else old) for state, should, old in zip(new_states, shouldInterviene, interventions)]
             modification = env.board[tensor(interventions)].unsqueeze(1)

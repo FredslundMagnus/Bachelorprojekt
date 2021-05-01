@@ -1,6 +1,7 @@
 # https://github.com/lweitkamp/option-critic-pytorch/blob/master/main.py
 # https://github.com/lweitkamp/option-critic-pytorch/blob/master/option_critic.py
 
+from Utils.debug import disablePrint, enablePrint
 from allGraphs import GraphMode
 from game import Game, Levels
 from agent import Teleporter, Mover, Networks, Learners, Explorations, MetaTeleporter, CFAgent
@@ -48,6 +49,10 @@ def teleport(defaults):
     mover = Mover(env, _extra_dim=1, **defaults)
     teleporter = Teleporter(env, **defaults)
     buffer = ReplayBuffer(**defaults)
+    enablePrint()
+    print(defaults)
+    disablePrint()
+    quit()
 
     with Save(env, collector, mover, teleporter, **defaults) as save:
         intervention_idx, modified_board = teleporter.pre_process(env)
