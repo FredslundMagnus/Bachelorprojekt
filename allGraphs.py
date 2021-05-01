@@ -177,7 +177,7 @@ def getInterventions(env: Game, state: FrozenSet[LayerType], data: Data, explora
     return format(env, rightIntervention(state, data))
 
 def getInterventionsmodel(state, all_layers, layers, model, env, not_in, frame):
-    if random() >= model.exploration - (frame/10000):
+    if random() >= (model.exploration - frame)/model.exploration:
         br, ba = recursiveBEST(layers, state, model.depth, model, all_layers, 1, env, not_in)
     else:
         br, ba = recursiveExplore(layers, state, model.depth-2, model, all_layers, 1, env, not_in)

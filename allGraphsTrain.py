@@ -18,9 +18,8 @@ def graphTrain(defaults):
     mover = Mover(env, _extra_dim=1, **defaults)
     teleporter = Teleporter(env, **defaults)
     collector = Collector(**defaults)
-    model = BayesionNN(layers, depth=3, exploration=1, samples=5)
-    use_model=False
-
+    model = BayesionNN(layers, depth=defaults['depth'], exploration=defaults['model_explore'], samples=defaults['samples'])
+    use_model=defaults['use_model']
     with Save(env, collector, mover, data, **defaults) as save:
         convert = [env.layers.types.index(layer) for layer in layers]
         player = env.layers.types.index(LayerType.Player)

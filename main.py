@@ -149,9 +149,13 @@ def CFagentv2(defaults):
 
 class Defaults:
     name: str = "Agent"
-    main: function = player
+    main: function = graphTrain
     level: Levels = Levels.CausalSuper
     failed_actions_chance: float = 0
+    use_model: bool = True
+    depth: int = 3
+    model_explore: int = 1000000
+    samples: int = 5
     hours: float = 0.2
     batch: int = 100
     width: int = 9
@@ -166,7 +170,7 @@ class Defaults:
     gamma1: float = 0.98
 
     network2: Networks = Networks.Mini
-    K2: float = 20
+    K2: float = 1000000
     learner2: Learners = Learners.Qlearn
     exploration2: Explorations = Explorations.epsilonGreedy
     gamma2: float = 0.95
