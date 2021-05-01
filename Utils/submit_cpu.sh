@@ -9,4 +9,4 @@ cd ..
 module -s load python3
 source ../project-env/bin/activate
 
-python main.py $LSB_PROJECT_NAME
+python main.py $MYARGS
