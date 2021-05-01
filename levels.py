@@ -257,6 +257,21 @@ class Causal5(Level):
 
         return True
 
+class CausalSuper(Level):
+    def generate(self):
+        nutters = []
+        for layer in [LayerType.Player, LayerType.Goal]:
+            if layer in self.uses:
+                self.level[layer].append(choice(self.notUsed))
+        removed = False
+        for layer in [LayerType.Super1, LayerType.Super2, LayerType.Super3, LayerType.Super4, LayerType.Super5, LayerType.Super6, LayerType.Super7]:
+            if random() > 0.8 and not removed:
+                removed = True
+                continue
+            if layer in self.uses:
+                self.level[layer].append(choice(self.notUsed))
+        return True
+
 
 class Coconuts(Level):
     def generate(self):
@@ -464,3 +479,4 @@ class Levels(Enum):
     Causal5 = Causal5
     Causal6 = Causal6
     Causal7 = Causal7
+    CausalSuper = CausalSuper

@@ -637,6 +637,115 @@ class Purplecross(Layer):
     def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
         return not self.positions[batch]
 
+class Super1(Layer):
+    color = Colors.purple
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch]:
+            self.remove(batch, pos)
+    def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
+        return True
+
+class Super2(Layer):
+    color = Colors.green
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        blocked = LayerType.Super1 in layersDict and bool(layersDict[LayerType.Super1].positions[batch])
+        if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch] and not blocked:
+            self.remove(batch, pos)
+
+    def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
+        return True
+
+class Super3(Layer):
+    color = Colors.pink
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        blocked = LayerType.Super1 in layersDict and bool(layersDict[LayerType.Super1].positions[batch])
+        if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch] and not blocked:
+            self.remove(batch, pos)
+
+    def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
+        return True
+
+class Super4(Layer):
+    color = Colors.red
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        blocked = LayerType.Super1 in layersDict and bool(layersDict[LayerType.Super1].positions[batch])
+        if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch] and not blocked:
+            self.remove(batch, pos)
+
+    def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
+        return True
+
+class Super5(Layer):
+    color = Colors.orange
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        Super2 = (LayerType.Super2 in layersDict and bool(layersDict[LayerType.Super2].positions[batch]))
+        Super3 = (LayerType.Super3 in layersDict and bool(layersDict[LayerType.Super3].positions[batch]))
+        Super4 = (LayerType.Super4 in layersDict and bool(layersDict[LayerType.Super4].positions[batch]))
+        open = ((not Super2) and (not Super3) and (Super4)) or ((not Super2) and (Super3) and (not Super4)) or ((Super2) and (not Super3) and (not Super4))
+        if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch] and open:
+            self.remove(batch, pos)
+
+    def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
+        return not self.positions[batch]
+
+class Super6(Layer):
+    color = Colors.blue
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        Super5 = (LayerType.Super5 in layersDict and bool(layersDict[LayerType.Super5].positions[batch]))
+        Super2 = (LayerType.Super2 in layersDict and bool(layersDict[LayerType.Super2].positions[batch]))
+        Super7 = (LayerType.Super7 in layersDict and bool(layersDict[LayerType.Super7].positions[batch]))
+        open = ((not Super5) and (Super2) and (Super7)) or ((Super5) and (not Super2) and (Super7)) or ((Super5) and (Super2) and (not Super7))
+        if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch] and open:
+            self.remove(batch, pos)
+
+    def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
+        return not self.positions[batch]
+
+class Super7(Layer):
+    color = Colors.black
+    size = 0.2
+    blocking = False
+    shape = Shape.Square
+
+    def check(self, batch: int, layersDict: Dict[LayerType, Layer], action, board) -> None:
+        Super5 = (LayerType.Super5 in layersDict and bool(layersDict[LayerType.Super5].positions[batch]))
+        Super6 = (LayerType.Super6 in layersDict and bool(layersDict[LayerType.Super6].positions[batch]))
+        Super4 = (LayerType.Super4 in layersDict and bool(layersDict[LayerType.Super4].positions[batch]))
+        Super3 = (LayerType.Super3 in layersDict and bool(layersDict[LayerType.Super3].positions[batch]))
+        open = ((not Super5) and (not Super6) and (not Super4) and (Super3)) or ((not Super3) and (Super5) and (Super6) and (Super4))
+        if (pos := layersDict[LayerType.Player].positions[batch][0]) in self.positions[batch] and open:
+            self.remove(batch, pos)
+
+    def isDone(self, batch: int, layersDict: Dict[LayerType, Layer]) -> bool:
+        return not self.positions[batch]
+
+
+
+
 
 class Layers:
     def __init__(self, batch: int, width: int, height: int, level, reset_chance: float, failed_actions_chance: float, *layers: Tuple[LayerType]) -> None:
