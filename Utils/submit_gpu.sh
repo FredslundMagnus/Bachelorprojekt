@@ -1,5 +1,4 @@
 #!/bin/sh
-#BSUB -q hpc
 #BSUB -q gpuv100
 #BSUB -gpu "num=1:mode=exclusive_process"
 #BSUB -n 1
@@ -11,5 +10,5 @@ cd ..
 module -s load python3
 source ../project-env/bin/activate
 
-python main.py $LSB_PROJECT_NAME
+python main.py $MYARGS
 

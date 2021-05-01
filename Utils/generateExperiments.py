@@ -30,11 +30,11 @@ def createFolders(name):
         file.write(f"mkdir ../outputs/{name}/{folder}\n")
 
 
-def genExperiments(name, n=1, **params):
+def genExperiments(name, n=1, cpu=False, **params):
     createFolders(name)
     check(params)
     for i in range(n):
-        file.write(f'bsub -o "../outputs/{name}/Markdown/{name}_{i}.md" -J "{name}_{i}" -P "-name {name}-{i} {" ".join(f"-{name} {value}" for name, value in params.items())}" < submit.sh\n')
+        file.write(f'bsub -o "../outputs/{name}/Markdown/{name}_{i}.md" -J "{name}_{i}" -env MYARGS="-name {name}-{i} {" ".join(f"-{name} {value}" for name, value in params.items())}" < submit_{"cpu" if cpu else "gpu"}.sh\n')
 
 #genExperiments(f"teleport_short", hours=3.0)
 #genExperiments(f"teleport_normal", hours=16)
@@ -254,14 +254,31 @@ def genExperiments(name, n=1, **params):
 
 # Jakob Good Data
 
-genExperiments(f"Causal3_Conver1", n=3, hours=24, level=Levels.Causal3, main=CFagent, CF_convert=1, TopN=3)
-genExperiments(f"Causal3_Conver2", n=3, hours=24, level=Levels.Causal3, main=CFagent, CF_convert=2, TopN=3)
-genExperiments(f"Causal4_Conver1", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=1, TopN=3)
-genExperiments(f"Causal4_Conver2", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=2, TopN=3)
-genExperiments(f"Coconuts_Conver1", n=3, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=1, TopN=3)
-genExperiments(f"Coconuts_Conver2", n=3, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=2, TopN=3)
-genExperiments(f"Maze_Conver1", n=3, hours=24, level=Levels.Maze, main=CFagent, CF_convert=1, TopN=3)
-genExperiments(f"Maze_Conver2", n=3, hours=24, level=Levels.Maze, main=CFagent, CF_convert=2, TopN=3)
-genExperiments(f"MonsterLevel_Conver1", n=3, hours=24, level=Levels.MonsterLevel, main=CFagent, CF_convert=1, TopN=3)
-genExperiments(f"MonsterLevel_Conver2", n=3, hours=24, level=Levels.MonsterLevel, main=CFagent, CF_convert=2, TopN=3)
+# genExperiments(f"Causal3_Conver1", n=3, hours=24, level=Levels.Causal3, main=CFagent, CF_convert=1, TopN=3)
+# genExperiments(f"Causal3_Conver2", n=3, hours=24, level=Levels.Causal3, main=CFagent, CF_convert=2, TopN=3)
+# genExperiments(f"Causal4_Conver1", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=1, TopN=3)
+# genExperiments(f"Causal4_Conver2", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=2, TopN=3)
+# genExperiments(f"Coconuts_Conver1", n=3, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=1, TopN=3)
+# genExperiments(f"Coconuts_Conver2", n=3, hours=24, level=Levels.Coconuts, main=CFagent, CF_convert=2, TopN=3)
+# genExperiments(f"Maze_Conver1", n=3, hours=24, level=Levels.Maze, main=CFagent, CF_convert=1, TopN=3)
+# genExperiments(f"Maze_Conver2", n=3, hours=24, level=Levels.Maze, main=CFagent, CF_convert=2, TopN=3)
+# genExperiments(f"MonsterLevel_Conver1", n=3, hours=24, level=Levels.MonsterLevel, main=CFagent, CF_convert=1, TopN=3)
+# genExperiments(f"MonsterLevel_Conver2", n=3, hours=24, level=Levels.MonsterLevel, main=CFagent, CF_convert=2, TopN=3)
+
+# genExperiments(f"Lights1_option_critic", n=3, hours=72, level=Levels.Causal3, main=option_critic_run, cpu=True, batch=25)
+# genExperiments(f"Lights2_option_critic", n=3, hours=72, level=Levels.Causal4, main=option_critic_run, cpu=True, batch=25)
+# genExperiments(f"Diamonds1_option_critic", n=3, hours=72, level=Levels.Causal2, main=option_critic_run, cpu=True, batch=25)
+# genExperiments(f"Diamonds2_option_critic", n=3, hours=72, level=Levels.Causal5, main=option_critic_run, cpu=True, batch=25)
+# genExperiments(f"Diamonds3_option_critic", n=3, hours=72, level=Levels.Causal6, main=option_critic_run, cpu=True, batch=25)
+# genExperiments(f"Diamonds4_option_critic", n=3, hours=72, level=Levels.Causal7, main=option_critic_run, cpu=True, batch=25)
+# genExperiments(f"SuperLevel1_option_critic", n=3, hours=72, level=Levels.SuperLevel, main=option_critic_run, cpu=True, batch=25)
+# genExperiments(f"SuperLevel2_option_critic", n=3, hours=72, level=Levels.SuperLevel2, main=option_critic_run, cpu=True, batch=25)
+# genExperiments(f"Maze_option_critic", n=3, hours=72, level=Levels.Maze, main=option_critic_run, cpu=True, batch=25)
+# genExperiments(f"Rocks_option_critic", n=3, hours=72, level=Levels.Rocks, main=option_critic_run, cpu=True, batch=25)
+# genExperiments(f"Coconuts_option_critic", n=3, hours=72, level=Levels.Coconuts, main=option_critic_run, cpu=True, batch=25)
+# genExperiments(f"Monsters_option_critic", n=3, hours=72, level=Levels.MonsterLevel, main=option_critic_run, cpu=True, batch=25)
+# genExperiments(f"DoorsAndKey_option_critic", n=3, hours=72, level=Levels.Causal1, main=option_critic_run, cpu=True, batch=25)
+
+genExperiments(f"Test_CPU", n=1, hours=0.1, level=Levels.Causal3, main=option_critic_run, cpu=True, batch=25)
+
 file.close()
