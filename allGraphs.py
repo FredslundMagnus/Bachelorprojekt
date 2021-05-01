@@ -174,45 +174,38 @@ def getInterventions(env: Game, state: FrozenSet[LayerType], data: Data, explora
         return format(env, bestIntervention(state, data))
     return format(env, rightIntervention(state, data))
 
-def getInterventionsmodel(state, all_layers, layers, model):
+def getInterventionsmodel(state, all_layers, layers, model, env, not_in):
     if random() <= model.exploration:
-        br, ba = recursiveBEST(layers, state, model.depth, model, all_layers, reward_trace=1)
+        br, ba = recursiveBEST(layers, state, model.depth, model, all_layers, 1, env, not_in)
     else:
-        br, ba = recursiveExplore(layers, state, model.depth-2, model, all_layers, reward_trace=1)
+        br, ba = recursiveExplore(layers, state, model.depth-2, model, all_layers, 1, env, not_in)
     print(br, ba)
-    return ba
+    return format(env, ba)
 
-def recursiveBEST(layers, state, depth, model, all_layers, reward_trace):
+def recursiveBEST(layers, state, depth, model, all_layers, reward_trace, env, not_in):
     if depth == 0:
         return 0, None
     best_reward = 0
     best_action = [False for _ in range(len(all_layers))]
-    best_action[0] = True
-    i = 0
     for layer in all_layers:
-        if layer in layers or layer.name == "Goal":
+        if layer in not_in:
             if depth == model.depth:
                 prediction = model.predict(layer, state)
             else:
                 prediction = model.predict_no_convert(layer, state)
-            reward, _ = recursiveBEST(layers, prediction, depth-1, model, all_layers, reward_trace*(1 - prediction[0, len(layers)]))
+            reward, _ = recursiveBEST(layers, prediction, depth-1, model, all_layers, reward_trace*(1 - prediction[0, len(layers)]), env, not_in)
             reward += prediction[0, len(layers)] * reward_trace
             if reward > best_reward:
-                ba = [False for _ in range(len(all_layers))]
-                ba[i] = True
-                best_reward, best_action = reward, ba
-        i += 1
+                best_reward, best_action = reward, layer
     return best_reward, best_action
 
-def recursiveExplore(layers, state, depth, model, all_layers, reward_trace):
+def recursiveExplore(layers, state, depth, model, all_layers, reward_trace, env, not_in):
     if depth == 0:
         return 0, None
     best_reward = 0
     best_action = [False for _ in range(len(all_layers))]
-    best_action[0] = True
-    i = 0
     for layer in all_layers:
-        if layer in layers or layer.name == "Goal":
+        if layer in not_in:
             for j in range(model.samples):
                 if j == 0:
                     if depth == model.depth-2:
@@ -226,11 +219,8 @@ def recursiveExplore(layers, state, depth, model, all_layers, reward_trace):
                         prediction = torch.cat((prediction, model.predict_no_convert(layer, state)), dim=0) 
             mean_pred = torch.mean(prediction, 0).unsqueeze(0)
             var_pred = torch.var(prediction, 0).unsqueeze(0)
-            reward, _ = recursiveExplore(layers, mean_pred, depth-1, model, all_layers, reward_trace*(1 - prediction[0, len(layers)]))
+            reward, _ = recursiveExplore(layers, mean_pred, depth-1, model, all_layers, reward_trace*(1 - prediction[0, len(layers)]), env, not_in)
             reward += torch.sum(var_pred) * reward_trace
             if reward > best_reward:
-                ba = [False for _ in range(len(all_layers))]
-                ba[i] = True
-                best_reward, best_action = reward * reward_trace, ba
-        i += 1
+                best_reward, best_action = reward * reward_trace, layer
     return best_reward, best_action
