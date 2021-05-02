@@ -109,7 +109,7 @@ class OptionCriticConv(nn.Module):
 
     @property
     def K_(self):
-        return max(self.temperature, self.temperature * (5000000 / self.num_steps))
+        return max(self.temperature, self.temperature * (1000000 / self.num_steps))
 
 
 
@@ -132,7 +132,7 @@ def critic_loss_fn(model, model_prime, data_batch):
     next_options_term_prob = next_termination_probs[batch_idx, options]
 
     # Now we can calculate the update target gt
-    gt = rewards + masks * 0.99 * \
+    gt = rewards + masks * 0.95 * \
         ((1 - next_options_term_prob) * next_Q_prime[batch_idx, options] + next_options_term_prob * next_Q_prime.max(dim=-1)[0])
 
     # to update Q we want to use the actual network, not the prime
@@ -152,7 +152,7 @@ def actor_loss_fn(obs, option, logp, entropy, reward, done, next_obs, model, mod
     next_Q_prime = model_prime.get_Q(next_state_prime).detach().squeeze()
 
     # Target update gt
-    gt = reward + (1 - done) * 0.99 * ((1 - next_option_term_prob) * next_Q_prime[option] + next_option_term_prob * next_Q_prime.max(dim=-1)[0])
+    gt = reward + (1 - done) * 0.98 * ((1 - next_option_term_prob) * next_Q_prime[option] + next_option_term_prob * next_Q_prime.max(dim=-1)[0])
 
     # The termination loss
     termination_loss = option_term_prob * (Q[option].detach() - Q.max(dim=-1)[0].detach() + 0.01) * (1 - done)
@@ -197,7 +197,7 @@ def option_critic_run(defaults):
     env = Game(**defaults)
     buffer = ReplayBuffer(**defaults)
     batch = env.batch
-    num_options = len(env.layers.layers)-2
+    num_options = len(env.layers.layers)-3
     option_critic = OptionCriticConv(
         in_features=env.board.shape[1],
         num_actions=4,
@@ -206,7 +206,7 @@ def option_critic_run(defaults):
         height=env.board.shape[3],
         temperature=0.001,
         eps_start=1000000,
-        eps_min=0.1,
+        eps_min=0.01,
         eps_decay=1000000,
         eps_test=0.05,
         device=device
