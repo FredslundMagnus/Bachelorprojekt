@@ -279,6 +279,6 @@ def genExperiments(name, n=1, cpu=False, **params):
 # genExperiments(f"Monsters_option_critic", n=3, hours=72, level=Levels.MonsterLevel, main=option_critic_run, cpu=True, batch=25)
 # genExperiments(f"DoorsAndKey_option_critic", n=3, hours=72, level=Levels.Causal1, main=option_critic_run, cpu=True, batch=25)
 
-genExperiments(f"Test_CPU_8", n=1, level=Levels.Causal3, cpu=True, batch=25)
+genExperiments(f"Test_CPU_9", n=1, level=Levels.Causal3, cpu=True, batch=25)
 
 file.close()
