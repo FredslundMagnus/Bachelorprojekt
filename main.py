@@ -49,10 +49,6 @@ def teleport(defaults):
     mover = Mover(env, _extra_dim=1, **defaults)
     teleporter = Teleporter(env, **defaults)
     buffer = ReplayBuffer(**defaults)
-    enablePrint()
-    print(defaults)
-    disablePrint()
-    quit()
 
     with Save(env, collector, mover, teleporter, **defaults) as save:
         intervention_idx, modified_board = teleporter.pre_process(env)
@@ -156,7 +152,7 @@ class Defaults:
     depth: int = 3
     model_explore: int = 1000000
     samples: int = 5
-    hours: float = 0.1
+    hours: float = 12
     batch: int = 100
     width: int = 9
     height: int = 9
