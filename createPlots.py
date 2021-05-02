@@ -26,6 +26,26 @@ Plot(
     ],
 )
 
+
+# Plot(
+#     title="causal42",
+#     loc=Loc.lowerRight,
+#     data=[
+#         ("DoorsAndKey_option_critic", "DoorsAndKey", Colors.blue),
+#         ("Monsters_option_critic", "Monsters", Colors.pink),
+#         ("Coconuts_option_critic", "Coconuts", Colors.green),
+#         ("Rocks_option_critic", "Rocks", Colors.brown),
+#         ("Maze_option_critic", "Maze", Colors.orange),
+#         ("Lights1_option_critic", "Lights1", Colors.black),
+#         ("Lights2_option_critic", "Lights2", Colors.purple),
+#         ("Diamonds1_option_critic", "Diamonds1", Colors.yellow),
+#         ("Diamonds2_option_critic", "Diamonds2", Colors.red),
+#         ("Diamonds3_option_critic", "Diamonds3", Colors.blueGray),
+#         ("Diamonds4_option_critic", "Diamonds4", Colors.lightGreen),
+#     ],
+# )
+
+
 envs = [
     ('Lights1', 'Magical Lights 1'),
     ('Lights2', 'Magical Lights 2'),
