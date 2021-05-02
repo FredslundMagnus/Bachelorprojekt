@@ -2,6 +2,7 @@ from abc import ABCMeta, abstractproperty
 from typing import Iterable, List, Tuple
 from colors import Color
 from enum import Enum
+import sys
 
 
 class LayerType(Enum):
@@ -40,6 +41,13 @@ class LayerType(Enum):
     Bluecross = 32
     Redcross = 33
     Purplecross = 34
+    Super1 = 35
+    Super2 = 36
+    Super3 = 37
+    Super4 = 38
+    Super5 = 39
+    Super6 = 40
+    Super7 = 41
 
 
 class Shape(Enum):

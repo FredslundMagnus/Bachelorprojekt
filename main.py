@@ -1,6 +1,7 @@
 # https://github.com/lweitkamp/option-critic-pytorch/blob/master/main.py
 # https://github.com/lweitkamp/option-critic-pytorch/blob/master/option_critic.py
 
+from Utils.debug import disablePrint, enablePrint
 from allGraphs import GraphMode
 from game import Game, Levels
 from agent import Teleporter, Mover, Networks, Learners, Explorations, MetaTeleporter, CFAgent
@@ -48,6 +49,10 @@ def teleport(defaults):
     mover = Mover(env, _extra_dim=1, **defaults)
     teleporter = Teleporter(env, **defaults)
     buffer = ReplayBuffer(**defaults)
+    enablePrint()
+    print(defaults)
+    disablePrint()
+    quit()
 
     with Save(env, collector, mover, teleporter, **defaults) as save:
         intervention_idx, modified_board = teleporter.pre_process(env)
@@ -144,10 +149,14 @@ def CFagentv2(defaults):
 
 class Defaults:
     name: str = "Agent"
-    main: function = option_critic_run
-    level: Levels = Levels.MonsterLevel
-    failed_actions_chance: float = 0.0
-    hours: float = 12
+    main: function = graphTrain
+    level: Levels = Levels.CausalSuper
+    failed_actions_chance: float = 0
+    use_model: bool = True
+    depth: int = 3
+    model_explore: int = 1000000
+    samples: int = 5
+    hours: float = 0.2
     batch: int = 100
     width: int = 9
     height: int = 9
@@ -208,6 +217,13 @@ class Defaults:
     layer_Bluecross: bool = True
     layer_Redcross: bool = True
     layer_Purplecross: bool = True
+    layer_Super1: bool = True
+    layer_Super2: bool = True
+    layer_Super3: bool = True
+    layer_Super4: bool = True
+    layer_Super5: bool = True
+    layer_Super6: bool = True
+    layer_Super7: bool = True
 
     epsilon_cap: float = 0.2
     softmax_cap: float = 0.02
