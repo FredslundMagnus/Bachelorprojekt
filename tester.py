@@ -18,7 +18,7 @@ def test_simple():
 
 
 def test_teleport():
-    with Load("Maze_Conver1", num=1) as load:
+    with Load("Causal4_Conver2", num=0) as load:
         collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
         #teleporter.exploration.explore = teleporter.exploration.greedy
         intervention_idx, modified_board = teleporter.pre_process(env)
@@ -119,4 +119,4 @@ def test_option_critic():
         collector.show(env)
 
 
-test_option_critic()
+test_teleport()

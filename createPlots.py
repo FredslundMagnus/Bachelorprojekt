@@ -15,16 +15,14 @@ from plotter import Colors, Loc, Plot
 #     )
 
 Plot(
-    title="causal42",
+    title="causal4",
     loc=Loc.lowerRight,
     data=[
-        ("Causal4_Cf_convert1_TopN6", "convert1_Top3", Colors.blue),
-        ("Causal4_Cf_convert2_TopN6", "convert2_Top3", Colors.pink),
-        ("Causal4_Cf_convert3_TopN6", "convert3_Top3", Colors.green),
-        ("Causal4_Cf_convert4_TopN6", "convert4_Top3", Colors.brown),
-        ("Causal4_Cf_convert5_TopN6", "convert5_Top3", Colors.orange),
+        ("Causal4_Conver1", "convert1_Top3", Colors.blue),
+        ("Causal4_Conver2", "convert2_Top3", Colors.pink),
     ],
 )
+
 
 
 # Plot(
