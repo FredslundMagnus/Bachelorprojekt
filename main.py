@@ -152,7 +152,7 @@ class Defaults:
     main: function = teleport
     level: Levels = Levels.Causal2
     failed_actions_chance: float = 0.5
-    hours: float = 0.2
+    hours: float = 0.1
     batch: int = 100
     width: int = 9
     height: int = 9
