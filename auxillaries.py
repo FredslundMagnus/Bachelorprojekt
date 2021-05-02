@@ -129,13 +129,6 @@ def random_agent(batch: int) -> Tensor:
 
 
 def run(Defaults):
-    enablePrint()
-    print("Start")
-    print(isServer)
-    print(sys.argv[0].split("\\")[-1].split("/")[-1] == "main.py")
-    print(sys.argv)
-    disablePrint()
-    # quit()
     if sys.argv[0].split("\\")[-1].split("/")[-1] == "main.py":
         (serverRun if isServer else Defaults.main).__call__(getvals(Defaults))
 
