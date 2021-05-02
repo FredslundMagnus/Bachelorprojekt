@@ -149,9 +149,13 @@ def CFagentv2(defaults):
 
 class Defaults:
     name: str = "Agent"
-    main: function = teleport
-    level: Levels = Levels.Causal2
-    failed_actions_chance: float = 0.5
+    main: function = Teleporter
+    level: Levels = Levels.CausalSuper
+    failed_actions_chance: float = 0
+    use_model: bool = True
+    depth: int = 3
+    model_explore: int = 1000000
+    samples: int = 5
     hours: float = 0.1
     batch: int = 100
     width: int = 9
@@ -213,6 +217,13 @@ class Defaults:
     layer_Bluecross: bool = True
     layer_Redcross: bool = True
     layer_Purplecross: bool = True
+    layer_Super1: bool = True
+    layer_Super2: bool = True
+    layer_Super3: bool = True
+    layer_Super4: bool = True
+    layer_Super5: bool = True
+    layer_Super6: bool = True
+    layer_Super7: bool = True
 
     epsilon_cap: float = 0.2
     softmax_cap: float = 0.02

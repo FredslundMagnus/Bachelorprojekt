@@ -87,12 +87,14 @@ class Data:
 
 
 environments = {
+    Levels.CausalSuper: ["causalsuper_demo", 0, [LayerType.Super1, LayerType.Super2, LayerType.Super3, LayerType.Super4, LayerType.Super5, LayerType.Super6, LayerType.Super7]],
     Levels.Causal7: ["causal7_demo", 0, [LayerType.Greencross, LayerType.Bluecross, LayerType.Redcross, LayerType.Purplecross]],
     Levels.Causal6: ["causal6_demo", 0, [LayerType.Greendown, LayerType.Greenup, LayerType.Greenstar, LayerType.Yellowstar, LayerType.Bluestar]],
     Levels.Causal5: ["causal5_demo", 0, [LayerType.Pink1, LayerType.Brown1, LayerType.Pink2, LayerType.Brown2, LayerType.Pink3, LayerType.Brown3]],
     Levels.Causal3: ["causal3_demo", 0, [LayerType.Gold, LayerType.Bluedoor, LayerType.Bluekeys, LayerType.Reddoor, LayerType.Redkeys]],
     Levels.Causal2: ["causal2_demo", 0, [LayerType.Diamond1, LayerType.Diamond2, LayerType.Diamond3, LayerType.Diamond4]],
     Levels.Causal1: ["causal1_demo", 0, [LayerType.Gold, LayerType.Keys, LayerType.Door]],
+
 }
 
 
@@ -174,8 +176,8 @@ def getInterventions(env: Game, state: FrozenSet[LayerType], data: Data, explora
         return format(env, bestIntervention(state, data))
     return format(env, rightIntervention(state, data))
 
-def getInterventionsmodel(state, all_layers, layers, model, env, not_in):
-    if random() <= model.exploration:
+def getInterventionsmodel(state, all_layers, layers, model, env, not_in, frame):
+    if random() >= (model.exploration - frame)/model.exploration:
         br, ba = recursiveBEST(layers, state, model.depth, model, all_layers, 1, env, not_in)
     else:
         br, ba = recursiveExplore(layers, state, model.depth-2, model, all_layers, 1, env, not_in)
@@ -184,8 +186,7 @@ def getInterventionsmodel(state, all_layers, layers, model, env, not_in):
 def recursiveBEST(layers, state, depth, model, all_layers, reward_trace, env, not_in):
     if depth == 0:
         return 0, None
-    best_reward = 0
-    best_action = [False for _ in range(len(all_layers))]
+    best_reward = -10**6
     for layer in all_layers:
         if layer in not_in:
             if depth == model.depth:
@@ -201,8 +202,7 @@ def recursiveBEST(layers, state, depth, model, all_layers, reward_trace, env, no
 def recursiveExplore(layers, state, depth, model, all_layers, reward_trace, env, not_in):
     if depth == 0:
         return 0, None
-    best_reward = 0
-    best_action = [False for _ in range(len(all_layers))]
+    best_reward = -10**6
     for layer in all_layers:
         if layer in not_in:
             for j in range(model.samples):

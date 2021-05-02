@@ -3,7 +3,7 @@ from helper import device
 from layers import Layers, LayerType
 from typing import List, Tuple
 from levels import Levels, MonsterLevel
-
+import sys
 
 class Game:
     def __init__(self, batch: int = None, hours: float = None, width: int = None, height: int = None, level: Levels = None, reset_chance: float = None, failed_actions_chance: float = None, **kwargs) -> None:
@@ -24,7 +24,8 @@ class Game:
             Levels.SuperLevel: {LayerType.Blocks, LayerType.Goal, LayerType.Gold, LayerType.Bluedoor, LayerType.Bluekeys, LayerType.Reddoor, LayerType.Redkeys, LayerType.Rock, LayerType.Dirt, LayerType.Coconut, LayerType.Door, LayerType.Keys},
             Levels.SuperLevel2: {LayerType.Blocks, LayerType.Goal, LayerType.Gold, LayerType.Bluedoor, LayerType.Bluekeys, LayerType.Reddoor, LayerType.Redkeys, LayerType.Rock, LayerType.Dirt, LayerType.Coconut},
             Levels.MonsterLevel: {LayerType.Blocks, LayerType.Goal, LayerType.Gold, LayerType.Monster, LayerType.Rock},
-            Levels.Causal7: {LayerType.Blocks, LayerType.Goal, LayerType.Greencross, LayerType.Bluecross, LayerType.Redcross, LayerType.Purplecross}
+            Levels.Causal7: {LayerType.Blocks, LayerType.Goal, LayerType.Greencross, LayerType.Bluecross, LayerType.Redcross, LayerType.Purplecross},
+            Levels.CausalSuper: {LayerType.Blocks, LayerType.Goal, LayerType.Super1, LayerType.Super2, LayerType.Super3, LayerType.Super4, LayerType.Super5, LayerType.Super6, LayerType.Super7}
         }
         convert = {(use, [layer for layer in LayerType if layer.name == name.split('_')[1]][0]) for name, use in kwargs.items() if name.split('_')[0] == "layer"}
         self.layers: Layers = Layers(batch, width, height, level, reset_chance, failed_actions_chance, *[layer for use, layer in convert if use and (layer in self.uses[level])])
