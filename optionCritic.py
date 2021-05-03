@@ -12,7 +12,7 @@ from auxillaries import loop
 from helper import device
 from copy import deepcopy
 from replaybuffer import ReplayBuffer
-
+import sys
 
 class OptionCriticConv(nn.Module):
     def __init__(self,
@@ -132,7 +132,7 @@ def critic_loss_fn(model, model_prime, data_batch):
     next_options_term_prob = next_termination_probs[batch_idx, options]
 
     # Now we can calculate the update target gt
-    gt = rewards + masks * 0.95 * \
+    gt = rewards + masks * 0.99 * \
         ((1 - next_options_term_prob) * next_Q_prime[batch_idx, options] + next_options_term_prob * next_Q_prime.max(dim=-1)[0])
 
     # to update Q we want to use the actual network, not the prime
@@ -152,14 +152,14 @@ def actor_loss_fn(obs, option, logp, entropy, reward, done, next_obs, model, mod
     next_Q_prime = model_prime.get_Q(next_state_prime).detach().squeeze()
 
     # Target update gt
-    gt = reward + (1 - done) * 0.98 * ((1 - next_option_term_prob) * next_Q_prime[option] + next_option_term_prob * next_Q_prime.max(dim=-1)[0])
+    gt = reward + (1 - done) * 0.99 * ((1 - next_option_term_prob) * next_Q_prime[option] + next_option_term_prob * next_Q_prime.max(dim=-1)[0])
 
     # The termination loss
     termination_loss = option_term_prob * (Q[option].detach() - Q.max(dim=-1)[0].detach() + 0.01) * (1 - done)
 
     # actor-critic policy gradient with entropy regularization
     #print(obs)
-    policy_loss = -logp * (gt.detach() - Q[option]) - 0.01 * entropy
+    policy_loss = -logp * (gt.detach() - Q[option])# - 0.01 * entropy
     actor_loss = termination_loss + policy_loss
     return actor_loss
 
@@ -188,7 +188,7 @@ def actor_loss_fn(obs, option, logp, entropy, reward, done, next_obs, model, mod
 # parser.add_argument('--exp', type=str, default=None, help='optional experiment name')
 # parser.add_argument('--switch-goal', type=bool, default=False, help='switch goal after 2k eps')
 
-update_frequency = 10
+update_frequency = 4
 freeze_interval = 10000
 
 
@@ -213,7 +213,7 @@ def option_critic_run(defaults):
     )
     # Create a prime network for more stable Q values
     option_critic_prime = deepcopy(option_critic)
-    optim = torch.optim.RMSprop(option_critic.parameters(), lr=0.0005)
+    optim = torch.optim.Adam(option_critic.parameters(), lr=1e-5, weight_decay=1e-5)
 
     with Save(env, collector, **defaults) as save:
         states = option_critic.get_state(env.board)
@@ -253,7 +253,7 @@ def option_critic_run(defaults):
             for i, (next_obs, reward, done, state, current_option, old_obs, logp, entropy) in enumerate(zip(next_obses, rewards, dones, states, current_options, old_obses, logps, entropys)):
                 option_terminations[i], greedy_options[i] = option_critic.predict_option_termination(state.unsqueeze(0), current_option)
                 loss += actor_loss_fn(old_obs, current_option, logp, entropy, reward, done, next_obs, option_critic, option_critic_prime)
-
+            loss /= i
             if frame % update_frequency == 0:
                 data_batch = buffer.sample_option_critic()
                 loss += critic_loss_fn(option_critic, option_critic_prime, data_batch)
