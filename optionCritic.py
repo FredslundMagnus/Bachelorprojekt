@@ -188,7 +188,7 @@ def actor_loss_fn(obs, option, logp, entropy, reward, done, next_obs, model, mod
 # parser.add_argument('--exp', type=str, default=None, help='optional experiment name')
 # parser.add_argument('--switch-goal', type=bool, default=False, help='switch goal after 2k eps')
 
-update_frequency = 4
+update_frequency = 10
 freeze_interval = 10000
 
 
