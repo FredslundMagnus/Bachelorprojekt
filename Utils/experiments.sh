@@ -1,11 +1,61 @@
 #!/bin/sh
-mkdir ../outputs/Causal4_Conver3/
-mkdir ../outputs/Causal4_Conver3/Markdown
-bsub -o "../outputs/Causal4_Conver3/Markdown/Causal4_Conver3_0.md" -J "Causal4_Conver3_0" -env MYARGS="-name Causal4_Conver3-0 -hours 24.0 -level Levels.Causal4 -main CFagent -CF_convert 3 -TopN 3" < submit_gpu.sh
-bsub -o "../outputs/Causal4_Conver3/Markdown/Causal4_Conver3_1.md" -J "Causal4_Conver3_1" -env MYARGS="-name Causal4_Conver3-1 -hours 24.0 -level Levels.Causal4 -main CFagent -CF_convert 3 -TopN 3" < submit_gpu.sh
-bsub -o "../outputs/Causal4_Conver3/Markdown/Causal4_Conver3_2.md" -J "Causal4_Conver3_2" -env MYARGS="-name Causal4_Conver3-2 -hours 24.0 -level Levels.Causal4 -main CFagent -CF_convert 3 -TopN 3" < submit_gpu.sh
-mkdir ../outputs/Causal4_Conver4/
-mkdir ../outputs/Causal4_Conver4/Markdown
-bsub -o "../outputs/Causal4_Conver4/Markdown/Causal4_Conver4_0.md" -J "Causal4_Conver4_0" -env MYARGS="-name Causal4_Conver4-0 -hours 24.0 -level Levels.Causal4 -main CFagent -CF_convert 4 -TopN 3" < submit_gpu.sh
-bsub -o "../outputs/Causal4_Conver4/Markdown/Causal4_Conver4_1.md" -J "Causal4_Conver4_1" -env MYARGS="-name Causal4_Conver4-1 -hours 24.0 -level Levels.Causal4 -main CFagent -CF_convert 4 -TopN 3" < submit_gpu.sh
-bsub -o "../outputs/Causal4_Conver4/Markdown/Causal4_Conver4_2.md" -J "Causal4_Conver4_2" -env MYARGS="-name Causal4_Conver4-2 -hours 24.0 -level Levels.Causal4 -main CFagent -CF_convert 4 -TopN 3" < submit_gpu.sh
+mkdir ../outputs/Attempt3_Lights1_option_critic/
+mkdir ../outputs/Attempt3_Lights1_option_critic/Markdown
+bsub -o "../outputs/Attempt3_Lights1_option_critic/Markdown/Attempt3_Lights1_option_critic_0.md" -J "Attempt3_Lights1_option_critic_0" -env MYARGS="-name Attempt3_Lights1_option_critic-0 -hours 72.0 -level Levels.Causal3 -main option_critic_run -batch 25" < submit_cpu.sh
+bsub -o "../outputs/Attempt3_Lights1_option_critic/Markdown/Attempt3_Lights1_option_critic_1.md" -J "Attempt3_Lights1_option_critic_1" -env MYARGS="-name Attempt3_Lights1_option_critic-1 -hours 72.0 -level Levels.Causal3 -main option_critic_run -batch 25" < submit_cpu.sh
+bsub -o "../outputs/Attempt3_Lights1_option_critic/Markdown/Attempt3_Lights1_option_critic_2.md" -J "Attempt3_Lights1_option_critic_2" -env MYARGS="-name Attempt3_Lights1_option_critic-2 -hours 72.0 -level Levels.Causal3 -main option_critic_run -batch 25" < submit_cpu.sh
+mkdir ../outputs/Attempt3_Lights2_option_critic/
+mkdir ../outputs/Attempt3_Lights2_option_critic/Markdown
+bsub -o "../outputs/Attempt3_Lights2_option_critic/Markdown/Attempt3_Lights2_option_critic_0.md" -J "Attempt3_Lights2_option_critic_0" -env MYARGS="-name Attempt3_Lights2_option_critic-0 -hours 72.0 -level Levels.Causal4 -main option_critic_run -batch 25" < submit_cpu.sh
+bsub -o "../outputs/Attempt3_Lights2_option_critic/Markdown/Attempt3_Lights2_option_critic_1.md" -J "Attempt3_Lights2_option_critic_1" -env MYARGS="-name Attempt3_Lights2_option_critic-1 -hours 72.0 -level Levels.Causal4 -main option_critic_run -batch 25" < submit_cpu.sh
+bsub -o "../outputs/Attempt3_Lights2_option_critic/Markdown/Attempt3_Lights2_option_critic_2.md" -J "Attempt3_Lights2_option_critic_2" -env MYARGS="-name Attempt3_Lights2_option_critic-2 -hours 72.0 -level Levels.Causal4 -main option_critic_run -batch 25" < submit_cpu.sh
+mkdir ../outputs/Attempt3_Diamonds1_option_critic/
+mkdir ../outputs/Attempt3_Diamonds1_option_critic/Markdown
+bsub -o "../outputs/Attempt3_Diamonds1_option_critic/Markdown/Attempt3_Diamonds1_option_critic_0.md" -J "Attempt3_Diamonds1_option_critic_0" -env MYARGS="-name Attempt3_Diamonds1_option_critic-0 -hours 72.0 -level Levels.Causal2 -main option_critic_run -batch 25" < submit_cpu.sh
+bsub -o "../outputs/Attempt3_Diamonds1_option_critic/Markdown/Attempt3_Diamonds1_option_critic_1.md" -J "Attempt3_Diamonds1_option_critic_1" -env MYARGS="-name Attempt3_Diamonds1_option_critic-1 -hours 72.0 -level Levels.Causal2 -main option_critic_run -batch 25" < submit_cpu.sh
+bsub -o "../outputs/Attempt3_Diamonds1_option_critic/Markdown/Attempt3_Diamonds1_option_critic_2.md" -J "Attempt3_Diamonds1_option_critic_2" -env MYARGS="-name Attempt3_Diamonds1_option_critic-2 -hours 72.0 -level Levels.Causal2 -main option_critic_run -batch 25" < submit_cpu.sh
+mkdir ../outputs/Attempt3_Diamonds2_option_critic/
+mkdir ../outputs/Attempt3_Diamonds2_option_critic/Markdown
+bsub -o "../outputs/Attempt3_Diamonds2_option_critic/Markdown/Attempt3_Diamonds2_option_critic_0.md" -J "Attempt3_Diamonds2_option_critic_0" -env MYARGS="-name Attempt3_Diamonds2_option_critic-0 -hours 72.0 -level Levels.Causal5 -main option_critic_run -batch 25" < submit_cpu.sh
+bsub -o "../outputs/Attempt3_Diamonds2_option_critic/Markdown/Attempt3_Diamonds2_option_critic_1.md" -J "Attempt3_Diamonds2_option_critic_1" -env MYARGS="-name Attempt3_Diamonds2_option_critic-1 -hours 72.0 -level Levels.Causal5 -main option_critic_run -batch 25" < submit_cpu.sh
+bsub -o "../outputs/Attempt3_Diamonds2_option_critic/Markdown/Attempt3_Diamonds2_option_critic_2.md" -J "Attempt3_Diamonds2_option_critic_2" -env MYARGS="-name Attempt3_Diamonds2_option_critic-2 -hours 72.0 -level Levels.Causal5 -main option_critic_run -batch 25" < submit_cpu.sh
+mkdir ../outputs/Attempt3_Diamonds3_option_critic/
+mkdir ../outputs/Attempt3_Diamonds3_option_critic/Markdown
+bsub -o "../outputs/Attempt3_Diamonds3_option_critic/Markdown/Attempt3_Diamonds3_option_critic_0.md" -J "Attempt3_Diamonds3_option_critic_0" -env MYARGS="-name Attempt3_Diamonds3_option_critic-0 -hours 72.0 -level Levels.Causal6 -main option_critic_run -batch 25" < submit_cpu.sh
+bsub -o "../outputs/Attempt3_Diamonds3_option_critic/Markdown/Attempt3_Diamonds3_option_critic_1.md" -J "Attempt3_Diamonds3_option_critic_1" -env MYARGS="-name Attempt3_Diamonds3_option_critic-1 -hours 72.0 -level Levels.Causal6 -main option_critic_run -batch 25" < submit_cpu.sh
+bsub -o "../outputs/Attempt3_Diamonds3_option_critic/Markdown/Attempt3_Diamonds3_option_critic_2.md" -J "Attempt3_Diamonds3_option_critic_2" -env MYARGS="-name Attempt3_Diamonds3_option_critic-2 -hours 72.0 -level Levels.Causal6 -main option_critic_run -batch 25" < submit_cpu.sh
+mkdir ../outputs/Attempt3_Diamonds4_option_critic/
+mkdir ../outputs/Attempt3_Diamonds4_option_critic/Markdown
+bsub -o "../outputs/Attempt3_Diamonds4_option_critic/Markdown/Attempt3_Diamonds4_option_critic_0.md" -J "Attempt3_Diamonds4_option_critic_0" -env MYARGS="-name Attempt3_Diamonds4_option_critic-0 -hours 72.0 -level Levels.Causal7 -main option_critic_run -batch 25" < submit_cpu.sh
+bsub -o "../outputs/Attempt3_Diamonds4_option_critic/Markdown/Attempt3_Diamonds4_option_critic_1.md" -J "Attempt3_Diamonds4_option_critic_1" -env MYARGS="-name Attempt3_Diamonds4_option_critic-1 -hours 72.0 -level Levels.Causal7 -main option_critic_run -batch 25" < submit_cpu.sh
+bsub -o "../outputs/Attempt3_Diamonds4_option_critic/Markdown/Attempt3_Diamonds4_option_critic_2.md" -J "Attempt3_Diamonds4_option_critic_2" -env MYARGS="-name Attempt3_Diamonds4_option_critic-2 -hours 72.0 -level Levels.Causal7 -main option_critic_run -batch 25" < submit_cpu.sh
+mkdir ../outputs/Attempt3_SuperLevel1_option_critic/
+mkdir ../outputs/Attempt3_SuperLevel1_option_critic/Markdown
+bsub -o "../outputs/Attempt3_SuperLevel1_option_critic/Markdown/Attempt3_SuperLevel1_option_critic_0.md" -J "Attempt3_SuperLevel1_option_critic_0" -env MYARGS="-name Attempt3_SuperLevel1_option_critic-0 -hours 72.0 -level Levels.SuperLevel -main option_critic_run -batch 25" < submit_cpu.sh
+bsub -o "../outputs/Attempt3_SuperLevel1_option_critic/Markdown/Attempt3_SuperLevel1_option_critic_1.md" -J "Attempt3_SuperLevel1_option_critic_1" -env MYARGS="-name Attempt3_SuperLevel1_option_critic-1 -hours 72.0 -level Levels.SuperLevel -main option_critic_run -batch 25" < submit_cpu.sh
+bsub -o "../outputs/Attempt3_SuperLevel1_option_critic/Markdown/Attempt3_SuperLevel1_option_critic_2.md" -J "Attempt3_SuperLevel1_option_critic_2" -env MYARGS="-name Attempt3_SuperLevel1_option_critic-2 -hours 72.0 -level Levels.SuperLevel -main option_critic_run -batch 25" < submit_cpu.sh
+mkdir ../outputs/Attempt3_SuperLevel2_option_critic/
+mkdir ../outputs/Attempt3_SuperLevel2_option_critic/Markdown
+bsub -o "../outputs/Attempt3_SuperLevel2_option_critic/Markdown/Attempt3_SuperLevel2_option_critic_0.md" -J "Attempt3_SuperLevel2_option_critic_0" -env MYARGS="-name Attempt3_SuperLevel2_option_critic-0 -hours 72.0 -level Levels.SuperLevel2 -main option_critic_run -batch 25" < submit_cpu.sh
+bsub -o "../outputs/Attempt3_SuperLevel2_option_critic/Markdown/Attempt3_SuperLevel2_option_critic_1.md" -J "Attempt3_SuperLevel2_option_critic_1" -env MYARGS="-name Attempt3_SuperLevel2_option_critic-1 -hours 72.0 -level Levels.SuperLevel2 -main option_critic_run -batch 25" < submit_cpu.sh
+bsub -o "../outputs/Attempt3_SuperLevel2_option_critic/Markdown/Attempt3_SuperLevel2_option_critic_2.md" -J "Attempt3_SuperLevel2_option_critic_2" -env MYARGS="-name Attempt3_SuperLevel2_option_critic-2 -hours 72.0 -level Levels.SuperLevel2 -main option_critic_run -batch 25" < submit_cpu.sh
+mkdir ../outputs/Attempt3_Maze_option_critic/
+mkdir ../outputs/Attempt3_Maze_option_critic/Markdown
+bsub -o "../outputs/Attempt3_Maze_option_critic/Markdown/Attempt3_Maze_option_critic_0.md" -J "Attempt3_Maze_option_critic_0" -env MYARGS="-name Attempt3_Maze_option_critic-0 -hours 72.0 -level Levels.Maze -main option_critic_run -batch 25" < submit_cpu.sh
+bsub -o "../outputs/Attempt3_Maze_option_critic/Markdown/Attempt3_Maze_option_critic_1.md" -J "Attempt3_Maze_option_critic_1" -env MYARGS="-name Attempt3_Maze_option_critic-1 -hours 72.0 -level Levels.Maze -main option_critic_run -batch 25" < submit_cpu.sh
+bsub -o "../outputs/Attempt3_Maze_option_critic/Markdown/Attempt3_Maze_option_critic_2.md" -J "Attempt3_Maze_option_critic_2" -env MYARGS="-name Attempt3_Maze_option_critic-2 -hours 72.0 -level Levels.Maze -main option_critic_run -batch 25" < submit_cpu.sh
+mkdir ../outputs/Attempt3_Coconuts_option_critic/
+mkdir ../outputs/Attempt3_Coconuts_option_critic/Markdown
+bsub -o "../outputs/Attempt3_Coconuts_option_critic/Markdown/Attempt3_Coconuts_option_critic_0.md" -J "Attempt3_Coconuts_option_critic_0" -env MYARGS="-name Attempt3_Coconuts_option_critic-0 -hours 72.0 -level Levels.Coconuts -main option_critic_run -batch 25" < submit_cpu.sh
+bsub -o "../outputs/Attempt3_Coconuts_option_critic/Markdown/Attempt3_Coconuts_option_critic_1.md" -J "Attempt3_Coconuts_option_critic_1" -env MYARGS="-name Attempt3_Coconuts_option_critic-1 -hours 72.0 -level Levels.Coconuts -main option_critic_run -batch 25" < submit_cpu.sh
+bsub -o "../outputs/Attempt3_Coconuts_option_critic/Markdown/Attempt3_Coconuts_option_critic_2.md" -J "Attempt3_Coconuts_option_critic_2" -env MYARGS="-name Attempt3_Coconuts_option_critic-2 -hours 72.0 -level Levels.Coconuts -main option_critic_run -batch 25" < submit_cpu.sh
+mkdir ../outputs/Attempt3_Monsters_option_critic/
+mkdir ../outputs/Attempt3_Monsters_option_critic/Markdown
+bsub -o "../outputs/Attempt3_Monsters_option_critic/Markdown/Attempt3_Monsters_option_critic_0.md" -J "Attempt3_Monsters_option_critic_0" -env MYARGS="-name Attempt3_Monsters_option_critic-0 -hours 72.0 -level Levels.MonsterLevel -main option_critic_run -batch 25" < submit_cpu.sh
+bsub -o "../outputs/Attempt3_Monsters_option_critic/Markdown/Attempt3_Monsters_option_critic_1.md" -J "Attempt3_Monsters_option_critic_1" -env MYARGS="-name Attempt3_Monsters_option_critic-1 -hours 72.0 -level Levels.MonsterLevel -main option_critic_run -batch 25" < submit_cpu.sh
+bsub -o "../outputs/Attempt3_Monsters_option_critic/Markdown/Attempt3_Monsters_option_critic_2.md" -J "Attempt3_Monsters_option_critic_2" -env MYARGS="-name Attempt3_Monsters_option_critic-2 -hours 72.0 -level Levels.MonsterLevel -main option_critic_run -batch 25" < submit_cpu.sh
+mkdir ../outputs/Attempt3_DoorsAndKey_option_critic/
+mkdir ../outputs/Attempt3_DoorsAndKey_option_critic/Markdown
+bsub -o "../outputs/Attempt3_DoorsAndKey_option_critic/Markdown/Attempt3_DoorsAndKey_option_critic_0.md" -J "Attempt3_DoorsAndKey_option_critic_0" -env MYARGS="-name Attempt3_DoorsAndKey_option_critic-0 -hours 72.0 -level Levels.Causal1 -main option_critic_run -batch 25" < submit_cpu.sh
+bsub -o "../outputs/Attempt3_DoorsAndKey_option_critic/Markdown/Attempt3_DoorsAndKey_option_critic_1.md" -J "Attempt3_DoorsAndKey_option_critic_1" -env MYARGS="-name Attempt3_DoorsAndKey_option_critic-1 -hours 72.0 -level Levels.Causal1 -main option_critic_run -batch 25" < submit_cpu.sh
+bsub -o "../outputs/Attempt3_DoorsAndKey_option_critic/Markdown/Attempt3_DoorsAndKey_option_critic_2.md" -J "Attempt3_DoorsAndKey_option_critic_2" -env MYARGS="-name Attempt3_DoorsAndKey_option_critic-2 -hours 72.0 -level Levels.Causal1 -main option_critic_run -batch 25" < submit_cpu.sh
