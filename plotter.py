@@ -53,6 +53,8 @@ class Plotter():
                     data.append(collector.data[keys][:minL])
                 data = np.array(data)
                 y = np.mean(data, axis=0)
+                if (any(y < 0)):
+                    y = (y + 1)/2
                 sd = np.std(data, axis=0)
                 y, sd = self.normalize(y, sd)
                 x = np.arange(1, len(y) + 1)
