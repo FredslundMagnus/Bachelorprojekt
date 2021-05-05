@@ -15,16 +15,34 @@ from plotter import Colors, Loc, Plot
 #     )
 
 Plot(
-    title="causal42",
+    title="causal4",
     loc=Loc.lowerRight,
     data=[
-        ("Causal4_Cf_convert1_TopN6", "convert1_Top3", Colors.blue),
-        ("Causal4_Cf_convert2_TopN6", "convert2_Top3", Colors.pink),
-        ("Causal4_Cf_convert3_TopN6", "convert3_Top3", Colors.green),
-        ("Causal4_Cf_convert4_TopN6", "convert4_Top3", Colors.brown),
-        ("Causal4_Cf_convert5_TopN6", "convert5_Top3", Colors.orange),
+        ("Causal4_Conver1", "convert1_Top3", Colors.blue),
+        ("Causal4_Conver2", "convert2_Top3", Colors.pink),
     ],
 )
+
+
+
+# Plot(
+#     title="causal42",
+#     loc=Loc.lowerRight,
+#     data=[
+#         ("DoorsAndKey_option_critic", "DoorsAndKey", Colors.blue),
+#         ("Monsters_option_critic", "Monsters", Colors.pink),
+#         ("Coconuts_option_critic", "Coconuts", Colors.green),
+#         ("Rocks_option_critic", "Rocks", Colors.brown),
+#         ("Maze_option_critic", "Maze", Colors.orange),
+#         ("Lights1_option_critic", "Lights1", Colors.black),
+#         ("Lights2_option_critic", "Lights2", Colors.purple),
+#         ("Diamonds1_option_critic", "Diamonds1", Colors.yellow),
+#         ("Diamonds2_option_critic", "Diamonds2", Colors.red),
+#         ("Diamonds3_option_critic", "Diamonds3", Colors.blueGray),
+#         ("Diamonds4_option_critic", "Diamonds4", Colors.lightGreen),
+#     ],
+# )
+
 
 envs = [
     ('Lights1', 'Magical Lights 1'),

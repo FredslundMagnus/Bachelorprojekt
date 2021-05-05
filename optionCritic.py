@@ -12,7 +12,7 @@ from auxillaries import loop
 from helper import device
 from copy import deepcopy
 from replaybuffer import ReplayBuffer
-
+import sys
 
 class OptionCriticConv(nn.Module):
     def __init__(self,
@@ -109,7 +109,7 @@ class OptionCriticConv(nn.Module):
 
     @property
     def K_(self):
-        return max(self.temperature, self.temperature * (5000000 / self.num_steps))
+        return max(self.temperature, self.temperature * (1000000 / self.num_steps))
 
 
 
@@ -159,7 +159,7 @@ def actor_loss_fn(obs, option, logp, entropy, reward, done, next_obs, model, mod
 
     # actor-critic policy gradient with entropy regularization
     #print(obs)
-    policy_loss = -logp * (gt.detach() - Q[option]) - 0.01 * entropy
+    policy_loss = -logp * (gt.detach() - Q[option])# - 0.01 * entropy
     actor_loss = termination_loss + policy_loss
     return actor_loss
 
@@ -189,7 +189,7 @@ def actor_loss_fn(obs, option, logp, entropy, reward, done, next_obs, model, mod
 # parser.add_argument('--switch-goal', type=bool, default=False, help='switch goal after 2k eps')
 
 update_frequency = 4
-freeze_interval = 200
+freeze_interval = 10000
 
 
 def option_critic_run(defaults):
@@ -197,7 +197,7 @@ def option_critic_run(defaults):
     env = Game(**defaults)
     buffer = ReplayBuffer(**defaults)
     batch = env.batch
-    num_options = len(env.layers.layers)-2
+    num_options = len(env.layers.layers)-3
     option_critic = OptionCriticConv(
         in_features=env.board.shape[1],
         num_actions=4,
@@ -206,14 +206,14 @@ def option_critic_run(defaults):
         height=env.board.shape[3],
         temperature=0.001,
         eps_start=1000000,
-        eps_min=0.1,
+        eps_min=0.01,
         eps_decay=1000000,
         eps_test=0.05,
         device=device
     )
     # Create a prime network for more stable Q values
     option_critic_prime = deepcopy(option_critic)
-    optim = torch.optim.RMSprop(option_critic.parameters(), lr=0.0005)
+    optim = torch.optim.Adam(option_critic.parameters(), lr=1e-5, weight_decay=1e-5)
 
     with Save(env, collector, **defaults) as save:
         states = option_critic.get_state(env.board)
@@ -253,7 +253,7 @@ def option_critic_run(defaults):
             for i, (next_obs, reward, done, state, current_option, old_obs, logp, entropy) in enumerate(zip(next_obses, rewards, dones, states, current_options, old_obses, logps, entropys)):
                 option_terminations[i], greedy_options[i] = option_critic.predict_option_termination(state.unsqueeze(0), current_option)
                 loss += actor_loss_fn(old_obs, current_option, logp, entropy, reward, done, next_obs, option_critic, option_critic_prime)
-
+            loss /= i
             if frame % update_frequency == 0:
                 data_batch = buffer.sample_option_critic()
                 loss += critic_loss_fn(option_critic, option_critic_prime, data_batch)
