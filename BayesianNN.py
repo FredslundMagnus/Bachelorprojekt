@@ -7,7 +7,7 @@ import torch
 class Network(nn.Module):
     def __init__(self, layers):
         super(Network, self).__init__()
-        self.model = nn.Sequential(nn.Linear((len(layers)+1)*2, 128), nn.Dropout(0.3), nn.LeakyReLU(), nn.Linear(128, (len(layers)+1)*2), nn.Dropout(0.3), nn.LeakyReLU(), nn.Flatten())
+        self.model = nn.Sequential(nn.Linear((len(layers)+1)*2, 32), nn.Dropout(0.3), nn.LeakyReLU(), nn.Linear(32, 32), nn.Dropout(0.3), nn.LeakyReLU(), nn.Linear(32, (len(layers)+1)*2), nn.Dropout(0.3), nn.LeakyReLU(), nn.Flatten())
         self.criterion = MSELoss()
         self.optimizer = Adam(self.model.parameters(), lr=1e-5, weight_decay=1e-5)
         self.counter = 0

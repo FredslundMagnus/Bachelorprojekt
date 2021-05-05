@@ -1,4 +1,6 @@
 #!/bin/sh
-mkdir ../outputs/Test_CPU_10/
-mkdir ../outputs/Test_CPU_10/Markdown
-bsub -o "../outputs/Test_CPU_10/Markdown/Test_CPU_10_0.md" -J "Test_CPU_10_0" -env MYARGS="-name Test_CPU_10-0 -hours 0.1 -level Levels.Causal3 -batch 25" < submit_cpu.sh
+mkdir ../outputs/Causal3_Conver4/
+mkdir ../outputs/Causal3_Conver4/Markdown
+bsub -o "../outputs/Causal3_Conver4/Markdown/Causal3_Conver4_0.md" -J "Causal3_Conver4_0" -env MYARGS="-name Causal3_Conver4-0 -hours 24.0 -level Levels.Causal3 -main CFagent -CF_convert 4 -TopN 3" < submit_gpu.sh
+bsub -o "../outputs/Causal3_Conver4/Markdown/Causal3_Conver4_1.md" -J "Causal3_Conver4_1" -env MYARGS="-name Causal3_Conver4-1 -hours 24.0 -level Levels.Causal3 -main CFagent -CF_convert 4 -TopN 3" < submit_gpu.sh
+bsub -o "../outputs/Causal3_Conver4/Markdown/Causal3_Conver4_2.md" -J "Causal3_Conver4_2" -env MYARGS="-name Causal3_Conver4-2 -hours 24.0 -level Levels.Causal3 -main CFagent -CF_convert 4 -TopN 3" < submit_gpu.sh

@@ -145,7 +145,7 @@ def CFagentv2(defaults):
 
 class Defaults:
     name: str = "Agent"
-    main: function = teleport
+    main: function = option_critic_run
     level: Levels = Levels.CausalSuper
     failed_actions_chance: float = 0
     use_model: bool = True

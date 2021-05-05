@@ -6,6 +6,7 @@ from main import *
 from load import Load
 from helper import device
 import torch
+import sys
 
 
 def test_simple():
@@ -17,7 +18,7 @@ def test_simple():
 
 
 def test_teleport():
-    with Load("Causal3_Conver2", num=1) as load:
+    with Load("Causal4_Conver3", num=2) as load:
         collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
         #teleporter.exploration.explore = teleporter.exploration.greedy
         intervention_idx, modified_board = teleporter.pre_process(env)
@@ -31,7 +32,7 @@ def test_teleport():
             all_rewards += sum(rewards)
             all_dones += sum(dones)
             if frame % 1000 == 0:
-                print("performance is " + str((all_rewards/all_dones).item()))
+                print("performance is " + str((all_rewards/all_dones).item()), file=sys.stderr)
 
 
 def test_metateleport():
@@ -113,7 +114,7 @@ def test_CFagent2():
 
 
 def test_option_critic():
-    with Load("Option_Critic") as load:
+    with Load("DoorsAndKey_option_critic", num=2) as load:
         env, collector = load.items(Game, Collector)
         collector.show(env)
 

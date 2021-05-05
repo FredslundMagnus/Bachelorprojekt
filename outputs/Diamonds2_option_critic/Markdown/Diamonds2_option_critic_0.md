@@ -1,0 +1,138 @@
+
+# Parameters
+
+    Name :                      Diamonds2_option_critic-0
+    Main :                      option_critic_run
+    Level :                     Levels.Causal5
+    Failed actions chance :     0.0
+    Hours :                     72.0
+    Batch :                     25
+    Width :                     9
+    Height :                    9
+    Graphmode :                 GraphMode.UCB1
+    Network1 :                  Networks.Teleporter
+    K1 :                        5000000
+    Learner1 :                  Learners.Qlearn
+    Exploration1 :              Explorations.softmaxer
+    Gamma1 :                    0.98
+    Network2 :                  Networks.Mini
+    K2 :                        1000000
+    Learner2 :                  Learners.Qlearn
+    Exploration2 :              Explorations.epsilonGreedy
+    Gamma2 :                    0.95
+    Layer blocks :              True
+    Layer goal :                True
+    Layer gold :                True
+    Layer keys :                True
+    Layer door :                True
+    Layer holder :              True
+    Layer putter :              True
+    Layer rock :                True
+    Layer dirt :                True
+    Layer diamond1 :            True
+    Layer diamond2 :            True
+    Layer diamond3 :            True
+    Layer diamond4 :            True
+    Layer reddoor :             True
+    Layer redkeys :             True
+    Layer bluedoor :            True
+    Layer bluekeys :            True
+    Layer pink1 :               True
+    Layer pink2 :               True
+    Layer pink3 :               True
+    Layer brown1 :              True
+    Layer brown2 :              True
+    Layer brown3 :              True
+    Layer greendown :           True
+    Layer greenup :             True
+    Layer greenstar :           True
+    Layer yellowstar :          True
+    Layer bluestar :            True
+    Layer coconut :             True
+    Layer monster :             True
+    Layer greencross :          True
+    Layer bluecross :           True
+    Layer redcross :            True
+    Layer purplecross :         True
+    Epsilon cap :               0.2
+    Softmax cap :               0.02
+    Update :                    10000
+    Reset chance :              0.002
+    Modified done chance :      0.05
+    Miss intervention cost :    -0.15
+    Intervention cost :         -0.05
+    Replay size :               100000
+    Sample size :               50
+    Cf convert :                3
+    Counterfacts :              1
+    Topn :                      6
+    Random counterfacts :       False
+    Minutes used :              4315 minutes.
+    Hours used :                71 hours.
+
+# Profiling
+
+Traceback (most recent call last):
+  File "main.py", line 227, in <module>
+    
+  File "/zhome/ea/9/137501/Desktop/Bachelor/Bachelorprojekt/auxillaries.py", line 132, in run
+    enablePrint()
+  File "/zhome/ea/9/137501/Desktop/Bachelor/Bachelorprojekt/Utils/server.py", line 37, in serverRun
+    profilingStats()
+  File "/zhome/ea/9/137501/Desktop/Bachelor/Bachelorprojekt/Utils/debug.py", line 59, in profilingStats
+    p = Stats('stats')
+  File "/appl/python/3.8.4/lib/python3.8/pstats.py", line 96, in __init__
+    self.init(arg)
+  File "/appl/python/3.8.4/lib/python3.8/pstats.py", line 110, in init
+    self.load_stats(arg)
+  File "/appl/python/3.8.4/lib/python3.8/pstats.py", line 124, in load_stats
+    self.stats = marshal.load(f)
+EOFError: EOF read where object expected
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@hpc.dtu.dk>
+Subject: Job 9601860: <Diamonds2_option_critic_0> in cluster <dcc> Exited
+
+Job <Diamonds2_option_critic_0> was submitted from host <gbarlogin1> by user <s183914> in cluster <dcc> at Thu Apr 29 21:41:07 2021
+Job was executed on host(s) <n-62-11-66>, in queue <hpc>, as user <s183914> in cluster <dcc> at Thu Apr 29 21:41:09 2021
+</zhome/ea/9/137501> was used as the home directory.
+</zhome/ea/9/137501/Desktop/Bachelor/Bachelorprojekt/Utils> was used as the working directory.
+Started at Thu Apr 29 21:41:09 2021
+Terminated at Sun May  2 21:36:12 2021
+Results reported at Sun May  2 21:36:12 2021
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/sh
+#BSUB -q hpc
+#BSUB -n 1
+#BSUB -R "rusage[mem=16G]"
+#BSUB -R "span[hosts=1]"
+#BSUB -W 4320
+# end of BSUB options
+cd ..
+module -s load python3
+source ../project-env/bin/activate
+
+python main.py $LSB_PROJECT_NAME
+------------------------------------------------------------
+
+Exited with exit code 1.
+
+Resource usage summary:
+
+    CPU time :                                   258284.83 sec.
+    Max Memory :                                 1028 MB
+    Average Memory :                             1006.98 MB
+    Total Requested Memory :                     16384.00 MB
+    Delta Memory :                               15356.00 MB
+    Max Swap :                                   -
+    Max Processes :                              4
+    Max Threads :                                6
+    Run time :                                   258914 sec.
+    Turnaround time :                            258905 sec.
+
+The output (if any) is above this job summary.
+
