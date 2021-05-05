@@ -15,6 +15,13 @@ from plotter import Colors, Loc, Plot
 #     )
 
 
+Plot(
+    title="convert1",
+    loc=Loc.lowerRight,
+    data=[
+        ("MonsterLevel_Conver1", "Monsters", Colors.pink),
+    ],
+)
 
 # Plot(
 #     title="convert1",
@@ -29,17 +36,17 @@ from plotter import Colors, Loc, Plot
 # )
 
 
-Plot(
-    title="convert2",
-    loc=Loc.lowerRight,
-    data=[
-        ("MonsterLevel_Conver2", "Monsters", Colors.pink),
-        ("Coconuts_Conver2", "Coconuts", Colors.green),
-        ("Maze_Conver2", "Maze", Colors.orange),
-        ("Causal3_Conver2", "Lights1", Colors.black),
-        ("Causal4_Conver2", "Lights2", Colors.purple),
-    ],
-)
+# Plot(
+#     title="convert2",
+#     loc=Loc.lowerRight,
+#     data=[
+#         ("MonsterLevel_Conver2", "Monsters", Colors.pink),
+#         ("Coconuts_Conver2", "Coconuts", Colors.green),
+#         ("Maze_Conver2", "Maze", Colors.orange),
+#         ("Causal3_Conver2", "Lights1", Colors.black),
+#         ("Causal4_Conver2", "Lights2", Colors.purple),
+#     ],
+# )
 
 # Plot(
 #     title="Teleporter",
