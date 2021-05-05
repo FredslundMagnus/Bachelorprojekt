@@ -14,15 +14,6 @@ from plotter import Colors, Loc, Plot
 #         ],
 #     )
 
-
-Plot(
-    title="convert1",
-    loc=Loc.lowerRight,
-    data=[
-        ("MonsterLevel_Conver1", "Monsters", Colors.pink),
-    ],
-)
-
 # Plot(
 #     title="convert1",
 #     loc=Loc.lowerRight,
@@ -48,23 +39,23 @@ Plot(
 #     ],
 # )
 
-# Plot(
-#     title="Teleporter",
-#     loc=Loc.lowerRight,
-#     data=[
-#         ("DoorsAndKey_teleport", "DoorsAndKey", Colors.blue),
-#         ("Monsters_teleport", "Monsters", Colors.pink),
-#         ("Coconuts_teleport", "Coconuts", Colors.green),
-#         ("Rocks_teleport", "Rocks", Colors.brown),
-#         ("Maze_teleport", "Maze", Colors.orange),
-#         ("Lights1_teleport", "Lights1", Colors.black),
-#         ("Lights2_teleport", "Lights2", Colors.purple),
-#         ("Diamonds1_teleport", "Diamonds1", Colors.yellow),
-#         ("Diamonds2_teleport", "Diamonds2", Colors.red),
-#         ("Diamonds3_teleport", "Diamonds3", Colors.blueGray),
-#         ("Diamonds4_teleport", "Diamonds4", Colors.lightGreen),
-#     ],
-# )
+Plot(
+    title="Teleporter",
+    loc=Loc.lowerRight,
+    data=[
+        ("DoorsAndKey_teleport", "DoorsAndKey", Colors.blue),
+        ("Monsters_teleport", "Monsters", Colors.pink),
+        ("Coconuts_teleport", "Coconuts", Colors.green),
+        ("Rocks_teleport", "Rocks", Colors.brown),
+        ("Maze_teleport", "Maze", Colors.orange),
+        ("Lights1_teleport", "Lights1", Colors.black),
+        ("Lights2_teleport", "Lights2", Colors.purple),
+        ("Diamonds1_teleport", "Diamonds1", Colors.yellow),
+        ("Diamonds2_teleport", "Diamonds2", Colors.red),
+        ("Diamonds3_teleport", "Diamonds3", Colors.blueGray),
+        ("Diamonds4_teleport", "Diamonds4", Colors.lightGreen),
+    ],
+)
 
 
 
