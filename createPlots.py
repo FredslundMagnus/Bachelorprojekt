@@ -14,30 +14,29 @@ from plotter import Colors, Loc, Plot
 #         ],
 #     )
 
-# Plot(
-#     title="convert1",
-#     loc=Loc.lowerRight,
-#     data=[
-#         ("MonsterLevel_Conver1", "Monsters", Colors.pink),
-#         ("Coconuts_Conver1", "Coconuts", Colors.green),
-#         ("Maze_Conver1", "Maze", Colors.orange),
-#         ("Causal3_Conver1", "Lights1", Colors.black),
-#         ("Causal4_Conver1", "Lights2", Colors.purple),
-#     ],
-# )
+Plot(
+    title="convert1",
+    loc=Loc.lowerRight,
+    data=[
+        ("MonsterLevel_Conver1", "Monsters", Colors.pink),
+        ("Coconuts_Conver1", "Coconuts", Colors.green),
+        ("Maze_Conver1", "Maze", Colors.orange),
+        ("Causal3_Conver1", "Lights1", Colors.black),
+        ("Causal4_Conver1", "Lights2", Colors.purple),
+    ],
+)
 
-
-# Plot(
-#     title="convert2",
-#     loc=Loc.lowerRight,
-#     data=[
-#         ("MonsterLevel_Conver2", "Monsters", Colors.pink),
-#         ("Coconuts_Conver2", "Coconuts", Colors.green),
-#         ("Maze_Conver2", "Maze", Colors.orange),
-#         ("Causal3_Conver2", "Lights1", Colors.black),
-#         ("Causal4_Conver2", "Lights2", Colors.purple),
-#     ],
-# )
+Plot(
+    title="convert2",
+    loc=Loc.lowerRight,
+    data=[
+        ("MonsterLevel_Conver2", "Monsters", Colors.pink),
+        ("Coconuts_Conver2", "Coconuts", Colors.green),
+        ("Maze_Conver2", "Maze", Colors.orange),
+        ("Causal3_Conver2", "Lights1", Colors.black),
+        ("Causal4_Conver2", "Lights2", Colors.purple),
+    ],
+)
 
 Plot(
     title="Teleporter",
@@ -70,25 +69,39 @@ Plot(
 
 
 
+Plot(
+    title="option_critic1",
+    loc=Loc.lowerRight,
+    data=[
+        ("DoorsAndKey_option_critic", "DoorsAndKey", Colors.blue),
+        ("Monsters_option_critic", "Monsters", Colors.pink),
+        ("Coconuts_option_critic", "Coconuts", Colors.green),
+        ("Maze_option_critic", "Maze", Colors.orange),
+        ("Lights1_option_critic", "Lights1", Colors.black),
+        ("Lights2_option_critic", "Lights2", Colors.purple),
+        ("Diamonds1_option_critic", "Diamonds1", Colors.yellow),
+        ("Diamonds2_option_critic", "Diamonds2", Colors.red),
+        ("Diamonds3_option_critic", "Diamonds3", Colors.blueGray),
+        ("Diamonds4_option_critic", "Diamonds4", Colors.lightGreen),
+    ],
+)
 
-
-# Plot(
-#     title="option_critic",
-#     loc=Loc.lowerRight,
-#     data=[
-#         ("DoorsAndKey_option_critic", "DoorsAndKey", Colors.blue),
-#         ("Monsters_option_critic", "Monsters", Colors.pink),
-#         ("Coconuts_option_critic", "Coconuts", Colors.green),
-#         ("Rocks_option_critic", "Rocks", Colors.brown),
-#         ("Maze_option_critic", "Maze", Colors.orange),
-#         ("Lights1_option_critic", "Lights1", Colors.black),
-#         ("Lights2_option_critic", "Lights2", Colors.purple),
-#         ("Diamonds1_option_critic", "Diamonds1", Colors.yellow),
-#         ("Diamonds2_option_critic", "Diamonds2", Colors.red),
-#         ("Diamonds3_option_critic", "Diamonds3", Colors.blueGray),
-#         ("Diamonds4_option_critic", "Diamonds4", Colors.lightGreen),
-#     ],
-# )
+Plot(
+    title="option_critic2",
+    loc=Loc.lowerRight,
+    data=[
+        ("Attempt2_DoorsAndKey_option_critic", "DoorsAndKey", Colors.blue),
+        ("Attempt2_Monsters_option_critic", "Monsters", Colors.pink),
+        ("Attempt2_Coconuts_option_critic", "Coconuts", Colors.green),
+        ("Attempt2_Maze_option_critic", "Maze", Colors.orange),
+        ("Attempt2_Lights1_option_critic", "Lights1", Colors.black),
+        ("Attempt2_Lights2_option_critic", "Lights2", Colors.purple),
+        ("Attempt2_Diamonds1_option_critic", "Diamonds1", Colors.yellow),
+        ("Attempt2_Diamonds2_option_critic", "Diamonds2", Colors.red),
+        ("Attempt2_Diamonds3_option_critic", "Diamonds3", Colors.blueGray),
+        ("Attempt2_Diamonds4_option_critic", "Diamonds4", Colors.lightGreen),
+    ],
+)
 
 
 envs = [

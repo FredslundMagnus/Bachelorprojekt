@@ -189,7 +189,7 @@ def actor_loss_fn(obs, option, logp, entropy, reward, done, next_obs, model, mod
 # parser.add_argument('--switch-goal', type=bool, default=False, help='switch goal after 2k eps')
 
 update_frequency = 4
-freeze_interval = 10000
+freeze_interval = 1000
 
 
 def option_critic_run(defaults):
@@ -204,10 +204,10 @@ def option_critic_run(defaults):
         num_options=num_options,
         width=env.board.shape[2],
         height=env.board.shape[3],
-        temperature=0.001,
-        eps_start=1000000,
-        eps_min=0.01,
-        eps_decay=1000000,
+        temperature=0.005,
+        eps_start=2000000,
+        eps_min=0.2,
+        eps_decay=2000000,
         eps_test=0.05,
         device=device
     )

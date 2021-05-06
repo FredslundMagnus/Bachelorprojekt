@@ -321,6 +321,18 @@ def genExperiments(name, n=1, cpu=False, **params):
 # genExperiments(f"Attempt4_Coconuts_option_critic", n=3, hours=72, level=Levels.Coconuts, main=option_critic_run, cpu=True, batch=32)
 # genExperiments(f"Attempt4_Monsters_option_critic", n=3, hours=72, level=Levels.MonsterLevel, main=option_critic_run, cpu=True, batch=32)
 # genExperiments(f"Attempt4_DoorsAndKey_option_critic", n=3, hours=72, level=Levels.Causal1, main=option_critic_run, cpu=True, batch=32)
+genExperiments(f"Attempt5_Lights1_option_critic", n=3, hours=72, level=Levels.Causal3, main=option_critic_run, cpu=True, batch=32)
+genExperiments(f"Attempt5_Lights2_option_critic", n=3, hours=72, level=Levels.Causal4, main=option_critic_run, cpu=True, batch=32)
+genExperiments(f"Attempt5_Diamonds1_option_critic", n=3, hours=72, level=Levels.Causal2, main=option_critic_run, cpu=True, batch=32)
+genExperiments(f"Attempt5_Diamonds2_option_critic", n=3, hours=72, level=Levels.Causal5, main=option_critic_run, cpu=True, batch=32)
+genExperiments(f"Attempt5_Diamonds3_option_critic", n=3, hours=72, level=Levels.Causal6, main=option_critic_run, cpu=True, batch=32)
+genExperiments(f"Attempt5_Diamonds4_option_critic", n=3, hours=72, level=Levels.Causal7, main=option_critic_run, cpu=True, batch=32)
+genExperiments(f"Attempt5_SuperLevel1_option_critic", n=3, hours=72, level=Levels.SuperLevel, main=option_critic_run, cpu=True, batch=32)
+genExperiments(f"Attempt5_SuperLevel2_option_critic", n=3, hours=72, level=Levels.SuperLevel2, main=option_critic_run, cpu=True, batch=32)
+genExperiments(f"Attempt5_Maze_option_critic", n=3, hours=72, level=Levels.Maze, main=option_critic_run, cpu=True, batch=32)
+genExperiments(f"Attempt5_Coconuts_option_critic", n=3, hours=72, level=Levels.Coconuts, main=option_critic_run, cpu=True, batch=32)
+genExperiments(f"Attempt5_Monsters_option_critic", n=3, hours=72, level=Levels.MonsterLevel, main=option_critic_run, cpu=True, batch=32)
+genExperiments(f"Attempt5_DoorsAndKey_option_critic", n=3, hours=72, level=Levels.Causal1, main=option_critic_run, cpu=True, batch=32)
 
 
 # genExperiments(f"Test_CPU_10", n=1, hours=0.1, level=Levels.Causal3, cpu=True, batch=25)
