@@ -107,7 +107,7 @@ def CFagent(defaults):
             CFagent.learn(CFobs, cf, CFrewards, CFdones1, CFboard)
 
 def Load_Cfagent(defaults):
-    with Load("Causal4_Conver4_3counterfacts", num=defaults['num']) as load:
+    with Load(defaults["load_name"], num=defaults['num']) as load:
         collector, env, mover, teleporter, CFagent = load.items(Collector, Game, Mover, Teleporter, CFAgent)
         buffer = ReplayBuffer(**defaults)
         CFbuffer = CFReplayBuffer(**defaults)
@@ -262,6 +262,7 @@ class Defaults:
     TopN: int = 6
     Random_counterfacts: bool = False
     num: int = 0
+    load_name: str = "Causal4_Conver4_3counterfacts"
 
 
 run(Defaults)
