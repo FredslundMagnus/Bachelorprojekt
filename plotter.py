@@ -43,7 +43,7 @@ class Plotter():
         self.plt.ylabel(ylabel)
         self.N: int = normalize
 
-        def varPlot(name: str, collectors: List[Collector], color: MaterialColor, meanVar: bool = False):
+        def varPlot(name: str, collectors: List[Collector], color: MaterialColor, meanVar: bool = True):
             if not collectors:
                 raise Exception(f"Der var ingen collectors i den givne position for {name}")
             if collectors:
@@ -53,12 +53,14 @@ class Plotter():
                     data.append(collector.data[keys][:minL])
                 data = np.array(data)
                 y = np.mean(data, axis=0)
+                if (any(y < 0)):
+                    y = (y + 1)/2
                 sd = np.std(data, axis=0)
                 y, sd = self.normalize(y, sd)
                 x = np.arange(1, len(y) + 1)
                 self.plt.plot(x, y, lw=2, label=name, color='#%02x%02x%02x' % color.color, zorder=2)
                 if meanVar:
-                    sd = sd / np.sqrt(len(collectors))
+                    sd = sd / np.sqrt(len(collectors)) * 1.96
                 self.plt.fill_between(x, y + sd, y - sd, facecolor='#%02x%02x%02x' % color.color, alpha=0.5, zorder=2)
                 self.plt.doPrint = True
 

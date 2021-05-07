@@ -132,7 +132,7 @@ def critic_loss_fn(model, model_prime, data_batch):
     next_options_term_prob = next_termination_probs[batch_idx, options]
 
     # Now we can calculate the update target gt
-    gt = rewards + masks * 0.99 * \
+    gt = rewards + masks * 0.98 * \
         ((1 - next_options_term_prob) * next_Q_prime[batch_idx, options] + next_options_term_prob * next_Q_prime.max(dim=-1)[0])
 
     # to update Q we want to use the actual network, not the prime
@@ -152,14 +152,14 @@ def actor_loss_fn(obs, option, logp, entropy, reward, done, next_obs, model, mod
     next_Q_prime = model_prime.get_Q(next_state_prime).detach().squeeze()
 
     # Target update gt
-    gt = reward + (1 - done) * 0.99 * ((1 - next_option_term_prob) * next_Q_prime[option] + next_option_term_prob * next_Q_prime.max(dim=-1)[0])
+    gt = reward + (1 - done) * 0.95 * ((1 - next_option_term_prob) * next_Q_prime[option] + next_option_term_prob * next_Q_prime.max(dim=-1)[0])
 
     # The termination loss
     termination_loss = option_term_prob * (Q[option].detach() - Q.max(dim=-1)[0].detach() + 0.01) * (1 - done)
 
     # actor-critic policy gradient with entropy regularization
     #print(obs)
-    policy_loss = -logp * (gt.detach() - Q[option])# - 0.01 * entropy
+    policy_loss = -logp * (gt.detach() - Q[option]) - 0.01 * entropy
     actor_loss = termination_loss + policy_loss
     return actor_loss
 
@@ -189,7 +189,7 @@ def actor_loss_fn(obs, option, logp, entropy, reward, done, next_obs, model, mod
 # parser.add_argument('--switch-goal', type=bool, default=False, help='switch goal after 2k eps')
 
 update_frequency = 4
-freeze_interval = 10000
+freeze_interval = 200
 
 
 def option_critic_run(defaults):
@@ -204,10 +204,10 @@ def option_critic_run(defaults):
         num_options=num_options,
         width=env.board.shape[2],
         height=env.board.shape[3],
-        temperature=0.001,
-        eps_start=1000000,
-        eps_min=0.01,
-        eps_decay=1000000,
+        temperature=0.005,
+        eps_start=2000000,
+        eps_min=0.2,
+        eps_decay=2000000,
         eps_test=0.05,
         device=device
     )

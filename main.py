@@ -106,6 +106,33 @@ def CFagent(defaults):
             CFboard, CFobs, cf, CFrewards, CFdones1 = CFbuffer.sample_data()
             CFagent.learn(CFobs, cf, CFrewards, CFdones1, CFboard)
 
+def Load_Cfagent(defaults):
+    with Load(defaults["load_name"], num=defaults['num']) as load:
+        collector, env, mover, teleporter, CFagent = load.items(Collector, Game, Mover, Teleporter, CFAgent)
+        buffer = ReplayBuffer(**defaults)
+        CFbuffer = CFReplayBuffer(**defaults)
+
+        with Save(env, collector, mover, teleporter, CFagent, **defaults) as save:
+            intervention_idx, modified_board = teleporter.pre_process(env)
+            dones = CFagent.pre_process(env)
+            CF_dones, cfs = None, None
+            CFagent.CF_count = 0
+            for frame in loop(env, collector, save, teleporter):
+                CFagent.counterfact(env, dones, teleporter, CF_dones, cfs)
+                modified_board = teleporter.interveen(env.board, intervention_idx, modified_board)
+                actions = mover(modified_board)
+                observations, rewards, dones, info = env.step(actions)
+                modified_board, modified_rewards, modified_dones, teleport_rewards, intervention_idx = teleporter.modify(observations, rewards, dones, info)
+                buffer.teleporter_save_data(teleporter.boards, observations, teleporter.interventions, teleport_rewards, dones, intervention_idx)
+                mover.learn(modified_board, actions, modified_rewards, modified_dones)
+                board_before, board_after, intervention, tele_rewards, tele_dones = buffer.sample_data()
+                teleporter.learn(board_after, intervention, tele_rewards, tele_dones, board_before)
+                collector.collect([rewards, modified_rewards, teleport_rewards], [dones, modified_dones])
+                CF_dones, cfs = CFagent.counterfact_check(dones, env, **defaults)
+                CFbuffer.CF_save_data(CFagent.boards, observations, CFagent.counterfactuals, rewards, dones, CF_dones)
+                CFboard, CFobs, cf, CFrewards, CFdones1 = CFbuffer.sample_data()
+                CFagent.learn(CFobs, cf, CFrewards, CFdones1, CFboard)
+
 
 def CFagentv2(defaults):
     env = Game(**defaults)
@@ -145,7 +172,7 @@ def CFagentv2(defaults):
 
 class Defaults:
     name: str = "Agent"
-    main: function = option_critic_run
+    main: function = Load_Cfagent
     level: Levels = Levels.CausalSuper
     failed_actions_chance: float = 0
     use_model: bool = True
@@ -234,6 +261,8 @@ class Defaults:
     Counterfacts: int = 1
     TopN: int = 6
     Random_counterfacts: bool = False
+    num: int = 0
+    load_name: str = "Causal4_Conver4_3counterfacts"
 
 
 run(Defaults)

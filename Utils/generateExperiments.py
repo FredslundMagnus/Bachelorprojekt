@@ -1,5 +1,5 @@
 
-from main import Defaults, teleport, simple, CFagent, graphTrain, CFagentv2, GraphMode, option_critic_run
+from main import Defaults, Load_Cfagent, teleport, simple, CFagent, graphTrain, CFagentv2, GraphMode, option_critic_run
 from network import Networks
 from learner import Learners
 from levels import Levels
@@ -34,6 +34,7 @@ def genExperiments(name, n=1, cpu=False, **params):
     createFolders(name)
     check(params)
     for i in range(n):
+        params['num'] = i
         file.write(f'bsub -o "../outputs/{name}/Markdown/{name}_{i}.md" -J "{name}_{i}" -env MYARGS="-name {name}-{i} {" ".join(f"-{name} {value}" for name, value in params.items())}" < submit_{"cpu" if cpu else "gpu"}.sh\n')
 
 #genExperiments(f"teleport_short", hours=3.0)
@@ -256,8 +257,12 @@ def genExperiments(name, n=1, cpu=False, **params):
 
 # genExperiments(f"Causal4_Conver3", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=3, TopN=3)
 # genExperiments(f"Causal4_Conver4", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=4, TopN=3)
-genExperiments(f"Causal3_Conver4", n=3, hours=24, level=Levels.Causal3, main=CFagent, CF_convert=4, TopN=3)
+# genExperiments(f"Causal3_Conver4", n=3, hours=24, level=Levels.Causal3, main=CFagent, CF_convert=4, TopN=3)
 # genExperiments(f"Causal4_Conver4softmax1", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=4, TopN=3)
+
+# genExperiments(f"Causal4_Conver4_3counterfacts", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=4, TopN=5, Counterfacts = 3)
+# genExperiments(f"Causal4_Conver4_3counterfacts_2", n=3, hours=11, level=Levels.Causal4, main=Load_Cfagent, CF_convert=4, TopN=5, Counterfacts = 3, load_name = "Causal4_Conver4_3counterfacts")
+genExperiments(f"Maze_Conver4_3counterfacts", n=3, hours=24, level=Levels.Maze, main=CFagent, CF_convert=4, TopN=5, Counterfacts = 3)
 
 # genExperiments(f"Causal3_Conver1", n=3, hours=24, level=Levels.Causal3, main=CFagent, CF_convert=1, TopN=3)
 # genExperiments(f"Causal3_Conver2", n=3, hours=24, level=Levels.Causal3, main=CFagent, CF_convert=2, TopN=3)
@@ -283,6 +288,7 @@ genExperiments(f"Causal3_Conver4", n=3, hours=24, level=Levels.Causal3, main=CFa
 # genExperiments(f"Coconuts_option_critic", n=3, hours=72, level=Levels.Coconuts, main=option_critic_run, cpu=True, batch=25)
 # genExperiments(f"Monsters_option_critic", n=3, hours=72, level=Levels.MonsterLevel, main=option_critic_run, cpu=True, batch=25)
 # genExperiments(f"DoorsAndKey_option_critic", n=3, hours=72, level=Levels.Causal1, main=option_critic_run, cpu=True, batch=25)
+
 # genExperiments(f"Attempt2_Lights1_option_critic", n=3, hours=72, level=Levels.Causal3, main=option_critic_run, cpu=True, batch=25)
 # genExperiments(f"Attempt2_Lights2_option_critic", n=3, hours=72, level=Levels.Causal4, main=option_critic_run, cpu=True, batch=25)
 # genExperiments(f"Attempt2_Diamonds1_option_critic", n=3, hours=72, level=Levels.Causal2, main=option_critic_run, cpu=True, batch=25)
@@ -319,6 +325,18 @@ genExperiments(f"Causal3_Conver4", n=3, hours=24, level=Levels.Causal3, main=CFa
 # genExperiments(f"Attempt4_Coconuts_option_critic", n=3, hours=72, level=Levels.Coconuts, main=option_critic_run, cpu=True, batch=32)
 # genExperiments(f"Attempt4_Monsters_option_critic", n=3, hours=72, level=Levels.MonsterLevel, main=option_critic_run, cpu=True, batch=32)
 # genExperiments(f"Attempt4_DoorsAndKey_option_critic", n=3, hours=72, level=Levels.Causal1, main=option_critic_run, cpu=True, batch=32)
+# genExperiments(f"Attempt5_Lights1_option_critic", n=3, hours=72, level=Levels.Causal3, main=option_critic_run, cpu=True, batch=32)
+# genExperiments(f"Attempt5_Lights2_option_critic", n=3, hours=72, level=Levels.Causal4, main=option_critic_run, cpu=True, batch=32)
+# genExperiments(f"Attempt5_Diamonds1_option_critic", n=3, hours=72, level=Levels.Causal2, main=option_critic_run, cpu=True, batch=32)
+# genExperiments(f"Attempt5_Diamonds2_option_critic", n=3, hours=72, level=Levels.Causal5, main=option_critic_run, cpu=True, batch=32)
+# genExperiments(f"Attempt5_Diamonds3_option_critic", n=3, hours=72, level=Levels.Causal6, main=option_critic_run, cpu=True, batch=32)
+# genExperiments(f"Attempt5_Diamonds4_option_critic", n=3, hours=72, level=Levels.Causal7, main=option_critic_run, cpu=True, batch=32)
+# genExperiments(f"Attempt5_SuperLevel1_option_critic", n=3, hours=72, level=Levels.SuperLevel, main=option_critic_run, cpu=True, batch=32)
+# genExperiments(f"Attempt5_SuperLevel2_option_critic", n=3, hours=72, level=Levels.SuperLevel2, main=option_critic_run, cpu=True, batch=32)
+# genExperiments(f"Attempt5_Maze_option_critic", n=3, hours=72, level=Levels.Maze, main=option_critic_run, cpu=True, batch=32)
+# genExperiments(f"Attempt5_Coconuts_option_critic", n=3, hours=72, level=Levels.Coconuts, main=option_critic_run, cpu=True, batch=32)
+# genExperiments(f"Attempt5_Monsters_option_critic", n=3, hours=72, level=Levels.MonsterLevel, main=option_critic_run, cpu=True, batch=32)
+# genExperiments(f"Attempt5_DoorsAndKey_option_critic", n=3, hours=72, level=Levels.Causal1, main=option_critic_run, cpu=True, batch=32)
 
 
 # genExperiments(f"Test_CPU_10", n=1, hours=0.1, level=Levels.Causal3, cpu=True, batch=25)
