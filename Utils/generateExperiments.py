@@ -260,7 +260,7 @@ def genExperiments(name, n=1, cpu=False, **params):
 # genExperiments(f"Causal3_Conver4", n=3, hours=24, level=Levels.Causal3, main=CFagent, CF_convert=4, TopN=3)
 # genExperiments(f"Causal4_Conver4softmax1", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=4, TopN=3)
 # genExperiments(f"Causal4_Conver4_3counterfacts", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=4, TopN=5, Counterfacts = 3)
-genExperiments(f"Causal4_Conver4_3counterfacts_2", n=3, hours=24, level=Levels.Causal4, main=Load_Cfagent, CF_convert=4, TopN=5, Counterfacts = 3)
+genExperiments(f"Causal4_Conver4_3counterfacts_2", n=3, hours=11, level=Levels.Causal4, main=Load_Cfagent, CF_convert=4, TopN=5, Counterfacts = 3)
 
 # genExperiments(f"Causal3_Conver1", n=3, hours=24, level=Levels.Causal3, main=CFagent, CF_convert=1, TopN=3)
 # genExperiments(f"Causal3_Conver2", n=3, hours=24, level=Levels.Causal3, main=CFagent, CF_convert=2, TopN=3)
