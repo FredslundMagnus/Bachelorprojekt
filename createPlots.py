@@ -87,19 +87,15 @@ Plot(
 )
 
 Plot(
-    title="option_critic2",
+    title="option_critic3",
     loc=Loc.lowerRight,
     data=[
-        ("Attempt2_DoorsAndKey_option_critic", "DoorsAndKey", Colors.blue),
-        ("Attempt2_Monsters_option_critic", "Monsters", Colors.pink),
-        ("Attempt2_Coconuts_option_critic", "Coconuts", Colors.green),
-        ("Attempt2_Maze_option_critic", "Maze", Colors.orange),
-        ("Attempt2_Lights1_option_critic", "Lights1", Colors.black),
-        ("Attempt2_Lights2_option_critic", "Lights2", Colors.purple),
-        ("Attempt2_Diamonds1_option_critic", "Diamonds1", Colors.yellow),
-        ("Attempt2_Diamonds2_option_critic", "Diamonds2", Colors.red),
-        ("Attempt2_Diamonds3_option_critic", "Diamonds3", Colors.blueGray),
-        ("Attempt2_Diamonds4_option_critic", "Diamonds4", Colors.lightGreen),
+        ("Attempt3_Maze_option_critic", "Maze", Colors.orange),
+        ("Attempt3_Lights1_option_critic", "Lights1", Colors.black),
+        ("Attempt3_Lights2_option_critic", "Lights2", Colors.purple),
+        ("Attempt3_Diamonds1_option_critic", "Diamonds1", Colors.yellow),
+        ("Attempt3_Diamonds2_option_critic", "Diamonds2", Colors.red),
+        ("Attempt3_Diamonds3_option_critic", "Diamonds3", Colors.blueGray),
     ],
 )
 
