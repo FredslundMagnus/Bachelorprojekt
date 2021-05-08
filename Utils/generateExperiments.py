@@ -250,8 +250,8 @@ def genExperiments(name, n=1, cpu=False, **params):
 # genExperiments(f"Maze_simple", n=3, hours=24, level=Levels.Maze, main=simple, network2=Networks.MiniBig)
 # genExperiments(f"Rocks_simple", n=3, hours=24, level=Levels.Rocks, main=simple, network2=Networks.MiniBig)
 # genExperiments(f"Coconuts_simple", n=3, hours=24, level=Levels.Coconuts, main=simple, network2=Networks.MiniBig)
-# genExperiments(f"Monsters_simple", n=3, hours=24, level=Levels.MonsterLevel, main=simple, network2=Networks.MiniBig)
-# genExperiments(f"DoorsAndKey_simple", n=3, hours=24, level=Levels.Causal1, main=simple, network2=Networks.MiniBig)
+genExperiments(f"Monsters_simple", n=3, hours=24, level=Levels.MonsterLevel, main=simple, network2=Networks.MiniBig)
+genExperiments(f"DoorsAndKey_simple", n=3, hours=24, level=Levels.Causal1, main=simple, network2=Networks.MiniBig)
 
 # Jakob Good Data
 
@@ -262,7 +262,7 @@ def genExperiments(name, n=1, cpu=False, **params):
 
 # genExperiments(f"Causal4_Conver4_3counterfacts", n=3, hours=24, level=Levels.Causal4, main=CFagent, CF_convert=4, TopN=5, Counterfacts = 3)
 # genExperiments(f"Causal4_Conver4_3counterfacts_2", n=3, hours=11, level=Levels.Causal4, main=Load_Cfagent, CF_convert=4, TopN=5, Counterfacts = 3, load_name = "Causal4_Conver4_3counterfacts")
-genExperiments(f"Maze_Conver4_3counterfacts", n=3, hours=24, level=Levels.Maze, main=CFagent, CF_convert=4, TopN=5, Counterfacts = 3)
+# genExperiments(f"Maze_Conver4_3counterfacts", n=3, hours=24, level=Levels.Maze, main=CFagent, CF_convert=4, TopN=5, Counterfacts = 3)
 
 # genExperiments(f"Causal3_Conver1", n=3, hours=24, level=Levels.Causal3, main=CFagent, CF_convert=1, TopN=3)
 # genExperiments(f"Causal3_Conver2", n=3, hours=24, level=Levels.Causal3, main=CFagent, CF_convert=2, TopN=3)
