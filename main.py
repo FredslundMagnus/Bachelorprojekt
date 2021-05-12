@@ -172,7 +172,7 @@ def CFagentv2(defaults):
 
 class Defaults:
     name: str = "Agent"
-    main: function = option_critic_run
+    main: function = CFagent
     level: Levels = Levels.MonsterLevel
     failed_actions_chance: float = 0
     use_model: bool = True

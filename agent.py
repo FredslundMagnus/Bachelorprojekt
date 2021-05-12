@@ -1,7 +1,7 @@
 from network import Net, Networks
 from game import Game
 from learner import Learner, Learners
-from torch import Tensor, random
+from torch import Tensor, random, set_default_dtype
 import torch
 from typing import List
 from abc import ABCMeta, abstractmethod
@@ -168,6 +168,8 @@ class CFAgent(Agent):
         self.done_number = 0
         self.CF_count = 0
         self.level = str(game.level)
+        if a != b:
+            cruas
 
     def __call__(self, board: Tensor) -> Tensor:
         self.values: Tensor = self.net.network(board)
