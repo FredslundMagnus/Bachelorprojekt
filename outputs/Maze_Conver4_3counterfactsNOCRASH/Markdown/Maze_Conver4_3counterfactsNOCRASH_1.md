@@ -247,3 +247,537 @@ Resource usage summary:
 
 The output (if any) is above this job summary.
 
+Traceback (most recent call last):
+  File "/zhome/ea/9/137501/Desktop/Bachelor/Bachelorprojekt/Utils/debug.py", line 71, in __init__
+    cProfile.run(
+  File "/appl/python/3.8.4/lib/python3.8/cProfile.py", line 16, in run
+    return _pyprofile._Utils(Profile).run(statement, filename, sort)
+  File "/appl/python/3.8.4/lib/python3.8/profile.py", line 53, in run
+    prof.run(statement)
+  File "/appl/python/3.8.4/lib/python3.8/cProfile.py", line 95, in run
+    return self.runctx(cmd, dict, dict)
+  File "/appl/python/3.8.4/lib/python3.8/cProfile.py", line 100, in runctx
+    exec(cmd, globals, locals)
+  File "<string>", line 2, in <module>
+  File "main.py", line 85, in CFagent
+    CFagent = CFAgent(env, **defaults)
+  File "/zhome/ea/9/137501/Desktop/Bachelor/Bachelorprojekt/agent.py", line 171, in __init__
+    if a != b:
+NameError: name 'a' is not defined
+
+
+# Parameters
+
+    Name :                      Maze_Conver4_3counterfactsNOCRASH-1
+    Main :                      CFagent
+    Level :                     Levels.Maze
+    Failed actions chance :     0
+    Use model :                 True
+    Depth :                     3
+    Model explore :             1000000
+    Samples :                   5
+    Hours :                     24.0
+    Batch :                     100
+    Width :                     9
+    Height :                    9
+    Graphmode :                 GraphMode.UCB1
+    Network1 :                  Networks.Teleporter
+    K1 :                        5000000
+    Learner1 :                  Learners.Qlearn
+    Exploration1 :              Explorations.softmaxer
+    Gamma1 :                    0.98
+    Network2 :                  Networks.Mini
+    K2 :                        1000000
+    Learner2 :                  Learners.Qlearn
+    Exploration2 :              Explorations.epsilonGreedy
+    Gamma2 :                    0.95
+    Layer blocks :              True
+    Layer goal :                True
+    Layer gold :                True
+    Layer keys :                True
+    Layer door :                True
+    Layer holder :              True
+    Layer putter :              True
+    Layer rock :                True
+    Layer dirt :                True
+    Layer diamond1 :            True
+    Layer diamond2 :            True
+    Layer diamond3 :            True
+    Layer diamond4 :            True
+    Layer reddoor :             True
+    Layer redkeys :             True
+    Layer bluedoor :            True
+    Layer bluekeys :            True
+    Layer pink1 :               True
+    Layer pink2 :               True
+    Layer pink3 :               True
+    Layer brown1 :              True
+    Layer brown2 :              True
+    Layer brown3 :              True
+    Layer greendown :           True
+    Layer greenup :             True
+    Layer greenstar :           True
+    Layer yellowstar :          True
+    Layer bluestar :            True
+    Layer coconut :             True
+    Layer monster :             True
+    Layer greencross :          True
+    Layer bluecross :           True
+    Layer redcross :            True
+    Layer purplecross :         True
+    Layer super1 :              True
+    Layer super2 :              True
+    Layer super3 :              True
+    Layer super4 :              True
+    Layer super5 :              True
+    Layer super6 :              True
+    Layer super7 :              True
+    Epsilon cap :               0.2
+    Softmax cap :               0.02
+    Update :                    10000
+    Reset chance :              0.002
+    Modified done chance :      0.05
+    Miss intervention cost :    -0.15
+    Intervention cost :         -0.05
+    Replay size :               100000
+    Sample size :               50
+    Cf convert :                4
+    Counterfacts :              3
+    Topn :                      5
+    Random counterfacts :       False
+    Num :                       1
+    Load name :                 Causal4_Conver4_3counterfacts
+    Minutes used :              0 minutes.
+    Hours used :                0 hours.
+
+# Profiling
+
+
+      254084 function calls (253795 primitive calls) in 8.62 seconds
+
+##    Ordered by: cumulative time
+   List reduced from 220 to 100 due to restriction <100>
+
+                  ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+                      1    0.000    0.000    8.624    8.624 {built-in method builtins.exec}
+                      1    0.000    0.000    8.624    8.624 <string>:1(<module>)
+                      1    0.000    0.000    8.624    8.624 main.py:80(CFagent)
+                      3    0.000    0.000    8.512    2.837 agent.py:16(__init__)
+                      3    0.000    0.000    8.512    2.837 network.py:37(__init__)
+                      1    0.000    0.000    8.495    8.495 agent.py:109(__init__)
+                      9    0.000    0.000    8.460    0.940 module.py:573(to)
+                  111/9    0.001    0.000    8.459    0.940 module.py:385(_apply)
+                     84    0.000    0.000    8.457    0.101 module.py:667(convert)
+                     84    8.455    0.101    8.457    0.101 {method 'to' of 'torch._C._TensorBase' objects}
+                      1    0.002    0.002    0.104    0.104 game.py:9(__init__)
+                      1    0.000    0.000    0.086    0.086 layers.py:793(update)
+                    100    0.001    0.000    0.081    0.001 layers.py:849(restart)
+                    100    0.001    0.000    0.070    0.001 level.py:8(__init__)
+                    141    0.009    0.000    0.064    0.000 levels.py:9(generate)
+                      9    0.000    0.000    0.052    0.006 network.py:17(__init__)
+                     18    0.000    0.000    0.042    0.002 conv.py:370(__init__)
+                     18    0.009    0.000    0.041    0.002 conv.py:66(__init__)
+                     42    0.000    0.000    0.036    0.001 init.py:347(kaiming_uniform_)
+                     84    0.033    0.000    0.033    0.000 {method 'uniform_' of 'torch._C._TensorBase' objects}
+                     18    0.000    0.000    0.031    0.002 conv.py:114(reset_parameters)
+                    300    0.003    0.000    0.023    0.000 level.py:41(notUsed)
+                    141    0.010    0.000    0.019    0.000 levels.py:75(RFS)
+                      1    0.000    0.000    0.013    0.013 agent.py:39(__init__)
+                    200    0.006    0.000    0.013    0.000 layers.py:36(reset)
+                      1    0.000    0.000    0.011    0.011 layers.py:751(__init__)
+                      7    0.000    0.000    0.011    0.002 layers.py:782(add)
+                    300    0.000    0.000    0.010    0.000 level.py:38(elementsIn)
+                      8    0.001    0.000    0.010    0.001 layer.py:61(__init__)
+                  10079    0.009    0.000    0.009    0.000 level.py:32(inverse)
+                    800    0.001    0.000    0.009    0.000 layer.py:77(restart)
+                      1    0.000    0.000    0.009    0.009 agent.py:158(__init__)
+                     24    0.000    0.000    0.007    0.000 linear.py:75(__init__)
+                  25836    0.005    0.000    0.007    0.000 enum.py:646(__hash__)
+                    300    0.003    0.000    0.006    0.000 level.py:39(<listcomp>)
+                     24    0.000    0.000    0.006    0.000 linear.py:86(reset_parameters)
+                   9200    0.004    0.000    0.005    0.000 layer.py:138(add)
+                    141    0.002    0.000    0.005    0.000 level.py:16(<dictcomp>)
+                  21085    0.005    0.000    0.005    0.000 enum.py:352(<genexpr>)
+                   8460    0.003    0.000    0.005    0.000 levels.py:31(<genexpr>)
+                      1    0.000    0.000    0.004    0.004 game.py:30(<setcomp>)
+                     41    0.002    0.000    0.004    0.000 game.py:30(<listcomp>)
+                      2    0.004    0.002    0.004    0.002 {built-in method zeros}
+                   1698    0.003    0.000    0.004    0.000 module.py:950(__setattr__)
+                      8    0.003    0.000    0.004    0.000 layer.py:175(NoRock_update)
+                    114    0.001    0.000    0.004    0.000 module.py:250(__init__)
+                   2456    0.001    0.000    0.003    0.000 random.py:285(choice)
+                    300    0.002    0.000    0.003    0.000 {built-in method _functools.reduce}
+                  17056    0.003    0.000    0.003    0.000 layer.py:190(grid)
+                      1    0.000    0.000    0.003    0.003 replaybuffer.py:8(__init__)
+                      1    0.003    0.003    0.003    0.003 replaybuffer.py:11(<listcomp>)
+                   3352    0.002    0.000    0.003    0.000 random.py:250(_randbelow_with_getrandbits)
+                    382    0.001    0.000    0.003    0.000 random.py:315(sample)
+                  25836    0.002    0.000    0.002    0.000 {built-in method builtins.hash}
+                     84    0.002    0.000    0.002    0.000 init.py:268(_calculate_fan_in_and_fan_out)
+                  24631    0.002    0.000    0.002    0.000 {method 'append' of 'list' objects}
+                     42    0.000    0.000    0.002    0.000 init.py:337(_calculate_correct_fan)
+                   2360    0.001    0.000    0.002    0.000 types.py:171(__get__)
+                    4/1    0.000    0.000    0.002    0.002 __init__.py:144(_lazy_init)
+                   2115    0.002    0.000    0.002    0.000 {method 'intersection_update' of 'set' objects}
+                   2115    0.002    0.000    0.002    0.000 levels.py:85(<listcomp>)
+                      1    0.001    0.001    0.001    0.001 {built-in method torch._C._cuda_init}
+                  11497    0.001    0.000    0.001    0.000 {method 'add' of 'set' objects}
+                   6374    0.001    0.000    0.001    0.000 {built-in method builtins.min}
+                   5169    0.001    0.000    0.001    0.000 {built-in method builtins.isinstance}
+                  12600    0.001    0.000    0.001    0.000 level.py:39(<lambda>)
+                    800    0.001    0.000    0.001    0.000 layer.py:147(clear2)
+                     33    0.000    0.000    0.001    0.000 activation.py:708(__init__)
+                   6374    0.001    0.000    0.001    0.000 {built-in method builtins.max}
+                      7    0.000    0.000    0.001    0.000 inspect.py:325(getmembers)
+                   9216    0.001    0.000    0.001    0.000 layer.py:154(elements)
+                    100    0.000    0.000    0.001    0.000 {built-in method builtins.all}
+                    213    0.001    0.000    0.001    0.000 module.py:1338(children)
+                    900    0.000    0.000    0.001    0.000 layers.py:799(<genexpr>)
+                      9    0.000    0.000    0.001    0.000 container.py:62(__init__)
+                      3    0.000    0.000    0.001    0.000 learner.py:16(__init__)
+                     18    0.000    0.000    0.001    0.000 flatten.py:34(__init__)
+                    272    0.000    0.000    0.001    0.000 {built-in method builtins.hasattr}
+                    854    0.000    0.000    0.001    0.000 abc.py:96(__instancecheck__)
+                     84    0.000    0.000    0.001    0.000 module.py:322(register_parameter)
+                      8    0.000    0.000    0.001    0.000 layer.py:71(<listcomp>)
+                   5435    0.000    0.000    0.000    0.000 {method 'getrandbits' of '_random.Random' objects}
+                   4512    0.000    0.000    0.000    0.000 {method 'remove' of 'set' objects}
+                   1799    0.000    0.000    0.000    0.000 {method 'split' of 'str' objects}
+                      3    0.000    0.000    0.000    0.000 adam.py:34(__init__)
+                   2359    0.000    0.000    0.000    0.000 enum.py:659(name)
+                      3    0.000    0.000    0.000    0.000 optimizer.py:34(__init__)
+                     42    0.000    0.000    0.000    0.000 init.py:112(uniform_)
+                    345    0.000    0.000    0.000    0.000 module.py:934(__getattr__)
+                    800    0.000    0.000    0.000    0.000 layer.py:142(clear)
+                     42    0.000    0.000    0.000    0.000 init.py:12(_no_grad_uniform_)
+                   4917    0.000    0.000    0.000    0.000 {method 'get' of 'dict' objects}
+                    854    0.000    0.000    0.000    0.000 {built-in method _abc._abc_instancecheck}
+                    168    0.000    0.000    0.000    0.000 grad_mode.py:119(__enter__)
+                    336    0.000    0.000    0.000    0.000 grad_mode.py:200(__init__)
+                     93    0.000    0.000    0.000    0.000 module.py:361(add_module)
+              3672/3669    0.000    0.000    0.000    0.000 {built-in method builtins.len}
+                    168    0.000    0.000    0.000    0.000 grad_mode.py:123(__exit__)
+                     90    0.000    0.000    0.000    0.000 utils.py:9(parse)
+                   3352    0.000    0.000    0.000    0.000 {method 'bit_length' of 'int' objects}
+
+
+# Other prints
+
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@hpc.dtu.dk>
+Subject: Job 9632720: <Maze_Conver4_3counterfactsNOCRASH_1> in cluster <dcc> Done
+
+Job <Maze_Conver4_3counterfactsNOCRASH_1> was submitted from host <gbarlogin1> by user <s183914> in cluster <dcc> at Wed May 12 14:11:08 2021
+Job was executed on host(s) <n-62-20-11>, in queue <gpuv100>, as user <s183914> in cluster <dcc> at Wed May 12 15:11:39 2021
+</zhome/ea/9/137501> was used as the home directory.
+</zhome/ea/9/137501/Desktop/Bachelor/Bachelorprojekt/Utils> was used as the working directory.
+Started at Wed May 12 15:11:39 2021
+Terminated at Wed May 12 15:11:53 2021
+Results reported at Wed May 12 15:11:53 2021
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/sh
+#BSUB -q gpuv100
+#BSUB -gpu "num=1:mode=exclusive_process"
+#BSUB -n 1
+#BSUB -R "rusage[mem=16G]"
+#BSUB -R "span[hosts=1]"
+#BSUB -W 1440
+# end of BSUB options
+cd ..
+module -s load python3
+source ../project-env/bin/activate
+
+python main.py $MYARGS
+
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   5.87 sec.
+    Max Memory :                                 2001 MB
+    Average Memory :                             2001.00 MB
+    Total Requested Memory :                     16384.00 MB
+    Delta Memory :                               14383.00 MB
+    Max Swap :                                   -
+    Max Processes :                              4
+    Max Threads :                                7
+    Run time :                                   15 sec.
+    Turnaround time :                            3645 sec.
+
+The output (if any) is above this job summary.
+
+Traceback (most recent call last):
+  File "/zhome/ea/9/137501/Desktop/Bachelor/Bachelorprojekt/Utils/debug.py", line 71, in __init__
+    cProfile.run(
+  File "/appl/python/3.8.4/lib/python3.8/cProfile.py", line 16, in run
+    return _pyprofile._Utils(Profile).run(statement, filename, sort)
+  File "/appl/python/3.8.4/lib/python3.8/profile.py", line 53, in run
+    prof.run(statement)
+  File "/appl/python/3.8.4/lib/python3.8/cProfile.py", line 95, in run
+    return self.runctx(cmd, dict, dict)
+  File "/appl/python/3.8.4/lib/python3.8/cProfile.py", line 100, in runctx
+    exec(cmd, globals, locals)
+  File "<string>", line 2, in <module>
+  File "main.py", line 85, in CFagent
+    CFagent = CFAgent(env, **defaults)
+  File "/zhome/ea/9/137501/Desktop/Bachelor/Bachelorprojekt/agent.py", line 171, in __init__
+    if a != b:
+NameError: name 'a' is not defined
+
+
+# Parameters
+
+    Name :                      Maze_Conver4_3counterfactsNOCRASH-1
+    Main :                      CFagent
+    Level :                     Levels.Maze
+    Failed actions chance :     0
+    Use model :                 True
+    Depth :                     3
+    Model explore :             1000000
+    Samples :                   5
+    Hours :                     0.0
+    Batch :                     100
+    Width :                     9
+    Height :                    9
+    Graphmode :                 GraphMode.UCB1
+    Network1 :                  Networks.Teleporter
+    K1 :                        5000000
+    Learner1 :                  Learners.Qlearn
+    Exploration1 :              Explorations.softmaxer
+    Gamma1 :                    0.98
+    Network2 :                  Networks.Mini
+    K2 :                        1000000
+    Learner2 :                  Learners.Qlearn
+    Exploration2 :              Explorations.epsilonGreedy
+    Gamma2 :                    0.95
+    Layer blocks :              True
+    Layer goal :                True
+    Layer gold :                True
+    Layer keys :                True
+    Layer door :                True
+    Layer holder :              True
+    Layer putter :              True
+    Layer rock :                True
+    Layer dirt :                True
+    Layer diamond1 :            True
+    Layer diamond2 :            True
+    Layer diamond3 :            True
+    Layer diamond4 :            True
+    Layer reddoor :             True
+    Layer redkeys :             True
+    Layer bluedoor :            True
+    Layer bluekeys :            True
+    Layer pink1 :               True
+    Layer pink2 :               True
+    Layer pink3 :               True
+    Layer brown1 :              True
+    Layer brown2 :              True
+    Layer brown3 :              True
+    Layer greendown :           True
+    Layer greenup :             True
+    Layer greenstar :           True
+    Layer yellowstar :          True
+    Layer bluestar :            True
+    Layer coconut :             True
+    Layer monster :             True
+    Layer greencross :          True
+    Layer bluecross :           True
+    Layer redcross :            True
+    Layer purplecross :         True
+    Layer super1 :              True
+    Layer super2 :              True
+    Layer super3 :              True
+    Layer super4 :              True
+    Layer super5 :              True
+    Layer super6 :              True
+    Layer super7 :              True
+    Epsilon cap :               0.2
+    Softmax cap :               0.02
+    Update :                    10000
+    Reset chance :              0.002
+    Modified done chance :      0.05
+    Miss intervention cost :    -0.15
+    Intervention cost :         -0.05
+    Replay size :               100000
+    Sample size :               50
+    Cf convert :                4
+    Counterfacts :              3
+    Topn :                      5
+    Random counterfacts :       False
+    Num :                       1
+    Load name :                 Causal4_Conver4_3counterfacts
+    Minutes used :              0 minutes.
+    Hours used :                0 hours.
+
+# Profiling
+
+
+      245807 function calls (245518 primitive calls) in 4.53 seconds
+
+##    Ordered by: cumulative time
+   List reduced from 220 to 100 due to restriction <100>
+
+                  ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+                      1    0.000    0.000    4.530    4.530 {built-in method builtins.exec}
+                      1    0.000    0.000    4.529    4.529 <string>:1(<module>)
+                      1    0.000    0.000    4.529    4.529 main.py:80(CFagent)
+                      3    0.000    0.000    4.431    1.477 agent.py:16(__init__)
+                      3    0.000    0.000    4.430    1.477 network.py:37(__init__)
+                      1    0.000    0.000    4.413    4.413 agent.py:109(__init__)
+                      9    0.000    0.000    4.402    0.489 module.py:573(to)
+                  111/9    0.001    0.000    4.402    0.489 module.py:385(_apply)
+                     84    0.000    0.000    4.399    0.052 module.py:667(convert)
+                     84    4.397    0.052    4.399    0.052 {method 'to' of 'torch._C._TensorBase' objects}
+                      1    0.002    0.002    0.094    0.094 game.py:9(__init__)
+                      1    0.000    0.000    0.080    0.080 layers.py:793(update)
+                    100    0.001    0.000    0.075    0.001 layers.py:849(restart)
+                    100    0.001    0.000    0.064    0.001 level.py:8(__init__)
+                    129    0.008    0.000    0.059    0.000 levels.py:9(generate)
+                      9    0.000    0.000    0.028    0.003 network.py:17(__init__)
+                    300    0.003    0.000    0.023    0.000 level.py:41(notUsed)
+                     18    0.000    0.000    0.019    0.001 conv.py:370(__init__)
+                     18    0.010    0.001    0.019    0.001 conv.py:66(__init__)
+                    129    0.009    0.000    0.017    0.000 levels.py:75(RFS)
+                     42    0.000    0.000    0.012    0.000 init.py:347(kaiming_uniform_)
+                    200    0.006    0.000    0.012    0.000 layers.py:36(reset)
+                      1    0.000    0.000    0.010    0.010 agent.py:158(__init__)
+                     84    0.010    0.000    0.010    0.000 {method 'uniform_' of 'torch._C._TensorBase' objects}
+                      1    0.000    0.000    0.010    0.010 layers.py:751(__init__)
+                    300    0.000    0.000    0.010    0.000 level.py:38(elementsIn)
+                      7    0.000    0.000    0.009    0.001 layers.py:782(add)
+                   9851    0.009    0.000    0.009    0.000 level.py:32(inverse)
+                    800    0.001    0.000    0.009    0.000 layer.py:77(restart)
+                      8    0.001    0.000    0.009    0.001 layer.py:61(__init__)
+                      1    0.000    0.000    0.008    0.008 agent.py:39(__init__)
+                     18    0.000    0.000    0.008    0.000 conv.py:114(reset_parameters)
+                     24    0.000    0.000    0.007    0.000 linear.py:75(__init__)
+                  24936    0.004    0.000    0.006    0.000 enum.py:646(__hash__)
+                    300    0.003    0.000    0.006    0.000 level.py:39(<listcomp>)
+                     24    0.000    0.000    0.005    0.000 linear.py:86(reset_parameters)
+                   9200    0.004    0.000    0.005    0.000 layer.py:138(add)
+                    129    0.002    0.000    0.004    0.000 level.py:16(<dictcomp>)
+                   7740    0.003    0.000    0.004    0.000 levels.py:31(<genexpr>)
+                  20569    0.004    0.000    0.004    0.000 enum.py:352(<genexpr>)
+                      8    0.003    0.000    0.004    0.000 layer.py:175(NoRock_update)
+                   1698    0.002    0.000    0.003    0.000 module.py:950(__setattr__)
+                    300    0.002    0.000    0.003    0.000 {built-in method _functools.reduce}
+                      1    0.000    0.000    0.003    0.003 replaybuffer.py:8(__init__)
+                      1    0.003    0.003    0.003    0.003 replaybuffer.py:11(<listcomp>)
+                    114    0.001    0.000    0.003    0.000 module.py:250(__init__)
+                   2264    0.001    0.000    0.003    0.000 random.py:285(choice)
+                      1    0.000    0.000    0.003    0.003 game.py:30(<setcomp>)
+                     41    0.001    0.000    0.003    0.000 game.py:30(<listcomp>)
+                  17056    0.003    0.000    0.003    0.000 layer.py:190(grid)
+                    358    0.001    0.000    0.002    0.000 random.py:315(sample)
+                   3131    0.002    0.000    0.002    0.000 random.py:250(_randbelow_with_getrandbits)
+                    4/1    0.000    0.000    0.002    0.002 __init__.py:144(_lazy_init)
+                      1    0.002    0.002    0.002    0.002 {built-in method torch._C._cuda_init}
+                     84    0.002    0.000    0.002    0.000 init.py:268(_calculate_fan_in_and_fan_out)
+                  24936    0.002    0.000    0.002    0.000 {built-in method builtins.hash}
+                     42    0.000    0.000    0.002    0.000 init.py:337(_calculate_correct_fan)
+                  24199    0.002    0.000    0.002    0.000 {method 'append' of 'list' objects}
+                   1935    0.001    0.000    0.001    0.000 {method 'intersection_update' of 'set' objects}
+                   1935    0.001    0.000    0.001    0.000 levels.py:85(<listcomp>)
+                  12600    0.001    0.000    0.001    0.000 level.py:39(<lambda>)
+                   5121    0.001    0.000    0.001    0.000 {built-in method builtins.isinstance}
+                   5834    0.001    0.000    0.001    0.000 {built-in method builtins.min}
+                  10597    0.001    0.000    0.001    0.000 {method 'add' of 'set' objects}
+                   2360    0.001    0.000    0.001    0.000 types.py:171(__get__)
+                    800    0.001    0.000    0.001    0.000 layer.py:147(clear2)
+                   9216    0.001    0.000    0.001    0.000 layer.py:154(elements)
+                   5834    0.001    0.000    0.001    0.000 {built-in method builtins.max}
+                     33    0.000    0.000    0.001    0.000 activation.py:708(__init__)
+                    100    0.000    0.000    0.001    0.000 {built-in method builtins.all}
+                    213    0.001    0.000    0.001    0.000 module.py:1338(children)
+                      7    0.000    0.000    0.001    0.000 inspect.py:325(getmembers)
+                    900    0.000    0.000    0.001    0.000 layers.py:799(<genexpr>)
+                      9    0.000    0.000    0.001    0.000 container.py:62(__init__)
+                      3    0.000    0.000    0.001    0.000 learner.py:16(__init__)
+                    806    0.000    0.000    0.001    0.000 abc.py:96(__instancecheck__)
+                     18    0.000    0.000    0.001    0.000 flatten.py:34(__init__)
+                    272    0.000    0.000    0.000    0.000 {built-in method builtins.hasattr}
+                     84    0.000    0.000    0.000    0.000 module.py:322(register_parameter)
+                      3    0.000    0.000    0.000    0.000 adam.py:34(__init__)
+                   4992    0.000    0.000    0.000    0.000 {method 'getrandbits' of '_random.Random' objects}
+                      3    0.000    0.000    0.000    0.000 optimizer.py:34(__init__)
+                   4128    0.000    0.000    0.000    0.000 {method 'remove' of 'set' objects}
+                     42    0.000    0.000    0.000    0.000 init.py:112(uniform_)
+                    806    0.000    0.000    0.000    0.000 {built-in method _abc._abc_instancecheck}
+                      8    0.000    0.000    0.000    0.000 layer.py:71(<listcomp>)
+                    345    0.000    0.000    0.000    0.000 module.py:934(__getattr__)
+                     42    0.000    0.000    0.000    0.000 init.py:12(_no_grad_uniform_)
+                    168    0.000    0.000    0.000    0.000 grad_mode.py:119(__enter__)
+                   4917    0.000    0.000    0.000    0.000 {method 'get' of 'dict' objects}
+                    336    0.000    0.000    0.000    0.000 grad_mode.py:200(__init__)
+                     93    0.000    0.000    0.000    0.000 module.py:361(add_module)
+                     90    0.000    0.000    0.000    0.000 utils.py:9(parse)
+                      1    0.000    0.000    0.000    0.000 agent.py:167(<listcomp>)
+                      1    0.000    0.000    0.000    0.000 layers.py:134(__init__)
+              3156/3153    0.000    0.000    0.000    0.000 {built-in method builtins.len}
+                   2359    0.000    0.000    0.000    0.000 enum.py:659(name)
+                    168    0.000    0.000    0.000    0.000 grad_mode.py:123(__exit__)
+                   3131    0.000    0.000    0.000    0.000 {method 'bit_length' of 'int' objects}
+                   1799    0.000    0.000    0.000    0.000 {method 'split' of 'str' objects}
+
+
+# Other prints
+
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@hpc.dtu.dk>
+Subject: Job 9632763: <Maze_Conver4_3counterfactsNOCRASH_1> in cluster <dcc> Done
+
+Job <Maze_Conver4_3counterfactsNOCRASH_1> was submitted from host <gbarlogin1> by user <s183914> in cluster <dcc> at Wed May 12 14:13:38 2021
+Job was executed on host(s) <n-62-20-11>, in queue <gpuv100>, as user <s183914> in cluster <dcc> at Wed May 12 15:13:28 2021
+</zhome/ea/9/137501> was used as the home directory.
+</zhome/ea/9/137501/Desktop/Bachelor/Bachelorprojekt/Utils> was used as the working directory.
+Started at Wed May 12 15:13:28 2021
+Terminated at Wed May 12 15:13:41 2021
+Results reported at Wed May 12 15:13:41 2021
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/sh
+#BSUB -q gpuv100
+#BSUB -gpu "num=1:mode=exclusive_process"
+#BSUB -n 1
+#BSUB -R "rusage[mem=16G]"
+#BSUB -R "span[hosts=1]"
+#BSUB -W 1440
+# end of BSUB options
+cd ..
+module -s load python3
+source ../project-env/bin/activate
+
+python main.py $MYARGS
+
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   5.13 sec.
+    Max Memory :                                 4 MB
+    Average Memory :                             4.00 MB
+    Total Requested Memory :                     16384.00 MB
+    Delta Memory :                               16380.00 MB
+    Max Swap :                                   -
+    Max Processes :                              4
+    Max Threads :                                5
+    Run time :                                   14 sec.
+    Turnaround time :                            3603 sec.
+
+The output (if any) is above this job summary.
+
