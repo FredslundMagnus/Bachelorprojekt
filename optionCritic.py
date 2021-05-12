@@ -159,7 +159,7 @@ def actor_loss_fn(obs, option, logp, entropy, reward, done, next_obs, model, mod
 
     # actor-critic policy gradient with entropy regularization
     #print(obs)
-    policy_loss = -logp * (gt.detach() - Q[option])# - 0.01 * entropy
+    policy_loss = -logp * (gt.detach() - Q[option]) - 0.01 * entropy
     actor_loss = termination_loss + policy_loss
     return actor_loss
 
@@ -213,7 +213,7 @@ def option_critic_run(defaults):
     )
     # Create a prime network for more stable Q values
     option_critic_prime = deepcopy(option_critic)
-    optim = torch.optim.Adam(option_critic.parameters(), lr=1e-5, weight_decay=1e-5)
+    optim = torch.optim.RMSprop(option_critic.parameters(), lr=0.0005)
 
     with Save(env, collector, **defaults) as save:
         states = option_critic.get_state(env.board)
@@ -253,7 +253,6 @@ def option_critic_run(defaults):
             for i, (next_obs, reward, done, state, current_option, old_obs, logp, entropy) in enumerate(zip(next_obses, rewards, dones, states, current_options, old_obses, logps, entropys)):
                 option_terminations[i], greedy_options[i] = option_critic.predict_option_termination(state.unsqueeze(0), current_option)
                 loss += actor_loss_fn(old_obs, current_option, logp, entropy, reward, done, next_obs, option_critic, option_critic_prime)
-            loss /= i
             if frame % update_frequency == 0:
                 data_batch = buffer.sample_option_critic()
                 loss += critic_loss_fn(option_critic, option_critic_prime, data_batch)

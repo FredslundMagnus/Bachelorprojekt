@@ -172,8 +172,8 @@ def CFagentv2(defaults):
 
 class Defaults:
     name: str = "Agent"
-    main: function = Load_Cfagent
-    level: Levels = Levels.CausalSuper
+    main: function = option_critic_run
+    level: Levels = Levels.MonsterLevel
     failed_actions_chance: float = 0
     use_model: bool = True
     depth: int = 3

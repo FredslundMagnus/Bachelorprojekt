@@ -99,6 +99,19 @@ Plot(
     ],
 )
 
+Plot(
+    title="option_critic6",
+    loc=Loc.lowerRight,
+    data=[
+        ("Attempt6_Maze_option_critic", "Maze", Colors.orange),
+        ("Attempt6_Lights1_option_critic", "Lights1", Colors.black),
+        ("Attempt6_Lights2_option_critic", "Lights2", Colors.purple),
+        ("Attempt6_Diamonds1_option_critic", "Diamonds1", Colors.yellow),
+        ("Attempt6_Diamonds2_option_critic", "Diamonds2", Colors.red),
+        ("Attempt6_Diamonds3_option_critic", "Diamonds3", Colors.blueGray),
+    ],
+)
+
 
 envs = [
     ('Lights1', 'Magical Lights 1'),
