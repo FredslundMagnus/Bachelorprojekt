@@ -1,0 +1,249 @@
+
+# Parameters
+
+    Name :                      Coconuts_Conver4_3counterfactsNOCRASH-1
+    Main :                      CFagent
+    Level :                     Levels.Coconuts
+    Failed actions chance :     0
+    Use model :                 True
+    Depth :                     3
+    Model explore :             1000000
+    Samples :                   5
+    Hours :                     24.0
+    Batch :                     100
+    Width :                     9
+    Height :                    9
+    Graphmode :                 GraphMode.UCB1
+    Network1 :                  Networks.Teleporter
+    K1 :                        5000000
+    Learner1 :                  Learners.Qlearn
+    Exploration1 :              Explorations.softmaxer
+    Gamma1 :                    0.98
+    Network2 :                  Networks.Mini
+    K2 :                        1000000
+    Learner2 :                  Learners.Qlearn
+    Exploration2 :              Explorations.epsilonGreedy
+    Gamma2 :                    0.95
+    Layer blocks :              True
+    Layer goal :                True
+    Layer gold :                True
+    Layer keys :                True
+    Layer door :                True
+    Layer holder :              True
+    Layer putter :              True
+    Layer rock :                True
+    Layer dirt :                True
+    Layer diamond1 :            True
+    Layer diamond2 :            True
+    Layer diamond3 :            True
+    Layer diamond4 :            True
+    Layer reddoor :             True
+    Layer redkeys :             True
+    Layer bluedoor :            True
+    Layer bluekeys :            True
+    Layer pink1 :               True
+    Layer pink2 :               True
+    Layer pink3 :               True
+    Layer brown1 :              True
+    Layer brown2 :              True
+    Layer brown3 :              True
+    Layer greendown :           True
+    Layer greenup :             True
+    Layer greenstar :           True
+    Layer yellowstar :          True
+    Layer bluestar :            True
+    Layer coconut :             True
+    Layer monster :             True
+    Layer greencross :          True
+    Layer bluecross :           True
+    Layer redcross :            True
+    Layer purplecross :         True
+    Layer super1 :              True
+    Layer super2 :              True
+    Layer super3 :              True
+    Layer super4 :              True
+    Layer super5 :              True
+    Layer super6 :              True
+    Layer super7 :              True
+    Epsilon cap :               0.2
+    Softmax cap :               0.02
+    Update :                    10000
+    Reset chance :              0.002
+    Modified done chance :      0.05
+    Miss intervention cost :    -0.15
+    Intervention cost :         -0.05
+    Replay size :               100000
+    Sample size :               50
+    Cf convert :                4
+    Counterfacts :              3
+    Topn :                      5
+    Random counterfacts :       False
+    Num :                       1
+    Load name :                 Causal4_Conver4_3counterfacts
+    Minutes used :              1435 minutes.
+    Hours used :                23 hours.
+
+# Profiling
+
+
+      62968931874 function calls (62628223379 primitive calls) in 86121.50 seconds
+
+##    Ordered by: cumulative time
+   List reduced from 511 to 100 due to restriction <100>
+
+                  ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+                      1    0.000    0.000 86121.502 86121.502 {built-in method builtins.exec}
+                      1    4.927    4.927 86121.501 86121.501 <string>:1(<module>)
+                      1  364.348  364.348 86116.574 86116.574 main.py:80(CFagent)
+                9320088   38.110    0.000 23411.359    0.003 agent.py:29(learn)
+                9320084  592.053    0.000 18952.187    0.002 learner.py:42(Qlearn)
+                3106696   14.613    0.000 17992.525    0.006 game.py:42(step)
+                3106696   21.790    0.000 17334.536    0.006 layers.py:827(step)
+                3106696 1353.310    0.000 17309.162    0.006 agent.py:212(counterfact)
+        379454687/38747883 1582.777    0.000 12512.002    0.000 module.py:866(_call_impl)
+                3106696  298.530    0.000 11752.890    0.004 layers.py:17(step)
+               29427799   81.760    0.000 11749.039    0.000 network.py:28(forward)
+               29427799  388.438    0.000 11467.927    0.000 container.py:117(forward)
+              309983824 1181.298    0.000 11427.348    0.000 layer.py:106(move)
+                3106696  363.583    0.000 9117.307    0.003 agent.py:54(_learn)
+                3106696  353.096    0.000 8320.316    0.003 agent.py:204(_learn)
+                9320084   84.557    0.000 7313.321    0.001 optimizer.py:84(wrapper)
+               87808687 7309.325    0.000 7309.325    0.000 {built-in method tensor}
+               80637035   45.109    0.000 7148.842    0.000 game.py:38(board)
+                9320084   43.620    0.000 6942.307    0.001 grad_mode.py:24(decorate_context)
+              309983824 1163.248    0.000 6865.728    0.000 layers.py:844(check)
+                9320084  301.009    0.000 6801.218    0.001 adam.py:55(step)
+               10052397  274.559    0.000 6566.424    0.001 agent.py:49(__call__)
+                3106696 5551.302    0.002 6559.908    0.002 replaybuffer.py:22(sample_data)
+                9320084 1409.027    0.000 6170.437    0.001 _functional.py:53(adam)
+                3106696 5208.961    0.002 6168.305    0.002 replaybuffer.py:67(sample_data)
+                3106696   97.974    0.000 5914.118    0.002 agent.py:117(_learn)
+                3106697  471.474    0.000 5532.058    0.002 layers.py:793(update)
+               86987481 2996.780    0.000 5256.296    0.000 layer.py:159(update)
+                3841930   78.016    0.000 5222.085    0.001 agent.py:176(choose_action)
+                9320084   39.834    0.000 5010.017    0.001 tensor.py:195(backward)
+                9320084   41.516    0.000 4968.815    0.001 __init__.py:68(backward)
+                9320084 4735.184    0.001 4735.184    0.001 {method 'run_backward' of 'torch._C._EngineBase' objects}
+                3106696 2646.638    0.001 4510.914    0.001 replaybuffer.py:28(teleporter_save_data)
+                3106696 2303.625    0.001 4327.066    0.001 agent.py:88(interveen)
+               58855598  135.051    0.000 4250.237    0.000 conv.py:398(forward)
+               58855598   85.836    0.000 4051.178    0.000 conv.py:390(_conv_forward)
+               58855598 3965.342    0.000 3965.342    0.000 {built-in method conv2d}
+               82070005  168.984    0.000 3217.692    0.000 linear.py:93(forward)
+               82070005   68.368    0.000 2962.118    0.000 functional.py:1737(linear)
+               82070005 2877.835    0.000 2877.835    0.000 {built-in method torch._C._nn.linear}
+              309983824  456.305    0.000 2585.182    0.000 layers.py:838(isFree)
+                3106696 1526.008    0.000 2331.453    0.001 agent.py:67(modify)
+             2025411212 1821.913    0.000 2128.877    0.000 layer.py:103(isFree)
+              309983824 1479.588    0.000 2067.574    0.000 layers.py:471(check)
+              309983824 1278.068    0.000 1755.242    0.000 layers.py:77(check)
+               13159093   89.168    0.000 1740.824    0.000 agent.py:59(modify_board)
+              170547052 1696.499    0.000 1696.499    0.000 {built-in method clone}
+              111497804   91.852    0.000 1692.392    0.000 activation.py:713(forward)
+               44226033 1680.382    0.000 1680.382    0.000 {built-in method cat}
+              111497804   94.444    0.000 1600.540    0.000 functional.py:1364(leaky_relu)
+              111497804 1487.526    0.000 1487.526    0.000 {built-in method torch._C._nn.leaky_relu}
+                3106692   57.270    0.000 1443.621    0.000 agent.py:172(__call__)
+                1780437   23.833    0.000 1424.676    0.001 layers.py:849(restart)
+             5344233334  984.847    0.000 1419.232    0.000 enum.py:646(__hash__)
+                3106696   54.096    0.000 1343.588    0.000 agent.py:112(__call__)
+             1040237272 1225.135    0.000 1225.135    0.000 layer.py:154(elements)
+                1780437   11.488    0.000 1217.026    0.001 level.py:8(__init__)
+              173974896 1216.647    0.000 1216.647    0.000 {method 'mul_' of 'torch._C._TensorBase' objects}
+               13159093 1142.366    0.000 1142.366    0.000 {built-in method torch._C._nn.one_hot}
+                1780437   75.625    0.000 1100.766    0.001 levels.py:277(generate)
+              318209350  259.040    0.000 1092.994    0.000 {built-in method builtins.any}
+              173974896 1069.623    0.000 1069.623    0.000 {method 'add_' of 'torch._C._TensorBase' objects}
+                9320084  197.129    0.000 1065.248    0.000 optimizer.py:189(zero_grad)
+                3841930  908.535    0.000 1054.389    0.000 agent.py:187(convert_values)
+               15880681  160.322    0.000  960.446    0.000 level.py:41(notUsed)
+                3106696  708.975    0.000  859.719    0.000 replaybuffer.py:73(CF_save_data)
+              309983824  657.482    0.000  845.924    0.000 layers.py:62(check)
+             2471114104  677.976    0.000  833.954    0.000 layers.py:809(<genexpr>)
+              310669700   65.010    0.000  770.124    0.000 {built-in method builtins.all}
+        10981148445/10981148442  690.595    0.000  768.276    0.000 {built-in method builtins.len}
+                3106696   63.978    0.000  762.092    0.000 replaybuffer.py:18(stacker)
+              664411423  159.534    0.000  745.650    0.000 layers.py:799(<genexpr>)
+                3106692   63.799    0.000  725.365    0.000 replaybuffer.py:63(stacker)
+               86987448  699.045    0.000  699.045    0.000 {method 'add' of 'torch._C._TensorBase' objects}
+               10052397  245.449    0.000  667.149    0.000 exploration.py:53(softmaxer)
+             7245742281  658.806    0.000  658.806    0.000 layer.py:99(positions)
+               86987448  614.112    0.000  614.112    0.000 {method 'sqrt' of 'torch._C._TensorBase' objects}
+              310669700  394.427    0.000  574.571    0.000 layers.py:113(isDone)
+               86987448  571.902    0.000  571.902    0.000 {method 'addcdiv_' of 'torch._C._TensorBase' objects}
+               86987448  568.609    0.000  568.609    0.000 {method 'addcmul_' of 'torch._C._TensorBase' objects}
+              608912220  411.920    0.000  508.306    0.000 tensor.py:906(grad)
+                3106696  277.438    0.000  473.317    0.000 collector.py:46(collect)
+                6213392  181.710    0.000  469.090    0.000 random.py:315(sample)
+               15880681   13.103    0.000  463.661    0.000 level.py:38(elementsIn)
+              309983824  307.159    0.000  452.567    0.000 layers.py:48(check)
+             5344268757  434.392    0.000  434.392    0.000 {built-in method builtins.hash}
+                9320084   15.335    0.000  432.549    0.000 loss.py:527(forward)
+                9320084   42.858    0.000  417.214    0.000 functional.py:2898(mse_loss)
+               86987448  416.871    0.000  416.871    0.000 {method 'zero_' of 'torch._C._TensorBase' objects}
+              335179243  274.103    0.000  389.811    0.000 layer.py:134(remove)
+              186812837  382.720    0.000  382.720    0.000 {method 'unsqueeze' of 'torch._C._TensorBase' objects}
+              309983824  239.540    0.000  346.547    0.000 layers.py:23(check)
+               86987481  326.538    0.000  326.538    0.000 layer.py:171(<listcomp>)
+               15880681  149.209    0.000  301.167    0.000 level.py:39(<listcomp>)
+               58855598   43.560    0.000  280.704    0.000 flatten.py:39(forward)
+               86987481  268.838    0.000  268.838    0.000 layer.py:172(<listcomp>)
+                6213394  252.451    0.000  252.451    0.000 {built-in method nonzero}
+                9320084  251.146    0.000  251.146    0.000 {built-in method torch._C._nn.mse_loss}
+              433740201  180.015    0.000  250.713    0.000 layer.py:138(add)
+               58855598  237.144    0.000  237.144    0.000 {method 'flatten' of 'torch._C._TensorBase' objects}
+
+
+# Other prints
+
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@hpc.dtu.dk>
+Subject: Job 9624182: <Coconuts_Conver4_3counterfactsNOCRASH_1> in cluster <dcc> Done
+
+Job <Coconuts_Conver4_3counterfactsNOCRASH_1> was submitted from host <gbarlogin1> by user <s183914> in cluster <dcc> at Sun May  9 01:29:16 2021
+Job was executed on host(s) <n-62-20-10>, in queue <gpuv100>, as user <s183914> in cluster <dcc> at Mon May 10 01:24:41 2021
+</zhome/ea/9/137501> was used as the home directory.
+</zhome/ea/9/137501/Desktop/Bachelor/Bachelorprojekt/Utils> was used as the working directory.
+Started at Mon May 10 01:24:41 2021
+Terminated at Tue May 11 01:20:22 2021
+Results reported at Tue May 11 01:20:22 2021
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/sh
+#BSUB -q gpuv100
+#BSUB -gpu "num=1:mode=exclusive_process"
+#BSUB -n 1
+#BSUB -R "rusage[mem=16G]"
+#BSUB -R "span[hosts=1]"
+#BSUB -W 1440
+# end of BSUB options
+cd ..
+module -s load python3
+source ../project-env/bin/activate
+
+python main.py $MYARGS
+
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   85906.95 sec.
+    Max Memory :                                 8982 MB
+    Average Memory :                             6121.17 MB
+    Total Requested Memory :                     16384.00 MB
+    Delta Memory :                               7402.00 MB
+    Max Swap :                                   -
+    Max Processes :                              4
+    Max Threads :                                8
+    Run time :                                   86141 sec.
+    Turnaround time :                            172266 sec.
+
+The output (if any) is above this job summary.
+
