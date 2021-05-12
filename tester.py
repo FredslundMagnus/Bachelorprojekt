@@ -18,7 +18,7 @@ def test_simple():
 
 
 def test_teleport():
-    with Load("Maze_Conver4_3counterfacts", num=0) as load:
+    with Load("MonsterLevel_Conver4_3counterfactsNOCRASH", num=1) as load:
         collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
         #teleporter.exploration.explore = teleporter.exploration.greedy
         intervention_idx, modified_board = teleporter.pre_process(env)

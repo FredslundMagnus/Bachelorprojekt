@@ -159,7 +159,7 @@ def actor_loss_fn(obs, option, logp, entropy, reward, done, next_obs, model, mod
 
     # actor-critic policy gradient with entropy regularization
     #print(obs)
-    policy_loss = -logp * (gt.detach() - Q[option]) - 0.01 * entropy
+    policy_loss = -logp * (gt.detach() - Q[option])# - 0.01 * entropy
     actor_loss = termination_loss + policy_loss
     return actor_loss
 

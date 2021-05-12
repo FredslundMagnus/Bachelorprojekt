@@ -168,8 +168,6 @@ class CFAgent(Agent):
         self.done_number = 0
         self.CF_count = 0
         self.level = str(game.level)
-        if a != b:
-            cruas
 
     def __call__(self, board: Tensor) -> Tensor:
         self.values: Tensor = self.net.network(board)
