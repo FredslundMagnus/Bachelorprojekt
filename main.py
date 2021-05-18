@@ -172,12 +172,12 @@ def CFagentv2(defaults):
 
 class Defaults:
     name: str = "Agent"
-    main: function = CFagent
-    level: Levels = Levels.MonsterLevel
+    main: function = graphTrain
+    level: Levels = Levels.Causal2
     failed_actions_chance: float = 0
-    use_model: bool = True
+    use_model: bool = False
     depth: int = 3
-    model_explore: int = 1000000
+    model_explore: int = 100000
     samples: int = 5
     hours: float = 12
     batch: int = 100

@@ -89,7 +89,7 @@ class Plotter():
 
 
 class Plot:
-    def __init__(self, data: List[Tuple[str, str, MaterialColor]], same_x: bool = False, title: str = 'Placeholder', xlabel: str = 'Games', ylabel: str = "Winrate", loc: Loc = Loc.upperLeft, ylim: Tuple[float, float] = (0, 1), keys: Tuple[int, int] = (0, 0), normalize: int = 100) -> None:
+    def __init__(self, data: List[Tuple[str, str, MaterialColor]], same_x: bool = False, title: str = 'Placeholder', xlabel: str = 'Seen frames in 100000', ylabel: str = "Winrate", loc: Loc = Loc.upperLeft, ylim: Tuple[float, float] = (0, 1), keys: Tuple[int, int] = (0, 0), normalize: int = 100) -> None:
         self.data: List[Tuple[str, str, MaterialColor]] = data
         self.same_x: bool = same_x
         self.title: str = title
