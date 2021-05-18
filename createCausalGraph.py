@@ -20,7 +20,7 @@ environments = {
 
 environment = environments[Levels.Causal3]
 useLayersOnlyOnce = False
-usePlayer = False
+usePlayer = True
 
 
 class PathGraph(Graph):
