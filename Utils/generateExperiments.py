@@ -376,14 +376,14 @@ def genExperiments(name, n=1, cpu=False, **params):
 # genExperiments(f"Attempt8_Monsters_option_critic", n=3, hours=72, level=Levels.MonsterLevel, main=option_critic_run, cpu=True, batch=32)
 # genExperiments(f"Attempt8_DoorsAndKey_option_critic", n=3, hours=72, level=Levels.Causal1, main=option_critic_run, cpu=True, batch=32)
 
-genExperiments(f"Diamonds1_0.5_NN", n=3, hours=10, level=Levels.Causal2, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.5, use_model = True)
-genExperiments(f"Diamonds2_0.5_NN", n=3, hours=10, level=Levels.Causal5, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.5, use_model = True)
-genExperiments(f"Diamonds3_0.5_NN", n=3, hours=10, level=Levels.Causal6, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.5, use_model = True)
-genExperiments(f"Diamonds4_0.5_NN", n=3, hours=10, level=Levels.Causal7, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.5, use_model = True)
-# genExperiments(f"Diamonds1_0.0_NN", n=3, hours=10, level=Levels.Causal2, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.0, use_model = True)
-# genExperiments(f"Diamonds2_0.0_NN", n=3, hours=10, level=Levels.Causal5, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.0, use_model = True)
-# genExperiments(f"Diamonds3_0.0_NN", n=3, hours=10, level=Levels.Causal6, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.0, use_model = True)
-# genExperiments(f"Diamonds4_0.0_NN", n=3, hours=10, level=Levels.Causal7, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.0, use_model = True)
+# genExperiments(f"Diamonds1_0.5_NN", n=3, hours=10, level=Levels.Causal2, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.5, use_model = True)
+# genExperiments(f"Diamonds2_0.5_NN", n=3, hours=10, level=Levels.Causal5, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.5, use_model = True)
+# genExperiments(f"Diamonds3_0.5_NN", n=3, hours=10, level=Levels.Causal6, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.5, use_model = True)
+# genExperiments(f"Diamonds4_0.5_NN", n=3, hours=10, level=Levels.Causal7, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.5, use_model = True)
+genExperiments(f"Diamonds1_0.0_NN", n=3, hours=10, level=Levels.Causal2, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.0, use_model = True)
+genExperiments(f"Diamonds2_0.0_NN", n=3, hours=10, level=Levels.Causal5, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.0, use_model = True)
+genExperiments(f"Diamonds3_0.0_NN", n=3, hours=10, level=Levels.Causal6, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.0, use_model = True)
+genExperiments(f"Diamonds4_0.0_NN", n=3, hours=10, level=Levels.Causal7, main=graphTrain, K1=200000, K2=100000, softmax_cap=0.0, failed_actions_chance=0.0, use_model = True)
 
 
 # genExperiments(f"Test_CPU_10", n=1, hours=0.1, level=Levels.Causal3, cpu=True, batch=25)
