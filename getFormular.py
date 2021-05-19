@@ -65,12 +65,14 @@ def draw(name: str):
     print("$$" + "\,\,\,,\,\,\,".join([f"{symbols(getActionName(layer, isMinus1=False))}=0" for layer in list(layers) + [LayerType.Goal]]) + "$$\n")
 
 
-draw("Diamonds1_0.5_UCB1")
-draw("Diamonds2_0.5_UCB1")
-draw("Diamonds3_0.5_UCB1")
-draw("Diamonds4_0.5_UCB1")
-
 draw("Diamonds1_0.0_UCB1")
+draw("Diamonds1_0.5_UCB1")
+
 draw("Diamonds2_0.0_UCB1")
+draw("Diamonds2_0.5_UCB1")
+
 draw("Diamonds3_0.0_UCB1")
+draw("Diamonds3_0.5_UCB1")
+
 draw("Diamonds4_0.0_UCB1")
+draw("Diamonds4_0.5_UCB1")
