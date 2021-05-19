@@ -1,3 +1,5 @@
+/zhome/ee/d/137643/Desktop/Bachelor/project-env/lib/python3.8/site-packages/torch/cuda/__init__.py:52: UserWarning: CUDA initialization: Found no NVIDIA driver on your system. Please check that you have an NVIDIA GPU and installed a driver from http://www.nvidia.com/Download/index.aspx (Triggered internally at  /pytorch/c10/cuda/CUDAFunctions.cpp:100.)
+  return torch._C._cuda_getDeviceCount() > 0
 Traceback (most recent call last):
   File "/zhome/ee/d/137643/Desktop/Bachelor/Bachelorprojekt/Utils/debug.py", line 71, in __init__
     cProfile.run(
@@ -14,7 +16,7 @@ OSError: [Errno 116] Stale file handle
 
 # Parameters
 
-    Name :                      Diamonds2_0.0_NN-2
+    Name :                      Diamonds2_0.0_NN_cpu-1
     Main :                      graphTrain
     Level :                     Levels.Causal5
     Failed actions chance :     0.0
@@ -91,7 +93,7 @@ OSError: [Errno 116] Stale file handle
     Counterfacts :              1
     Topn :                      6
     Random counterfacts :       False
-    Num :                       2
+    Num :                       1
     Load name :                 Causal4_Conver4_3counterfacts
     Minutes used :              595 minutes.
     Hours used :                9 hours.
@@ -117,51 +119,48 @@ FileNotFoundError: [Errno 2] No such file or directory: 'stats'
 
 ------------------------------------------------------------
 Sender: LSF System <lsfadmin@hpc.dtu.dk>
-Subject: Job 9651548: <Diamonds2_0.0_NN_2> in cluster <dcc> Exited
+Subject: Job 9653097: <Diamonds2_0.0_NN_cpu_1> in cluster <dcc> Exited
 
-Job <Diamonds2_0.0_NN_2> was submitted from host <n-62-27-18> by user <s183905> in cluster <dcc> at Tue May 18 21:12:59 2021
-Job was executed on host(s) <n-62-20-2>, in queue <gpuv100>, as user <s183905> in cluster <dcc> at Wed May 19 07:08:34 2021
+Job <Diamonds2_0.0_NN_cpu_1> was submitted from host <n-62-30-5> by user <s183905> in cluster <dcc> at Wed May 19 11:40:32 2021
+Job was executed on host(s) <n-62-21-108>, in queue <hpc>, as user <s183905> in cluster <dcc> at Wed May 19 11:40:33 2021
 </zhome/ee/d/137643> was used as the home directory.
 </zhome/ee/d/137643/Desktop/Bachelor/Bachelorprojekt/Utils> was used as the working directory.
-Started at Wed May 19 07:08:34 2021
-Terminated at Wed May 19 17:04:01 2021
-Results reported at Wed May 19 17:04:01 2021
+Started at Wed May 19 11:40:33 2021
+Terminated at Wed May 19 21:35:40 2021
+Results reported at Wed May 19 21:35:40 2021
 
 Your job looked like:
 
 ------------------------------------------------------------
 # LSBATCH: User input
 #!/bin/sh
-#BSUB -q gpuv100
-#BSUB -gpu "num=1:mode=exclusive_process"
+#BSUB -q hpc
 #BSUB -n 1
 #BSUB -R "rusage[mem=16G]"
 #BSUB -R "span[hosts=1]"
-#BSUB -W 1440
+#BSUB -W 4320
 # end of BSUB options
 cd ..
 module -s load python3
 source ../project-env/bin/activate
 
 python main.py $MYARGS
-
-
 ------------------------------------------------------------
 
 Exited with exit code 1.
 
 Resource usage summary:
 
-    CPU time :                                   35618.98 sec.
-    Max Memory :                                 2064 MB
-    Average Memory :                             2056.73 MB
+    CPU time :                                   35696.94 sec.
+    Max Memory :                                 109 MB
+    Average Memory :                             102.58 MB
     Total Requested Memory :                     16384.00 MB
-    Delta Memory :                               14320.00 MB
+    Delta Memory :                               16275.00 MB
     Max Swap :                                   -
     Max Processes :                              4
-    Max Threads :                                8
-    Run time :                                   35837 sec.
-    Turnaround time :                            71462 sec.
+    Max Threads :                                6
+    Run time :                                   35706 sec.
+    Turnaround time :                            35708 sec.
 
 The output (if any) is above this job summary.
 
