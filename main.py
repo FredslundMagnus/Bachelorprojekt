@@ -175,8 +175,8 @@ class Defaults:
     main: function = graphTrain
     level: Levels = Levels.Causal2
     failed_actions_chance: float = 0
-    use_model: bool = False
-    depth: int = 3
+    use_model: bool = True
+    depth: int = 1
     model_explore: int = 100000
     samples: int = 5
     hours: float = 12

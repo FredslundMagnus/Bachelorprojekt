@@ -180,7 +180,7 @@ def getInterventionsmodel(state, all_layers, layers, model, env, not_in, frame):
     if random() >= (model.exploration - frame)/model.exploration:
         br, ba = recursiveBEST(layers, state, model.depth, model, all_layers, 1, env, not_in)
     else:
-        br, ba = recursiveExplore(layers, state, model.depth-2, model, all_layers, 1, env, not_in)
+        br, ba = recursiveExplore(layers, state, model.depth, model, all_layers, 1, env, not_in)
     return format(env, ba)
 
 def recursiveBEST(layers, state, depth, model, all_layers, reward_trace, env, not_in):
@@ -207,12 +207,12 @@ def recursiveExplore(layers, state, depth, model, all_layers, reward_trace, env,
         if layer in not_in:
             for j in range(model.samples):
                 if j == 0:
-                    if depth == model.depth-2:
+                    if depth == model.depth:
                         prediction = model.predict(layer, state)
                     else:
                         prediction = model.predict_no_convert(layer, state)
                 else: 
-                    if depth == model.depth-2:
+                    if depth == model.depth:
                         prediction = torch.cat((prediction, model.predict(layer, state)), dim=0)
                     else:
                         prediction = torch.cat((prediction, model.predict_no_convert(layer, state)), dim=0) 

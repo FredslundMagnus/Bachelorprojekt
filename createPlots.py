@@ -1,7 +1,7 @@
 from plotter import Colors, Loc, Plot
 
 
-# # Diamonds plots
+# Diamonds plots
 # for i in range(1, 5):
 #     Plot(
 #         title=f"Diamonds Explorer {i}",
@@ -9,8 +9,10 @@ from plotter import Colors, Loc, Plot
 #         data=[
 #             (f"Diamonds{i}_0.5_UCB1", "UCB1 (stochastic)", Colors.blue),
 #             (f"Diamonds{i}_0.5_var", "Uncertainty sampling (stochastic)", Colors.red),
+#             (f"Diamonds{i}_0.5_NN", "Neural Network (stochastic)", Colors.purple),
 #             (f"Diamonds{i}_0.0_UCB1", "UCB1 (deterministic)", Colors.green),
 #             (f"Diamonds{i}_0.0_var", "Uncertainty sampling (deterministic)", Colors.brown),
+#             (f"Diamonds{i}_0.0_NN", "Neural Network (deterministic)", Colors.yellow),
 #         ],
 #     )
 
@@ -73,18 +75,6 @@ Plot(
         ("Diamonds4_simple", "Diamonds4", Colors.lightGreen),
     ],
 )
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 # Plot(
