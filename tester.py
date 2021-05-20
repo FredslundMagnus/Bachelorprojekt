@@ -7,8 +7,13 @@ from main import *
 from load import Load
 from helper import device
 import torch
+<<<<<<< HEAD
 import sys
 import numpy as np
+=======
+from Utils.debug import disablePrint, enablePrint
+
+>>>>>>> 001a01b2e62652290a5187f76336612f7f369a18
 
 def test_simple():
     with Load("causal3_9x9_20hoursONLYMOVERsoftmaxgam0995") as load:
@@ -120,15 +125,18 @@ def test_option_critic():
         env, collector = load.items(Game, Collector)
         collector.show(env)
 
+
 Tests = ['Causal3_Conver1', 'Causal3_Conver2', 'Causal3_Conver4_3counterfactsNOCRASH_2', 'Lights1_teleport',
-    'Maze_Conver1', 'Maze_Conver2', 'Maze_Conver4_3counterfactsNOCRASH_2', 'Maze_teleport',
-    'Coconuts_Conver1', 'Coconuts_Conver2', 'Coconuts_Conver4_3counterfactsNOCRASH_2', 'Coconuts_teleport',
-    'Maze_Conver1', 'Maze_Conver2', 'Maze_Conver4_3counterfactsNOCRASH_2', 'Maze_teleport',
-    'MonsterLevel_Conver1', 'MonsterLevel_Conver2', 'MonsterLevel_Conver4_3counterfactsNOCRASH_2', 'Monsters']
+         'Maze_Conver1', 'Maze_Conver2', 'Maze_Conver4_3counterfactsNOCRASH_2', 'Maze_teleport',
+         'Coconuts_Conver1', 'Coconuts_Conver2', 'Coconuts_Conver4_3counterfactsNOCRASH_2', 'Coconuts_teleport',
+         'Maze_Conver1', 'Maze_Conver2', 'Maze_Conver4_3counterfactsNOCRASH_2', 'Maze_teleport',
+         'MonsterLevel_Conver1', 'MonsterLevel_Conver2', 'MonsterLevel_Conver4_3counterfactsNOCRASH_2', 'Monsters']
 
 for test in Tests:
+    disablePrint()
     performance = [None, None, None]
     for i in range(len(performance)):
         performance[i] = test_teleport(name=test, num=i)
+    enablePrint()
     print(test)
     print('$' + str(round(mean(performance),2)) + '\pm' + str(round(1.96 * std(performance)/np.sqrt(len(performance)),2)) + '$')
