@@ -173,9 +173,9 @@ def CFagentv2(defaults):
 class Defaults:
     name: str = "Agent"
     main: function = graphTrain
-    level: Levels = Levels.Causal2
+    level: Levels = Levels.CausalSuper
     failed_actions_chance: float = 0
-    use_model: bool = True
+    use_model: bool = False
     depth: int = 1
     model_explore: int = 100000
     samples: int = 5
