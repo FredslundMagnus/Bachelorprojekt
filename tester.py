@@ -134,4 +134,4 @@ for test, name in Tests:
         performance[i] = test_teleport(name=test, num=i)
     enablePrint()
     print(name)
-    print('$' + str(round(mean(performance),2)) + '\pm' + str(round(1.96 * std(performance)/np.sqrt(len(performance)),2)) + '$')
+    print('$' + str(round(mean(performance),2)) + ' \pm ' + str(round(1.96 * std(performance)/np.sqrt(len(performance)),2)) + '$')
