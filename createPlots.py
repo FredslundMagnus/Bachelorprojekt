@@ -2,10 +2,26 @@ from plotter import Colors, Loc, Plot
 
 
 # Diamonds plots
+# for i in range(1, 5):
+#     Plot(
+#         title=f"Diamonds Explorer {i}",
+#         loc=Loc.lowerRight,
+#         data=[
+#             (f"Diamonds{i}_0.5_UCB1", "UCB1 (stochastic)", Colors.blue),
+#             (f"Diamonds{i}_0.5_var", "Uncertainty sampling (stochastic)", Colors.red),
+#             (f"Diamonds{i}_0.5_NN_cpu", "Neural Network (stochastic)", Colors.purple),
+#             (f"Diamonds{i}_0.0_UCB1", "UCB1 (deterministic)", Colors.green),
+#             (f"Diamonds{i}_0.0_var", "Uncertainty sampling (deterministic)", Colors.brown),
+#             (f"Diamonds{i}_0.0_NN_cpu", "Neural Network (deterministic)", Colors.yellow),
+#         ],
+#     )
+
+
 for i in range(1, 5):
     Plot(
-        title=f"Diamonds Explorer {i}",
+        title=f"Diamonds Explorer {i} Cheese",
         loc=Loc.lowerRight,
+        keys=(1, 0),
         data=[
             (f"Diamonds{i}_0.5_UCB1", "UCB1 (stochastic)", Colors.blue),
             (f"Diamonds{i}_0.5_var", "Uncertainty sampling (stochastic)", Colors.red),
@@ -15,6 +31,14 @@ for i in range(1, 5):
             (f"Diamonds{i}_0.0_NN_cpu", "Neural Network (deterministic)", Colors.yellow),
         ],
     )
+
+#
+
+#
+
+#
+
+#
 
 # Plot(
 #     title="convert1",
