@@ -192,9 +192,9 @@ envs_small = [
 for env, name, env2 in envs_small:
     Plot(
         x_max = 3500,
-        keys=(1, 1),
-        ylim=(0, 1),
-        type="Counterfactualtestr2d2",
+        keys=(1, 0),
+        ylim=(0, 12),
+        type="Counterfactualtestr2d1",
         title=name,
         ylabel='MouseReward pr. Cheese',
         loc=Loc.lowerRight,
@@ -208,9 +208,9 @@ for env, name, env2 in envs_small:
 
 Plot(
     x_max = 3500,
-    keys=(1, 1),
-    ylim=(0, 1),
-    type="Counterfactualr2d2",
+    keys=(1, 0),
+    ylim=(0, 12),
+    type="Counterfactualr2d1",
     title='Magical Lights 2',
     ylabel='MouseReward pr. Cheese',
     loc=Loc.lowerRight,
