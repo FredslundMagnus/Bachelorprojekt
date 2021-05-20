@@ -1,6 +1,8 @@
 from plotter import Colors, Loc, Plot
 
 
+
+
 # Diamonds plots
 # for i in range(1, 5):
 #     Plot(
@@ -181,13 +183,50 @@ envs = [
     ('DoorsAndKey', 'Doors and Key'),
 ]
 
-for env, name in envs:
+envs_small = [
+    ('Causal3', 'Magical Lights 1', 'Lights1'),
+    ('Maze', 'Maze', 'Maze'),
+    ('Coconuts', 'Coconuts', 'Coconuts'),
+    ('MonsterLevel', 'Monsters', 'Monsters'),
+]
+
+
+for env, name, env2 in envs_small:
     Plot(
-        title=name+' Comparison',
+        type="Counterfactual",
+        title=name,
         loc=Loc.lowerRight,
         data=[
-            (f"{env}_simple", "Q-learn", Colors.green),
-            (f"{env}_teleport", "Teleport", Colors.blue),
-            (f"Attempt2_{env}_option_critic", "Option-Critic", Colors.purple)
+            (f"{env}_Conver1", "f1", Colors.pink),
+            (f"{env}_Conver2", "f2", Colors.orange),
+            (f"{env}_Conver4_3counterfactsNOCRASH_2", "f3", Colors.lime),
+            (f"{env2}_teleport", "Teleport", Colors.blue),
         ],
     )
+
+Plot(
+    type="Counterfactual",
+    title='Magical Lights 2',
+    loc=Loc.lowerRight,
+    data=[
+        (f"Causal4_Conver1", "f1", Colors.pink),
+        (f"Causal4_Conver2", "f2", Colors.orange),
+        (f"Causal4_Conver4_3counterfacts_2", "f3", Colors.lime),
+        (f"Lights2_teleport", "Teleport", Colors.blue),
+    ],
+)
+
+
+
+
+# for env, name in envs:
+#     Plot(
+#         title=name+' Comparison',
+#         loc=Loc.lowerRight,
+#         data=[
+#             (f"{env}_simple", "Q-learn", Colors.green),
+#             (f"{env}_teleport", "Teleport", Colors.blue),
+#             (f"Attempt2_{env}_option_critic", "Option-Critic", Colors.purple)
+#         ],
+#     )
+
