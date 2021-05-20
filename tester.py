@@ -1,3 +1,4 @@
+from numpy.core.fromnumeric import mean, std
 from torch import tensor, cat
 from allGraphs import getInterventions, states, transform, transformNot, environments, Data
 from layer import LayerType
@@ -17,8 +18,8 @@ def test_simple():
             env.step(actions)
 
 
-def test_teleport():
-    with Load("MonsterLevel_Conver4_3counterfactsNOCRASH", num=1) as load:
+def test_teleport(name="MonsterLevel_Conver4_3counterfactsNOCRASH", num=1):
+    with Load(name, num=num) as load:
         collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
         #teleporter.exploration.explore = teleporter.exploration.greedy
         intervention_idx, modified_board = teleporter.pre_process(env)
@@ -31,8 +32,9 @@ def test_teleport():
             modified_board, _, _, _, intervention_idx = teleporter.modify(observations, rewards, dones, info)
             all_rewards += sum(rewards)
             all_dones += sum(dones)
-            if frame % 1000 == 0:
-                print("performance is " + str((all_rewards/all_dones).item()), file=sys.stderr)
+            if frame % 100 == 0:
+                return (all_rewards/all_dones).item()
+                # print("performance is " + str((all_rewards/all_dones).item()), file=sys.stderr)
 
 
 def test_metateleport():
@@ -118,5 +120,15 @@ def test_option_critic():
         env, collector = load.items(Game, Collector)
         collector.show(env)
 
+Tests = ['Causal3_Conver1', 'Causal3_Conver2', 'Causal3_Conver4_3counterfactsNOCRASH_2', 'Lights1_teleport',
+    'Maze_Conver1', 'Maze_Conver2', 'Maze_Conver4_3counterfactsNOCRASH_2', 'Maze_teleport',
+    'Coconuts_Conver1', 'Coconuts_Conver2', 'Coconuts_Conver4_3counterfactsNOCRASH_2', 'Coconuts_teleport',
+    'Maze_Conver1', 'Maze_Conver2', 'Maze_Conver4_3counterfactsNOCRASH_2', 'Maze_teleport',
+    'MonsterLevel_Conver1', 'MonsterLevel_Conver2', 'MonsterLevel_Conver4_3counterfactsNOCRASH_2', 'Monsters']
 
-test_option_critic()
+for test in Tests:
+    performance = [None, None, None]
+    for i in range(len(performance)):
+        performance[i] = test_teleport(name=test, num=i)
+    print(test)
+    print('$' + str(round(mean(performance),2)) + '\pm' + str(round(std(performance),2)) + '$')
