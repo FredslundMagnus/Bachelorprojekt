@@ -14,7 +14,7 @@ class Load:
         return self
 
     def __exit__(self, type, value, traceback):
-        pass
+        print(type, value, traceback)
 
     def items(self, *args):
         return tuple(self.d[arg.__name__] for arg in args)

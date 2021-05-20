@@ -25,8 +25,8 @@ def load(*colectors: List[Tuple[str, str, MaterialColor]], same_x: bool = False)
                 with Load(name, num=i) as load:
                     collector: Collector = load.items(Collector)
                     temp[-1][1].append(*collector)
-            except:
-                pass
+            except Exception as e:
+                print(e)
     enablePrint()
     return temp
 
