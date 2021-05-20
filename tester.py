@@ -114,9 +114,9 @@ def test_CFagent2():
 
 
 def test_option_critic():
-    with Load("DoorsAndKey_option_critic", num=2) as load:
+    with Load("Attempt2_Rocks_option_critic", num=0) as load:
         env, collector = load.items(Game, Collector)
         collector.show(env)
 
 
-test_teleport()
+test_option_critic()
