@@ -8,7 +8,7 @@ from load import Load
 from helper import device
 import torch
 import sys
-
+import numpy as np
 
 def test_simple():
     with Load("causal3_9x9_20hoursONLYMOVERsoftmaxgam0995") as load:
@@ -131,4 +131,4 @@ for test in Tests:
     for i in range(len(performance)):
         performance[i] = test_teleport(name=test, num=i)
     print(test)
-    print('$' + str(round(mean(performance),2)) + '\pm' + str(round(std(performance),2)) + '$')
+    print('$' + str(round(mean(performance),2)) + '\pm' + str(round(1.96 * std(performance)/np.sqrt(len(performance)),2)) + '$')
