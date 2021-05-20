@@ -1,8 +1,6 @@
 from plotter import Colors, Loc, Plot
 
 
-
-
 # Diamonds plots
 # for i in range(1, 5):
 #     Plot(
@@ -217,11 +215,11 @@ Plot(
 )
 
 
-
-
 # for env, name in envs:
 #     Plot(
-#         title=name+' Comparison',
+#         title=name,
+#         type="_Comparison",
+#         x_max=5000,
 #         loc=Loc.lowerRight,
 #         data=[
 #             (f"{env}_simple", "Q-learn", Colors.green),
@@ -229,4 +227,3 @@ Plot(
 #             (f"Attempt2_{env}_option_critic", "Option-Critic", Colors.purple)
 #         ],
 #     )
-
