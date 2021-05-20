@@ -191,24 +191,26 @@ envs_small = [
 
 for env, name, env2 in envs_small:
     Plot(
+        x_max = 3500,
         type="Counterfactual",
         title=name,
         loc=Loc.lowerRight,
         data=[
-            (f"{env}_Conver1", "f1", Colors.pink),
-            (f"{env}_Conver2", "f2", Colors.orange),
+            (f"{env}_Conver1", "f1", Colors.brown),
+            (f"{env}_Conver2", "f2", Colors.teal),
             (f"{env}_Conver4_3counterfactsNOCRASH_2", "f3", Colors.lime),
             (f"{env2}_teleport", "Teleport", Colors.blue),
         ],
     )
 
 Plot(
+    x_max = 3500,
     type="Counterfactual",
     title='Magical Lights 2',
     loc=Loc.lowerRight,
     data=[
-        (f"Causal4_Conver1", "f1", Colors.pink),
-        (f"Causal4_Conver2", "f2", Colors.orange),
+        (f"Causal4_Conver1", "f1", Colors.brown),
+        (f"Causal4_Conver2", "f2", Colors.teal),
         (f"Causal4_Conver4_3counterfacts_2", "f3", Colors.lime),
         (f"Lights2_teleport", "Teleport", Colors.blue),
     ],
