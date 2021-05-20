@@ -121,18 +121,37 @@ for i in range(1, 5):
 #     ],
 # )
 
-# Plot(
-#     title="option_critic3",
-#     loc=Loc.lowerRight,
-#     data=[
-#         ("Attempt3_Maze_option_critic", "Maze", Colors.orange),
-#         ("Attempt3_Lights1_option_critic", "Lights1", Colors.black),
-#         ("Attempt3_Lights2_option_critic", "Lights2", Colors.purple),
-#         ("Attempt3_Diamonds1_option_critic", "Diamonds1", Colors.yellow),
-#         ("Attempt3_Diamonds2_option_critic", "Diamonds2", Colors.red),
-#         ("Attempt3_Diamonds3_option_critic", "Diamonds3", Colors.blueGray),
-#     ],
-# )
+Plot(
+    title="option_critic2",
+    loc=Loc.lowerRight,
+    data=[
+        ("Attempt2_Coconuts_option_critic", "Coconuts", Colors.orange),
+        ("Attempt2_Maze_option_critic", "Maze", Colors.orange),
+        ("Attempt2_Lights1_option_critic", "Lights1", Colors.black),
+        ("Attempt2_Lights2_option_critic", "Lights2", Colors.purple),
+        ("Attempt2_Diamonds1_option_critic", "Diamonds1", Colors.yellow),
+        ("Attempt2_Diamonds2_option_critic", "Diamonds2", Colors.red),
+        ("Attempt2_Diamonds3_option_critic", "Diamonds3", Colors.blueGray),
+        ("Attempt2_Diamonds4_option_critic", "Diamonds4", Colors.blueGray),
+        ("Attempt2_DoorsAndKey_option_critic", "DoorsAndKey", Colors.blueGray),
+        ("Attempt2_Monsters_option_critic", "Monsters", Colors.blueGray),
+        ("Attempt2_SuperLevel1_option_critic", "SuperLevel1", Colors.blueGray),
+        ("Attempt2_SuperLevel2_option_critic", "SuperLevel2", Colors.blueGray),
+    ],
+)
+
+Plot(
+    title="option_critic8",
+    loc=Loc.lowerRight,
+    data=[
+        ("Attempt8_Maze_option_critic", "Maze", Colors.orange),
+        ("Attempt8_Lights1_option_critic", "Lights1", Colors.black),
+        ("Attempt8_Lights2_option_critic", "Lights2", Colors.purple),
+        ("Attempt8_Diamonds1_option_critic", "Diamonds1", Colors.yellow),
+        ("Attempt8_Diamonds2_option_critic", "Diamonds2", Colors.red),
+        ("Attempt8_Diamonds3_option_critic", "Diamonds3", Colors.blueGray),
+    ],
+)
 
 # Plot(
 #     title="option_critic6",
