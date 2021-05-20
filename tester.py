@@ -7,13 +7,8 @@ from main import *
 from load import Load
 from helper import device
 import torch
-<<<<<<< HEAD
 import sys
 import numpy as np
-=======
-from Utils.debug import disablePrint, enablePrint
-
->>>>>>> 001a01b2e62652290a5187f76336612f7f369a18
 
 def test_simple():
     with Load("causal3_9x9_20hoursONLYMOVERsoftmaxgam0995") as load:
