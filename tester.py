@@ -125,7 +125,7 @@ Tests = ['Causal3_Conver1', 'Causal3_Conver2', 'Causal3_Conver4_3counterfactsNOC
          'Maze_Conver1', 'Maze_Conver2', 'Maze_Conver4_3counterfactsNOCRASH_2', 'Maze_teleport',
          'Coconuts_Conver1', 'Coconuts_Conver2', 'Coconuts_Conver4_3counterfactsNOCRASH_2', 'Coconuts_teleport',
          'Maze_Conver1', 'Maze_Conver2', 'Maze_Conver4_3counterfactsNOCRASH_2', 'Maze_teleport',
-         'MonsterLevel_Conver1', 'MonsterLevel_Conver2', 'MonsterLevel_Conver4_3counterfactsNOCRASH_2', 'Monsters']
+         'MonsterLevel_Conver1', 'MonsterLevel_Conver2', 'MonsterLevel_Conver4_3counterfactsNOCRASH_2', 'Monsters_teleport']
 
 for test in Tests:
     disablePrint()
