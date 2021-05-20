@@ -43,6 +43,7 @@ class Plotter():
         self.plt.ylabel(ylabel)
         self.N: int = normalize
         self.type: str = type
+        print(self.title)
 
         def varPlot(name: str, collectors: List[Collector], color: MaterialColor, meanVar: bool = True):
             if not collectors:

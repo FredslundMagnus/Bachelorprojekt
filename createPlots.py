@@ -17,23 +17,23 @@ from plotter import Colors, Loc, Plot
 #     )
 
 
-for i in range(1, 5):
-    Plot(
-        title=f"Diamonds Explorer {i}",
-        type="_Cheese",
-        loc=Loc.upperRight,
-        keys=(1, 0),
-        ylim=(0, 25),
-        ylabel="Cheese pr. game",
-        data=[
-            (f"Diamonds{i}_0.5_UCB1", "UCB1 (stochastic)", Colors.blue),
-            (f"Diamonds{i}_0.5_var", "Uncertainty sampling (stochastic)", Colors.red),
-            (f"Diamonds{i}_0.5_NN_cpu", "Neural Network (stochastic)", Colors.purple),
-            (f"Diamonds{i}_0.0_UCB1", "UCB1 (deterministic)", Colors.green),
-            (f"Diamonds{i}_0.0_var", "Uncertainty sampling (deterministic)", Colors.brown),
-            (f"Diamonds{i}_0.0_NN_cpu", "Neural Network (deterministic)", Colors.yellow),
-        ],
-    )
+# for i in range(1, 5):
+#     Plot(
+#         title=f"Diamonds Explorer {i}",
+#         type="_Cheese",
+#         loc=Loc.upperRight,
+#         keys=(1, 0),
+#         ylim=(0, 25),
+#         ylabel="Cheese pr. game",
+#         data=[
+#             (f"Diamonds{i}_0.5_UCB1", "UCB1 (stochastic)", Colors.blue),
+#             (f"Diamonds{i}_0.5_var", "Uncertainty sampling (stochastic)", Colors.red),
+#             (f"Diamonds{i}_0.5_NN_cpu", "Neural Network (stochastic)", Colors.purple),
+#             (f"Diamonds{i}_0.0_UCB1", "UCB1 (deterministic)", Colors.green),
+#             (f"Diamonds{i}_0.0_var", "Uncertainty sampling (deterministic)", Colors.brown),
+#             (f"Diamonds{i}_0.0_NN_cpu", "Neural Network (deterministic)", Colors.yellow),
+#         ],
+#     )
 
 #
 
@@ -121,37 +121,37 @@ for i in range(1, 5):
 #     ],
 # )
 
-Plot(
-    title="option_critic2",
-    loc=Loc.lowerRight,
-    data=[
-        ("Attempt2_Coconuts_option_critic", "Coconuts", Colors.orange),
-        ("Attempt2_Maze_option_critic", "Maze", Colors.orange),
-        ("Attempt2_Lights1_option_critic", "Lights1", Colors.black),
-        ("Attempt2_Lights2_option_critic", "Lights2", Colors.purple),
-        ("Attempt2_Diamonds1_option_critic", "Diamonds1", Colors.yellow),
-        ("Attempt2_Diamonds2_option_critic", "Diamonds2", Colors.red),
-        ("Attempt2_Diamonds3_option_critic", "Diamonds3", Colors.blueGray),
-        ("Attempt2_Diamonds4_option_critic", "Diamonds4", Colors.blueGray),
-        ("Attempt2_DoorsAndKey_option_critic", "DoorsAndKey", Colors.blueGray),
-        ("Attempt2_Monsters_option_critic", "Monsters", Colors.blueGray),
-        ("Attempt2_SuperLevel1_option_critic", "SuperLevel1", Colors.blueGray),
-        ("Attempt2_SuperLevel2_option_critic", "SuperLevel2", Colors.blueGray),
-    ],
-)
+# Plot(
+#     title="option_critic2",
+#     loc=Loc.lowerRight,
+#     data=[
+#         ("Attempt2_Coconuts_option_critic", "Coconuts", Colors.orange),
+#         ("Attempt2_Maze_option_critic", "Maze", Colors.orange),
+#         ("Attempt2_Lights1_option_critic", "Lights1", Colors.black),
+#         ("Attempt2_Lights2_option_critic", "Lights2", Colors.purple),
+#         ("Attempt2_Diamonds1_option_critic", "Diamonds1", Colors.yellow),
+#         ("Attempt2_Diamonds2_option_critic", "Diamonds2", Colors.red),
+#         ("Attempt2_Diamonds3_option_critic", "Diamonds3", Colors.blueGray),
+#         ("Attempt2_Diamonds4_option_critic", "Diamonds4", Colors.blueGray),
+#         ("Attempt2_DoorsAndKey_option_critic", "DoorsAndKey", Colors.blueGray),
+#         ("Attempt2_Monsters_option_critic", "Monsters", Colors.blueGray),
+#         ("Attempt2_SuperLevel1_option_critic", "SuperLevel1", Colors.blueGray),
+#         ("Attempt2_SuperLevel2_option_critic", "SuperLevel2", Colors.blueGray),
+#     ],
+# )
 
-Plot(
-    title="option_critic8",
-    loc=Loc.lowerRight,
-    data=[
-        ("Attempt8_Maze_option_critic", "Maze", Colors.orange),
-        ("Attempt8_Lights1_option_critic", "Lights1", Colors.black),
-        ("Attempt8_Lights2_option_critic", "Lights2", Colors.purple),
-        ("Attempt8_Diamonds1_option_critic", "Diamonds1", Colors.yellow),
-        ("Attempt8_Diamonds2_option_critic", "Diamonds2", Colors.red),
-        ("Attempt8_Diamonds3_option_critic", "Diamonds3", Colors.blueGray),
-    ],
-)
+# Plot(
+#     title="option_critic8",
+#     loc=Loc.lowerRight,
+#     data=[
+#         ("Attempt8_Maze_option_critic", "Maze", Colors.orange),
+#         ("Attempt8_Lights1_option_critic", "Lights1", Colors.black),
+#         ("Attempt8_Lights2_option_critic", "Lights2", Colors.purple),
+#         ("Attempt8_Diamonds1_option_critic", "Diamonds1", Colors.yellow),
+#         ("Attempt8_Diamonds2_option_critic", "Diamonds2", Colors.red),
+#         ("Attempt8_Diamonds3_option_critic", "Diamonds3", Colors.blueGray),
+#     ],
+# )
 
 # Plot(
 #     title="option_critic6",
@@ -167,28 +167,27 @@ Plot(
 # )
 
 
-# envs = [
-#     ('Lights1', 'Magical Lights 1'),
-#     ('Lights2', 'Magical Lights 2'),
-#     ('Diamonds1', 'Diamonds Explorer 1'),
-#     ('Diamonds2', 'Diamonds Explorer 2'),
-#     ('Diamonds3', 'Diamonds Explorer 3'),
-#     ('Diamonds4', 'Diamonds Explorer 4'),
-#     ('SuperLevel1', 'Super Level 1'),
-#     ('SuperLevel2', 'Super Level 2'),
-#     ('Maze', 'Maze'),
-#     ('Rocks', 'Rocks & Dirt'),
-#     ('Coconuts', 'Coconuts'),
-#     ('Monsters', 'Monsters'),
-#     ('DoorsAndKey', 'Doors and Key'),
-# ]
+envs = [
+    ('Lights1', 'Magical Lights 1'),
+    ('Lights2', 'Magical Lights 2'),
+    ('Diamonds1', 'Diamonds Explorer 1'),
+    ('Diamonds2', 'Diamonds Explorer 2'),
+    ('Diamonds3', 'Diamonds Explorer 3'),
+    ('Diamonds4', 'Diamonds Explorer 4'),
+    ('Maze', 'Maze'),
+    ('Rocks', 'Rocks & Dirt'),
+    ('Coconuts', 'Coconuts'),
+    ('Monsters', 'Monsters'),
+    ('DoorsAndKey', 'Doors and Key'),
+]
 
-# for env, name in envs:
-#     Plot(
-#         title=name+' Comparison',
-#         loc=Loc.lowerRight,
-#         data=[
-#             (f"{env}_simple", "Q-learn", Colors.blue),
-#             (f"{env}_teleport", "Teleport", Colors.pink),
-#         ],
-#     )
+for env, name in envs:
+    Plot(
+        title=name+' Comparison',
+        loc=Loc.lowerRight,
+        data=[
+            (f"{env}_simple", "Q-learn", Colors.green),
+            (f"{env}_teleport", "Teleport", Colors.blue),
+            (f"Attempt2_{env}_option_critic", "Option-Critic", Colors.purple)
+        ],
+    )
