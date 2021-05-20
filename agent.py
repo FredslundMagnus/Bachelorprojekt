@@ -192,11 +192,11 @@ class CFAgent(Agent):
         if self.convert_function == 1:
             learning_scores = values
         elif self.convert_function == 2:
-            learning_scores = (1 - abs(values - 0.5))
+            learning_scores = (0.5 - abs(values - 0.5))
         elif self.convert_function == 3:
             learning_scores = values * softmax(tele_values * 3, dim=1)
         elif self.convert_function == 4:
-            learning_scores = (1 - abs(values - 0.5)) * softmax(tele_values * 3, dim=1)
+            learning_scores = (0.5 - abs(values - 0.5)) * softmax(tele_values * 3, dim=1)
         elif self.convert_function == 5:
             learning_scores = softmax(tele_values * 3, dim=1)
         return learning_scores

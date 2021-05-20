@@ -1,3 +1,4 @@
+from numpy.core.fromnumeric import mean, std
 from torch import tensor, cat
 from allGraphs import getInterventions, states, transform, transformNot, environments, Data
 from layer import LayerType
@@ -7,7 +8,7 @@ from load import Load
 from helper import device
 import torch
 import sys
-
+import numpy as np
 
 def test_simple():
     with Load("causal3_9x9_20hoursONLYMOVERsoftmaxgam0995") as load:
@@ -17,8 +18,8 @@ def test_simple():
             env.step(actions)
 
 
-def test_teleport():
-    with Load("MonsterLevel_Conver4_3counterfactsNOCRASH", num=1) as load:
+def test_teleport(name="MonsterLevel_Conver4_3counterfactsNOCRASH", num=1):
+    with Load(name, num=num) as load:
         collector, env, mover, teleporter = load.items(Collector, Game, Mover, Teleporter)
         #teleporter.exploration.explore = teleporter.exploration.greedy
         intervention_idx, modified_board = teleporter.pre_process(env)
@@ -31,8 +32,9 @@ def test_teleport():
             modified_board, _, _, _, intervention_idx = teleporter.modify(observations, rewards, dones, info)
             all_rewards += sum(rewards)
             all_dones += sum(dones)
-            if frame % 1000 == 0:
-                print("performance is " + str((all_rewards/all_dones).item()), file=sys.stderr)
+            if frame % 10000 == 0:
+                return (all_rewards/all_dones).item()
+                # print("performance is " + str((all_rewards/all_dones).item()), file=sys.stderr)
 
 
 def test_metateleport():
@@ -114,9 +116,22 @@ def test_CFagent2():
 
 
 def test_option_critic():
-    with Load("DoorsAndKey_option_critic", num=2) as load:
+    with Load("Attempt2_Rocks_option_critic", num=0) as load:
         env, collector = load.items(Game, Collector)
         collector.show(env)
 
 
-test_teleport()
+Tests = [('Causal3_Conver1','Lights1_f1'), ('Causal3_Conver2','Lights1_f2'), ('Causal3_Conver4_3counterfactsNOCRASH_2', 'Lights1_f3'), ('Lights1_teleport', 'Lights1_tele'),
+         ('Maze_Conver1', 'Maze_f1'), ('Maze_Conver2', 'Maze_f2'), ('Maze_Conver4_3counterfactsNOCRASH_2', 'Maze_f3'), ('Maze_teleport', 'Maze_tele'),
+         ('Coconuts_Conver1', 'Coconuts_f1'), ('Coconuts_Conver2', 'Coconuts_f2'), ('Coconuts_Conver4_3counterfactsNOCRASH_2', 'Coconuts_f3'), ('Coconuts_teleport', 'Coconuts_tele'),
+         ('Causal4_Conver1', 'Lights2_f1'), ('Causal4_Conver2', 'Lights2_f2'), ('Causal4_Conver4_3counterfacts_2', 'Lights2_f3'), ('Lights2_teleport', 'Lights2_tele'),
+         ('MonsterLevel_Conver1', 'Monsters_f1'), ('MonsterLevel_Conver2', 'Monsters_f2'), ('MonsterLevel_Conver4_3counterfactsNOCRASH_2', 'Monsters_f3'), ('Monsters_teleport', 'Monsters_tele')]
+
+for test, name in Tests:
+    disablePrint()
+    performance = [None, None, None]
+    for i in range(len(performance)):
+        performance[i] = test_teleport(name=test, num=i)
+    enablePrint()
+    print(name)
+    print('$' + str(round(mean(performance),2)) + ' \pm ' + str(round(1.96 * std(performance)/np.sqrt(len(performance)),2)) + '$')

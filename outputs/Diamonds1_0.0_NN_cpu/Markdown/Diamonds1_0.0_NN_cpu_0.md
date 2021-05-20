@@ -246,3 +246,251 @@ Resource usage summary:
 
 The output (if any) is above this job summary.
 
+/zhome/ee/d/137643/Desktop/Bachelor/project-env/lib/python3.8/site-packages/torch/cuda/__init__.py:52: UserWarning: CUDA initialization: Found no NVIDIA driver on your system. Please check that you have an NVIDIA GPU and installed a driver from http://www.nvidia.com/Download/index.aspx (Triggered internally at  /pytorch/c10/cuda/CUDAFunctions.cpp:100.)
+  return torch._C._cuda_getDeviceCount() > 0
+
+# Parameters
+
+    Name :                      Diamonds1_0.0_NN_cpu-0
+    Main :                      graphTrain
+    Level :                     Levels.Causal2
+    Failed actions chance :     0.0
+    Use model :                 True
+    Depth :                     1
+    Model explore :             100000
+    Samples :                   5
+    Hours :                     10.0
+    Batch :                     100
+    Width :                     9
+    Height :                    9
+    Graphmode :                 GraphMode.UCB1
+    Network1 :                  Networks.Teleporter
+    K1 :                        200000.0
+    Learner1 :                  Learners.Qlearn
+    Exploration1 :              Explorations.softmaxer
+    Gamma1 :                    0.98
+    Network2 :                  Networks.Mini
+    K2 :                        100000.0
+    Learner2 :                  Learners.Qlearn
+    Exploration2 :              Explorations.epsilonGreedy
+    Gamma2 :                    0.95
+    Layer blocks :              True
+    Layer goal :                True
+    Layer gold :                True
+    Layer keys :                True
+    Layer door :                True
+    Layer holder :              True
+    Layer putter :              True
+    Layer rock :                True
+    Layer dirt :                True
+    Layer diamond1 :            True
+    Layer diamond2 :            True
+    Layer diamond3 :            True
+    Layer diamond4 :            True
+    Layer reddoor :             True
+    Layer redkeys :             True
+    Layer bluedoor :            True
+    Layer bluekeys :            True
+    Layer pink1 :               True
+    Layer pink2 :               True
+    Layer pink3 :               True
+    Layer brown1 :              True
+    Layer brown2 :              True
+    Layer brown3 :              True
+    Layer greendown :           True
+    Layer greenup :             True
+    Layer greenstar :           True
+    Layer yellowstar :          True
+    Layer bluestar :            True
+    Layer coconut :             True
+    Layer monster :             True
+    Layer greencross :          True
+    Layer bluecross :           True
+    Layer redcross :            True
+    Layer purplecross :         True
+    Layer super1 :              True
+    Layer super2 :              True
+    Layer super3 :              True
+    Layer super4 :              True
+    Layer super5 :              True
+    Layer super6 :              True
+    Layer super7 :              True
+    Epsilon cap :               0.2
+    Softmax cap :               0.0
+    Update :                    10000
+    Reset chance :              0.002
+    Modified done chance :      0.05
+    Miss intervention cost :    -0.15
+    Intervention cost :         -0.05
+    Replay size :               100000
+    Sample size :               50
+    Cf convert :                3
+    Counterfacts :              1
+    Topn :                      6
+    Random counterfacts :       False
+    Num :                       0
+    Load name :                 Causal4_Conver4_3counterfacts
+    Minutes used :              595 minutes.
+    Hours used :                9 hours.
+
+# Profiling
+
+
+      18352345295 function calls (18038173964 primitive calls) in 35700.17 seconds
+
+##    Ordered by: cumulative time
+   List reduced from 439 to 100 due to restriction <100>
+
+                  ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+                      1    0.000    0.000 35700.168 35700.168 {built-in method builtins.exec}
+                      1    0.001    0.001 35700.168 35700.168 <string>:1(<module>)
+                      1   88.151   88.151 35700.166 35700.166 allGraphsTrain.py:13(graphTrain)
+        331613765/37178665 1252.801    0.000 11902.968    0.000 module.py:715(_call_impl)
+               29443510  341.520    0.000 11282.051    0.000 container.py:115(forward)
+                7344419   73.216    0.000 10426.543    0.001 BayesianNN.py:57(learn)
+                 390736   68.741    0.000 10026.195    0.026 allGraphsTrain.py:40(<listcomp>)
+                5940071   21.614    0.000 9913.979    0.002 allGraphs.py:179(getInterventionsmodel)
+                7344419   85.524    0.000 9902.202    0.001 BayesianNN.py:21(learn)
+                 390736 1989.977    0.005 9316.108    0.024 allGraphs.py:156(transformNot)
+               28662038   68.277    0.000 8856.168    0.000 BayesianNN.py:18(forward)
+        25150530/5810161  980.345    0.000 8770.409    0.002 allGraphs.py:186(recursiveBEST)
+               21317619  217.421    0.000 7927.191    0.000 BayesianNN.py:61(predict)
+                7735155   44.874    0.000 4560.937    0.001 grad_mode.py:23(decorate_context)
+                 390736   25.477    0.000 4435.926    0.011 allGraphs.py:141(transform)
+                7735155  215.938    0.000 4431.665    0.001 adam.py:55(step)
+                 390736    2.287    0.000 4256.113    0.011 agent.py:29(learn)
+                 390736   43.119    0.000 4252.887    0.011 agent.py:117(_learn)
+                 390736   27.298    0.000 4209.768    0.011 learner.py:42(Qlearn)
+                7735155   36.642    0.000 3932.436    0.001 tensor.py:181(backward)
+                7735155   24.981    0.000 3895.793    0.001 __init__.py:68(backward)
+                7735155 3759.253    0.000 3759.253    0.000 {method 'run_backward' of 'torch._C._EngineBase' objects}
+                7735155  845.735    0.000 3343.371    0.000 functional.py:53(adam)
+               87549058  196.622    0.000 3097.772    0.000 linear.py:92(forward)
+               85986114   79.764    0.000 3009.901    0.000 dropout.py:57(forward)
+               85986114  294.197    0.000 2930.137    0.000 functional.py:960(dropout)
+               87549058  336.813    0.000 2816.707    0.000 functional.py:1669(linear)
+                 781472    2.426    0.000 2727.808    0.003 network.py:28(forward)
+               85986114 2550.861    0.000 2550.861    0.000 {built-in method dropout}
+                 390736    2.091    0.000 2457.478    0.006 game.py:42(step)
+                 390736    2.937    0.000 2418.132    0.006 layers.py:827(step)
+                1562944    5.134    0.000 2205.007    0.001 conv.py:422(forward)
+                1562944    5.515    0.000 2197.861    0.001 conv.py:414(_conv_forward)
+                1562944 2191.595    0.001 2191.595    0.001 {built-in method conv2d}
+                 390736   80.127    0.000 2079.506    0.005 allGraphsTrain.py:33(<listcomp>)
+               39464437  972.127    0.000 1999.384    0.000 allGraphs.py:114(states)
+              351662800 1690.711    0.000 1690.711    0.000 {method 'sum' of 'torch._C._TensorBase' objects}
+               28662038 1194.421    0.000 1652.889    0.000 BayesianNN.py:43(convert_data)
+              330346874  913.637    0.000 1530.004    0.000 tensor.py:933(grad)
+                 390736    6.826    0.000 1485.293    0.004 agent.py:112(__call__)
+               87549058 1454.694    0.000 1454.694    0.000 {built-in method addmm}
+                 390736   42.513    0.000 1254.657    0.003 layers.py:17(step)
+               39073600   84.179    0.000 1207.731    0.000 layer.py:106(move)
+                 390737   70.789    0.000 1156.912    0.003 layers.py:793(update)
+                7735155  138.806    0.000 1132.229    0.000 optimizer.py:167(zero_grad)
+               88330530   71.702    0.000 1042.865    0.000 activation.py:713(forward)
+              512446531  325.175    0.000 1023.498    0.000 overrides.py:1070(has_torch_function)
+               88330530  109.173    0.000  971.163    0.000 functional.py:1292(leaky_relu)
+               88330530  849.743    0.000  849.743    0.000 {built-in method torch._C._nn.leaky_relu}
+               94384804  840.797    0.000  840.797    0.000 {method 'mul_' of 'torch._C._TensorBase' objects}
+              653445008  316.786    0.000  832.451    0.000 {built-in method builtins.any}
+          525360/129910   28.896    0.000  819.366    0.006 allGraphs.py:202(recursiveExplore)
+               61153835  172.475    0.000  795.769    0.000 tensor.py:21(wrapped)
+               39073600  155.532    0.000  718.376    0.000 layers.py:844(check)
+               87549058  624.306    0.000  624.306    0.000 {method 't' of 'torch._C._TensorBase' objects}
+              398083939  613.627    0.000  613.627    0.000 {method 'item' of 'torch._C._TensorBase' objects}
+                1094591   12.144    0.000  562.556    0.001 layers.py:849(restart)
+               94384804  531.577    0.000  531.577    0.000 {method 'add_' of 'torch._C._TensorBase' objects}
+                 390736   32.698    0.000  472.066    0.001 allGraphsTrain.py:51(<listcomp>)
+                 390736   58.530    0.000  462.977    0.001 allGraphsTrain.py:44(<listcomp>)
+                1094591    6.356    0.000  456.434    0.000 level.py:8(__init__)
+                1094591   16.002    0.000  397.891    0.000 levels.py:151(generate)
+             1159800207  321.341    0.000  393.465    0.000 overrides.py:1083(<genexpr>)
+                7735155   10.813    0.000  372.493    0.000 loss.py:445(forward)
+                5255990   62.896    0.000  365.089    0.000 level.py:41(notUsed)
+                9567082  364.690    0.000  364.690    0.000 {built-in method tensor}
+                7735155   43.063    0.000  361.680    0.000 functional.py:2637(mse_loss)
+               57324077  348.816    0.000  348.816    0.000 {built-in method zeros}
+                7893752    7.589    0.000  331.561    0.000 game.py:38(board)
+               39073600   72.424    0.000  323.975    0.000 layers.py:838(isFree)
+               20126555   67.403    0.000  318.886    0.000 tensor.py:506(__rsub__)
+               47192402  315.719    0.000  315.719    0.000 {method 'add' of 'torch._C._TensorBase' objects}
+               47192402  311.062    0.000  311.062    0.000 {method 'sqrt' of 'torch._C._TensorBase' objects}
+                5940071   54.919    0.000  300.165    0.000 allGraphs.py:167(format)
+              882780421  196.192    0.000  281.178    0.000 enum.py:646(__hash__)
+               41027280  263.071    0.000  263.071    0.000 {method 'eq' of 'torch._C._TensorBase' objects}
+               47192402  259.268    0.000  259.268    0.000 {method 'addcdiv_' of 'torch._C._TensorBase' objects}
+                 390736   99.717    0.000  256.426    0.001 agent.py:67(modify)
+              268461826  209.434    0.000  251.551    0.000 layer.py:103(isFree)
+               20126555  251.483    0.000  251.483    0.000 {built-in method rsub}
+                2735159  130.394    0.000  224.736    0.000 layer.py:175(NoRock_update)
+               47192402  223.232    0.000  223.232    0.000 {method 'addcmul_' of 'torch._C._TensorBase' objects}
+              332785973  222.195    0.000  222.195    0.000 {built-in method torch._C._get_tracing_state}
+               39073600  217.000    0.000  217.000    0.000 {method 'argmax' of 'torch._C._TensorBase' objects}
+                7735155  207.302    0.000  207.302    0.000 {built-in method torch._C._nn.mse_loss}
+               69298582  198.525    0.000  198.525    0.000 {method 'flatten' of 'torch._C._TensorBase' objects}
+              100227535   54.490    0.000  191.616    0.000 {built-in method builtins.all}
+               37969565  182.335    0.000  182.335    0.000 {method 'unsqueeze' of 'torch._C._TensorBase' objects}
+                5255990    5.072    0.000  180.882    0.000 level.py:38(elementsIn)
+                1172208    4.817    0.000  173.808    0.000 tensor.py:576(__iter__)
+               19735819  172.905    0.000  172.905    0.000 {method 'gt' of 'torch._C._TensorBase' objects}
+                1172208  165.732    0.000  165.732    0.000 {method 'unbind' of 'torch._C._TensorBase' objects}
+               47192512   71.753    0.000  160.297    0.000 tensor.py:596(__hash__)
+               39073600   89.152    0.000  141.950    0.000 layers.py:207(check)
+             1355898570  141.638    0.000  141.638    0.000 {method 'values' of 'collections.OrderedDict' objects}
+        1198204738/1198204736  130.930    0.000  137.418    0.000 {built-in method builtins.len}
+               39073600   85.658    0.000  136.422    0.000 layers.py:219(check)
+              215013076  136.310    0.000  136.310    0.000 module.py:765(__getattr__)
+               39073600   84.358    0.000  133.880    0.000 layers.py:231(check)
+                5255990   59.129    0.000  118.858    0.000 level.py:39(<listcomp>)
+
+
+# Other prints
+
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@hpc.dtu.dk>
+Subject: Job 9668375: <Diamonds1_0.0_NN_cpu_0> in cluster <dcc> Done
+
+Job <Diamonds1_0.0_NN_cpu_0> was submitted from host <n-62-30-8> by user <s183905> in cluster <dcc> at Wed May 19 22:55:26 2021
+Job was executed on host(s) <n-62-11-67>, in queue <hpc>, as user <s183905> in cluster <dcc> at Wed May 19 22:55:27 2021
+</zhome/ee/d/137643> was used as the home directory.
+</zhome/ee/d/137643/Desktop/Bachelor/Bachelorprojekt/Utils> was used as the working directory.
+Started at Wed May 19 22:55:27 2021
+Terminated at Thu May 20 08:50:30 2021
+Results reported at Thu May 20 08:50:30 2021
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/sh
+#BSUB -q hpc
+#BSUB -n 1
+#BSUB -R "rusage[mem=16G]"
+#BSUB -R "span[hosts=1]"
+#BSUB -W 4320
+# end of BSUB options
+cd ..
+module -s load python3
+source ../project-env/bin/activate
+
+python main.py $MYARGS
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   35580.56 sec.
+    Max Memory :                                 102 MB
+    Average Memory :                             96.04 MB
+    Total Requested Memory :                     16384.00 MB
+    Delta Memory :                               16282.00 MB
+    Max Swap :                                   -
+    Max Processes :                              4
+    Max Threads :                                6
+    Run time :                                   35729 sec.
+    Turnaround time :                            35704 sec.
+
+The output (if any) is above this job summary.
+
