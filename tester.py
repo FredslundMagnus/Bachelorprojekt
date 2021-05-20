@@ -32,7 +32,7 @@ def test_teleport(name="MonsterLevel_Conver4_3counterfactsNOCRASH", num=1):
             modified_board, _, _, _, intervention_idx = teleporter.modify(observations, rewards, dones, info)
             all_rewards += sum(rewards)
             all_dones += sum(dones)
-            if frame % 100 == 0:
+            if frame % 10000 == 0:
                 return (all_rewards/all_dones).item()
                 # print("performance is " + str((all_rewards/all_dones).item()), file=sys.stderr)
 
@@ -121,17 +121,17 @@ def test_option_critic():
         collector.show(env)
 
 
-Tests = ['Causal3_Conver1', 'Causal3_Conver2', 'Causal3_Conver4_3counterfactsNOCRASH_2', 'Lights1_teleport',
-         'Maze_Conver1', 'Maze_Conver2', 'Maze_Conver4_3counterfactsNOCRASH_2', 'Maze_teleport',
-         'Coconuts_Conver1', 'Coconuts_Conver2', 'Coconuts_Conver4_3counterfactsNOCRASH_2', 'Coconuts_teleport',
-         'Maze_Conver1', 'Maze_Conver2', 'Maze_Conver4_3counterfactsNOCRASH_2', 'Maze_teleport',
-         'MonsterLevel_Conver1', 'MonsterLevel_Conver2', 'MonsterLevel_Conver4_3counterfactsNOCRASH_2', 'Monsters_teleport']
+Tests = [('Causal3_Conver1','Lights1_f1'), ('Causal3_Conver2','Lights1_f2'), ('Causal3_Conver4_3counterfactsNOCRASH_2', 'Lights1_f3'), ('Lights1_teleport', 'Lights1_tele'),
+         ('Maze_Conver1', 'Maze_f1'), ('Maze_Conver2', 'Maze_f2'), ('Maze_Conver4_3counterfactsNOCRASH_2', 'Maze_f3'), ('Maze_teleport', 'Maze_tele'),
+         ('Coconuts_Conver1', 'Coconuts_f1'), ('Coconuts_Conver2', 'Coconuts_f2'), ('Coconuts_Conver4_3counterfactsNOCRASH_2', 'Coconuts_f3'), ('Coconuts_teleport', 'Coconuts_tele'),
+         ('Causal4_Conver1', 'Lights2_f1'), ('Causal4_Conver2', 'Lights2_f2'), ('Causal4_Conver4_3counterfacts_2', 'Lights2_f3'), ('Lights2_teleport', 'Lights2_tele'),
+         ('MonsterLevel_Conver1', 'Monsters_f1'), ('MonsterLevel_Conver2', 'Monsters_f2'), ('MonsterLevel_Conver4_3counterfactsNOCRASH_2', 'Monsters_f3'), ('Monsters_teleport', 'Monsters_tele')]
 
-for test in Tests:
+for test, name in Tests:
     disablePrint()
     performance = [None, None, None]
     for i in range(len(performance)):
         performance[i] = test_teleport(name=test, num=i)
     enablePrint()
-    print(test)
+    print(name)
     print('$' + str(round(mean(performance),2)) + '\pm' + str(round(1.96 * std(performance)/np.sqrt(len(performance)),2)) + '$')
