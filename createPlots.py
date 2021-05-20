@@ -8,10 +8,10 @@ from plotter import Colors, Loc, Plot
 #         loc=Loc.lowerRight,
 #         data=[
 #             (f"Diamonds{i}_0.5_UCB1", "UCB1 (stochastic)", Colors.blue),
-#             (f"Diamonds{i}_0.5_var", "Uncertainty sampling (stochastic)", Colors.red),
+#             (f"Diamonds{i}_0.5_var", "Variance exploration (stochastic)", Colors.red),
 #             (f"Diamonds{i}_0.5_NN_cpu", "Neural Network (stochastic)", Colors.purple),
 #             (f"Diamonds{i}_0.0_UCB1", "UCB1 (deterministic)", Colors.green),
-#             (f"Diamonds{i}_0.0_var", "Uncertainty sampling (deterministic)", Colors.brown),
+#             (f"Diamonds{i}_0.0_var", "Variance exploration (deterministic)", Colors.brown),
 #             (f"Diamonds{i}_0.0_NN_cpu", "Neural Network (deterministic)", Colors.yellow),
 #         ],
 #     )
@@ -22,15 +22,15 @@ from plotter import Colors, Loc, Plot
 #         title=f"Diamonds Explorer {i}",
 #         type="_Cheese",
 #         loc=Loc.upperRight,
-#         keys=(1, 0),
-#         ylim=(0, 25),
-#         ylabel="Cheese pr. game",
+#         keys=(0, 1),
+#         ylim=(0, 0.6),
+#         ylabel="Reward pr. cheese",
 #         data=[
 #             (f"Diamonds{i}_0.5_UCB1", "UCB1 (stochastic)", Colors.blue),
-#             (f"Diamonds{i}_0.5_var", "Uncertainty sampling (stochastic)", Colors.red),
+#             (f"Diamonds{i}_0.5_var", "Variance exploration (stochastic)", Colors.red),
 #             (f"Diamonds{i}_0.5_NN_cpu", "Neural Network (stochastic)", Colors.purple),
 #             (f"Diamonds{i}_0.0_UCB1", "UCB1 (deterministic)", Colors.green),
-#             (f"Diamonds{i}_0.0_var", "Uncertainty sampling (deterministic)", Colors.brown),
+#             (f"Diamonds{i}_0.0_var", "Variance exploration (deterministic)", Colors.brown),
 #             (f"Diamonds{i}_0.0_NN_cpu", "Neural Network (deterministic)", Colors.yellow),
 #         ],
 #     )
@@ -189,32 +189,32 @@ envs_small = [
 ]
 
 
-for env, name, env2 in envs_small:
-    Plot(
-        x_max = 3500,
-        type="Counterfactual",
-        title=name,
-        loc=Loc.lowerRight,
-        data=[
-            (f"{env}_Conver1", "f1", Colors.brown),
-            (f"{env}_Conver2", "f2", Colors.teal),
-            (f"{env}_Conver4_3counterfactsNOCRASH_2", "f3", Colors.lime),
-            (f"{env2}_teleport", "Teleport", Colors.blue),
-        ],
-    )
+# for env, name, env2 in envs_small:
+#     Plot(
+#         x_max = 3500,
+#         type="Counterfactual",
+#         title=name,
+#         loc=Loc.lowerRight,
+#         data=[
+#             (f"{env}_Conver1", "f1", Colors.brown),
+#             (f"{env}_Conver2", "f2", Colors.teal),
+#             (f"{env}_Conver4_3counterfactsNOCRASH_2", "f3", Colors.lime),
+#             (f"{env2}_teleport", "Teleport", Colors.blue),
+#         ],
+#     )
 
-Plot(
-    x_max = 3500,
-    type="Counterfactual",
-    title='Magical Lights 2',
-    loc=Loc.lowerRight,
-    data=[
-        (f"Causal4_Conver1", "f1", Colors.brown),
-        (f"Causal4_Conver2", "f2", Colors.teal),
-        (f"Causal4_Conver4_3counterfacts_2", "f3", Colors.lime),
-        (f"Lights2_teleport", "Teleport", Colors.blue),
-    ],
-)
+# Plot(
+#     x_max = 3500,
+#     type="Counterfactual",
+#     title='Magical Lights 2',
+#     loc=Loc.lowerRight,
+#     data=[
+#         (f"Causal4_Conver1", "f1", Colors.brown),
+#         (f"Causal4_Conver2", "f2", Colors.teal),
+#         (f"Causal4_Conver4_3counterfacts_2", "f3", Colors.lime),
+#         (f"Lights2_teleport", "Teleport", Colors.blue),
+#     ],
+# )
 
 
 # for env, name in envs:
