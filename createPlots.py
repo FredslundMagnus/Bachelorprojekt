@@ -9,12 +9,36 @@ from plotter import Colors, Loc, Plot
 #         data=[
 #             (f"Diamonds{i}_0.5_UCB1", "UCB1 (stochastic)", Colors.blue),
 #             (f"Diamonds{i}_0.5_var", "Uncertainty sampling (stochastic)", Colors.red),
-#             (f"Diamonds{i}_0.5_NN", "Neural Network (stochastic)", Colors.purple),
+#             (f"Diamonds{i}_0.5_NN_cpu", "Neural Network (stochastic)", Colors.purple),
 #             (f"Diamonds{i}_0.0_UCB1", "UCB1 (deterministic)", Colors.green),
 #             (f"Diamonds{i}_0.0_var", "Uncertainty sampling (deterministic)", Colors.brown),
-#             (f"Diamonds{i}_0.0_NN", "Neural Network (deterministic)", Colors.yellow),
+#             (f"Diamonds{i}_0.0_NN_cpu", "Neural Network (deterministic)", Colors.yellow),
 #         ],
 #     )
+
+
+for i in range(1, 5):
+    Plot(
+        title=f"Diamonds Explorer {i} Cheese",
+        loc=Loc.lowerRight,
+        keys=(1, 0),
+        data=[
+            (f"Diamonds{i}_0.5_UCB1", "UCB1 (stochastic)", Colors.blue),
+            (f"Diamonds{i}_0.5_var", "Uncertainty sampling (stochastic)", Colors.red),
+            (f"Diamonds{i}_0.5_NN_cpu", "Neural Network (stochastic)", Colors.purple),
+            (f"Diamonds{i}_0.0_UCB1", "UCB1 (deterministic)", Colors.green),
+            (f"Diamonds{i}_0.0_var", "Uncertainty sampling (deterministic)", Colors.brown),
+            (f"Diamonds{i}_0.0_NN_cpu", "Neural Network (deterministic)", Colors.yellow),
+        ],
+    )
+
+#
+
+#
+
+#
+
+#
 
 # Plot(
 #     title="convert1",
@@ -140,21 +164,21 @@ Plot(
 # )
 
 
-envs = [
-    ('Lights1', 'Magical Lights 1'),
-    ('Lights2', 'Magical Lights 2'),
-    ('Diamonds1', 'Diamonds Explorer 1'),
-    ('Diamonds2', 'Diamonds Explorer 2'),
-    ('Diamonds3', 'Diamonds Explorer 3'),
-    ('Diamonds4', 'Diamonds Explorer 4'),
-    ('SuperLevel1', 'Super Level 1'),
-    ('SuperLevel2', 'Super Level 2'),
-    ('Maze', 'Maze'),
-    ('Rocks', 'Rocks & Dirt'),
-    ('Coconuts', 'Coconuts'),
-    ('Monsters', 'Monsters'),
-    ('DoorsAndKey', 'Doors and Key'),
-]
+# envs = [
+#     ('Lights1', 'Magical Lights 1'),
+#     ('Lights2', 'Magical Lights 2'),
+#     ('Diamonds1', 'Diamonds Explorer 1'),
+#     ('Diamonds2', 'Diamonds Explorer 2'),
+#     ('Diamonds3', 'Diamonds Explorer 3'),
+#     ('Diamonds4', 'Diamonds Explorer 4'),
+#     ('SuperLevel1', 'Super Level 1'),
+#     ('SuperLevel2', 'Super Level 2'),
+#     ('Maze', 'Maze'),
+#     ('Rocks', 'Rocks & Dirt'),
+#     ('Coconuts', 'Coconuts'),
+#     ('Monsters', 'Monsters'),
+#     ('DoorsAndKey', 'Doors and Key'),
+# ]
 
 # for env, name in envs:
 #     Plot(
