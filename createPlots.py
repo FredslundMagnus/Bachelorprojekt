@@ -19,9 +19,12 @@ from plotter import Colors, Loc, Plot
 
 for i in range(1, 5):
     Plot(
-        title=f"Diamonds Explorer {i} Cheese",
-        loc=Loc.lowerRight,
+        title=f"Diamonds Explorer {i}",
+        type="_Cheese",
+        loc=Loc.upperRight,
         keys=(1, 0),
+        ylim=(0, 25),
+        ylabel="Cheese pr. game",
         data=[
             (f"Diamonds{i}_0.5_UCB1", "UCB1 (stochastic)", Colors.blue),
             (f"Diamonds{i}_0.5_var", "Uncertainty sampling (stochastic)", Colors.red),
