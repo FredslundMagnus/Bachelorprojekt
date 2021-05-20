@@ -45,7 +45,7 @@ class Plotter():
         self.type: str = type
         print(self.title)
 
-        def varPlot(name: str, collectors: List[Collector], color: MaterialColor, meanVar: bool = True):
+        def varPlot(name: str, collectors: List[Collector], color: MaterialColor, x_max: int, meanVar: bool = True):
             if not collectors:
                 raise Exception(f"Der var ingen collectors i den givne position for {name}")
             if collectors:
@@ -53,7 +53,7 @@ class Plotter():
                 minL = min(len(collector.data[keys]) for collector in collectors)
                 for collector in collectors:
                     data.append(collector.data[keys][:minL])
-                data = np.array(data)
+                data = np.array(data)[:, :x_max+self.N]
                 y = np.mean(data, axis=0)
                 if (any(y < 0)):
                     y = (y + 1)/2
@@ -91,9 +91,8 @@ class Plotter():
 
 
 class Plot:
-    def __init__(self, data: List[Tuple[str, str, MaterialColor]], same_x: bool = False, title: str = 'Placeholder', xlabel: str = 'Seen frames in 100000', ylabel: str = "Winrate", loc: Loc = Loc.upperLeft, ylim: Tuple[float, float] = (0, 1), keys: Tuple[int, int] = (0, 0), normalize: int = 100, type: str = "") -> None:
+    def __init__(self, data: List[Tuple[str, str, MaterialColor]], title: str = 'Placeholder', xlabel: str = 'Seen frames in 100000', ylabel: str = "Winrate", loc: Loc = Loc.upperLeft, ylim: Tuple[float, float] = (0, 1), keys: Tuple[int, int] = (0, 0), normalize: int = 100, type: str = "", x_max: int = 1000000000) -> None:
         self.data: List[Tuple[str, str, MaterialColor]] = data
-        self.same_x: bool = same_x
         self.title: str = title
         self.xlabel: str = xlabel
         self.ylabel: str = ylabel
@@ -102,12 +101,13 @@ class Plot:
         self.keys: Tuple[float, float] = keys
         self.normalize: int = normalize
         self.type: str = type
+        self.x_max: int = x_max
         self.createPlot()
 
     def createPlot(self):
         with Plotter(title=self.title, xlabel=self.xlabel, ylabel=self.ylabel, loc=self.loc, ylim=self.ylim, keys=self.keys, normalize=self.normalize, type=self.type) as plt:
             for name, collectors, color in load(*self.data):
-                plt.varPlot(name, collectors, color)
+                plt.varPlot(name, collectors, color, self.x_max)
 
 
 # with Plotter(title="Test Causal 2 and 5") as plt:
