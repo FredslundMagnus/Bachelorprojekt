@@ -189,32 +189,38 @@ envs_small = [
 ]
 
 
-# for env, name, env2 in envs_small:
-#     Plot(
-#         x_max = 3500,
-#         type="Counterfactual",
-#         title=name,
-#         loc=Loc.lowerRight,
-#         data=[
-#             (f"{env}_Conver1", "f1", Colors.brown),
-#             (f"{env}_Conver2", "f2", Colors.teal),
-#             (f"{env}_Conver4_3counterfactsNOCRASH_2", "f3", Colors.lime),
-#             (f"{env2}_teleport", "Teleport", Colors.blue),
-#         ],
-#     )
+for env, name, env2 in envs_small:
+    Plot(
+        x_max = 3500,
+        keys=(1, 1),
+        ylim=(0, 1),
+        type="Counterfactualtestr2d2",
+        title=name,
+        ylabel='MouseReward pr. Cheese',
+        loc=Loc.lowerRight,
+        data=[
+            (f"{env}_Conver1", "f1", Colors.brown),
+            (f"{env}_Conver2", "f2", Colors.teal),
+            (f"{env}_Conver4_3counterfactsNOCRASH_2", "f3", Colors.lime),
+            (f"{env2}_teleport", "Teleport", Colors.blue),
+        ],
+    )
 
-# Plot(
-#     x_max = 3500,
-#     type="Counterfactual",
-#     title='Magical Lights 2',
-#     loc=Loc.lowerRight,
-#     data=[
-#         (f"Causal4_Conver1", "f1", Colors.brown),
-#         (f"Causal4_Conver2", "f2", Colors.teal),
-#         (f"Causal4_Conver4_3counterfacts_2", "f3", Colors.lime),
-#         (f"Lights2_teleport", "Teleport", Colors.blue),
-#     ],
-# )
+Plot(
+    x_max = 3500,
+    keys=(1, 1),
+    ylim=(0, 1),
+    type="Counterfactualr2d2",
+    title='Magical Lights 2',
+    ylabel='MouseReward pr. Cheese',
+    loc=Loc.lowerRight,
+    data=[
+        (f"Causal4_Conver1", "f1", Colors.brown),
+        (f"Causal4_Conver2", "f2", Colors.teal),
+        (f"Causal4_Conver4_3counterfacts_2", "f3", Colors.lime),
+        (f"Lights2_teleport", "Teleport", Colors.blue),
+    ],
+)
 
 
 # for env, name in envs:
