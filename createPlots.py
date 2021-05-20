@@ -183,7 +183,8 @@ envs = [
 
 for env, name in envs:
     Plot(
-        title=name+' Comparison',
+        title=name,
+        type="_Comparison",
         loc=Loc.lowerRight,
         data=[
             (f"{env}_simple", "Q-learn", Colors.green),
