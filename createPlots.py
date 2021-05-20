@@ -185,6 +185,7 @@ for env, name in envs:
     Plot(
         title=name,
         type="_Comparison",
+        x_max=5000,
         loc=Loc.lowerRight,
         data=[
             (f"{env}_simple", "Q-learn", Colors.green),
