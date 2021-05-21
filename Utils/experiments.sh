@@ -1,41 +1,16 @@
 #!/bin/sh
-mkdir ../outputs/Diamonds1_0.5_NN_cpu_2/
-mkdir ../outputs/Diamonds1_0.5_NN_cpu_2/Markdown
-bsub -o "../outputs/Diamonds1_0.5_NN_cpu_2/Markdown/Diamonds1_0.5_NN_cpu_2_0.md" -J "Diamonds1_0.5_NN_cpu_2_0" -env MYARGS="-name Diamonds1_0.5_NN_cpu_2-0 -hours 10.0 -level Levels.Causal2 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0 -failed_actions_chance 0.5 -use_model True -num 0" < submit_cpu.sh
-bsub -o "../outputs/Diamonds1_0.5_NN_cpu_2/Markdown/Diamonds1_0.5_NN_cpu_2_1.md" -J "Diamonds1_0.5_NN_cpu_2_1" -env MYARGS="-name Diamonds1_0.5_NN_cpu_2-1 -hours 10.0 -level Levels.Causal2 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0 -failed_actions_chance 0.5 -use_model True -num 1" < submit_cpu.sh
-bsub -o "../outputs/Diamonds1_0.5_NN_cpu_2/Markdown/Diamonds1_0.5_NN_cpu_2_2.md" -J "Diamonds1_0.5_NN_cpu_2_2" -env MYARGS="-name Diamonds1_0.5_NN_cpu_2-2 -hours 10.0 -level Levels.Causal2 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0 -failed_actions_chance 0.5 -use_model True -num 2" < submit_cpu.sh
-mkdir ../outputs/Diamonds2_0.5_NN_cpu_2/
-mkdir ../outputs/Diamonds2_0.5_NN_cpu_2/Markdown
-bsub -o "../outputs/Diamonds2_0.5_NN_cpu_2/Markdown/Diamonds2_0.5_NN_cpu_2_0.md" -J "Diamonds2_0.5_NN_cpu_2_0" -env MYARGS="-name Diamonds2_0.5_NN_cpu_2-0 -hours 10.0 -level Levels.Causal5 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0 -failed_actions_chance 0.5 -use_model True -num 0" < submit_cpu.sh
-bsub -o "../outputs/Diamonds2_0.5_NN_cpu_2/Markdown/Diamonds2_0.5_NN_cpu_2_1.md" -J "Diamonds2_0.5_NN_cpu_2_1" -env MYARGS="-name Diamonds2_0.5_NN_cpu_2-1 -hours 10.0 -level Levels.Causal5 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0 -failed_actions_chance 0.5 -use_model True -num 1" < submit_cpu.sh
-bsub -o "../outputs/Diamonds2_0.5_NN_cpu_2/Markdown/Diamonds2_0.5_NN_cpu_2_2.md" -J "Diamonds2_0.5_NN_cpu_2_2" -env MYARGS="-name Diamonds2_0.5_NN_cpu_2-2 -hours 10.0 -level Levels.Causal5 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0 -failed_actions_chance 0.5 -use_model True -num 2" < submit_cpu.sh
-mkdir ../outputs/Diamonds3_0.5_NN_cpu_2/
-mkdir ../outputs/Diamonds3_0.5_NN_cpu_2/Markdown
-bsub -o "../outputs/Diamonds3_0.5_NN_cpu_2/Markdown/Diamonds3_0.5_NN_cpu_2_0.md" -J "Diamonds3_0.5_NN_cpu_2_0" -env MYARGS="-name Diamonds3_0.5_NN_cpu_2-0 -hours 10.0 -level Levels.Causal6 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0 -failed_actions_chance 0.5 -use_model True -num 0" < submit_cpu.sh
-bsub -o "../outputs/Diamonds3_0.5_NN_cpu_2/Markdown/Diamonds3_0.5_NN_cpu_2_1.md" -J "Diamonds3_0.5_NN_cpu_2_1" -env MYARGS="-name Diamonds3_0.5_NN_cpu_2-1 -hours 10.0 -level Levels.Causal6 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0 -failed_actions_chance 0.5 -use_model True -num 1" < submit_cpu.sh
-bsub -o "../outputs/Diamonds3_0.5_NN_cpu_2/Markdown/Diamonds3_0.5_NN_cpu_2_2.md" -J "Diamonds3_0.5_NN_cpu_2_2" -env MYARGS="-name Diamonds3_0.5_NN_cpu_2-2 -hours 10.0 -level Levels.Causal6 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0 -failed_actions_chance 0.5 -use_model True -num 2" < submit_cpu.sh
-mkdir ../outputs/Diamonds4_0.5_NN_cpu_2/
-mkdir ../outputs/Diamonds4_0.5_NN_cpu_2/Markdown
-bsub -o "../outputs/Diamonds4_0.5_NN_cpu_2/Markdown/Diamonds4_0.5_NN_cpu_2_0.md" -J "Diamonds4_0.5_NN_cpu_2_0" -env MYARGS="-name Diamonds4_0.5_NN_cpu_2-0 -hours 10.0 -level Levels.Causal7 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0 -failed_actions_chance 0.5 -use_model True -num 0" < submit_cpu.sh
-bsub -o "../outputs/Diamonds4_0.5_NN_cpu_2/Markdown/Diamonds4_0.5_NN_cpu_2_1.md" -J "Diamonds4_0.5_NN_cpu_2_1" -env MYARGS="-name Diamonds4_0.5_NN_cpu_2-1 -hours 10.0 -level Levels.Causal7 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0 -failed_actions_chance 0.5 -use_model True -num 1" < submit_cpu.sh
-bsub -o "../outputs/Diamonds4_0.5_NN_cpu_2/Markdown/Diamonds4_0.5_NN_cpu_2_2.md" -J "Diamonds4_0.5_NN_cpu_2_2" -env MYARGS="-name Diamonds4_0.5_NN_cpu_2-2 -hours 10.0 -level Levels.Causal7 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0 -failed_actions_chance 0.5 -use_model True -num 2" < submit_cpu.sh
-mkdir ../outputs/Diamonds1_0.0_NN_cpu_2/
-mkdir ../outputs/Diamonds1_0.0_NN_cpu_2/Markdown
-bsub -o "../outputs/Diamonds1_0.0_NN_cpu_2/Markdown/Diamonds1_0.0_NN_cpu_2_0.md" -J "Diamonds1_0.0_NN_cpu_2_0" -env MYARGS="-name Diamonds1_0.0_NN_cpu_2-0 -hours 10.0 -level Levels.Causal2 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0 -failed_actions_chance 0.0 -use_model True -num 0" < submit_cpu.sh
-bsub -o "../outputs/Diamonds1_0.0_NN_cpu_2/Markdown/Diamonds1_0.0_NN_cpu_2_1.md" -J "Diamonds1_0.0_NN_cpu_2_1" -env MYARGS="-name Diamonds1_0.0_NN_cpu_2-1 -hours 10.0 -level Levels.Causal2 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0 -failed_actions_chance 0.0 -use_model True -num 1" < submit_cpu.sh
-bsub -o "../outputs/Diamonds1_0.0_NN_cpu_2/Markdown/Diamonds1_0.0_NN_cpu_2_2.md" -J "Diamonds1_0.0_NN_cpu_2_2" -env MYARGS="-name Diamonds1_0.0_NN_cpu_2-2 -hours 10.0 -level Levels.Causal2 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0 -failed_actions_chance 0.0 -use_model True -num 2" < submit_cpu.sh
-mkdir ../outputs/Diamonds2_0.0_NN_cpu_2/
-mkdir ../outputs/Diamonds2_0.0_NN_cpu_2/Markdown
-bsub -o "../outputs/Diamonds2_0.0_NN_cpu_2/Markdown/Diamonds2_0.0_NN_cpu_2_0.md" -J "Diamonds2_0.0_NN_cpu_2_0" -env MYARGS="-name Diamonds2_0.0_NN_cpu_2-0 -hours 10.0 -level Levels.Causal5 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0 -failed_actions_chance 0.0 -use_model True -num 0" < submit_cpu.sh
-bsub -o "../outputs/Diamonds2_0.0_NN_cpu_2/Markdown/Diamonds2_0.0_NN_cpu_2_1.md" -J "Diamonds2_0.0_NN_cpu_2_1" -env MYARGS="-name Diamonds2_0.0_NN_cpu_2-1 -hours 10.0 -level Levels.Causal5 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0 -failed_actions_chance 0.0 -use_model True -num 1" < submit_cpu.sh
-bsub -o "../outputs/Diamonds2_0.0_NN_cpu_2/Markdown/Diamonds2_0.0_NN_cpu_2_2.md" -J "Diamonds2_0.0_NN_cpu_2_2" -env MYARGS="-name Diamonds2_0.0_NN_cpu_2-2 -hours 10.0 -level Levels.Causal5 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0 -failed_actions_chance 0.0 -use_model True -num 2" < submit_cpu.sh
-mkdir ../outputs/Diamonds3_0.0_NN_cpu_2/
-mkdir ../outputs/Diamonds3_0.0_NN_cpu_2/Markdown
-bsub -o "../outputs/Diamonds3_0.0_NN_cpu_2/Markdown/Diamonds3_0.0_NN_cpu_2_0.md" -J "Diamonds3_0.0_NN_cpu_2_0" -env MYARGS="-name Diamonds3_0.0_NN_cpu_2-0 -hours 10.0 -level Levels.Causal6 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0 -failed_actions_chance 0.0 -use_model True -num 0" < submit_cpu.sh
-bsub -o "../outputs/Diamonds3_0.0_NN_cpu_2/Markdown/Diamonds3_0.0_NN_cpu_2_1.md" -J "Diamonds3_0.0_NN_cpu_2_1" -env MYARGS="-name Diamonds3_0.0_NN_cpu_2-1 -hours 10.0 -level Levels.Causal6 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0 -failed_actions_chance 0.0 -use_model True -num 1" < submit_cpu.sh
-bsub -o "../outputs/Diamonds3_0.0_NN_cpu_2/Markdown/Diamonds3_0.0_NN_cpu_2_2.md" -J "Diamonds3_0.0_NN_cpu_2_2" -env MYARGS="-name Diamonds3_0.0_NN_cpu_2-2 -hours 10.0 -level Levels.Causal6 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0 -failed_actions_chance 0.0 -use_model True -num 2" < submit_cpu.sh
-mkdir ../outputs/Diamonds4_0.0_NN_cpu_2/
-mkdir ../outputs/Diamonds4_0.0_NN_cpu_2/Markdown
-bsub -o "../outputs/Diamonds4_0.0_NN_cpu_2/Markdown/Diamonds4_0.0_NN_cpu_2_0.md" -J "Diamonds4_0.0_NN_cpu_2_0" -env MYARGS="-name Diamonds4_0.0_NN_cpu_2-0 -hours 10.0 -level Levels.Causal7 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0 -failed_actions_chance 0.0 -use_model True -num 0" < submit_cpu.sh
-bsub -o "../outputs/Diamonds4_0.0_NN_cpu_2/Markdown/Diamonds4_0.0_NN_cpu_2_1.md" -J "Diamonds4_0.0_NN_cpu_2_1" -env MYARGS="-name Diamonds4_0.0_NN_cpu_2-1 -hours 10.0 -level Levels.Causal7 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0 -failed_actions_chance 0.0 -use_model True -num 1" < submit_cpu.sh
-bsub -o "../outputs/Diamonds4_0.0_NN_cpu_2/Markdown/Diamonds4_0.0_NN_cpu_2_2.md" -J "Diamonds4_0.0_NN_cpu_2_2" -env MYARGS="-name Diamonds4_0.0_NN_cpu_2-2 -hours 10.0 -level Levels.Causal7 -main graphTrain -K1 200000.0 -K2 100000.0 -softmax_cap 0.0 -failed_actions_chance 0.0 -use_model True -num 2" < submit_cpu.sh
+mkdir ../outputs/Diamonds2_convert1/
+mkdir ../outputs/Diamonds2_convert1/Markdown
+bsub -o "../outputs/Diamonds2_convert1/Markdown/Diamonds2_convert1_0.md" -J "Diamonds2_convert1_0" -env MYARGS="-name Diamonds2_convert1-0 -hours 24.0 -level Levels.Causal5 -main CFagent -CF_convert 1 -TopN 2 -K1 2000000.0 -num 0" < submit_gpu.sh
+bsub -o "../outputs/Diamonds2_convert1/Markdown/Diamonds2_convert1_1.md" -J "Diamonds2_convert1_1" -env MYARGS="-name Diamonds2_convert1-1 -hours 24.0 -level Levels.Causal5 -main CFagent -CF_convert 1 -TopN 2 -K1 2000000.0 -num 1" < submit_gpu.sh
+bsub -o "../outputs/Diamonds2_convert1/Markdown/Diamonds2_convert1_2.md" -J "Diamonds2_convert1_2" -env MYARGS="-name Diamonds2_convert1-2 -hours 24.0 -level Levels.Causal5 -main CFagent -CF_convert 1 -TopN 2 -K1 2000000.0 -num 2" < submit_gpu.sh
+mkdir ../outputs/Diamonds2_convert2/
+mkdir ../outputs/Diamonds2_convert2/Markdown
+bsub -o "../outputs/Diamonds2_convert2/Markdown/Diamonds2_convert2_0.md" -J "Diamonds2_convert2_0" -env MYARGS="-name Diamonds2_convert2-0 -hours 24.0 -level Levels.Causal5 -main CFagent -CF_convert 2 -TopN 2 -K1 2000000.0 -num 0" < submit_gpu.sh
+bsub -o "../outputs/Diamonds2_convert2/Markdown/Diamonds2_convert2_1.md" -J "Diamonds2_convert2_1" -env MYARGS="-name Diamonds2_convert2-1 -hours 24.0 -level Levels.Causal5 -main CFagent -CF_convert 2 -TopN 2 -K1 2000000.0 -num 1" < submit_gpu.sh
+bsub -o "../outputs/Diamonds2_convert2/Markdown/Diamonds2_convert2_2.md" -J "Diamonds2_convert2_2" -env MYARGS="-name Diamonds2_convert2-2 -hours 24.0 -level Levels.Causal5 -main CFagent -CF_convert 2 -TopN 2 -K1 2000000.0 -num 2" < submit_gpu.sh
+mkdir ../outputs/Diamonds2_convert4/
+mkdir ../outputs/Diamonds2_convert4/Markdown
+bsub -o "../outputs/Diamonds2_convert4/Markdown/Diamonds2_convert4_0.md" -J "Diamonds2_convert4_0" -env MYARGS="-name Diamonds2_convert4-0 -hours 24.0 -level Levels.Causal5 -main CFagent -CF_convert 4 -TopN 2 -K1 2000000.0 -num 0" < submit_gpu.sh
+bsub -o "../outputs/Diamonds2_convert4/Markdown/Diamonds2_convert4_1.md" -J "Diamonds2_convert4_1" -env MYARGS="-name Diamonds2_convert4-1 -hours 24.0 -level Levels.Causal5 -main CFagent -CF_convert 4 -TopN 2 -K1 2000000.0 -num 1" < submit_gpu.sh
+bsub -o "../outputs/Diamonds2_convert4/Markdown/Diamonds2_convert4_2.md" -J "Diamonds2_convert4_2" -env MYARGS="-name Diamonds2_convert4-2 -hours 24.0 -level Levels.Causal5 -main CFagent -CF_convert 4 -TopN 2 -K1 2000000.0 -num 2" < submit_gpu.sh
