@@ -2,40 +2,43 @@ from plotter import Colors, Loc, Plot
 
 
 # Diamonds plots
-# for i in range(1, 5):
-#     Plot(
-#         title=f"Diamonds Explorer {i}",
-#         loc=Loc.lowerRight,
-#         data=[
-#             (f"Diamonds{i}_0.5_UCB1", "UCB1 (stochastic)", Colors.blue),
-#             (f"Diamonds{i}_0.5_var", "Variance exploration (stochastic)", Colors.red),
-#             (f"Diamonds{i}_0.5_NN_cpu", "Neural Network (stochastic)", Colors.purple),
-#             (f"Diamonds{i}_0.0_UCB1", "UCB1 (deterministic)", Colors.green),
-#             (f"Diamonds{i}_0.0_var", "Variance exploration (deterministic)", Colors.brown),
-#             (f"Diamonds{i}_0.0_NN_cpu", "Neural Network (deterministic)", Colors.yellow),
-#         ],
-#     )
+for i in range(1, 5):
+    Plot(
+        title=f"Diamonds Explorer {i}",
+        loc=Loc.lowerRight,
+        x_max=1000,
+        data=[
+            (f"Diamonds{i}_0.5_UCB1", "UCB1 (stochastic)", Colors.blue),
+            (f"Diamonds{i}_0.5_var", "Variance exploration (stochastic)", Colors.red),
+            (f"Diamonds{i}_0.5_NN_cpu", "Neural Network (stochastic)", Colors.purple),
+            (f"Diamonds{i}_0.0_UCB1", "UCB1 (deterministic)", Colors.green),
+            (f"Diamonds{i}_0.0_var", "Variance exploration (deterministic)", Colors.brown),
+            (f"Diamonds{i}_0.0_NN_cpu", "Neural Network (deterministic)", Colors.yellow),
+            (f"Diamonds{i}_teleport", "Teleporter (deterministic)", Colors.orange),
+        ],
+    )
 
 
-# for i in range(1, 5):
-#     Plot(
-#         title=f"Diamonds Explorer {i}",
-#         type="_Cheese",
-#         loc=Loc.upperRight,
-#         keys=(0, 1),
-#         ylim=(0, 0.6),
-#         ylabel="Reward pr. cheese",
-#         data=[
-#             (f"Diamonds{i}_0.5_UCB1", "UCB1 (stochastic)", Colors.blue),
-#             (f"Diamonds{i}_0.5_var", "Variance exploration (stochastic)", Colors.red),
-#             (f"Diamonds{i}_0.5_NN_cpu", "Neural Network (stochastic)", Colors.purple),
-#             (f"Diamonds{i}_0.0_UCB1", "UCB1 (deterministic)", Colors.green),
-#             (f"Diamonds{i}_0.0_var", "Variance exploration (deterministic)", Colors.brown),
-#             (f"Diamonds{i}_0.0_NN_cpu", "Neural Network (deterministic)", Colors.yellow),
-#         ],
-#     )
+for i in range(1, 5):
+    Plot(
+        title=f"Diamonds Explorer {i}",
+        type="_Cheese",
+        loc=Loc.upperRight,
+        keys=(0, 1),
+        ylim=(0, 0.6),
+        x_max=500,
+        ylabel="Reward pr. cheese",
+        data=[
+            (f"Diamonds{i}_0.5_UCB1", "UCB1 (stochastic)", Colors.blue),
+            (f"Diamonds{i}_0.5_var", "Variance exploration (stochastic)", Colors.red),
+            (f"Diamonds{i}_0.5_NN_cpu", "Neural Network (stochastic)", Colors.purple),
+            (f"Diamonds{i}_0.0_UCB1", "UCB1 (deterministic)", Colors.green),
+            (f"Diamonds{i}_0.0_var", "Variance exploration (deterministic)", Colors.brown),
+            (f"Diamonds{i}_0.0_NN_cpu", "Neural Network (deterministic)", Colors.yellow),
+            (f"Diamonds{i}_teleport", "Teleporter (deterministic)", Colors.orange),
+        ],
+    )
 
-#
 
 #
 
@@ -167,60 +170,60 @@ from plotter import Colors, Loc, Plot
 # )
 
 
-envs = [
-    ('Lights1', 'Magical Lights 1'),
-    ('Lights2', 'Magical Lights 2'),
-    ('Diamonds1', 'Diamonds Explorer 1'),
-    ('Diamonds2', 'Diamonds Explorer 2'),
-    ('Diamonds3', 'Diamonds Explorer 3'),
-    ('Diamonds4', 'Diamonds Explorer 4'),
-    ('Maze', 'Maze'),
-    ('Rocks', 'Rocks & Dirt'),
-    ('Coconuts', 'Coconuts'),
-    ('Monsters', 'Monsters'),
-    ('DoorsAndKey', 'Doors and Key'),
-]
+# envs = [
+#     ('Lights1', 'Magical Lights 1'),
+#     ('Lights2', 'Magical Lights 2'),
+#     ('Diamonds1', 'Diamonds Explorer 1'),
+#     ('Diamonds2', 'Diamonds Explorer 2'),
+#     ('Diamonds3', 'Diamonds Explorer 3'),
+#     ('Diamonds4', 'Diamonds Explorer 4'),
+#     ('Maze', 'Maze'),
+#     ('Rocks', 'Rocks & Dirt'),
+#     ('Coconuts', 'Coconuts'),
+#     ('Monsters', 'Monsters'),
+#     ('DoorsAndKey', 'Doors & Key'),
+# ]
 
-envs_small = [
-    ('Causal3', 'Magical Lights 1', 'Lights1'),
-    ('Maze', 'Maze', 'Maze'),
-    ('Coconuts', 'Coconuts', 'Coconuts'),
-    ('MonsterLevel', 'Monsters', 'Monsters'),
-]
+# envs_small = [
+#     ('Causal3', 'Magical Lights 1', 'Lights1'),
+#     ('Maze', 'Maze', 'Maze'),
+#     ('Coconuts', 'Coconuts', 'Coconuts'),
+#     ('MonsterLevel', 'Monsters', 'Monsters'),
+# ]
 
 
-for env, name, env2 in envs_small:
-    Plot(
-        x_max = 3500,
-        keys=(1, 0),
-        ylim=(0, 12),
-        type="Counterfactualtestr2d1",
-        title=name,
-        ylabel='MouseReward pr. Cheese',
-        loc=Loc.lowerRight,
-        data=[
-            (f"{env}_Conver1", "f1", Colors.brown),
-            (f"{env}_Conver2", "f2", Colors.teal),
-            (f"{env}_Conver4_3counterfactsNOCRASH_2", "f3", Colors.lime),
-            (f"{env2}_teleport", "Teleport", Colors.blue),
-        ],
-    )
+# for env, name, env2 in envs_small:
+#     Plot(
+#         x_max = 3500,
+#         keys=(1, 0),
+#         ylim=(0, 12),
+#         type="Counterfactualtestr2d1",
+#         title=name,
+#         ylabel='MouseReward pr. Cheese',
+#         loc=Loc.lowerRight,
+#         data=[
+#             (f"{env}_Conver1", "f1", Colors.brown),
+#             (f"{env}_Conver2", "f2", Colors.teal),
+#             (f"{env}_Conver4_3counterfactsNOCRASH_2", "f3", Colors.lime),
+#             (f"{env2}_teleport", "Teleport", Colors.blue),
+#         ],
+#     )
 
-Plot(
-    x_max = 3500,
-    keys=(1, 0),
-    ylim=(0, 12),
-    type="Counterfactualr2d1",
-    title='Magical Lights 2',
-    ylabel='MouseReward pr. Cheese',
-    loc=Loc.lowerRight,
-    data=[
-        (f"Causal4_Conver1", "f1", Colors.brown),
-        (f"Causal4_Conver2", "f2", Colors.teal),
-        (f"Causal4_Conver4_3counterfacts_2", "f3", Colors.lime),
-        (f"Lights2_teleport", "Teleport", Colors.blue),
-    ],
-)
+# Plot(
+#     x_max=3500,
+#     keys=(1, 0),
+#     ylim=(0, 12),
+#     type="Counterfactualr2d1",
+#     title='Magical Lights 2',
+#     ylabel='MouseReward pr. Cheese',
+#     loc=Loc.lowerRight,
+#     data=[
+#         (f"Causal4_Conver1", "f1", Colors.brown),
+#         (f"Causal4_Conver2", "f2", Colors.teal),
+#         (f"Causal4_Conver4_3counterfacts_2", "f3", Colors.lime),
+#         (f"Lights2_teleport", "Teleport", Colors.blue),
+#     ],
+# )
 
 
 # for env, name in envs:
