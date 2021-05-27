@@ -67,6 +67,18 @@ from plotter import Colors, Loc, Plot
 #     ],
 # )
 
+Plot(
+    title="Dia2Con14",
+    loc=Loc.lowerRight,
+    keys=(1, 0),
+    ylim=(0, 12),
+    data=[
+        ("Diamonds2_convert1", "f1", Colors.pink),
+        ("Diamonds2_convert2", "f2", Colors.green),
+        ("Diamonds2_convert4", "f3", Colors.orange),
+    ],
+)
+
 # Plot(
 #     title="Teleporter",
 #     loc=Loc.lowerRight,
@@ -189,38 +201,38 @@ envs_small = [
 ]
 
 
-for env, name, env2 in envs_small:
-    Plot(
-        x_max = 3500,
-        keys=(1, 0),
-        ylim=(0, 12),
-        type="Counterfactualtestr2d1",
-        title=name,
-        ylabel='MouseReward pr. Cheese',
-        loc=Loc.lowerRight,
-        data=[
-            (f"{env}_Conver1", "f1", Colors.brown),
-            (f"{env}_Conver2", "f2", Colors.teal),
-            (f"{env}_Conver4_3counterfactsNOCRASH_2", "f3", Colors.lime),
-            (f"{env2}_teleport", "Teleport", Colors.blue),
-        ],
-    )
+# for env, name, env2 in envs_small:
+#     Plot(
+#         x_max = 3500,
+#         keys=(1, 0),
+#         ylim=(0, 12),
+#         type="Counterfactualtestr2d1",
+#         title=name,
+#         ylabel='MouseReward pr. Cheese',
+#         loc=Loc.lowerRight,
+#         data=[
+#             (f"{env}_Conver1", "f1", Colors.brown),
+#             (f"{env}_Conver2", "f2", Colors.teal),
+#             (f"{env}_Conver4_3counterfactsNOCRASH_2", "f3", Colors.lime),
+#             (f"{env2}_teleport", "Teleport", Colors.blue),
+#         ],
+#     )
 
-Plot(
-    x_max = 3500,
-    keys=(1, 0),
-    ylim=(0, 12),
-    type="Counterfactualr2d1",
-    title='Magical Lights 2',
-    ylabel='MouseReward pr. Cheese',
-    loc=Loc.lowerRight,
-    data=[
-        (f"Causal4_Conver1", "f1", Colors.brown),
-        (f"Causal4_Conver2", "f2", Colors.teal),
-        (f"Causal4_Conver4_3counterfacts_2", "f3", Colors.lime),
-        (f"Lights2_teleport", "Teleport", Colors.blue),
-    ],
-)
+# Plot(
+#     x_max = 3500,
+#     keys=(1, 0),
+#     ylim=(0, 12),
+#     type="Counterfactualr2d1",
+#     title='Magical Lights 2',
+#     ylabel='MouseReward pr. Cheese',
+#     loc=Loc.lowerRight,
+#     data=[
+#         (f"Causal4_Conver1", "f1", Colors.brown),
+#         (f"Causal4_Conver2", "f2", Colors.teal),
+#         (f"Causal4_Conver4_3counterfacts_2", "f3", Colors.lime),
+#         (f"Lights2_teleport", "Teleport", Colors.blue),
+#     ],
+# )
 
 
 # for env, name in envs:
